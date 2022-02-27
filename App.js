@@ -143,36 +143,36 @@ import { View, ActivityIndicator, TouchableOpacity, Image, RefreshControl,  Text
         };
         
         const authContext = React.useMemo(() => ({
-          signIn: async(userName, password) => {
-            let userToken;
-            userToken = null;
-            return await MainService.login(userName, password).then(async(res) => {
-              console.log("Response from login", res);
-              console.log("Phone number "+userName+" and Password "+password);
-              const statusCode = res.statusCode;
-              const message = res.message;
-              if(statusCode == 1){
-                const respData = res.data;
-                try{
-                  
-                  userToken = respData.access_token;
-                  setProfile(respData);
-                  await AsyncStorage.setItem("userToken", userToken);
-                  await AsyncStorage.setItem("userProfile", JSON.stringify(respData));
-                  dispatch({ type: 'LOGIN', id: userName, userToken: userToken})
-                  return {"message": message, "statusCode": statusCode, "userName": userName, "userToken": userToken};
-                }catch(e){
-                  return {"message": e.message, "statusCode": 0};
-                }
-              }else{
-                return {"message": message, "statusCode": statusCode};
-              }
-            });
-            
+
+          
+          sendSmsVerification: async(data) => {
+            const result = await MainService.sendOTP(data);
+            return result;
           },
+
+          verifyOTP: async(data) => {
+            const result = await MainService.verifyOneTimePassword(data);
+            return result;
+           },
+
+
+          goToHomeScreen: async(user) => {
+              let userToken = null;
+                try{
+                  userToken = user.access_token;
+                  setProfile(user);
+                  await AsyncStorage.setItem("userToken", userToken);
+                  await AsyncStorage.setItem("userProfile", JSON.stringify(user));
+                  dispatch({ type: 'LOGIN', id: user.phone_number, userToken: userToken})
+                  return {"message": message, "statusCode": statusCode, "userName": user.phone_number, "userToken": userToken};
+                }catch(e){
+                  console.log("Got exception on async storage", e);
+                  return {"message": e.message, "statusCode": 0};
+                } 
+          },
+          
           signOut: async() => {
             try{
-              // setProfile(null);
               await AsyncStorage.removeItem("userToken");
               await AsyncStorage.removeItem("userProfile");
             }catch(e){
@@ -181,24 +181,21 @@ import { View, ActivityIndicator, TouchableOpacity, Image, RefreshControl,  Text
             dispatch({ type: 'LOGOUT' });
           },
           
+        
+          createProfile: async(data) => {
+            return await MainService.createProfile(data);
+          },
           
-          signUp: async(data) => {
-            let userToken;
-            userToken = null;
-            return await MainService.register(data).then(async(res) => {
-              // console.log("Registration response", res);
+          updateProfile: async(data) => {
+
+            return await MainService.updateProfile(data).then(async(res) => {
               const statusCode = res.statusCode;
               const message = res.message;
               if(statusCode == 1){
                 const respData = res.data;
                 try{
-                  userToken = respData.access_token;
-                  let userName = respData.phone_number;
-                  setProfile(respData);
-                  await AsyncStorage.setItem("userToken", userToken);
                   await AsyncStorage.setItem("userProfile", JSON.stringify(respData));
-                  dispatch({ type: 'LOGIN', id: userName, userToken: userToken});
-                  return {"message": message, "statusCode": statusCode, "userName": userName};
+                  return {"message": message, "statusCode": statusCode, "data": respData};
                 }catch(e){
                   return {"message": e.message, "statusCode": 0};
                 }
@@ -227,27 +224,9 @@ import { View, ActivityIndicator, TouchableOpacity, Image, RefreshControl,  Text
               }
             });
           },
-          
-          updateProfile: async(data) => {
-            let userToken;
-            userToken = null;
-            return await MainService.updateProfile(data).then(async(res) => {
-              // console.log("Profile update response", res);
-              const statusCode = res.statusCode;
-              const message = res.message;
-              if(statusCode == 1){
-                const respData = res.data;
-                try{
-                  await AsyncStorage.setItem("userProfile", JSON.stringify(respData));
-                  return {"message": message, "statusCode": statusCode, "data": respData};
-                }catch(e){
-                  return {"message": e.message, "statusCode": 0};
-                }
-              }else{
-                return {"message": message, "statusCode": statusCode};
-              }
-            });
-          },
+
+
+         
           
           asyncCustomerProfile: async(id) => {
             return await MainService.getCustomerData(id).then(async(res) => {
@@ -346,6 +325,7 @@ import { View, ActivityIndicator, TouchableOpacity, Image, RefreshControl,  Text
             const result = await MainService.postSuggestion(data);
             return result;
           },
+
           
           submitParkingRequest: async(data) => {
             return await MainService.postParkingRequest(data).then(async(res) => {

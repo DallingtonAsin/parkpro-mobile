@@ -3,17 +3,22 @@ import Service from './service';
 export default class MainService{
     
     
-    static login = (phone_number, password) => {
-        const endpoint = "customer/login";
+    static login = (phone_number, otp) => {
+        const endpoint = "customer/verify-otp";
         const data = {
                        phone_number: phone_number,
-                       password: password
+                       otp: otp
                     };
         return Service.PostData(endpoint, data);
     }
     
     static register = async(data) => {
         const endpoint = "customer/register";
+        return await Service.PostData(endpoint, data);
+    }
+
+    static createProfile = async(data) => {
+        const endpoint = "customer/profile/create";
         return await Service.PostData(endpoint, data);
     }
 
@@ -115,7 +120,15 @@ export default class MainService{
         const endpoint = 'parking_areas';
         return useNativeFetcher(endpoint);
     }
-    
-    
+
+    static sendOTP = async(data) => {
+        const endpoint = 'customer/send-otp';
+        return await Service.PostData(endpoint, data);
+    }
+    static verifyOneTimePassword = async(data) => {
+        const endpoint = 'customer/verify-otp';
+        return await Service.PostData(endpoint, data);
+    }
+  
     
 }

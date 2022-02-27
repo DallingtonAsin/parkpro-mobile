@@ -58,17 +58,18 @@ const Profile = props => {
 
   
    <View style={styles.header}>
-   {
-                  profile.image ?
-                  <ProfilePicture
-                        isPicture={true}
-                        URLPicture={profile.image}
-                        shape='circle'
-                        pictureStyle={styles.avatar} 
-                    />
-                  : <Avatar.Image size={120} style={styles.avatar} 
-                  source={{uri: image }} />
-                }
+
+   { profile.image ?
+          <ProfilePicture
+          isPicture={true}
+          URLPicture={profile.image}
+          shape='circle'
+          pictureStyle={styles.avatar} 
+      />
+        : <Avatar.Image size={120} style={styles.avatar} 
+        source={require('../../assets/user-profile9.png')} />
+   }
+
     </View>
                
                

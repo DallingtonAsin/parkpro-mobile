@@ -131,9 +131,6 @@ const initialState = {
         case "Version":
         Toast.show('This is the latest version');
         break;
-        case "ChangePassword":
-        navigation.navigate(link);
-        break;
         case "ClearCache": 
         showAlert();
         break;
@@ -221,21 +218,7 @@ const initialState = {
      
         <View style={css.body}>
 
-        <Text style={css.title}>Preferences</Text>
-        <View style={{ borderBottomColor: '#e2e2e2', borderBottomWidth: 1, }}/>
-        <FlatList
-        data={set1}
-        renderItem={({ item }) =>
-        <TouchableOpacity key={item.item} onPress={() =>{Navigate(item.link)}}
-        style={{ padding:18, flexDirection:'row', justifyContent:'space-between'}}>
-        <Text style={{ fontSize:17 }}>{item.item}</Text>
-        {
-          (item.data)
-          ? <Text style={{ opacity:0.4, bottom:10 }}>{item.data}</Text> 
-          : <Text></Text>
-        }
-        </TouchableOpacity>}
-        />
+      
         
         <Text style={css.title}>Information</Text>
         <View style={{ borderBottomColor: '#f1f1f1', borderBottomWidth: 1, }}/>

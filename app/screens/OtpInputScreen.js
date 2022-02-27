@@ -1,14 +1,56 @@
 import React, { useState } from "react";
-import { SafeAreaView, StyleSheet, View, Text, TouchableOpacity } from "react-native";
-
-import { checkVerification } from "../api/verify";
+import { SafeAreaView, StyleSheet, Alert, Text, TouchableOpacity } from "react-native";
 import OTPInputView from "@twotalltotems/react-native-otp-input";
 import design from '../../assets/css/styles';
 import FontAwesome from 'react-native-vector-icons/FontAwesome5';
+import { AuthContext } from '../context/context';
+import { UIActivityIndicator } from 'react-native-indicators';
 
 const OtpInputScreen = ({ route, navigation }) => {
  const { phoneNumber } = route.params;
  const [invalidCode, setInvalidCode] = useState(false);
+ const [message, setMessage] = useState("");
+ const { verifyOTP, goToHomeScreen } = React.useContext(AuthContext);
+ const [otpCode, setOTP] = useState("");
+ const [isSending, setIsSending] = useState(false);
+
+ const verifyOTPCode = async(code) => {
+      verifyCustomerOtp(code);
+ }
+
+ const onClickContinue = () => {
+      verifyCustomerOtp(otpCode);
+ }
+
+ const verifyCustomerOtp = async(code) => {
+  if(!code){
+    Alert.alert("Info", "Please enter the sent OTP");
+   }else{
+   const data = {
+      phone_number: phoneNumber,
+      otp: code
+   }
+   setIsSending(true);
+  await verifyOTP(data).then(async(response) => {
+    const statusCode = response.statusCode;
+    const message = response.message;
+    const data = response.data;
+    console.log("Got this response", response);
+    if(statusCode == 1){
+      if(data.is_registered){
+        await goToHomeScreen(data);
+      }else{
+        navigation.navigate("Signup", {userId: data.id, phoneNumber: phoneNumber });
+      }
+    }else{
+      setInvalidCode(true);
+      setMessage(message);
+    }
+    setIsSending(false);
+   });
+  }
+ }
+
  return (
    <SafeAreaView style={styles.wrapper}>
      <Text style={styles.prompt}>Enter the code we sent you</Text>
@@ -18,19 +60,29 @@ const OtpInputScreen = ({ route, navigation }) => {
     
      <OTPInputView
        style={{ width: "80%", height: 200 }}
-       pinCount={6}
+       pinCount={4}
        autoFocusOnLoad
        codeInputFieldStyle={styles.underlineStyleBase}
        codeInputHighlightStyle={styles.underlineStyleHighLighted}
        onCodeFilled={(code) => {
-         checkVerification(phoneNumber, code).then((success) => {
-          console.log("Response from server on checking otp", success);
-           if (!success) setInvalidCode(true);
-           success && navigation.navigate("Register", { phoneNumber: phoneNumber });
-         });
+        setOTP(code);
+        verifyOTPCode(code);
        }}
      />
-     {invalidCode && <Text style={styles.error}>Incorrect code.</Text>}
+     {invalidCode && <Text style={styles.error}>{message}</Text>}
+
+     <TouchableOpacity
+           style={styles.btnContinue}
+           onPress={() => onClickContinue()}
+         >
+          
+           <Text style={styles.continueText, {color: design.colors.dark}}> 
+           {isSending ? <UIActivityIndicator color='black' size={27} /> : 
+            <> <FontAwesome name="arrow-right" size={15} color={design.colors.dark}/> <Text>Continue</Text></>
+           } 
+           </Text>
+       
+         </TouchableOpacity>
 
      <TouchableOpacity
            style={styles.button}
@@ -39,7 +91,7 @@ const OtpInputScreen = ({ route, navigation }) => {
           }}
          >
            <FontAwesome name="arrow-left" size={15} color={design.colors.white}/>
-           <Text style={styles.buttonText} >Go Back</Text>
+           <Text style={styles.backText} >Go Back</Text>
        
          </TouchableOpacity>
    </SafeAreaView>
@@ -110,11 +162,56 @@ const styles = StyleSheet.create({
   flexDirection: 'row',
 },
 
-buttonText: {
+btnContinue: {
+  marginTop: 20,
+  height: 60,
+  width: 330,
+  justifyContent: "center",
+  alignItems: "center",
+  backgroundColor: design.colors.white, 
+  shadowColor: "rgba(0,0,0,0.4)",
+  shadowOffset: {
+    width: 1,
+    height: 5,
+  },
+  shadowOpacity: 0.34,
+  shadowRadius: 6.27,
+  elevation: 20,
+  borderRadius:5,
+  flexDirection: 'row',
+  borderColor: design.colors.primary,
+  borderWidth:1,
+},
+
+continueText: {
   color: "white",
-  fontSize: 16,
+  fontSize: 18,
+  textAlign: 'center',
+  marginLeft:10,
+},
+
+backText: {
+  color: "white",
+  fontSize: 18,
   textAlign: 'center',
   left:20,
+},
+
+btnPrimary: {
+  color: '#fff',
+  borderRadius:25,
+  height:60,
+  backgroundColor: '#273746',
+  borderColor: '#273746',
+  position: 'absolute',
+  bottom: 0,
+  width: '100%',
+  justifyContent: 'center',
+  alignItems: 'center',
+  fontWeight: 'bold',
+  marginBottom: 40,
+  paddingLeft:20,
+  paddingRight:20,
 },
 });
 
