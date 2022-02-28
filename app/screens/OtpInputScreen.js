@@ -7,7 +7,7 @@ import { AuthContext } from '../context/context';
 import { UIActivityIndicator } from 'react-native-indicators';
 
 const OtpInputScreen = ({ route, navigation }) => {
- const { phoneNumber } = route.params;
+ const { otp, phoneNumber } = route.params;
  const [invalidCode, setInvalidCode] = useState(false);
  const [message, setMessage] = useState("");
  const { verifyOTP, goToHomeScreen } = React.useContext(AuthContext);
@@ -19,7 +19,7 @@ const OtpInputScreen = ({ route, navigation }) => {
  }
 
  const onClickContinue = () => {
-      verifyCustomerOtp(otpCode);
+      verifyCustomerOtp(otp);
  }
 
  const verifyCustomerOtp = async(code) => {
@@ -64,8 +64,9 @@ const OtpInputScreen = ({ route, navigation }) => {
        autoFocusOnLoad
        codeInputFieldStyle={styles.underlineStyleBase}
        codeInputHighlightStyle={styles.underlineStyleHighLighted}
+       code={otp}
        onCodeFilled={(code) => {
-        setOTP(code);
+        setOTP(otp);
         verifyOTPCode(code);
        }}
      />

@@ -11,17 +11,16 @@ import {SafeAreaView, Platform, StyleSheet,
     import { DataTable, Divider } from 'react-native-paper';
     import { Avatar, Button, Card, Title, RadioButton , Searchbar  } from 'react-native-paper';
     import {Monetize} from '../components/SharedCommons';
-    import MainService from '../redux/services/main.service';
     import CustomLoader from '../components/CustomActivityIndicator';
     import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
     import {callHelpLine} from '../components/SharedCommons';
-    
+    import { AuthContext } from '../context/context';
+
     const initialFeesData = [];
     
     const ParkingFeesScreen = ({route, navigation}) => {
     
         const { parking_area_id, parking_area, photo, phone_number } = route.params;
-        
         const [fees, setFees] = useState(initialFeesData);
         const [done, setDone] = useState(false);
         const [refreshing, setRefreshing] = useState(false);
@@ -29,6 +28,7 @@ import {SafeAreaView, Platform, StyleSheet,
         const [searchQuery, setSearchQuery] = React.useState('');
         const [checked, setChecked] = React.useState('first');
         const onChangeSearch = query => setSearchQuery(query);
+        const { fetchParkingFees } = React.useContext(AuthContext);
         
         const onRefresh = React.useCallback(async () => {
             setRefreshing(true);
@@ -41,7 +41,7 @@ import {SafeAreaView, Platform, StyleSheet,
         const getParkingFees = async() => {
             if(parking_area_id){
                 console.log("Parking area is "+parking_area_id);
-                await MainService.fetchParkingFees(parking_area_id).then(res => {
+                await fetchParkingFees(parking_area_id).then(res => {
                     console.log("Response for parking fees is", res);
                     if(res.statusCode == 1){
                         setFees(res.data);

@@ -4,21 +4,14 @@ import { Text,
   View, 
   ScrollView,
   TouchableOpacity,
-  Dimensions, 
-  Alert,StatusBar,
-  SafeAreaView,
-  Button,KeyboardAvoidingView ,
+  Alert,StatusBar,KeyboardAvoidingView ,
   StyleSheet} from 'react-native';
-  import AsyncStorage from '@react-native-async-storage/async-storage';
   import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
   import design from '../../assets/css/styles';
   import { TextInput as RNTextInput, Avatar, Card, Title, Paragraph } from 'react-native-paper';
-  import { FlutterwaveButton } from 'flutterwave-react-native';
-  import MainService from '../redux/services/main.service';
   import PushNotification, {Importance} from "react-native-push-notification";
   import { UIActivityIndicator } from 'react-native-indicators';
   import { AuthContext } from '../context/context';
-  import NumberFormat from 'react-number-format';
   import ProfileContext from '../context/index';
   import {minTopAmount, maxTopAmount} from '@env';
   
@@ -73,7 +66,7 @@ import { Text,
     
     const [state, setData] = useState(initialState);
     const [isLoading, setIsLoading] = useState(false);
-    const { asyncCustomerProfile, syncProfileData } = React.useContext(AuthContext);
+    const { asyncCustomerProfile, syncProfileData, depositMoney } = React.useContext(AuthContext);
     const {profile, setProfile} = useContext(ProfileContext);
     const min_recharge_amount = minTopAmount;
     const max_recharge_amount = maxTopAmount;
@@ -102,7 +95,7 @@ import { Text,
                 phone_number: state.phone_number,
               }
               
-              await MainService.topUp(data).then(async res => {
+              await depositMoney(data).then(async res => {
                 console.log("Response for top up is", res);
                 const statusCode = res.statusCode;
                 const message = res.message;

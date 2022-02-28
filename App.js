@@ -1,23 +1,21 @@
-import React, {useEffect, useState, useMemo, useContext} from 'react';
-import { View, ActivityIndicator, TouchableOpacity, Image, RefreshControl,  Text, 
+import React, {useEffect, useState, useMemo} from 'react';
+import { View, ActivityIndicator, Image, RefreshControl,  Text, 
   StyleSheet, SafeAreaView, ScrollView} from 'react-native';
   import { NavigationContainer } from '@react-navigation/native';
   import AsyncStorage from '@react-native-async-storage/async-storage';
   import { Provider as PaperProvider, DefaultTheme as PaperDefaultTheme, DarkTheme as PaperDarkTheme } 
   from 'react-native-paper';
   import { AuthContext } from './app/context/context';
-  import MainService from './app/redux/services/main.service';
   import AppRootStack from  './app/components/stacks/AppRootStack';
   import DrawerScreenStack from './app/components/stacks/DrawerScreenStack';
   import loginReducer from './app/redux/reducers/loginReducer';
   import NetInfo from "@react-native-community/netinfo";
   import FontAwesome from 'react-native-vector-icons/FontAwesome';
   import { ProfileProvider } from './app/context/index';
-  import ProfileContext from './app/context/index';
-  import {numberWithCommas} from './app/components/SharedCommons';
   import SplashScreen from 'react-native-splash-screen'
-  import { images, icons, COLORS, FONTS, SIZES } from './constants';
+  import {  icons} from './constants';
   import GlobalFont from 'react-native-global-font'
+  const Services = require("./app/services");
   
   // import OfflineScreen from  './app/screens/OfflineScreen';
   
@@ -146,12 +144,12 @@ import { View, ActivityIndicator, TouchableOpacity, Image, RefreshControl,  Text
 
           
           sendSmsVerification: async(data) => {
-            const result = await MainService.sendOTP(data);
+            const result = await Services.CustomerService.sendOTP(data);
             return result;
           },
 
           verifyOTP: async(data) => {
-            const result = await MainService.verifyOneTimePassword(data);
+            const result = await Services.CustomerService.verifyOneTimePassword(data);
             return result;
            },
 
@@ -181,14 +179,16 @@ import { View, ActivityIndicator, TouchableOpacity, Image, RefreshControl,  Text
             dispatch({ type: 'LOGOUT' });
           },
           
-        
+      
           createProfile: async(data) => {
-            return await MainService.createProfile(data);
+            return await Services.CustomerService.createProfile(data);
           },
+
+        
           
           updateProfile: async(data) => {
 
-            return await MainService.updateProfile(data).then(async(res) => {
+            return await Services.CustomerService.updateProfile(data).then(async(res) => {
               const statusCode = res.statusCode;
               const message = res.message;
               if(statusCode == 1){
@@ -206,12 +206,10 @@ import { View, ActivityIndicator, TouchableOpacity, Image, RefreshControl,  Text
           },
 
           UpdateProfileImage: async(data) => {
-            return await MainService.uploadProfilePicture(data)
+            return await Services.CustomerService.uploadProfilePicture(data)
             .then( async(res) => {
-              // console.log("Change Profile Image response", res);
               const statusCode = res.statusCode;
               const message = res.message;
-
               if(statusCode == 1){
                 try{
                   const respData = res.data;
@@ -225,11 +223,13 @@ import { View, ActivityIndicator, TouchableOpacity, Image, RefreshControl,  Text
             });
           },
 
+          deleteProfilePicture: async(data) => {
+            return await Services.CustomerService.removeProfilePicture(data);
+          },
 
-         
           
           asyncCustomerProfile: async(id) => {
-            return await MainService.getCustomerData(id).then(async(res) => {
+            return await Services.CustomerService.getCustomerData(id).then(async(res) => {
               const statusCode = res.statusCode;
               const message = res.message;
               if(statusCode == 1){
@@ -248,7 +248,7 @@ import { View, ActivityIndicator, TouchableOpacity, Image, RefreshControl,  Text
           },
           
           getCustomerNotifications: async(id) => {
-            return await MainService.getNotifications(id).then(async(res) => {
+            return await Services.CustomerService.getNotifications(id).then(async(res) => {
               const statusCode = res.statusCode;
               let data;
               if(statusCode == 1){
@@ -261,7 +261,7 @@ import { View, ActivityIndicator, TouchableOpacity, Image, RefreshControl,  Text
           },
           
           getCustomerTransactions: async(id) => {
-            return await MainService.getTransactionHistory(id).then(async(res) => {
+            return await Services.TransactionService.getTransactionHistory(id).then(async(res) => {
               const statusCode = res.statusCode;
               let data;
               if(statusCode == 1){
@@ -274,7 +274,7 @@ import { View, ActivityIndicator, TouchableOpacity, Image, RefreshControl,  Text
           },
           
           getParkingAreas: async() => {
-            return await MainService.fetchParkingAreas().then(async(res) => {
+            return await Services.ParkingService.fetchParkingAreas().then(async(res) => {
               const statusCode = res.statusCode;
               let data;
               if(statusCode == 1){
@@ -287,7 +287,7 @@ import { View, ActivityIndicator, TouchableOpacity, Image, RefreshControl,  Text
           },
           
           getVehicleCategories: async() => {
-            return await MainService.getCarTypes().then(async(res) => {
+            return await Services.ParkingService.getCarTypes().then(async(res) => {
               const statusCode = res.statusCode;
               let data;
               if(statusCode == 1){
@@ -304,8 +304,7 @@ import { View, ActivityIndicator, TouchableOpacity, Image, RefreshControl,  Text
           updatePassword: async(data) => {
             let userToken;
             userToken = null;
-            return await MainService.changePassword(data).then(async(res) => {
-              // console.log("Change Password response", res);
+            return await Services.CustomerService.changePassword(data).then(async(res) => {
               const statusCode = res.statusCode;
               const message = res.message;
               if(statusCode == 1){
@@ -322,13 +321,24 @@ import { View, ActivityIndicator, TouchableOpacity, Image, RefreshControl,  Text
           
           
           postSuggestion: async(data) => {
-            const result = await MainService.postSuggestion(data);
+            const result = await Services.CustomerService.postSuggestion(data);
+            return result;
+          },
+
+             
+          depositMoney: async(data) => {
+            const result = await Services.CustomerService.topUp(data);
+            return result;
+          },
+
+          filterParkingAreas: async(data) => {
+            const result = await Services.ParkingService.filterParkingAreas(data);
             return result;
           },
 
           
           submitParkingRequest: async(data) => {
-            return await MainService.postParkingRequest(data).then(async(res) => {
+            return await Services.ParkingService.postParkingRequest(data).then(async(res) => {
               const statusCode = res.statusCode;
               const message = res.message;
               if(statusCode == 1){
@@ -355,7 +365,7 @@ import { View, ActivityIndicator, TouchableOpacity, Image, RefreshControl,  Text
           },
           
           fetchMyParkingRequests: async(id) => {
-            return await MainService.getMyParkingRequests(id).then(async(res) => {
+            return await Services.ParkingService.getMyParkingRequests(id).then(async(res) => {
               const statusCode = res.statusCode;
               let data;
               if(statusCode == 1){
@@ -366,9 +376,25 @@ import { View, ActivityIndicator, TouchableOpacity, Image, RefreshControl,  Text
               return data;
             });
           },
+
+          fetchParkingFees: async(id) => {
+            return await Services.ParkingService.fetchParkingFees(id).then(async(res) => {
+              const statusCode = res.statusCode;
+              let data;
+              if(statusCode == 1){
+                data = res.data;
+              }else{
+                data = [];
+              }
+              return data;
+            });
+          },
+
+
+          
           
           fetchOrderInfo: async(order_no, customer_id) => {
-            return await MainService.getOrderDetails(order_no, customer_id).then(async(res) => {
+            return await Services.TransactionService.getOrderDetails(order_no, customer_id).then(async(res) => {
               const statusCode = res.statusCode;
               let data;
               if(statusCode == 1){
@@ -379,12 +405,7 @@ import { View, ActivityIndicator, TouchableOpacity, Image, RefreshControl,  Text
               return data;
             });
           },
-          
-          
-          
-          
-          
-          
+         
           
         }), []);
         
@@ -392,8 +413,6 @@ import { View, ActivityIndicator, TouchableOpacity, Image, RefreshControl,  Text
         
         useEffect(() => {
           
-          // await AsyncStorage.removeItem("userToken");
-          // await AsyncStorage.removeItem("userProfile");
           
           let isMounted = true;
           NetInfo.fetch().then(state => {
@@ -433,8 +452,7 @@ import { View, ActivityIndicator, TouchableOpacity, Image, RefreshControl,  Text
           
           SplashScreen.hide();
           return () => { isMounted = false };
-          // if(isMounted) {
-          // }
+         
         }, []);
         
         if(loginState.isLoading) {

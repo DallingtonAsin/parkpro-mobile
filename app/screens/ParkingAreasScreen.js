@@ -8,7 +8,6 @@ import {SafeAreaView, Platform,SectionList,Dimensions,
     import {TimePicker} from 'react-native-simple-time-picker';
     import DateTimePicker from '@react-native-community/datetimepicker';
     import design from '../../assets/css/styles';
-    import MainService from '../redux/services/main.service';
     import { Avatar, Card, Title, Paragraph, Searchbar  } from 'react-native-paper';
     import CustomLoader from '../components/CustomActivityIndicator';
     import { Rating, AirbnbRating, Button, Tab } from 'react-native-elements';
@@ -22,7 +21,7 @@ import {SafeAreaView, Platform,SectionList,Dimensions,
     const ParkingAreasScreen = (props) => {
         
         
-        const { getParkingAreas } = React.useContext(AuthContext);
+        const { getParkingAreas, filterParkingAreas } = React.useContext(AuthContext);
         const [refreshing, setRefreshing] = useState(false);
         const [parkingAreas, setParkingAreas] = useState([]);
         const [isLoading, setIsLoading] = useState(true);
@@ -195,7 +194,7 @@ import {SafeAreaView, Platform,SectionList,Dimensions,
                         );
                         
                         const filterParkings = async(searchItem) => {
-                            await MainService.filterParkingAreas(searchItem).then(res => {
+                            await filterParkingAreas(searchItem).then(res => {
                                 console.log("Response for parking areas is", res);
                                 if(res.statusCode == 1){
                                     const p_areas = res.data;

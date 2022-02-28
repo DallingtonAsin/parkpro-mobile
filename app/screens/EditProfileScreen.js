@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useContext} from 'react';
-import { Text,TextInput, TouchableOpacity,ScrollView, View, StyleSheet, SafeAreaView,  Platform, Image,
+import { Text,TextInput, TouchableOpacity, View, StyleSheet, SafeAreaView,  Platform, Image,
   PermissionsAndroid, Alert, ImageBackground, Pressable} from 'react-native';
   import design from '../../assets/css/styles';
   import Icon from 'react-native-vector-icons/FontAwesome5';
@@ -12,10 +12,9 @@ import { Text,TextInput, TouchableOpacity,ScrollView, View, StyleSheet, SafeArea
   import ImagePicker from 'react-native-image-crop-picker';
   import Toast from 'react-native-simple-toast';
   import ProfilePicture from 'react-native-profile-picture';
-  // import BottomSheet from 'reanimated-bottom-sheet';
   import AsyncStorage from '@react-native-async-storage/async-storage';
   import { BottomSheet } from 'react-native-btr';
-  import {APP_NAME} from '@env';
+  import {APP_NAME} from '@env';;
   
   const initialState = {
     user_id: '',
@@ -40,7 +39,7 @@ import { Text,TextInput, TouchableOpacity,ScrollView, View, StyleSheet, SafeArea
     const [isUpdatingImage, setIsUpdatingImage] = useState(false);
     const [visible, setVisible] = useState(false);
     const {profile, setProfile} = useContext(ProfileContext);
-    const { updateProfile, UpdateProfileImage, syncProfileData } = React.useContext(AuthContext);
+    const { updateProfile, UpdateProfileImage, syncProfileData, deleteProfilePicture } = React.useContext(AuthContext);
     
     const bs = React.useRef(null);
     const fall = new Animated.Value(1);
@@ -204,9 +203,6 @@ import { Text,TextInput, TouchableOpacity,ScrollView, View, StyleSheet, SafeArea
           const email = profile.email;
           const balance = profile.account_balance;
           const image = profile.image;
-          
-          console.log("Balance: " + balance);
-          
           setData({
             ...state,
             user_id: user_id,
@@ -222,6 +218,53 @@ import { Text,TextInput, TouchableOpacity,ScrollView, View, StyleSheet, SafeArea
       }catch(e){
         console.log("Error on async storage", e);
       }
+    }
+
+
+    const removeProfilePicture = async() => {
+        if(profile.id && profile.phone_number){
+          const data = {
+            id: profile.id,
+            phone_number: profile.phone_number
+          }
+          setIsUpdatingImage(true);
+          const response = await deleteProfilePicture(data);
+          const statusCode = response.statusCode;
+          const message = response.message;
+          if(statusCode == 1){
+            const customer = response.data;
+            console.log("Data on removing profile image", customer);
+            setProfile(customer);
+            await syncProfileData(customer);
+            await updateUserProfile(customer);
+            Toast.show(message);
+          }else{
+            alert(message);
+          }
+          setIsUpdatingImage(false);
+        }else{
+          alert("Unable to get your identity");
+        }
+    }
+
+    const confirmRemovePicture = () => {
+    
+      Alert.alert(
+        "Warning",
+        "Are you sure you want to remove your profile picture?",
+        [
+          {
+            text: "OK",
+            onPress: () => removeProfilePicture(), 
+            style: "cancel",
+          },
+        ],
+        {
+          cancelable: true,
+        }
+      );
+
+
     }
     
     useEffect(() => {
@@ -246,10 +289,24 @@ import { Text,TextInput, TouchableOpacity,ScrollView, View, StyleSheet, SafeArea
       >
       <View style={styles.panel} elevation={5}>
       
-      <View style={{alignItems: 'center'}}>
-      <Text style={styles.panelTitle}>Upload Profile Photo</Text>
-      <Text style={styles.panelSubtitle}>Choose Your Profile Picture</Text>
+      <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
+      <View>
+      <Text style={styles.panelTitle}>Profile Photo</Text>
+      <Text style={styles.panelSubtitle}>Upload Profile Picture</Text>
       </View>
+      
+      {
+        profile.image ? 
+        <TouchableOpacity style={{marginLeft: 55}} onPress={() =>  confirmRemovePicture()}>
+        <FontAwesome name={"trash"} size={30} color={design.colors.red} />
+        </TouchableOpacity>
+        : null
+      }
+      
+      
+      
+      </View>
+      
       
       <View style={{flexDirection: 'row', alignItems: 'center', margin:30, justifyContent: 'space-evenly'}}>
       
@@ -492,12 +549,15 @@ import { Text,TextInput, TouchableOpacity,ScrollView, View, StyleSheet, SafeArea
       panelTitle: {
         fontSize: 22,
         height: 35,
+        textAlign: 'center',
       },
       panelSubtitle: {
         fontSize: 14,
         color: 'gray',
         height: 30,
         marginBottom: 10,
+        textAlign: 'center',
+        
       },
       
       

@@ -7,8 +7,6 @@ import SignupScreen from '../../screens/SignupScreen';
 import OtpInputScreen from '../../screens/OtpInputScreen';
 
 
-import ResetPasswordScreen from '../../screens/ResetPasswordScreen';
-
 const Stack = createStackNavigator();
 
 const AppRootStack = () => {
@@ -18,7 +16,6 @@ const AppRootStack = () => {
         <Stack.Screen name="Signin" component={SigninScreen} />
         <Stack.Screen name="Otp" component={OtpInputScreen} />
         <Stack.Screen name="Signup" component={SignupScreen} />
-        <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} />
         </Stack.Navigator> 
     )
 }
