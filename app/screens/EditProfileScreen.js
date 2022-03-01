@@ -11,7 +11,6 @@ import { Text,TextInput, TouchableOpacity, View, StyleSheet, SafeAreaView,  Plat
   import ProfileContext from '../context/index';
   import ImagePicker from 'react-native-image-crop-picker';
   import Toast from 'react-native-simple-toast';
-  import ProfilePicture from 'react-native-profile-picture';
   import AsyncStorage from '@react-native-async-storage/async-storage';
   import { BottomSheet } from 'react-native-btr';
   import {APP_NAME} from '@env';;

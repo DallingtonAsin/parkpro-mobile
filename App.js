@@ -325,6 +325,11 @@ import { View, ActivityIndicator, Image, RefreshControl,  Text,
             return result;
           },
 
+          loadAirtimeCredit: async(data) => {
+            const result = await Services.TransactionService.loadAirtime(data);
+            return result;
+          },
+
              
           depositMoney: async(data) => {
             const result = await Services.CustomerService.topUp(data);

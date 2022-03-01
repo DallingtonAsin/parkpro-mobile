@@ -25,15 +25,17 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import design from '../../assets/css/styles';
 import ProfileContext from '../context/index';
 import { AuthContext } from '../context/context';
+import Toast from 'react-native-simple-toast';
 import { openDatabase } from 'react-native-sqlite-storage';
 import { UIActivityIndicator } from 'react-native-indicators';
 import * as theme from '../../assets/theme';
-import {currency} from '@env';
+import {currency, minAirtimeAmount, maxAirtimeAmount} from '@env';
 import Dropdown from 'react-native-modal-dropdown';
 import BottomSheet, {
   BottomSheetBackdrop,
   BottomSheetScrollView
 } from '@gorhom/bottom-sheet';
+
 
 
 const fall = new Animated.Value(1);
@@ -62,27 +64,31 @@ const HomeScreen = props => {
   
   // ref
   const vehicleBottomSheetRef = useRef(0);
+  const buyAirtimeBottomSheetRef = useRef(0);
+  
   const favouritesBottomSheetRef = useRef(0);
   
   
   // variables
   const snapPoints = useMemo(() => ['25%', '70%'], []);
+  const airtimeSnapPoints = useMemo(() => ['25%', '50%'], []);
   
-  // callbacks
-  const handlePresentModalPress = useCallback(() => {
-    vehicleBottomSheetRef.current?.present();
-  }, []);
+  
   const handleSheetChanges = useCallback((index) => {
     console.log('handleSheetChanges', index);
   }, []);
   
-  const handleClosePress = useCallback(() => {
-    vehicleBottomSheetRef.current?.close();
-  }, []);
+  
   
   const openVehiclesSheet = useCallback((index) => {
     vehicleBottomSheetRef.current?.snapToIndex(index);
   }, []);
+  
+  const openCloseBuyAirtimeSheet = useCallback((index) => {
+    buyAirtimeBottomSheetRef.current?.snapToIndex(index);
+  }, []);
+
+  const handleCloseAirtimeSheet = () => buyAirtimeBottomSheetRef.current?.close()
   
   const openFavouritesSheet = useCallback((index) => {
     favouritesBottomSheetRef.current?.snapToIndex(index);
@@ -94,9 +100,11 @@ const HomeScreen = props => {
   
   
   const {profile, setProfile} = useContext(ProfileContext);
-  const { getParkingAreas, getVehicleCategories } = React.useContext(AuthContext);
+  const { getParkingAreas, getVehicleCategories, loadAirtimeCredit, syncProfileData } = React.useContext(AuthContext);
   
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingAirtime, setIsLoadingAirtime] = useState(false);
+  
   const [isParkingsLoading, setIsParkingsLoading] = useState(true);
   
   
@@ -104,6 +112,48 @@ const HomeScreen = props => {
   const [vehicle, setVehicleData] = React.useState(initialVehicleState);
   const [nearByParkings, setNearByParkings] = useState([]);
   const [vehicleTypes, setVehicleTypes] = useState([]);
+  
+  const [airtimeAmount, setAirtimeAmount] =useState(0);
+  
+  const loadAirtime = async() => {
+    
+    const airtime = parseFloat(airtimeAmount);
+    minAirtimeAmount = parseFloat(minAirtimeAmount);
+    maxAirtimeAmount = parseFloat(maxAirtimeAmount);
+    
+    if(!airtime){
+      Alert.alert("Message", "Please enter airtime amount to load.")
+    }
+    if(airtime){
+      if(airtime < minAirtimeAmount || airtime > maxAirtimeAmount){
+        Alert.alert("Message", "Please enter airtime amount not less than "+minAirtimeAmount+" and not greater than "+maxAirtimeAmount+".")
+      }
+      if(airtime >= minAirtimeAmount && airtime <= maxAirtimeAmount){
+        const data = {
+          id: profile.id,
+          phone_number: profile.phone_number,
+          amount: airtime
+        }
+        setIsLoadingAirtime(true);
+        const response = await loadAirtimeCredit(data);
+        console.log("Response from loading airtime", response);
+        const statusCode = response.statusCode;
+        const message = response.message;
+        if(statusCode == 1){
+          const customer = response.data;
+          setProfile(customer);
+          await syncProfileData(customer);
+          setAirtimeAmount(0);
+          handleCloseAirtimeSheet();
+          Toast.show(message);
+        }else{
+          Alert.alert("Message", message);
+        }
+        setIsLoadingAirtime(false);
+      }
+    }
+    
+  }
   
   const renderVehiclesBackdrop = useCallback(
     props => (
@@ -698,7 +748,7 @@ const HomeScreen = props => {
                                               
                                               <View style={{ flex: 1, paddingHorizontal: SIZES.padding, alignItems: "center", justifyContent: "center"}}>
                                               <View style={{flexDirection: 'column' }}>
-
+                                              
                                               <View style={{flexDirection: 'row', justifyContent: "space-around"}}>
                                               <Text style={{
                                                 color: '#fff',
@@ -709,8 +759,8 @@ const HomeScreen = props => {
                                               </Text>
                                               <FontAwesome name={"info-circle"} size={20} color={design.colors.white} style={{marginTop:5}}/>
                                               </View>
-                                             
-
+                                              
+                                              
                                               <Text style={{
                                                 color: '#fff',
                                                 fontSize: 28,
@@ -799,327 +849,377 @@ const HomeScreen = props => {
                                                 </View>
                                                 
                                                 <View style={styles.morePanel}>
+                                                
+                                                
+                                                <TouchableOpacity  onPress={() => openCloseBuyAirtimeSheet(1)} style={{alignContent:'center', alignItems: 'center'}}>
+                                                <FontAwesome name={"mobile"} size={35} color={design.colors.orange} />
+                                                <Text style={styles.moreText}>Airtime</Text>
+                                                </TouchableOpacity>
+                                                
+                                                <TouchableOpacity style={{alignContent:'center', alignItems: 'center'}}>
+                                                <FontAwesome name={"wifi"} size={35} color={design.colors.orange} />
+                                                <Text style={styles.moreText}>Data</Text>
+                                                </TouchableOpacity>
+                                                
+                                                <TouchableOpacity style={{alignContent:'center', alignItems: 'center'}}>
+                                                <FontAwesome5 name={"wallet"} size={35}  color={design.colors.orange}/>
+                                                <Text style={styles.moreText}>Bills</Text>
+                                                </TouchableOpacity>
+                                                
+                                                
+                                                </View>
+                                                
+                                                </View>
+                                                </View>
+                                                
+                                                
+                                                {/* Vehicles List  */}
+                                                <BottomSheet
+                                                ref={vehicleBottomSheetRef}
+                                                index={-1}
+                                                snapPoints={snapPoints}
+                                                enablePanDownToClose={true}
+                                                backdropComponent={renderVehiclesBackdrop}
+                                                onChange={handleSheetChanges}
+                                                handleComponent={() => renderHeader("My Vehicles") }
+                                                >
+                                                <BottomSheetScrollView contentContainerStyle={styles.contentContainer}>
+                                                
+                                                <View style={{flexDirection: 'row'}}>
+                                                <View style={{flexDirection: 'row', alignItems: 'flex-end'}}>
+                                                </View>
+                                                </View>
+                                                
+                                                <Divider style={styles.divider}/>
+                                                <FlatList
+                                                scrollEnabled={true}
+                                                vertical={true}
+                                                data={vehicles}
+                                                renderItem={({item}) => VehicleComponent(item) }
+                                                ItemSeparatorComponent = { FlatListItemSeparator }
+                                                keyExtractor={(item, index) => { return item.number.toString()}}
+                                                />
+                                                <Pressable style={styles.bottomSheetButton} onPress={() => {setIsSheetVisible(true)}}>
+                                                <Text style={{fontSize:14, textAlign: 'center', textTransform:'uppercase'}}>
+                                                add vehicle
+                                                </Text>
+                                                <FontAwesome name={"arrow-right"} size={18} style={design.vehicle.icon} color={"#808080"}/>
+                                                </Pressable>
+                                                </BottomSheetScrollView>
+                                                </BottomSheet>
+                                                
+                                                
+                                                
+                                                {/* Buy Airtime     */}
+                                                <BottomSheet
+                                                ref={buyAirtimeBottomSheetRef}
+                                                index={-1}
+                                                snapPoints={airtimeSnapPoints}
+                                                enablePanDownToClose={true}
+                                                backdropComponent={renderVehiclesBackdrop}
+                                                onChange={handleSheetChanges}
+                                                handleComponent={() => renderHeader("Buy Airtime") }
+                                                >
+                                                <BottomSheetScrollView contentContainerStyle={styles.contentContainer}>
+                                                
+                                                <View style={{flexDirection: 'row', padding:35}}>
+                                                <TextInput 
+                                                name="vehicleNumber" 
+                                                value={airtimeAmount}
+                                                onSubmitEditing={Keyboard.dismiss}
+                                                onChangeText={(val) => setAirtimeAmount(val)}   
+                                                style={styles.input}
+                                                keyboardType='numeric'
+                                                placeholder={"Enter amount to load e.g 50"}/>
+                                                </View>
+                                                
+                                                <TouchableOpacity style={styles.bottomSheetButton} onPress={() => loadAirtime() }>
+                                                
+                                                {
+                                                  isLoadingAirtime ? 
+                                                  <UIActivityIndicator color='black' size={27}/> : 
+                                                  <>
+                                                  <Text style={{fontSize:14, textAlign: 'center',
+                                                  textTransform:'uppercase'}}> Continue</Text>
+                                                  <FontAwesome name={"arrow-right"} size={18}
+                                                  style={design.vehicle.icon} color={"#808080"}/>
+                                                  </>
+                                                }
+                                                </TouchableOpacity>
+                                                </BottomSheetScrollView>
+                                                </BottomSheet>
+                                                
+                                                
+                                                
+                                                
+                                                <BottomSheet
+                                                ref={favouritesBottomSheetRef}
+                                                index={-1}
+                                                snapPoints={snapPoints}
+                                                enablePanDownToClose={true}
+                                                backdropComponent={renderFavouritesBackdrop}
+                                                onChange={handleSheetChanges}
+                                                handleComponent={() => renderHeader("favourite parking areas") }
+                                                >
+                                                <BottomSheetScrollView contentContainerStyle={styles.contentContainer}>
+                                                
+                                                <View style={styles.SheetContentContainer}>
+                                                <Divider style={styles.divider}/>
+                                                
+                                                <SafeAreaView>
+                                                <FlatList
+                                                data={nearByParkings}
+                                                renderItem={({item}) => parkingsComponent(item) }
+                                                keyExtractor={(item, index) => { return item.id.toString()}}
+                                                ItemSeparatorComponent = { FlatListItemSeparator }
+                                                />
+                                                </SafeAreaView>
+                                                
+                                                <Pressable style={styles.bottomSheetButton} onPress={showModal}>
+                                                <Text style={design.vehicle.textAdd}>
+                                                add favourite parking 
+                                                <FontAwesome name={"arrow-right"} size={10} style={design.vehicle.icon}/>
+                                                </Text>
+                                                </Pressable>
+                                                
+                                                
+                                                </View>
+                                                </BottomSheetScrollView>
+                                                </BottomSheet>
+                                                
+                                                
+                                                </View>
+                                                </ScrollView>
+                                                );
+                                              };
                                               
+                                              export default HomeScreen;
                                               
-                                              <TouchableOpacity style={{alignContent:'center', alignItems: 'center'}}>
-                                              <FontAwesome name={"mobile"} size={35} color={design.colors.orange} />
-                                              <Text style={styles.moreText}>Airtime</Text>
-                                              </TouchableOpacity>
-                                              
-                                              <TouchableOpacity style={{alignContent:'center', alignItems: 'center'}}>
-                                              <FontAwesome name={"wifi"} size={35} color={design.colors.orange} />
-                                              <Text style={styles.moreText}>Data</Text>
-                                              </TouchableOpacity>
-                                              
-                                              <TouchableOpacity style={{alignContent:'center', alignItems: 'center'}}>
-                                              <FontAwesome5 name={"wallet"} size={35}  color={design.colors.orange}/>
-                                              <Text style={styles.moreText}>Bills</Text>
-                                              </TouchableOpacity>
-                                              
-                                              
-                                              </View>
-                                              
-                                              </View>
-                                              
-                                              
-                                              
-                                              
-                                              
-                                              </View>
-                                              
-                                              
-                                              
-                                              <BottomSheet
-                                              ref={vehicleBottomSheetRef}
-                                              index={-1}
-                                              snapPoints={snapPoints}
-                                              enablePanDownToClose={true}
-                                              backdropComponent={renderVehiclesBackdrop}
-                                              onChange={handleSheetChanges}
-                                              handleComponent={() => renderHeader("My Vehicles") }
-                                              >
-                                              <BottomSheetScrollView contentContainerStyle={styles.contentContainer}>
-                                              
-                                              <View style={{flexDirection: 'row'}}>
-                                              <View style={{flexDirection: 'row', alignItems: 'flex-end'}}>
-                                              </View>
-                                              </View>
-                                              
-                                              <Divider style={styles.divider}/>
-                                              <FlatList
-                                              scrollEnabled={true}
-                                              vertical={true}
-                                              data={vehicles}
-                                              renderItem={({item}) => VehicleComponent(item) }
-                                              ItemSeparatorComponent = { FlatListItemSeparator }
-                                              keyExtractor={(item, index) => { return item.number.toString()}}
-                                              />
-                                              <Pressable style={styles.bottomSheetButton} onPress={() => {setIsSheetVisible(true)}}>
-                                              <Text style={{fontSize:14, textAlign: 'center', textTransform:'uppercase'}}>
-                                              add vehicle
-                                              </Text>
-                                              <FontAwesome name={"arrow-right"} size={18} style={design.vehicle.icon} color={"#808080"}/>
-                                              </Pressable>
-                                              </BottomSheetScrollView>
-                                              </BottomSheet>
-                                              
-                                              <BottomSheet
-                                              ref={favouritesBottomSheetRef}
-                                              index={-1}
-                                              snapPoints={snapPoints}
-                                              enablePanDownToClose={true}
-                                              backdropComponent={renderFavouritesBackdrop}
-                                              onChange={handleSheetChanges}
-                                              handleComponent={() => renderHeader("favourite parking areas") }
-                                              >
-                                              <BottomSheetScrollView contentContainerStyle={styles.contentContainer}>
-                                              
-                                              <View style={styles.SheetContentContainer}>
-                                              <Divider style={styles.divider}/>
-                                              
-                                              <SafeAreaView>
-                                              <FlatList
-                                              data={nearByParkings}
-                                              renderItem={({item}) => parkingsComponent(item) }
-                                              keyExtractor={(item, index) => { return item.id.toString()}}
-                                              ItemSeparatorComponent = { FlatListItemSeparator }
-                                              />
-                                              </SafeAreaView>
-                                              
-                                              <Pressable style={styles.bottomSheetButton} onPress={showModal}>
-                                              <Text style={design.vehicle.textAdd}>
-                                              add favourite parking 
-                                              <FontAwesome name={"arrow-right"} size={10} style={design.vehicle.icon}/>
-                                              </Text>
-                                              </Pressable>
-                                              
-                                              
-                                              </View>
-                                              </BottomSheetScrollView>
-                                              </BottomSheet>
-                                              
-                                              
-                                              </View>
-                                              </ScrollView>
-                                              );
-                                            };
-                                            
-                                            export default HomeScreen;
-                                            
-                                            const styles = StyleSheet.create({
-                                              
-                                              container: {
-                                                flex: 1,
-                                                backgroundColor: design.colors.primary,
-                                              },
-                                              
-                                              uploadOptions:{
-                                                flexDirection: 'column', 
-                                                justifyContent: 'center',
-                                                alignItems: 'center'
-                                              },
-                                              
-                                              
-                                              
-                                              shadow: {
-                                                shadowColor: "#000",
-                                                shadowOffset: {
-                                                  width: 0,
-                                                  height: 2,
+                                              const styles = StyleSheet.create({
+                                                
+                                                container: {
+                                                  flex: 1,
+                                                  backgroundColor: design.colors.primary,
                                                 },
-                                                shadowOpacity: 0.25,
-                                                shadowRadius: 3.84,
                                                 
-                                                elevation: 5,
-                                              },
-                                              
-                                              
-                                              SheetContentContainer: {
-                                                backgroundColor: 'white',
-                                                padding: 16,
-                                                paddingTop:0,
-                                                // height:'auto',
-                                              },
-                                              
-                                              contentContainer: {
-                                                // flex: 1,
-                                                alignItems: 'center',
+                                                uploadOptions:{
+                                                  flexDirection: 'column', 
+                                                  justifyContent: 'center',
+                                                  alignItems: 'center'
+                                                },
                                                 
                                                 
-                                              },
-                                              
-                                              card:{
-                                                flex:1,
-                                              },
-                                              
-                                              
-                                              input: {
-                                                backgroundColor: '#ffffff',
-                                                borderRadius: 3,
-                                                padding:10,
-                                                borderWidth: 0.5,
-                                                borderColor:design.colors.primary,
-                                              },
-                                              
-                                              button: {
-                                                borderRadius: 20,
-                                                padding: 10,
-                                                elevation: 2
-                                              },
-                                              
-                                              
-                                              textStyle: {
-                                                color: "white",
-                                                fontWeight: "bold",
-                                                textAlign: "center"
-                                              },
-                                              
-                                              divider:{
-                                                borderBottomColor: '#e2e2e2',
-                                                borderBottomWidth: 1,
-                                                marginTop:20
-                                              },
-                                              
-                                              cardContainer:{
-                                                flexDirection: "row",
-                                                textAlign:'center',
-                                                flexWrap: 'wrap',
-                                              },
-                                              
-                                              
-                                              
-                                              
-                                              bottomSheetButton:{
-                                                flexDirection: 'row',
-                                                borderWidth:1, 
-                                                marginTop:15,
-                                                marginBottom:60,
-                                                height:50,
-                                                width:'70%',
-                                                padding:15,
-                                                borderRadius:30,
-                                                borderColor:design.colors.primary,
-                                                justifyContent: 'center',
-                                                alignItems: 'center',
-                                              },
-                                              
-                                              inputContainer:{
-                                                padding:10,
                                                 
-                                              },
-                                              scrollView: {
-                                                flex: 1, 
-                                              },
-                                              bottomSheetContainer:{
-                                                flex: 1,
-                                                padding: 24,
-                                                justifyContent: 'center',
-                                                backgroundColor: 'grey',
-                                              },
-                                              
-                                              footer:{
-                                                marginBottom: 30,
-                                                flexDirection: 'row',
-                                                alignItems: 'center',
-                                                alignSelf: 'center',
-                                                justifyContent: 'center',
+                                                shadow: {
+                                                  shadowColor: "#000",
+                                                  shadowOffset: {
+                                                    width: 0,
+                                                    height: 2,
+                                                  },
+                                                  shadowOpacity: 0.25,
+                                                  shadowRadius: 3.84,
+                                                  
+                                                  elevation: 5,
+                                                },
                                                 
-                                              },
-                                              
-                                              vehiclesDropdown: {
-                                                borderRadius: theme.SIZES.base / 2,
-                                                borderColor: theme.COLORS.overlay,
-                                                borderWidth: 1,
-                                                padding: theme.SIZES.base*1.3,
-                                                width:350,
-                                                justifyContent: 'center',
-                                                alignItems: 'center',
-                                                fontSize: theme.SIZES.font*0.95,
-                                              },
-                                              
-                                              vehiclesDropdownOption: {
-                                                padding: 5,
-                                                fontSize: 18,
-                                              },
-                                              indicator: {
-                                                position: "absolute",
-                                                width: 10,
-                                                height: 4,
-                                                backgroundColor: "#999",
-                                              },
-                                              
-                                              customBottomSheetHeader: {
-                                                alignContent: "center",
-                                                alignItems: "center",
-                                                justifyContent: "center",
-                                                backgroundColor: "white",
-                                                paddingVertical: 14,
-                                                borderBottomWidth: 1,
-                                                borderBottomColor: "#fff",
-                                              },
-                                              
-                                              bottomSheetHeader: {
-                                                backgroundColor: '#FFFFFF',
-                                                shadowColor: '#333333',
-                                                borderTopLeftRadius: 20,
-                                                borderTopRightRadius: 20,
-                                              },
-                                              
-                                              panelHeader: {
-                                                alignItems: 'center',
-                                              },
-                                              
-                                              panelHandle: {
-                                                width: 40,
-                                                height: 8,
-                                                borderRadius: 4,
-                                                backgroundColor: '#999',
-                                                marginTop: 8,
-                                                marginBottom: 10,
                                                 
-                                              },
-                                              
-                                              panel: {
-                                                backgroundColor: '#FFFFFF',
-                                              },
-                                              
-                                              panelTitle: {
-                                                fontSize: 22,
-                                                height: 35,
-                                              },
-                                              panelSubtitle: {
-                                                fontSize: 14,
-                                                color: 'gray',
-                                                height: 30,
-                                                marginBottom: 10,
-                                              },
-                                              
-                                              morePanel:{
-                                                backgroundColor: '#fff',
-                                                padding:30,
-                                                margin:20,
-                                                borderRadius:5,
-                                                borderColor: design.colors.orange,
-                                                borderWidth:1,
-                                                flexDirection: 'row',
-                                                justifyContent: 'space-between', alignContent:'center',
-                                                alignItems: 'center'
-                                              },
-
-                                              moreText: {
+                                                SheetContentContainer: {
+                                                  backgroundColor: 'white',
+                                                  padding: 16,
+                                                  paddingTop:0,
+                                                  // height:'auto',
+                                                },
+                                                
+                                                contentContainer: {
+                                                  flex: 1,
+                                                  alignItems: 'center',
+                                                  
+                                                  
+                                                },
+                                                
+                                                card:{
+                                                  flex:1,
+                                                },
+                                                
+                                                
+                                                input: {
+                                                  backgroundColor: '#ffffff',
+                                                  borderRadius: 3,
+                                                  padding:10,
+                                                  borderWidth: 0.5,
+                                                  borderColor:design.colors.primary,
+                                                },
+                                                
+                                                airtimeInput: {
+                                                  backgroundColor: '#ffffff',
+                                                  borderRadius: 3,
+                                                  padding:15,
+                                                  borderWidth: 0.5,
+                                                  borderColor:design.colors.primary,
+                                                  width: '100%',
+                                                },
+                                                
+                                                
+                                                
+                                                button: {
+                                                  borderRadius: 20,
+                                                  padding: 10,
+                                                  elevation: 2
+                                                },
+                                                
+                                                
+                                                textStyle: {
+                                                  color: "white",
+                                                  fontWeight: "bold",
+                                                  textAlign: "center"
+                                                },
+                                                
+                                                divider:{
+                                                  borderBottomColor: '#e2e2e2',
+                                                  borderBottomWidth: 1,
+                                                  marginTop:20
+                                                },
+                                                
+                                                cardContainer:{
+                                                  flexDirection: "row",
+                                                  textAlign:'center',
+                                                  flexWrap: 'wrap',
+                                                },
+                                                
+                                                
+                                                
+                                                
+                                                bottomSheetButton:{
+                                                  flexDirection: 'row',
+                                                  borderWidth:1, 
+                                                  marginTop:15,
+                                                  marginBottom:60,
+                                                  height:60,
+                                                  width:'70%',
+                                                  padding:15,
+                                                  borderRadius:30,
+                                                  borderColor:design.colors.primary,
+                                                  justifyContent: 'center',
+                                                  alignItems: 'center',
+                                                },
+                                                
+                                                inputContainer:{
+                                                  padding:10,
+                                                  
+                                                },
+                                                scrollView: {
+                                                  flex: 1, 
+                                                },
+                                                bottomSheetContainer:{
+                                                  flex: 1,
+                                                  padding: 24,
+                                                  justifyContent: 'center',
+                                                  backgroundColor: 'grey',
+                                                },
+                                                
+                                                footer:{
+                                                  marginBottom: 30,
+                                                  flexDirection: 'row',
+                                                  alignItems: 'center',
+                                                  alignSelf: 'center',
+                                                  justifyContent: 'center',
+                                                  
+                                                },
+                                                
+                                                vehiclesDropdown: {
+                                                  borderRadius: theme.SIZES.base / 2,
+                                                  borderColor: theme.COLORS.overlay,
+                                                  borderWidth: 1,
+                                                  padding: theme.SIZES.base*1.3,
+                                                  width:350,
+                                                  justifyContent: 'center',
+                                                  alignItems: 'center',
+                                                  fontSize: theme.SIZES.font*0.95,
+                                                },
+                                                
+                                                vehiclesDropdownOption: {
+                                                  padding: 5,
+                                                  fontSize: 18,
+                                                },
+                                                indicator: {
+                                                  position: "absolute",
+                                                  width: 10,
+                                                  height: 4,
+                                                  backgroundColor: "#999",
+                                                },
+                                                
+                                                customBottomSheetHeader: {
+                                                  alignContent: "center",
+                                                  alignItems: "center",
+                                                  justifyContent: "center",
+                                                  backgroundColor: "white",
+                                                  paddingVertical: 14,
+                                                  borderBottomWidth: 1,
+                                                  borderBottomColor: "#fff",
+                                                },
+                                                
+                                                bottomSheetHeader: {
+                                                  backgroundColor: '#FFFFFF',
+                                                  shadowColor: '#333333',
+                                                  borderTopLeftRadius: 20,
+                                                  borderTopRightRadius: 20,
+                                                },
+                                                
+                                                panelHeader: {
+                                                  alignItems: 'center',
+                                                },
+                                                
+                                                panelHandle: {
+                                                  width: 40,
+                                                  height: 8,
+                                                  borderRadius: 4,
+                                                  backgroundColor: '#999',
+                                                  marginTop: 8,
+                                                  marginBottom: 10,
+                                                  
+                                                },
+                                                
+                                                panel: {
+                                                  backgroundColor: '#FFFFFF',
+                                                },
+                                                
+                                                panelTitle: {
+                                                  fontSize: 22,
+                                                  height: 35,
+                                                },
+                                                panelSubtitle: {
+                                                  fontSize: 14,
+                                                  color: 'gray',
+                                                  height: 30,
+                                                  marginBottom: 10,
+                                                },
+                                                
+                                                morePanel:{
+                                                  backgroundColor: '#fff',
+                                                  padding:30,
+                                                  margin:20,
+                                                  borderRadius:5,
+                                                  borderColor: design.colors.orange,
+                                                  borderWidth:1,
+                                                  flexDirection: 'row',
+                                                  justifyContent: 'space-between', alignContent:'center',
+                                                  alignItems: 'center'
+                                                },
+                                                
+                                                moreText: {
                                                   fontSize: 16,
                                                   fontWeight: 'bold',
                                                   opacity: 0.6,
-                                              },
+                                                },
+                                                
+                                                
+                                                
+                                                
+                                                
+                                                
+                                                
+                                                
+                                              });
                                               
                                               
                                               
-                                              
-                                              
-                                              
-                                              
-                                              
-                                            });
-                                            
-                                            
-                                            

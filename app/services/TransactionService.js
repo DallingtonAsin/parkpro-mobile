@@ -15,6 +15,11 @@ module.exports = {
    getOrderDetails : async(order_no, customer_id) => {
     const endpoint = `device/parking-request/details?order_no=${order_no}&customer_id=${customer_id}`;
     return await http.ApiService.fetchData(endpoint);
-},
+   },
+
+   loadAirtime: async(data) => {
+    const endpoint = 'customer/send/airtime';
+    return await http.ApiService.PostData(endpoint, data);
+   },
 
 }
