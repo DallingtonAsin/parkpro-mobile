@@ -113,7 +113,7 @@ const AboutScreen = (props) => {
     <Card style={[styles.card, {justifyContent: 'center', alignItems: 'center'} ]}>
     <Card.Content>
     <TouchableOpacity  onPress={() => Linking.openURL("http://www.parkproug.com")}>
-        <Text style={{fontSize:18, color:design.colors.orange, fontWeight: 'bold', textShadowColor: '#ffa500', fontFamily: 'RobotoCondensed-Light'}}>Visit our website</Text>
+        <Text style={{fontSize:18, color:design.colors.orange, fontWeight: 'normal', textShadowColor: '#ffa500', fontFamily: 'RobotoCondensed-Light'}}>Visit our website</Text>
     </TouchableOpacity> 
     </Card.Content>
     </Card>

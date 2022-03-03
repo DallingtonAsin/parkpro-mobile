@@ -1,17 +1,16 @@
 import React, {useState} from 'react';
-import { Text,TouchableOpacity, View, FlatList, Linking, ScrollView, Image, Alert, StyleSheet} from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome5';
+import { Text,TouchableOpacity, View, FlatList, Linking, StyleSheet} from 'react-native';
 import styles from '../../assets/css/styles';
-import DropDownPicker from 'react-native-dropdown-picker';
 import Toast from 'react-native-simple-toast';
 import AwesomeAlert from 'react-native-awesome-alerts';
 import { Cache } from 'react-native-cache';
-import Dialog, { DialogFooter, DialogButton, DialogContent, DialogTitle } from 'react-native-popup-dialog';
+import Dialog, { DialogFooter, DialogButton, DialogContent } from 'react-native-popup-dialog';
 import Rate, { AndroidMarket } from 'react-native-rate';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {  AirbnbRating } from 'react-native-elements';
-import { config } from '../config/env'
+import {getAppVersionName} from '../components/SharedCommons';
 
+const version  = getAppVersionName();
 
 const cache = new Cache({
   namespace: "myapp",
@@ -21,21 +20,14 @@ const cache = new Cache({
   backend: AsyncStorage
 });
 
-const set1 = [
-  {
-    "key": 2,
-    "item": "Change Password",
-    "link": "ChangePassword",
-    "data": "",
-  },
-];
+
 
 const set2 = [
   {
     "key": 5,
     "item": "Version",
     "link": "Version",
-    "data": "1.0.0",
+    "data": version,
   },
 
   {

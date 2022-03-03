@@ -29,7 +29,7 @@ import Toast from 'react-native-simple-toast';
 import { openDatabase } from 'react-native-sqlite-storage';
 import { UIActivityIndicator } from 'react-native-indicators';
 import * as theme from '../../assets/theme';
-import {currency, minAirtimeAmount, maxAirtimeAmount} from '@env';
+import {CURRENCY, MIN_AIRTIME_AMOUNT, MAX_AIRTIME_AMOUNT} from '@env';
 import Dropdown from 'react-native-modal-dropdown';
 import BottomSheet, {
   BottomSheetBackdrop,
@@ -118,8 +118,8 @@ const HomeScreen = props => {
   const loadAirtime = async() => {
     
     const airtime = parseFloat(airtimeAmount);
-    minAirtimeAmount = parseFloat(minAirtimeAmount);
-    maxAirtimeAmount = parseFloat(maxAirtimeAmount);
+    minAirtimeAmount = parseFloat(MIN_AIRTIME_AMOUNT);
+    maxAirtimeAmount = parseFloat(MAX_AIRTIME_AMOUNT);
     
     if(!airtime){
       Alert.alert("Message", "Please enter airtime amount to load.")
@@ -145,7 +145,7 @@ const HomeScreen = props => {
           await syncProfileData(customer);
           setAirtimeAmount(0);
           handleCloseAirtimeSheet();
-          Toast.show(message);
+          Toast.show(message, Toast.LONG);
         }else{
           Alert.alert("Message", message);
         }
@@ -265,19 +265,7 @@ const HomeScreen = props => {
                             setVehicleData({...initialVehicleState});
                             populateVehicles();
                             setIsSheetVisible(false);
-                            Alert.alert(
-                              'Success',
-                              'Vehicle registered Successfully',
-                              [
-                                {
-                                  text: 'Ok',
-                                  onPress: () => {
-                                    // do nothing
-                                  }
-                                },
-                              ],
-                              { cancelable: false }
-                              );
+                            Toast.show('Vehicle added successfully', Toast.LONG);
                             } else {
                               alert('Registration of vehicle failed');
                             }
@@ -322,19 +310,7 @@ const HomeScreen = props => {
                               setVehicleData({...initialVehicleState});
                               populateVehicles();
                               setIsEditSheetVisible(false);
-                              Alert.alert(
-                                'Success',
-                                'Vehicle updated successfully',
-                                [
-                                  {
-                                    text: 'Ok',
-                                    onPress: () => {
-                                      // do nothing
-                                    }
-                                  },
-                                ],
-                                { cancelable: false }
-                                );
+                              Toast.show('Vehicle details updated successfully', Toast.LONG);
                               } else alert('Updation Failed');
                             }
                             );
@@ -354,19 +330,7 @@ const HomeScreen = props => {
                               [VehicleId],
                               (tx, results) => {
                                 if (results.rowsAffected > 0) {
-                                  Alert.alert(
-                                    'Success',
-                                    'Vehicle removed successfully',
-                                    [
-                                      {
-                                        text: 'Ok',
-                                        onPress: () => {
-                                          populateVehicles();
-                                        }
-                                      },
-                                    ],
-                                    { cancelable: false }
-                                    );
+                                  Toast.show('Vehicle removed successfully', Toast.LONG);
                                   } else {
                                     alert('Unable to remove vehicle');
                                   }
@@ -546,7 +510,9 @@ const HomeScreen = props => {
                                           
                                           <StatusBar
                                           backgroundColor={design.colors.primary}
+                                          barStyle="light-content"
                                           />
+                                          
                                           
                                           <BrSheet
                                           visible={isSheetVisible}
@@ -767,7 +733,7 @@ const HomeScreen = props => {
                                                 padding: 15,
                                                 textAlign: 'center',
                                                 fontWeight: "bold",
-                                              }}>{currency}. {profile.account_balance }</Text>
+                                              }}>{CURRENCY}. {profile.account_balance }</Text>
                                               </View>
                                               </View>
                                               

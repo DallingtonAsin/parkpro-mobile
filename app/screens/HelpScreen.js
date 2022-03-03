@@ -3,7 +3,7 @@ import { Text,StyleSheet,FlatList, View, TouchableOpacity} from 'react-native';
 import design from '../../assets/css/styles';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {callHelpLine, SendEmail, SendSms, inboxFromWhatsapp} from '../components/SharedCommons';
-import {companyLine, whatsapLine, companyEmail} from '@env';
+import {COMPANY_LINE, COMPANY_WHATSAP_LINE, COMPANY_EMAIL} from '@env';
 
 
 
@@ -22,10 +22,10 @@ const CardComponent = ({info}) => (
   const Help = ({navigation}) => {
   
     const communicationChannels = [
-      {id: 1, iconName: "phone-alt", name:'Phone', text: companyLine, 'method': () => {callHelpLine(companyLine)}},
-      {id: 2, iconName: "whatsapp", name:'Whatsap', text: whatsapLine, 'method': () => {inboxFromWhatsapp(whatsapLine)}},
-      {id: 3, iconName: "sms", name:'SMS', text: 'Report a problem via sms', 'method': () => {SendSms(companyLine)}},
-      {id: 4, iconName: "envelope", name:'Email', text: companyEmail, 'method': () => {SendEmail(companyEmail)}},
+      {id: 1, iconName: "phone-alt", name:'Phone', text: COMPANY_LINE, 'method': () => {callHelpLine(COMPANY_LINE)}},
+      {id: 2, iconName: "whatsapp", name:'Whatsap', text: COMPANY_WHATSAP_LINE, 'method': () => {inboxFromWhatsapp(COMPANY_WHATSAP_LINE)}},
+      {id: 3, iconName: "sms", name:'SMS', text: 'Report a problem via sms', 'method': () => {SendSms(COMPANY_LINE)}},
+      {id: 4, iconName: "envelope", name:'Email', text: COMPANY_EMAIL, 'method': () => {SendEmail(COMPANY_EMAIL)}},
       {id: 5, iconName: "comments", name:'Feedback', text: 'Suggest something to us', 'method': () => navigation.navigate('Suggestions')},
       
     ];

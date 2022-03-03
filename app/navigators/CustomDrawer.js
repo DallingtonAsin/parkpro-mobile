@@ -3,10 +3,8 @@ import {View, Text,ScrollView, TouchableOpacity, Linking} from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import styles from '../../assets/css/styles';
 import { Avatar } from 'react-native-paper';
-import { SendEmail } from '../components/SharedCommons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome5';
 import { AuthContext } from '../context/context';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {APP_NAME} from '@env';
 import ProfileContext from '../context/index';
 import Rate, { AndroidMarket } from 'react-native-rate';

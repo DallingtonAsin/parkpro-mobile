@@ -9,7 +9,7 @@ import ProfileStack from  './ProfileStack';
 import ParkingFeesStack from  './ParkingFeesStack';
 
 import ExtraServicesStack from  './ExtraServicesStack';
-import PaymentStatementStack from  './PaymentStatementStack';
+import TransactionsHistoryStack from  './TransactionsHistoryStack';
 import TopupStack from  './TopupStack';
 import HelpStack from  './HelpStack';
 import EditProfileStack from  './EditProfileStack';
@@ -36,7 +36,7 @@ const DrawerScreenStack = () => {
         <Drawer.Screen name="Home" component={AppTabStack} />
         <Drawer.Screen name="Profile" component={ProfileStack}/>
         <Drawer.Screen name="EditProfile" component={EditProfileStack}/>
-        <Drawer.Screen name="PaymentHistory" component={PaymentStatementStack}/>
+        <Drawer.Screen name="PaymentHistory" component={TransactionsHistoryStack}/>
         <Drawer.Screen name="ParkingAreas" component={ParkingAreasStack}/>
         <Drawer.Screen name="ParkingFees" component={ParkingFeesStack}/>
         <Drawer.Screen name="Weather" component={WeatherStack}/>

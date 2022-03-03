@@ -1,16 +1,13 @@
 import React from 'react';
-import {Image} from 'react-native'
 import { BottomTabBar, createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MultiBarProvider, BottomTabBarWrapper} from 'react-native-multibar';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import HomeStack from './HomeStack';
 import HelpStack from './HelpStack';
-import MapStack from './MapStack';
 import WeatherStack from './WeatherStack';
 import NotificationStack from './NotificationStack';
 import OrdersStack from './OrdersStack';
 import styles from '../../../assets/css/styles';
-import { images, icons, COLORS, FONTS, SIZES } from '../../../constants';
 
 const BottomTab = createBottomTabNavigator();
 

@@ -13,7 +13,7 @@ import { Text,
   import { UIActivityIndicator } from 'react-native-indicators';
   import { AuthContext } from '../context/context';
   import ProfileContext from '../context/index';
-  import {minTopAmount, maxTopAmount} from '@env';
+  import {MIN_TOPUP_AMOUNT, MAX_TOPUP_AMOUNT} from '@env';
   
   // import ReactDOM from "react-dom";
   
@@ -68,8 +68,8 @@ import { Text,
     const [isLoading, setIsLoading] = useState(false);
     const { asyncCustomerProfile, syncProfileData, depositMoney } = React.useContext(AuthContext);
     const {profile, setProfile} = useContext(ProfileContext);
-    const min_recharge_amount = minTopAmount;
-    const max_recharge_amount = maxTopAmount;
+    const min_recharge_amount = MIN_TOPUP_AMOUNT;
+    const max_recharge_amount = MAX_TOPUP_AMOUNT;
     
     const RechargeUserAccount = async() => {
       try{
@@ -78,11 +78,11 @@ import { Text,
           const rechargeAmount = parseFloat(state.rechargeAmount);
           
           console.log(state.rechargeAmount);
-          console.log(minTopAmount);
-          console.log(maxTopAmount);
+          console.log(MIN_TOPUP_AMOUNT);
+          console.log(MAX_TOPUP_AMOUNT);
           
           if (state.phone_number && state.rechargeAmount ) {
-            if(rechargeAmount >= minTopAmount && rechargeAmount <= maxTopAmount){
+            if(rechargeAmount >= MIN_TOPUP_AMOUNT && rechargeAmount <= MAX_TOPUP_AMOUNT){
               let amount = state.rechargeAmount;
               amount = parseFloat(amount.replace(/[^\d.]+/g, ''));
               
@@ -255,11 +255,11 @@ import { Text,
           placeholder="Eg. 10,000"
           value={state.rechargeAmount}
           keyboardType='numeric'
-          selectionColor={design.colors.orange}
-          underlineColor={design.colors.orange}
-          outlineColor={design.colors.orange}
-          activeUnderlineColor={design.colors.orange}
-          activeOutlineColor={design.colors.orange}
+          selectionColor={design.colors.primary}
+          underlineColor={design.colors.primary}
+          outlineColor={design.colors.primary}
+          activeUnderlineColor={design.colors.primary}
+          activeOutlineColor={design.colors.primary}
           onChangeText={(text) => { onChangeAmount(text) }}
           //  label="Topup amount"
             />
@@ -287,7 +287,8 @@ import { Text,
             placeholder="Your phone number"
             value={state.phone_number} 
             keyboardType='numeric'
-            onChangeText={(text) => { onChangePhoneNumber(text) }} style={styles.textInput}  />
+            style={styles.inputBox}
+            onChangeText={(text) => { onChangePhoneNumber(text) }}  />
           }
           </TouchableOpacity>  
           
@@ -379,5 +380,9 @@ import { Text,
             fontWeight: 'normal',
             borderRadius:30,
             borderWidth:1,
-          }
+          },
+          inputBox: {
+            borderBottomWidth: 1,
+            borderBottomColor: 'gray',
+        }
         })
