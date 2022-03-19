@@ -36,12 +36,12 @@ export const numberWithCommas = (x) => {
 }
 
 export const getAppVersionName = () => {
-  let version = `v.${MAJOR_VERSION}.${MINOR_VERSION}.${PATCH_VERSION}`;
-  if (!PRE_RELEASE) {
-      version = version.concat(`-${PRE_RELEASE}`);
-  }
+  // let version = `v.${MAJOR_VERSION}.${MINOR_VERSION}.${PATCH_VERSION}`;
+  // if (!PRE_RELEASE) {
+  //     version = version.concat(`-${PRE_RELEASE}`);
+  // }
 
-  return version;
+  return 1.5; // version;
 };
 
  export const RateUs = () => {

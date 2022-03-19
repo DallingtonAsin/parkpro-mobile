@@ -524,7 +524,7 @@ import { StyleSheet, Text, View,Button,Pressable,
               </View>
               <TouchableOpacity style={styles.buy} onPress={() => {
                 setState({...state, activeModal: item });
-                setIsModalVisible(true);
+                setIsModalVisible(!isModalVisible);
               }}>
               <View style={styles.buyTotal}>
               
