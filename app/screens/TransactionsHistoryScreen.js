@@ -6,6 +6,7 @@ import { Text,FlatList,View, RefreshControl, Alert,SectionList,StatusBar ,
   import CustomLoader from '../components/CustomActivityIndicator';
   import AsyncStorage from '@react-native-async-storage/async-storage';
   import { AuthContext } from '../context/context';
+  import { icons, SIZES } from '../../constants';
   
   
   const wait = (timeout) => {
@@ -121,8 +122,19 @@ import { Text,FlatList,View, RefreshControl, Alert,SectionList,StatusBar ,
               
               <View style={{height:130,backgroundColor: design.colors.primary}}>
               <View style={{alignItems: 'center', margin:20}}>
-              <Image style={{ width:50, height:60, tintColor: '#fff'}} source={require('../../assets/images/transaction-history.png')} />
-              <Text style={{color: '#fff', fontSize:18 }}>Statement</Text>
+              
+              <Image
+              source={icons.statement}
+              resizeMode="cover"
+              style={{
+                tintColor: '#fff',
+                width:  50,
+                height:  50,
+              }}
+              />
+              
+            
+              <Text style={{color: '#fff', fontSize:18, padding:10 }}>Statement</Text>
               </View>
               </View>
               

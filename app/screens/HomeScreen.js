@@ -13,7 +13,7 @@ import {
   SafeAreaView,Keyboard,
   Alert, Pressable,
 } from 'react-native';
-import { images, icons, COLORS, FONTS, SIZES } from '../../constants';
+import { icons, SIZES } from '../../constants';
 import OptionItem from '../components/OptionItem';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
@@ -716,7 +716,7 @@ const HomeScreen = props => {
                               fontWeight: "bold",
                             }}>My Wallet      
                             </Text>
-                            <FontAwesome name={"info-circle"} size={20} color={design.colors.white} style={{marginTop:5}}/>
+                            {/* <FontAwesome name={"info-circle"} size={20} color={design.colors.white} style={{marginTop:5}}/> */}
                             </View>
                             
                             
@@ -726,7 +726,7 @@ const HomeScreen = props => {
                               padding: 15,
                               textAlign: 'center',
                               fontWeight: "bold",
-                            }}>{CURRENCY}. {profile.account_balance }</Text>
+                            }}>{CURRENCY} {profile.account_balance }</Text>
                             </View>
                             </View>
                             
@@ -801,7 +801,7 @@ const HomeScreen = props => {
                               
                               </View>
                               
-                              <View style={styles.morePanel}>
+                              {/* <View style={styles.morePanel}>
                               
                               
                               <TouchableOpacity  onPress={() => openCloseBuyAirtimeSheet(1)} style={{alignContent:'center', alignItems: 'center'}}>
@@ -820,7 +820,7 @@ const HomeScreen = props => {
                               </TouchableOpacity>
                               
                               
-                              </View>
+                              </View> */}
                               
                               </View>
                               </View>
