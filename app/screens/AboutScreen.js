@@ -22,7 +22,7 @@ const AboutScreen = (props) => {
     <Card style={styles.card}>
     <Card.Content>
     <Title>Services</Title>
-    <Text style={{  opacity:0.5, fontSize:16 }}>
+    <Text style={{  opacity:0.5, fontSize:18 }}>
     {APP_NAME} provides easy access to better and affordable parking areas without a hustle. Just recharge your account 
     and get affordable parking in less than a minute!
     
@@ -33,7 +33,7 @@ const AboutScreen = (props) => {
     <Card style={styles.card}>
     <Card.Content>
     <Title>Usage</Title>
-    <Text style={{  opacity:0.5, fontSize:16 }}>
+    <Text style={{  opacity:0.5, fontSize:18 }}>
     To get started, search for a parking area and pick one that you prefer (depending on distance, price or spaciousness).
     Ensure your <Text style={{textTransform:'lowercase'}}>{APP_NAME}</Text> wallet has enough money to pay for parking. Else, you can recharge your account
     using the "Top Up" option in the app.</Text>  

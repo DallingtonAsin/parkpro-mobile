@@ -1,89 +1,157 @@
 import React, {useState, useEffect, useRef} from 'react';
-import {SafeAreaView, Platform, StyleSheet,
-        ScrollView, RefreshControl,Alert,
-        Text, View, Pressable, TextInput,
-        TouchableOpacity, FlatList } from 'react-native';
-    import Icon from 'react-native-vector-icons/FontAwesome5';
-    import SearchableDropdown from 'react-native-searchable-dropdown';
-    import {TimePicker} from 'react-native-simple-time-picker';
-    import DateTimePicker from '@react-native-community/datetimepicker';
-    import design from '../../assets/css/styles';
-    import { DataTable, Divider } from 'react-native-paper';
-    import { Avatar, Button, Card, Title, RadioButton , Searchbar  } from 'react-native-paper';
-    import {Monetize} from '../components/SharedCommons';
-    import CustomLoader from '../components/CustomActivityIndicator';
-    import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-    import {callHelpLine} from '../components/SharedCommons';
-    import { AuthContext } from '../context/context';
+import {StyleSheet, RefreshControl,Alert,Text, View,TouchableOpacity, FlatList } from 'react-native';
+import design from '../../assets/css/styles';
+import { DataTable, Divider } from 'react-native-paper';
+import {  Button, Card, Title } from 'react-native-paper';
+import {Monetize} from '../components/SharedCommons';
+import CustomLoader from '../components/CustomActivityIndicator';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import {callHelpLine} from '../components/SharedCommons';
+import { AuthContext } from '../context/context';
+import { UIActivityIndicator } from 'react-native-indicators';
+import Toast from 'react-native-simple-toast';
 
-    const initialFeesData = [];
+
+const dbParkingHelper = require("../database/favouriteParkings");
+const initialFeesData = [];
+
+const ParkingFeesScreen = ({route, navigation}) => {
     
-    const ParkingFeesScreen = ({route, navigation}) => {
+    const { parking_area_id, parking_area, photo, phone_number } = route.params;
+    const [fees, setFees] = useState(initialFeesData);
+    const [done, setDone] = useState(false);
+    const [refreshing, setRefreshing] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [doesParkingExistInFavourites, setParkingExistsInFavourites] = useState(false);
     
-        const { parking_area_id, parking_area, photo, phone_number } = route.params;
-        const [fees, setFees] = useState(initialFeesData);
-        const [done, setDone] = useState(false);
-        const [refreshing, setRefreshing] = useState(false);
-        
-        const [searchQuery, setSearchQuery] = React.useState('');
-        const [checked, setChecked] = React.useState('first');
-        const onChangeSearch = query => setSearchQuery(query);
-        const { fetchParkingFees } = React.useContext(AuthContext);
-        
-        const onRefresh = React.useCallback(async () => {
-            setRefreshing(true);
-            const timer = setTimeout(() => {
-                setRefreshing(false);
-            }, 1000);
-            return () => clearTimeout(timer);
-        }, [refreshing]);
-        
-        const getParkingFees = async() => {
-            if(parking_area_id){
-                console.log("Parking area is "+parking_area_id);
-                await fetchParkingFees(parking_area_id).then(res => {
-                    console.log("Response for parking fees is", res);
-                    if(res.statusCode == 1){
-                        setFees(res.data);
-                    }
-                    const timer = setTimeout(() => {
-                        setDone(true);
-                    }, 1000);
-                    return () => clearTimeout(timer);
-                }).catch(error => { 
-                    setDone(true);
-                    Alert.alert("Error","Unable to fetch parking fees: " + error);
-                });
-            }else{
-                console.log("Unable to get parking area id");
-            }
+    dbParkingHelper.doesParkingExistinFavourites(parking_area_id, exists => {
+        console.log("Check Exists parking area in favourites response", exists);
+        if(exists){
+            setParkingExistsInFavourites(true);
+        }else{
+            setParkingExistsInFavourites(false);
         }
+    });
+    
+    const [searchQuery, setSearchQuery] = React.useState('');
+    const onChangeSearch = query => setSearchQuery(query);
+    const { fetchParkingFees, searchParkingArea } = React.useContext(AuthContext);
+    
+    const onRefresh = React.useCallback(async () => {
+        setRefreshing(true);
+        const timer = setTimeout(() => {
+            setRefreshing(false);
+        }, 1000);
+        return () => clearTimeout(timer);
+    }, [refreshing]);
+    
+    const getParkingFees = async() => {
+        if(parking_area_id){
+            console.log("Parking area is "+parking_area_id);
+            await fetchParkingFees(parking_area_id).then(res => {
+                console.log("Response for parking fees is", res);
+                if(res.statusCode == 1){
+                    setFees(res.data);
+                }
+                const timer = setTimeout(() => {
+                    setDone(true);
+                }, 1000);
+                return () => clearTimeout(timer);
+            }).catch(error => { 
+                setDone(true);
+                Alert.alert("Error","Unable to fetch parking fees: " + error);
+            });
+        }else{
+            console.log("Unable to get parking area id");
+        }
+    }
+    
+    const EmptyFlastListMessage = ({item}) => {
+        return (
+            <Text
+            style={styles.emptyListStyle}>
+            No fees Found
+            </Text>
+            );
+        };
         
-        const EmptyFlastListMessage = ({item}) => {
-            return (
-                <Text
-                style={styles.emptyListStyle}>
-                No fees Found
-                </Text>
-                );
-            };
+        const CustomDataTable = (props) => (
+            <DataTable.Row style={{opacity:0.7}}>
+            <DataTable.Cell>{props.item.vehicle_type}</DataTable.Cell>
+            <DataTable.Cell>{Monetize(props.item.fee_per_hour)}</DataTable.Cell>
+            </DataTable.Row>
+            );
             
-            const CustomDataTable = (props) => (
-                <DataTable.Row style={{opacity:0.7}}>
-                <DataTable.Cell>{props.item.vehicle_type}</DataTable.Cell>
-                <DataTable.Cell>{Monetize(props.item.fee_per_hour)}</DataTable.Cell>
-                </DataTable.Row>
-                );
+            const FlatListItemSeparator = () => {
+                return (
+                    <Divider/>
+                    );
+                }
                 
-                const FlatListItemSeparator = () => {
-                    return (
-                        <Divider/>
-                        );
-                    }
+                const addParkingToFavourites = async() => {
                     
-                    const FlatListHeader = () => {
-                        return (
-                            <>
+                    if(parking_area_id){
+                        console.log("Parking id to be added", parking_area_id);
+                        const resp = await searchParkingArea(parking_area_id)
+                        if(resp.statusCode == 1){
+                            const parking = resp.data[0];
+                            console.log("Parking area object retrieved", parking);
+                            if(parking){
+                                setIsLoading(true);
+                                dbParkingHelper.doesParkingExistinFavourites(parking.id, exists => {
+                                    console.log("Exists parking area in favourites response", exists);
+                                    if(exists){
+                                        setIsLoading(false);
+                                        Toast.show('Sorry, parking area '+parking.name+' has already been added to favourites.', Toast.LONG);
+                                    }else{
+                                        dbParkingHelper.addParkingIntoFavourites(parking, isInserted => {
+                                            console.log("Insert parking into favourite response", isInserted);
+                                            if(isInserted){
+                                                Toast.show(`Parking ${parking.name} has been successfully added to favourites.`, Toast.LONG);
+                                            }else{
+                                                alert('Unable to add parking to favourites');
+                                            }
+                                            setIsLoading(false);
+                                        });
+                                    }
+                                });
+                            }else{
+                                Toast.show("Unable to fetch parking at this time.");    
+                            }
+                            
+                        }else{
+                            Toast.show(resp.message);   
+                        }
+                    }else{
+                        Toast.show("Unable to capture selected parking.");  
+                    }
+                }
+                
+                const FlatListHeader = () => {
+                    return (
+                        <>
+
+                        {
+                            doesParkingExistInFavourites ? 
+                             <Text style={{color: design.colors.orange, fontSize:15, fontWeight: 'bold', fontStyle: 'italic'}}>
+                                    <FontAwesome5 name={"heart"} size={16} color={design.colors.orange} /> Marked Favourite</Text>
+                            :   <TouchableOpacity onPress={() => addParkingToFavourites()} 
+                            style={{ backgroundColor: design.colors.primary, 
+                                borderRadius:5, alignContent:'center', 
+                                alignItems:'center', padding:15, borderRadius:35 }}>
+                                
+                                {isLoading ?
+                                    <UIActivityIndicator color='white' size={30} /> :
+                                    <Text style={{color:'#fff', fontSize:14, textTransform:'capitalize'}}>
+                                    Add to Favourites
+                                    </Text> 
+                                }
+                                </TouchableOpacity>
+                        }
+                        
+                        
+                     
                             <DataTable.Header>
                             <DataTable.Title>Vehicle Type</DataTable.Title>
                             <DataTable.Title>Fee/hour</DataTable.Title>
@@ -108,18 +176,15 @@ import {SafeAreaView, Platform, StyleSheet,
                         
                         return (
                             <View style={styles.container}>
-                            
-                            
                             <View style={styles.semicontainer}>
                             
                             { done ?
                                 <>
-                                
                                 <Card>
-                                
                                 <Card.Cover source={{ uri: photo }} style={{width:'90%', height:'40%', margin:5, borderRadius:5}}/>
                                 <Card.Content>
                                 <Title>{parking_area}</Title>
+                                
                                 <FlatList
                                 data={fees}
                                 renderItem={({item}) => <CustomDataTable item={item}/>}
@@ -136,36 +201,24 @@ import {SafeAreaView, Platform, StyleSheet,
                                     </Card.Content>
                                     <Card.Actions>
                                     
-                                    
                                     <View style={{flexDirection: 'row'}}>
                                     <View>
                                     <Button onPress={() => navigation.navigate("Map")} style={{ backgroundColor: design.colors.primary, 
                                         borderRadius:5, alignContent:'center', alignItems:'center', padding:5, borderRadius:35 }}>
-                                        <Text style={{color:'#fff', fontSize:14, textTransform:'capitalize'}}>Request parking</Text> 
+                                        <Text style={{color:'#fff', fontSize:14, textTransform:'capitalize'}}>
+                                        Request parking
+                                        </Text> 
                                         </Button>
                                         </View>
-                                        
                                         <View>
                                         <TouchableOpacity style={styles.callBtn} onPress={() =>  callHelpLine(phone_number)}>
                                         <FontAwesome5 name="phone-alt" size={18} color={design.colors.white}/>
                                         <Text style={{fontSize:16, paddingLeft:10, color:design.colors.white}}>Call Now</Text>
                                         </TouchableOpacity>
                                         </View>
-                                        
                                         </View>
-                                        
-                                        
-                                        
-                                        
-                                        
-                                        
-                                        
                                         </Card.Actions>
                                         </Card>
-                                        
-                                        
-                                        
-                                        
                                         </>
                                         : <CustomLoader color={design.colors.orange}/>
                                     }
@@ -191,7 +244,6 @@ import {SafeAreaView, Platform, StyleSheet,
                                         borderColor:'#e2e2e2',
                                         borderRadius:10,
                                         shadowColor: "#000",
-                                        // height: '100%',
                                         shadowOpacity: 0.6,
                                         padding:10,
                                         margin:5,

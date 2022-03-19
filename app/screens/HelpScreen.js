@@ -13,7 +13,7 @@ const CardComponent = ({info}) => (
   <Icon name={info.iconName} style={design.helpIcon} size={20}/>
   <View style={{flexDirection: 'column', marginLeft:15}}>
   <Text style={styles.channel}>{info.name}</Text>
-  <Text>{info.text}</Text>
+  <Text style={{fontSize:16}}>{info.text}</Text>
   </View>
   </View>
   </TouchableOpacity>

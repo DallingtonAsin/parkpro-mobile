@@ -93,7 +93,7 @@ import { icons } from '../../constants';
         <View style={innerStyles.divider}></View>
 
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding:10}}>
-        <Text style={innerStyles.subtitle}>Tel</Text>
+        <Text style={innerStyles.subtitle}>Telephone</Text>
         <Text style={innerStyles.info}>{item.telephone_no}</Text>
         </View>
 

@@ -668,11 +668,13 @@ theme : {
     },
     text: {
       fontWeight:'bold',
-      fontSize:14,
+      fontSize:16,
       marginBottom:5,
     },
     name: {
        opacity:0.8,
+      fontSize:16,
+
     },
     ellipsis : {
       marginTop:15,

@@ -272,7 +272,7 @@ import {SafeAreaView, Platform,SectionList,Dimensions,
                             <TabBar
                             {...props}
                             renderLabel={({ route, focused, color }) => (
-                                <Text style={{ color: '#000', margin: 8, fontSize:14, textTransform:'uppercase' }}>
+                                <Text style={{ color: '#000', margin: 8, fontSize:15, textTransform:'capitalize' }}>
                                 {route.title}
                                 </Text>
                                 )}

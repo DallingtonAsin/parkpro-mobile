@@ -141,15 +141,15 @@ const WeatherScreen = () => {
               const weather = hour.item.weather[0];
               var dt = new Date(hour.item.dt * 1000);
               return <View style={styles.hour}>
-                <Text>{dt.toLocaleTimeString().replace(/:\d+ /, ' ')}</Text>
-                <Text>{Math.round(hour.item.temp)}°C</Text>
+                <Text style={styles.text}>{dt.toLocaleTimeString().replace(/:\d+ /, ' ')}</Text>
+                <Text style={styles.text}>{Math.round(hour.item.temp)}°C</Text>
                 <Image
                   style={styles.smallIcon}
                   source={{
                     uri: `http://openweathermap.org/img/wn/${weather.icon}@4x.png`,
                   }}
                 />
-                <Text>{weather.description}</Text>
+                <Text style={styles.text}>{weather.description}</Text>
               </View>
             }}
           />
@@ -254,5 +254,8 @@ const styles = StyleSheet.create({
   smallIcon: {
     width: 100,
     height: 100,
+  },
+  text:{
+    fontSize:16
   }
 });

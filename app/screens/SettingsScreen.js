@@ -121,7 +121,7 @@ const initialState = {
     const Navigate = (link) =>{
       switch(link){
         case "Version":
-        Toast.show('This is the latest version');
+        Toast.show(`version ${version}`);
         break;
         case "ClearCache": 
         showAlert();

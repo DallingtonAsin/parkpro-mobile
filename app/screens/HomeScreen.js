@@ -35,18 +35,8 @@ import BottomSheet, {
   BottomSheetScrollView
 } from '@gorhom/bottom-sheet';
 
-const dbVehicleHelper = require("../database/vehicles")
-
-const initialUserState = {
-  user_id: '',
-  name: '',
-  firstname: '',
-  lastname: '',
-  phoneNo: '',
-  email: '',
-  account_balance: '',
-  image: '',
-}
+const dbVehicleHelper = require("../database/vehicles");
+const dbParkingHelper = require("../database/favouriteParkings");
 
 const initialVehicleState= {
   id: '',
@@ -55,12 +45,45 @@ const initialVehicleState= {
   type: '',
 }
 
+const initialFavouriteParking = {
+  uniquePId: '',
+  client_id: '',
+  name: '',
+  phone_number: '',
+  address: '',
+  description: '',
+  opens_at: '',
+  closes_at: '',
+  latitude: '',
+  longitude: '',
+  rating: '', 
+  total_space: '',
+  current_free_space: '',
+  photo: '',
+}
+
 const HomeScreen = props => {
+  
+  
+  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingAirtime, setIsLoadingAirtime] = useState(false);
+  const [isParkingsLoading, setIsParkingsLoading] = useState(true);
+  const [vehicles, setVehicleState] = useState({});
+  const [vehicle, setVehicleData] = React.useState(initialVehicleState);
+  const [nearByParkings, setNearByParkings] = useState([]);
+  const [vehicleTypes, setVehicleTypes] = useState([]);
+  const [airtimeAmount, setAirtimeAmount] =useState(0);
+  
+  const [favouriteParkings, setFavouriteParkings] = useState([]);
+  
+  const [isSheetVisible, setIsSheetVisible] = useState(false);
+  const [isEditSheetVisible, setIsEditSheetVisible] = useState(false);
+  const {profile, setProfile} = useContext(ProfileContext);
+  const { getParkingAreas, getVehicleCategories, loadAirtimeCredit, syncProfileData } = React.useContext(AuthContext);
   
   // ref
   const vehicleBottomSheetRef = useRef(0);
   const buyAirtimeBottomSheetRef = useRef(0);
-  
   const favouritesBottomSheetRef = useRef(0);
   
   
@@ -72,15 +95,20 @@ const HomeScreen = props => {
   const handleSheetChanges = useCallback((index) => {
     console.log('handleSheetChanges', index);
   }, []);
-  
+
+  const handleVehicleSheetChanges = useCallback((index) => {
+    console.log('handleSheetChanges', index);
+    populateVehicles();
+  }, []);
+
+  const handleSheetFavouriteParkingChanges = useCallback((index) => {
+    console.log('handleSheetChanges', index);
+    populateFavouriteParkings();
+  }, []);
   
   
   const openVehiclesSheet = useCallback((index) => {
     vehicleBottomSheetRef.current?.snapToIndex(index);
-  }, []);
-  
-  const openCloseBuyAirtimeSheet = useCallback((index) => {
-    buyAirtimeBottomSheetRef.current?.snapToIndex(index);
   }, []);
   
   const handleCloseAirtimeSheet = () => buyAirtimeBottomSheetRef.current?.close()
@@ -89,26 +117,114 @@ const HomeScreen = props => {
     favouritesBottomSheetRef.current?.snapToIndex(index);
   }, []);
   
-  const [state, setData] = useState(initialUserState);
-  const [isSheetVisible, setIsSheetVisible] = useState(false);
-  const [isEditSheetVisible, setIsEditSheetVisible] = useState(false);
   
+  useEffect(() => {
+    dbVehicleHelper.createVehiclesTable();
+    dbParkingHelper.createTableFavouriteParkings();
+    populateVehicleTypes();
+  }, []);
+
+
+  useEffect(() => {
+    populateVehicles();
+    populateFavouriteParkings();
+  }, []);
+
   
-  const {profile, setProfile} = useContext(ProfileContext);
-  const { getParkingAreas, getVehicleCategories, loadAirtimeCredit, syncProfileData } = React.useContext(AuthContext);
+  const populateFavouriteParkings = () =>{
+    try{
+      dbParkingHelper.getFavouriteParkings(parkings => {
+        console.log("Got this favourite parkings list", parkings);
+        if(parkings){
+          setFavouriteParkings(parkings);
+        }
+      });
+    }catch(error){
+      Toast.show(error.message);
+    }
+    
+  }
   
-  const [isLoading, setIsLoading] = useState(false);
-  const [isLoadingAirtime, setIsLoadingAirtime] = useState(false);
+  const addParkingToFavourites = (parking) => {
+    if(parking){
+      dbParkingHelper.addParkingIntoFavourites(parking, inserted => {
+        console.log("Insert parking into favourite response", isInserted);
+        if(isInserted){
+          setVehicleData({...initialVehicleState});
+          populateFavouriteParkings();
+          // setIsSheetVisible(false);
+          Toast.show('Vehicle added successfully', Toast.LONG);
+        }else{
+          alert('Unable to register vehicle');
+        }
+        setIsLoading(false);
+      });
+      
+    }
+  }
   
-  const [isParkingsLoading, setIsParkingsLoading] = useState(true);
+  const removeParkingAreaFromFavourites = (parking) => {
+    try{
+      if(!parking.id){
+        alert('Please unable to get parking area id');
+        return;
+      }
+      if(!parking.uniquePId){
+        alert('Please unable to get parking area unique id');
+        return;
+      }
+      dbParkingHelper.removeParkingFromFavourites(parking, isDeleted => {
+        console.log("Delete parking from favourite response", isDeleted);
+        if(isDeleted){
+          populateFavouriteParkings();
+          Toast.show('Parking area '+parking.name+' successfully removed from favourites.', Toast.LONG);
+        }else{
+          alert('Unable to remove parking area from favourites');
+        }
+      });
+    }catch(error){
+      Toast.show(error.message);
+    }
+  }
+
+  const chooseActionOnFavouriteParking = (item) => {
+    Alert.alert(
+      'Take action',
+      'Choose action on favourite parking',
+      [
+        {
+          text: 'Remove',
+          onPress: () => {
+            confirmRemoveFavouriteParking(item);
+          }
+        },
+      ],
+      { cancelable: true }
+      );
+    }
+
+    const confirmRemoveFavouriteParking = (item) => {
+      Alert.alert(
+        'Confirm Remove',
+        `Are you sure you want to remove  ${item.name} from your favourite parkings?`,
+        [
+          {
+            text: 'Yes',
+            onPress: () => {
+              removeParkingAreaFromFavourites(item);
+            }
+          },
+          {
+            text: 'No',
+            onPress: () => {
+              
+            }
+          },
+        ],
+        { cancelable: true }
+        );
+      }
   
-  
-  const [vehicles, setVehicleState] = useState({});
-  const [vehicle, setVehicleData] = React.useState(initialVehicleState);
-  const [nearByParkings, setNearByParkings] = useState([]);
-  const [vehicleTypes, setVehicleTypes] = useState([]);
-  
-  const [airtimeAmount, setAirtimeAmount] =useState(0);
   
   const loadAirtime = async() => {
     
@@ -177,17 +293,6 @@ const HomeScreen = props => {
             });
           }
           
-          useEffect(() => {
-            // create table vehicles if it doesn't exist
-            dbVehicleHelper.createVehiclesTable();
-          }, []);
-          
-          
-          useEffect(() => {
-            fetchParkings();
-            populateVehicles();
-            populateVehicleTypes();
-          }, []);
           
           const populateVehicleTypes = async() => {
             const data = await getVehicleCategories();
@@ -314,7 +419,6 @@ const HomeScreen = props => {
                 alert('Please select vehicle to remove');
                 return;
               }
-              // delete vehicle 
               dbVehicleHelper.deleteVehicle(VehicleId, isDeleted => {
                 console.log("Delete vehicle response", isDeleted);
                 if(isDeleted){
@@ -327,10 +431,7 @@ const HomeScreen = props => {
             }catch(error){
               Toast.show(error.message);
             }
-            
-            
-            
-          };
+          }
           
           const cancelEditVehicle = () =>{
             setIsEditSheetVisible(false);
@@ -352,23 +453,13 @@ const HomeScreen = props => {
             });
           }
           
-          
-          const fetchParkings = async() => {
-            const parkings = await getParkingAreas();
-            if(parkings.length > 0) {
-              setNearByParkings(parkings);
-              setIsParkingsLoading(false);
-            }
-            
-          }
-          
-          
+      
+        
           const [visible, setVisible] = useState(false);
           
           const showModal = () => setVisible(true);
-          
-          
-          const getVehicleNo = (item) => {
+
+          const chooseActionOnVehicle = (item) => {
             Alert.alert(
               'Take action',
               'Choose action on the vehicle',
@@ -458,8 +549,8 @@ const HomeScreen = props => {
                   <Text style={[design.vehicle.name, {color: '#000'}]}>{capitalizeFirstLetter(item.type)}</Text>
                   </View>
                   <View style={design.vehicle.rightContainer}>
-                  <Pressable onPress={() => getVehicleNo(item) }>
-                  <FontAwesome name={"ellipsis-h"} size={28} style={design.vehicle.ellipsis} />
+                  <Pressable onPress={() => chooseActionOnVehicle(item) }>
+                  <FontAwesome name={"ellipsis-h"} size={35} style={design.vehicle.ellipsis} />
                   </Pressable>
                   </View>
                   
@@ -468,21 +559,16 @@ const HomeScreen = props => {
                   
                   const parkingsComponent = (item) => (
                     <View style={[design.vehicle.container,{padding:10}]}>
-                    
                     <Icon name="map-marker" size={30} color="#4F8EF7" />
-                    
                     <View style={design.vehicle.middleContainer}>
                     <Text style={design.vehicle.text}>{item.name}</Text>
                     <Text style={design.vehicle.name}>{item.address}</Text>
                     </View>
-                    
                     <View style={design.vehicle.rightContainer}>
-                    <Pressable>
-                    <FontAwesome name={"ellipsis-h"} size={20} style={design.vehicle.ellipsis} />
+                    <Pressable onPress={() => chooseActionOnFavouriteParking(item)}>
+                    <FontAwesome name={"ellipsis-h"} size={35} style={design.vehicle.ellipsis} />
                     </Pressable>
                     </View>
-                    
-                    
                     </View>
                     )
                     
@@ -492,7 +578,7 @@ const HomeScreen = props => {
                         <View style={styles.bottomSheetHeader}>
                         <View style={styles.panelHeader}>
                         <View style={styles.panelHandle} />
-                        <Text style={{fontSize:18, textAlign: 'center', fontWeight: '900', textTransform:'capitalize'}}>{title}</Text>
+                        <Text style={styles.popupHeaderText}>{title}</Text>
                         </View>
                         </View>
                         );
@@ -522,7 +608,7 @@ const HomeScreen = props => {
                         
                         <View style={{ flex: 3, backgroundColor: design.colors.white, padding:20 }}>
                         <View style={{alignItems:'center'}}>
-                        <Text style={{ padding:10, fontSize: 18, textTransform:'uppercase',fontWeight:'bold'}}>Add new vehicle</Text>
+                        <Text style={styles.popupTitle}>Add new vehicle</Text>
                         </View>
                         
                         <View style={styles.inputContainer}>
@@ -620,7 +706,7 @@ const HomeScreen = props => {
                           
                           <View style={{ flex: 3, backgroundColor: design.colors.white, padding:20 }}>
                           <View style={{alignItems:'center'}}>
-                          <Text style={{ padding:10, fontSize: 18, textTransform:'uppercase',fontWeight:'bold'}}>Edit vehicle details</Text>
+                          <Text style={styles.popupTitle}>Edit vehicle details</Text>
                           </View>
                           
                           <View style={styles.inputContainer}>
@@ -711,7 +797,7 @@ const HomeScreen = props => {
                             <View style={{flexDirection: 'row', justifyContent: "space-around"}}>
                             <Text style={{
                               color: '#fff',
-                              fontSize: 22,
+                              fontSize: 24,
                               textAlign: 'center',
                               fontWeight: "bold",
                             }}>My Wallet      
@@ -820,364 +906,389 @@ const HomeScreen = props => {
                               </TouchableOpacity>
                               
                               
-                              </View> */}
-                              
-                              </View>
-                              </View>
-                              
-                              
-                              {/* Vehicles List  */}
-                              <BottomSheet
-                              ref={vehicleBottomSheetRef}
-                              index={-1}
-                              snapPoints={snapPoints}
-                              enablePanDownToClose={true}
-                              backdropComponent={renderVehiclesBackdrop}
-                              onChange={handleSheetChanges}
-                              handleComponent={() => renderHeader("My Vehicles") }
-                              >
-                              <BottomSheetScrollView contentContainerStyle={styles.contentContainer}>
-                              
-                              <View style={{flexDirection: 'row'}}>
-                              <View style={{flexDirection: 'row', alignItems: 'flex-end'}}>
-                              </View>
-                              </View>
-                              
-                              <Divider style={styles.divider}/>
-                              <FlatList
-                              scrollEnabled={true}
-                              vertical={true}
-                              data={vehicles}
-                              renderItem={({item}) => VehicleComponent(item) }
-                              ItemSeparatorComponent = { FlatListItemSeparator }
-                              keyExtractor={(item, index) => { return item.number.toString()}}
-                              />
-                              <Pressable style={styles.bottomSheetButton} onPress={() => {setIsSheetVisible(true)}}>
-                              <Text style={{fontSize:14, textAlign: 'center', textTransform:'uppercase'}}>
-                              add vehicle
-                              </Text>
-                              <FontAwesome name={"arrow-right"} size={18} style={design.vehicle.icon} color={"#808080"}/>
-                              </Pressable>
-                              </BottomSheetScrollView>
-                              </BottomSheet>
-                              
-                              
-                              
-                              {/* Buy Airtime     */}
-                              <BottomSheet
-                              ref={buyAirtimeBottomSheetRef}
-                              index={-1}
-                              snapPoints={airtimeSnapPoints}
-                              enablePanDownToClose={true}
-                              backdropComponent={renderVehiclesBackdrop}
-                              onChange={handleSheetChanges}
-                              handleComponent={() => renderHeader("Buy Airtime") }
-                              >
-                              <BottomSheetScrollView contentContainerStyle={styles.contentContainer}>
-                              
-                              <View style={{flexDirection: 'row', padding:35}}>
-                              <TextInput 
-                              name="vehicleNumber" 
-                              value={airtimeAmount}
-                              onSubmitEditing={Keyboard.dismiss}
-                              onChangeText={(val) => setAirtimeAmount(val)}   
-                              style={styles.input}
-                              keyboardType='numeric'
-                              placeholder={"Enter amount to load e.g 50"}/>
-                              </View>
-                              
-                              <TouchableOpacity style={styles.bottomSheetButton} onPress={() => loadAirtime() }>
-                              
-                              {
-                                isLoadingAirtime ? 
-                                <UIActivityIndicator color='black' size={27}/> : 
-                                <>
-                                <Text style={{fontSize:14, textAlign: 'center',
-                                textTransform:'uppercase'}}> Continue</Text>
-                                <FontAwesome name={"arrow-right"} size={18}
-                                style={design.vehicle.icon} color={"#808080"}/>
-                                </>
-                              }
-                              </TouchableOpacity>
-                              </BottomSheetScrollView>
-                              </BottomSheet>
-                              
-                              
-                              
-                              
-                              <BottomSheet
-                              ref={favouritesBottomSheetRef}
-                              index={-1}
-                              snapPoints={snapPoints}
-                              enablePanDownToClose={true}
-                              backdropComponent={renderFavouritesBackdrop}
-                              onChange={handleSheetChanges}
-                              handleComponent={() => renderHeader("favourite parking areas") }
-                              >
-                              <BottomSheetScrollView contentContainerStyle={styles.contentContainer}>
-                              
-                              <View style={styles.SheetContentContainer}>
-                              <Divider style={styles.divider}/>
-                              
-                              <SafeAreaView>
-                              <FlatList
-                              data={nearByParkings}
-                              renderItem={({item}) => parkingsComponent(item) }
-                              keyExtractor={(item, index) => { return item.id.toString()}}
-                              ItemSeparatorComponent = { FlatListItemSeparator }
-                              />
-                              </SafeAreaView>
-                              
-                              <Pressable style={styles.bottomSheetButton} onPress={showModal}>
-                              <Text style={design.vehicle.textAdd}>
-                              add favourite parking 
-                              <FontAwesome name={"arrow-right"} size={10} style={design.vehicle.icon}/>
-                              </Text>
-                              </Pressable>
-                              
-                              
-                              </View>
-                              </BottomSheetScrollView>
-                              </BottomSheet>
-                              
-                              
-                              </View>
-                              </ScrollView>
-                              );
-                            };
+                            </View> */}
                             
-                            export default HomeScreen;
+                            </View>
+                            </View>
                             
-                            const styles = StyleSheet.create({
-                              
-                              container: {
-                                flex: 1,
-                                backgroundColor: design.colors.primary,
+                            
+                            {/* Vehicles List  */}
+                            <BottomSheet
+                            ref={vehicleBottomSheetRef}
+                            index={-1}
+                            snapPoints={snapPoints}
+                            enablePanDownToClose={true}
+                            backdropComponent={renderVehiclesBackdrop}
+                            onChange={handleVehicleSheetChanges}
+                            handleComponent={() => renderHeader("My Vehicles") }
+                            >
+                            <BottomSheetScrollView contentContainerStyle={styles.contentContainer}>
+                            
+                            <View style={{flexDirection: 'row'}}>
+                            <View style={{flexDirection: 'row', alignItems: 'flex-end'}}>
+                            </View>
+                            </View>
+                            
+                            <Divider style={styles.divider}/>
+                            <FlatList
+                            scrollEnabled={true}
+                            vertical={true}
+                            data={vehicles}
+                            renderItem={({item}) => VehicleComponent(item) }
+                            ItemSeparatorComponent = { FlatListItemSeparator }
+                            keyExtractor={(item, index) => { return item.number.toString()}}
+                            ListEmptyComponent={<View style={{flex:1, justifyContent: 'center', alignItems: 'center'}}>
+                              <Text style={styles.text}>You haven't added any vehicles yet.</Text>
+                              </View>}
+                            />
+                            <Pressable style={styles.bottomSheetButton} onPress={() => {setIsSheetVisible(true)}}>
+                            <Text style={{fontSize:14, textAlign: 'center', textTransform:'uppercase'}}>
+                            add vehicle
+                            </Text>
+                            <FontAwesome name={"arrow-right"} size={18} style={design.vehicle.icon} color={"#808080"}/>
+                            </Pressable>
+                            </BottomSheetScrollView>
+                            </BottomSheet>
+                            
+                            
+                            
+                            {/* Buy Airtime     */}
+                            <BottomSheet
+                            ref={buyAirtimeBottomSheetRef}
+                            index={-1}
+                            snapPoints={airtimeSnapPoints}
+                            enablePanDownToClose={true}
+                            backdropComponent={renderVehiclesBackdrop}
+                            onChange={handleSheetChanges}
+                            handleComponent={() => renderHeader("Buy Airtime") }
+                            >
+                            <BottomSheetScrollView contentContainerStyle={styles.contentContainer}>
+                            
+                            <View style={{flexDirection: 'row', padding:35}}>
+                            <TextInput 
+                            name="vehicleNumber" 
+                            value={airtimeAmount}
+                            onSubmitEditing={Keyboard.dismiss}
+                            onChangeText={(val) => setAirtimeAmount(val)}   
+                            style={styles.input}
+                            keyboardType='numeric'
+                            placeholder={"Enter amount to load e.g 50"}/>
+                            </View>
+                            
+                            <TouchableOpacity style={styles.bottomSheetButton} onPress={() => loadAirtime() }>
+                            
+                            {
+                              isLoadingAirtime ? 
+                              <UIActivityIndicator color='black' size={27}/> : 
+                              <>
+                              <Text style={{fontSize:14, textAlign: 'center',
+                              textTransform:'uppercase'}}> Continue</Text>
+                              <FontAwesome name={"arrow-right"} size={18}
+                              style={design.vehicle.icon} color={"#808080"}/>
+                              </>
+                            }
+                            </TouchableOpacity>
+                            </BottomSheetScrollView>
+                            </BottomSheet>
+                            
+                            
+                            
+                            
+                            <BottomSheet
+                            ref={favouritesBottomSheetRef}
+                            index={-1}
+                            snapPoints={snapPoints}
+                            enablePanDownToClose={true}
+                            backdropComponent={renderFavouritesBackdrop}
+                            onChange={handleSheetFavouriteParkingChanges}
+                            handleComponent={() => renderHeader("favourite parking areas") }
+                            >
+                            <BottomSheetScrollView contentContainerStyle={styles.contentContainer}>
+                            
+                            <View style={styles.SheetContentContainer}>
+                            <Divider style={styles.divider}/>
+                            
+                            <SafeAreaView>
+                            <FlatList
+                            data={favouriteParkings}
+                            renderItem={({item}) => parkingsComponent(item) }
+                            keyExtractor={(item, index) => { return item.id.toString()}}
+                            ItemSeparatorComponent = { FlatListItemSeparator }
+                            ListEmptyComponent={<View style={{flex:1, justifyContent: 'center', alignItems: 'center'}}>
+                              <Text style={styles.text}>You haven't added any parkings in favourite section</Text>
+                              </View>}
+                            />
+                            </SafeAreaView>
+                            
+                            <Pressable style={styles.bottomSheetButton} onPress={showModal}>
+                            <Text style={design.vehicle.textAdd}>
+                            add favourite parking 
+                            <FontAwesome name={"arrow-right"} size={10} style={design.vehicle.icon}/>
+                            </Text>
+                            </Pressable>
+                            
+                            
+                            </View>
+                            </BottomSheetScrollView>
+                            </BottomSheet>
+                            
+                            
+                            </View>
+                            </ScrollView>
+                            );
+                          };
+                          
+                          export default HomeScreen;
+                          
+                          const styles = StyleSheet.create({
+                            
+                            container: {
+                              flex: 1,
+                              backgroundColor: design.colors.primary,
+                            },
+                            
+                            uploadOptions:{
+                              flexDirection: 'column', 
+                              justifyContent: 'center',
+                              alignItems: 'center'
+                            },
+                            
+                            
+                            
+                            shadow: {
+                              shadowColor: "#000",
+                              shadowOffset: {
+                                width: 0,
+                                height: 2,
                               },
+                              shadowOpacity: 0.25,
+                              shadowRadius: 3.84,
                               
-                              uploadOptions:{
-                                flexDirection: 'column', 
-                                justifyContent: 'center',
-                                alignItems: 'center'
-                              },
-                              
-                              
-                              
-                              shadow: {
-                                shadowColor: "#000",
-                                shadowOffset: {
-                                  width: 0,
-                                  height: 2,
-                                },
-                                shadowOpacity: 0.25,
-                                shadowRadius: 3.84,
-                                
-                                elevation: 5,
-                              },
+                              elevation: 5,
+                            },
+                            
+                            
+                            SheetContentContainer: {
+                              backgroundColor: 'white',
+                              padding: 16,
+                              paddingTop:0,
+                              // height:'auto',
+                            },
+                            
+                            contentContainer: {
+                              flex: 1,
+                              alignItems: 'center',
                               
                               
-                              SheetContentContainer: {
-                                backgroundColor: 'white',
-                                padding: 16,
-                                paddingTop:0,
-                                // height:'auto',
-                              },
+                            },
+                            
+                            card:{
+                              flex:1,
+                            },
+                            
+                            
+                            input: {
+                              backgroundColor: '#ffffff',
+                              borderRadius: 3,
+                              padding:10,
+                              borderWidth: 0.5,
+                              borderColor:design.colors.primary,
+                              fontSize:16,
+                            },
+                            
+                            airtimeInput: {
+                              backgroundColor: '#ffffff',
+                              borderRadius: 3,
+                              padding:15,
+                              borderWidth: 0.5,
+                              borderColor:design.colors.primary,
+                              width: '100%',
+                            },
+                            
+                            
+                            
+                            button: {
+                              borderRadius: 20,
+                              padding: 10,
+                              elevation: 2
+                            },
+                            
+                            
+                            textStyle: {
+                              color: "white",
+                              fontWeight: "bold",
+                              textAlign: "center"
+                            },
+                            
+                            divider:{
+                              borderBottomColor: '#e2e2e2',
+                              borderBottomWidth: 1,
+                              marginTop:20
+                            },
+                            
+                            cardContainer:{
+                              flexDirection: "row",
+                              textAlign:'center',
+                              flexWrap: 'wrap',
+                            },
+                            
+                            
+                            
+                            
+                            bottomSheetButton:{
+                              flexDirection: 'row',
+                              borderWidth:1, 
+                              marginTop:15,
+                              marginBottom:60,
+                              height:60,
+                              width:'70%',
+                              padding:15,
+                              borderRadius:30,
+                              borderColor:design.colors.primary,
+                              justifyContent: 'center',
+                              alignItems: 'center',
+                            },
+                            
+                            inputContainer:{
+                              padding:10,
                               
-                              contentContainer: {
-                                flex: 1,
-                                alignItems: 'center',
-                                
-                                
-                              },
+                            },
+                            scrollView: {
+                              flex: 1, 
+                            },
+                            bottomSheetContainer:{
+                              flex: 1,
+                              padding: 24,
+                              justifyContent: 'center',
+                              backgroundColor: 'grey',
+                            },
+                            
+                            footer:{
+                              marginBottom: 30,
+                              flexDirection: 'row',
+                              alignItems: 'center',
+                              alignSelf: 'center',
+                              justifyContent: 'center',
                               
-                              card:{
-                                flex:1,
-                              },
+                            },
+                            
+                            vehiclesDropdown: {
+                              borderRadius: theme.SIZES.base / 2,
+                              borderColor: theme.COLORS.overlay,
+                              borderWidth: 1,
+                              padding: theme.SIZES.base*1.3,
+                              width:350,
+                              justifyContent: 'center',
+                              alignItems: 'center',
+                              fontSize: theme.SIZES.font*0.95,
+                            },
+                            
+                            vehiclesDropdownOption: {
+                              padding: 5,
+                              fontSize: 18,
+                            },
+                            indicator: {
+                              position: "absolute",
+                              width: 10,
+                              height: 4,
+                              backgroundColor: "#999",
+                            },
+                            
+                            customBottomSheetHeader: {
+                              alignContent: "center",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              backgroundColor: "white",
+                              paddingVertical: 14,
+                              borderBottomWidth: 1,
+                              borderBottomColor: "#fff",
+                            },
+                            
+                            bottomSheetHeader: {
+                              backgroundColor: '#FFFFFF',
+                              shadowColor: '#333333',
+                              borderTopLeftRadius: 20,
+                              borderTopRightRadius: 20,
+                            },
+                            
+                            panelHeader: {
+                              alignItems: 'center',
+                            },
+                            
+                            panelHandle: {
+                              width: 40,
+                              height: 8,
+                              borderRadius: 4,
+                              backgroundColor: '#999',
+                              marginTop: 8,
+                              marginBottom: 10,
                               
-                              
-                              input: {
-                                backgroundColor: '#ffffff',
-                                borderRadius: 3,
-                                padding:10,
-                                borderWidth: 0.5,
-                                borderColor:design.colors.primary,
-                                fontSize:16,
-                              },
-                              
-                              airtimeInput: {
-                                backgroundColor: '#ffffff',
-                                borderRadius: 3,
-                                padding:15,
-                                borderWidth: 0.5,
-                                borderColor:design.colors.primary,
-                                width: '100%',
-                              },
-                              
-                              
-                              
-                              button: {
-                                borderRadius: 20,
-                                padding: 10,
-                                elevation: 2
-                              },
-                              
-                              
-                              textStyle: {
-                                color: "white",
-                                fontWeight: "bold",
-                                textAlign: "center"
-                              },
-                              
-                              divider:{
-                                borderBottomColor: '#e2e2e2',
-                                borderBottomWidth: 1,
-                                marginTop:20
-                              },
-                              
-                              cardContainer:{
-                                flexDirection: "row",
-                                textAlign:'center',
-                                flexWrap: 'wrap',
-                              },
-                              
-                              
-                              
-                              
-                              bottomSheetButton:{
-                                flexDirection: 'row',
-                                borderWidth:1, 
-                                marginTop:15,
-                                marginBottom:60,
-                                height:60,
-                                width:'70%',
-                                padding:15,
-                                borderRadius:30,
-                                borderColor:design.colors.primary,
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                              },
-                              
-                              inputContainer:{
-                                padding:10,
-                                
-                              },
-                              scrollView: {
-                                flex: 1, 
-                              },
-                              bottomSheetContainer:{
-                                flex: 1,
-                                padding: 24,
-                                justifyContent: 'center',
-                                backgroundColor: 'grey',
-                              },
-                              
-                              footer:{
-                                marginBottom: 30,
-                                flexDirection: 'row',
-                                alignItems: 'center',
-                                alignSelf: 'center',
-                                justifyContent: 'center',
-                                
-                              },
-                              
-                              vehiclesDropdown: {
-                                borderRadius: theme.SIZES.base / 2,
-                                borderColor: theme.COLORS.overlay,
-                                borderWidth: 1,
-                                padding: theme.SIZES.base*1.3,
-                                width:350,
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                fontSize: theme.SIZES.font*0.95,
-                              },
-                              
-                              vehiclesDropdownOption: {
-                                padding: 5,
-                                fontSize: 18,
-                              },
-                              indicator: {
-                                position: "absolute",
-                                width: 10,
-                                height: 4,
-                                backgroundColor: "#999",
-                              },
-                              
-                              customBottomSheetHeader: {
-                                alignContent: "center",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                backgroundColor: "white",
-                                paddingVertical: 14,
-                                borderBottomWidth: 1,
-                                borderBottomColor: "#fff",
-                              },
-                              
-                              bottomSheetHeader: {
-                                backgroundColor: '#FFFFFF',
-                                shadowColor: '#333333',
-                                borderTopLeftRadius: 20,
-                                borderTopRightRadius: 20,
-                              },
-                              
-                              panelHeader: {
-                                alignItems: 'center',
-                              },
-                              
-                              panelHandle: {
-                                width: 40,
-                                height: 8,
-                                borderRadius: 4,
-                                backgroundColor: '#999',
-                                marginTop: 8,
-                                marginBottom: 10,
-                                
-                              },
-                              
-                              panel: {
-                                backgroundColor: '#FFFFFF',
-                              },
-                              
-                              panelTitle: {
-                                fontSize: 22,
-                                height: 35,
-                              },
-                              panelSubtitle: {
-                                fontSize: 14,
-                                color: 'gray',
-                                height: 30,
-                                marginBottom: 10,
-                              },
-                              
-                              morePanel:{
-                                backgroundColor: '#fff',
-                                padding:30,
-                                margin:20,
-                                borderRadius:5,
-                                borderColor: design.colors.orange,
-                                borderWidth:1,
-                                flexDirection: 'row',
-                                justifyContent: 'space-between', alignContent:'center',
-                                alignItems: 'center'
-                              },
-                              
-                              moreText: {
-                                fontSize: 16,
-                                fontWeight: 'bold',
-                                opacity: 0.6,
-                              },
+                            },
+                            
+                            panel: {
+                              backgroundColor: '#FFFFFF',
+                            },
+                            
+                            panelTitle: {
+                              fontSize: 22,
+                              height: 35,
+                            },
+                            panelSubtitle: {
+                              fontSize: 14,
+                              color: 'gray',
+                              height: 30,
+                              marginBottom: 10,
+                            },
+                            
+                            morePanel:{
+                              backgroundColor: '#fff',
+                              padding:30,
+                              margin:20,
+                              borderRadius:5,
+                              borderColor: design.colors.orange,
+                              borderWidth:1,
+                              flexDirection: 'row',
+                              justifyContent: 'space-between', alignContent:'center',
+                              alignItems: 'center'
+                            },
+                            
+                            moreText: {
+                              fontSize: 16,
+                              fontWeight: 'bold',
+                              opacity: 0.6,
+                            },
+                            
+                            label: {
+                              fontSize:16,
+                            },
+                            
+                            popupTitle: {
+                              padding:10, 
+                              fontSize: 18,
+                              textTransform:'uppercase',
+                              fontWeight:'bold'
+                            },
+                            
+                            popupHeaderText: {
+                              padding:10, 
+                              fontSize: 19,
+                              textTransform:'capitalize',
+                              fontWeight:'bold'
+                            },
 
-                              label: {
-                                    fontSize:16,
-                              },
-                              
-                              
-                              
-                              
-                              
-                              
-                              
-                              
-                            });
+                            text: {
+                              fontSize: 18,
+                              textAlign: 'center',
+                            }
                             
                             
                             
+                            
+                            
+                            
+                            
+                            
+                          });
+                          
+                          
+                          

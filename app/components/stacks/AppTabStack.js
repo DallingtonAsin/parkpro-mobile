@@ -10,7 +10,7 @@ import OrdersStack from './OrdersStack';
 import styles from '../../../assets/css/styles';
 
 const BottomTab = createBottomTabNavigator();
-
+const tabIconFontSize = 24;
 
 const AppTabStack = () => {
     return (
@@ -54,7 +54,7 @@ const AppTabStack = () => {
                             <Icon
                             name="heart"
                             color="#E24E1B"
-                            size={12}
+                            size={14}
                             onPress={() => {
                             }}
                             />
@@ -75,7 +75,7 @@ const AppTabStack = () => {
                                     backgroundColor: styles.colors.white,
                                 },
                                 labelStyle:{
-                                    fontSize:12,
+                                    fontSize: 14,
                                     textAlign:'center',
                                 },
                                 labelPosition:'below-icon',
@@ -89,7 +89,7 @@ const AppTabStack = () => {
                                     <Icon
                                     name="home"
                                     style={{
-                                        fontSize: 20,
+                                        fontSize: tabIconFontSize,
                                         color: color
                                     }}
                                     />
@@ -106,7 +106,7 @@ const AppTabStack = () => {
                                         <Icon
                                             name="list-ul"
                                             style={{
-                                                fontSize: 20,
+                                                fontSize: tabIconFontSize,
                                                 color: color
                                             }}
                                             />
@@ -122,7 +122,7 @@ const AppTabStack = () => {
                                             <Icon
                                             name="bell"
                                             style={{
-                                                fontSize: 20,
+                                                fontSize: tabIconFontSize,
                                                 color: color
                                             }}
                                             />
@@ -138,7 +138,7 @@ const AppTabStack = () => {
                                                 <Icon
                                                 name="cloud-rain"
                                                 style={{
-                                                    fontSize: 20,
+                                                    fontSize: tabIconFontSize,
                                                     color: color
                                                 }}
                                                 />
@@ -155,7 +155,7 @@ const AppTabStack = () => {
                                                     <Icon
                                                     name="question-circle"
                                                     style={{
-                                                        fontSize: 20,
+                                                        fontSize: tabIconFontSize,
                                                         color: color
                                                     }}
                                                     />

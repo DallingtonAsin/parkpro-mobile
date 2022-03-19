@@ -263,7 +263,7 @@ import { Text,
           onChangeText={(text) => { onChangeAmount(text) }}
           //  label="Topup amount"
             />
-          <Text style={{ opacity: 0.5, color: state.warningColor }}>Min: {min_recharge_amount} and Max: {max_recharge_amount}</Text>
+          <Text style={{ opacity: 0.5, color: state.warningColor, fontSize:15 }}>Min: {min_recharge_amount} and Max: {max_recharge_amount}</Text>
           </View>
           
           
@@ -282,7 +282,7 @@ import { Text,
           
           <TouchableOpacity>    
           {
-            !state.editMode ? <Text style={{ fontSize: 16 }}>{state.phone_number}</Text>
+            !state.editMode ? <Text style={{ fontSize: 18 }}>{state.phone_number}</Text>
             : <TextInput mode={'outlined'}
             placeholder="Your phone number"
             value={state.phone_number} 
@@ -384,5 +384,5 @@ import { Text,
           inputBox: {
             borderBottomWidth: 1,
             borderBottomColor: 'gray',
-        }
+         }
         })

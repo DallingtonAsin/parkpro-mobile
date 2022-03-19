@@ -22,7 +22,7 @@ export default function WeatherDetails({ currentWeather, currentWeatherDetails, 
                     <View style={styles.weatherDetailsRow}>
                         <FontAwesome name="thermometer" size={25} color={SECONDARY_COLOR} />
                         <View style={styles.weatherDetailsItems}>
-                            <Text>Feels like :</Text>
+                            <Text style={styles.text}>Feels like :</Text>
                             <Text style={styles.textSecondary}>{temp} ° {units} </Text>
                         </View>
                     </View>
@@ -31,7 +31,7 @@ export default function WeatherDetails({ currentWeather, currentWeatherDetails, 
                     <View style={styles.weatherDetailsRow}>
                         <FontAwesome5 name="water" size={25} color={SECONDARY_COLOR} />
                         <View style={styles.weatherDetailsItems}>
-                            <Text>Humidity :</Text>
+                            <Text style={styles.text}>Humidity :</Text>
                             <Text style={styles.textSecondary}>{humidity} %</Text>
                         </View>
                     </View>
@@ -42,7 +42,7 @@ export default function WeatherDetails({ currentWeather, currentWeatherDetails, 
                     <View style={styles.weatherDetailsRow}>
                         <FontAwesome name="bold" size={25} color={SECONDARY_COLOR} />
                         <View style={styles.weatherDetailsItems}>
-                            <Text>Wind Speed :</Text>
+                            <Text style={styles.text}>Wind Speed :</Text>
                             <Text style={styles.textSecondary}>{windSpeed}</Text>
                         </View>
                     </View>
@@ -51,7 +51,7 @@ export default function WeatherDetails({ currentWeather, currentWeatherDetails, 
                     <View style={styles.weatherDetailsRow}>
                         <FontAwesome name="tachometer" size={25} color={SECONDARY_COLOR} />
                         <View style={styles.weatherDetailsItems}>
-                            <Text>Pressure :</Text>
+                            <Text style={styles.text}>Pressure :</Text>
                             <Text style={styles.textSecondary}>{pressure} hPa</Text>
                         </View>
                     </View>
@@ -90,4 +90,7 @@ const styles = StyleSheet.create({
         fontWeight: '700',
         margin: 7,
     },
+    text: {
+        fontSize:16
+    }
 })

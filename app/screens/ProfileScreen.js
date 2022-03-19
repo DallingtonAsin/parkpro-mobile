@@ -79,7 +79,7 @@ const Profile = props => {
 
     <View style={{justifyContent: 'center', alignSelf: 'center'}}>
     <Text style={styles.name}>{name}</Text>
-    <Paragraph style={styles.info}>{state.role}</Paragraph>
+    <Paragraph style={styles.info}>{profile.phone_number}</Paragraph>
     </View>
    
     <Divider style={ design.divider1 }/>
@@ -110,8 +110,6 @@ const Profile = props => {
     <Text style={styles.text}>EMAIL</Text>
     <Text style={styles.userinfo}>{profile.email}</Text>
         </View>
-        
-        
         <Divider style={design.divider1} />
 
     </View>
@@ -122,9 +120,6 @@ const Profile = props => {
     <Text style={{color:'#fff', textAlign: 'center', fontSize:15}}>Edit Profile</Text>
     </TouchableOpacity>
     </View>
-
-
-
     </SafeAreaView>
     );
     
@@ -158,11 +153,11 @@ const Profile = props => {
       opacity:0.8,
       textTransform:'capitalize',
       fontWeight:'bold',
+      fontSize:16,
     },
     userinfo: {
-      // fontWeight: 'bold',
       opacity:0.7,
-      fontSize:15,
+      fontSize:17,
     },
     avatar: {
       width: 120,

@@ -29,6 +29,8 @@ import { Text,TextInput, TouchableOpacity, View, StyleSheet, SafeAreaView,  Plat
     
   }
   
+  
+  
   var mime = require('mime-types');
   
   const EditProfile = () => {
@@ -40,10 +42,8 @@ import { Text,TextInput, TouchableOpacity, View, StyleSheet, SafeAreaView,  Plat
     const {profile, setProfile} = useContext(ProfileContext);
     const { updateProfile, UpdateProfileImage, syncProfileData, deleteProfilePicture } = React.useContext(AuthContext);
     
-    const bs = React.useRef(null);
-    const fall = new Animated.Value(1);
-    
-    
+ 
+
     const [image, setImage] = useState('https://dallingtonasingwire.com/img/user-profile9.png');
     
     const toggleBottomNavigationView = () => {
@@ -171,8 +171,8 @@ import { Text,TextInput, TouchableOpacity, View, StyleSheet, SafeAreaView,  Plat
         console.log("Update profile data", reqParams);
         setIsLoading(true);
         let response = await updateProfile(reqParams);
-        let message = response.message
-        let statusCode = response.statusCode;
+        const message = response.message
+        const statusCode = response.statusCode;
         setIsLoading(false);
         if(statusCode == 0){
           Alert.alert("Message", message);
@@ -182,7 +182,7 @@ import { Text,TextInput, TouchableOpacity, View, StyleSheet, SafeAreaView,  Plat
           setProfile(customer);
           await syncProfileData(customer);
           await updateUserProfile(customer);
-          Alert.alert("Message", message);
+          Toast.show(message, Toast.LONG);
         }
         setIsLoading(false);
       }else{
@@ -218,36 +218,36 @@ import { Text,TextInput, TouchableOpacity, View, StyleSheet, SafeAreaView,  Plat
         console.log("Error on async storage", e);
       }
     }
-
-
-    const removeProfilePicture = async() => {
-        if(profile.id && profile.phone_number){
-          const data = {
-            id: profile.id,
-            phone_number: profile.phone_number
-          }
-          setIsUpdatingImage(true);
-          const response = await deleteProfilePicture(data);
-          const statusCode = response.statusCode;
-          const message = response.message;
-          if(statusCode == 1){
-            const customer = response.data;
-            console.log("Data on removing profile image", customer);
-            setProfile(customer);
-            await syncProfileData(customer);
-            await updateUserProfile(customer);
-            Toast.show(message);
-          }else{
-            alert(message);
-          }
-          setIsUpdatingImage(false);
-        }else{
-          alert("Unable to get your identity");
-        }
-    }
-
-    const confirmRemovePicture = () => {
     
+    
+    const removeProfilePicture = async() => {
+      if(profile.id && profile.phone_number){
+        const data = {
+          id: profile.id,
+          phone_number: profile.phone_number
+        }
+        setIsUpdatingImage(true);
+        const response = await deleteProfilePicture(data);
+        const statusCode = response.statusCode;
+        const message = response.message;
+        if(statusCode == 1){
+          const customer = response.data;
+          console.log("Data on removing profile image", customer);
+          setProfile(customer);
+          await syncProfileData(customer);
+          await updateUserProfile(customer);
+          Toast.show(message);
+        }else{
+          alert(message);
+        }
+        setIsUpdatingImage(false);
+      }else{
+        alert("Unable to get your identity");
+      }
+    }
+    
+    const confirmRemovePicture = () => {
+      
       Alert.alert(
         "Warning",
         "Are you sure you want to remove your profile picture?",
@@ -261,413 +261,384 @@ import { Text,TextInput, TouchableOpacity, View, StyleSheet, SafeAreaView,  Plat
         {
           cancelable: true,
         }
-      );
-
-
-    }
-    
-    useEffect(() => {
-      let isMounted = true;
-      if(isMounted) {
-        updateUserProfile();
-      }
-      return () => { isMounted = false };
-    }, []);
-    
-    
-    return(
-      <>
-      
-      <SafeAreaView style={styles.container}>
-      
-      
-      <BottomSheet
-      visible={visible}
-      onBackButtonPress={toggleBottomNavigationView}
-      onBackdropPress={toggleBottomNavigationView}
-      >
-      <View style={styles.panel} elevation={5}>
-      
-      <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
-      <View>
-      <Text style={styles.panelTitle}>Profile Photo</Text>
-      <Text style={styles.panelSubtitle}>Upload Profile Picture</Text>
-      </View>
-      
-      {
-        profile.image ? 
-        <TouchableOpacity style={{marginLeft: 55}} onPress={() =>  confirmRemovePicture()}>
-        <FontAwesome name={"trash"} size={30} color={design.colors.red} />
-        </TouchableOpacity>
-        : null
+        );
+        
+        
       }
       
+      useEffect(() => {
+        let isMounted = true;
+        if(isMounted) {
+          updateUserProfile();
+        }
+        return () => { isMounted = false };
+      }, []);
       
       
-      </View>
-      
-      
-      <View style={{flexDirection: 'row', alignItems: 'center', margin:30, justifyContent: 'space-evenly'}}>
-      
-      <View style={styles.uploadOptions}>
-      <TouchableOpacity onPress={()=> setVisible(false) } style={[styles.icon, {borderColor:'red', backgroundColor: 'red'}]} >
-      <FontAwesome name={"trash"} size={22} color={"#fff"} />
-      </TouchableOpacity>
-      <Text>Cancel</Text>
-      </View>
-      
-      <View style={styles.uploadOptions}>
-      <TouchableOpacity  style={[styles.icon, {borderColor:'purple', backgroundColor: 'purple'}]}>
-      <FontAwesome name={"photo"} size={25}  color={"#fff"}  onPress={() => choosePhotoFromLibrary()}/>
-      </TouchableOpacity>
-      <Text>Gallery</Text>
-      </View>
-      
-      <View style={styles.uploadOptions}>
-      <TouchableOpacity onPress={() => takePhotoFromCamera()} style={[styles.icon, {borderColor:'green', backgroundColor: 'green'}]}> 
-      <FontAwesome name={"camera"} size={25} color={"#fff"}/>
-      </TouchableOpacity>
-      <Text>Camera</Text>
-      </View>
-      
-      </View>
-      
-      </View>
-      </BottomSheet>
-      
-      
-      <View style={styles.header}>
-      {
-        !isUpdatingImage ? 
-        state.image ?
-        <Avatar.Image size={120} style={styles.avatar} 
-        source={{uri: state.image }} />
-        : <Avatar.Image size={120} style={styles.avatar} 
-        source={require('../../assets/user-profile9.png')} />
-        : 
-        <View style={styles.avatar1}>
-        <UIActivityIndicator color='black' size={27}/>
+      return(
+        <>
+        
+        <SafeAreaView style={styles.container}>
+        
+        
+        <BottomSheet
+        visible={visible}
+        onBackButtonPress={toggleBottomNavigationView}
+        onBackdropPress={toggleBottomNavigationView}
+        >
+        <View style={styles.panel} elevation={5}>
+        
+        <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
+        <View>
+        <Text style={styles.panelTitle}>Profile Photo</Text>
+        <Text style={styles.panelSubtitle}>Upload Profile Picture</Text>
         </View>
-      } 
-      <TouchableOpacity onPress={toggleBottomNavigationView} style={styles.camera}>
-      <Icon name="camera" color={design.colors.white}  size={18}/>
-      </TouchableOpacity>    
-      </View>
-      
-      
-      
-      
-      
-      
-      
-      
-      <View style={styles.body}>
-      
-      <View style={styles.form}>
-      <Text style={styles.text}>FIRST NAME</Text>
-      <TextInput value={state.first_name} 
-      placeholder="First Name"
-      style={styles.input} 
-      spellCheck={false}
-      autoCorrect={false}
-      onChangeText={(val) => setData({...state, first_name: val})}
-      />
-      </View>
-      
-      <View style={styles.form}>
-      <Text style={styles.text}>LAST NAME</Text>
-      <TextInput value={state.last_name}
-      placeholder="Last Name"
-      style={styles.input} 
-      spellCheck={false}
-      autoCorrect={false}
-      onChangeText={(val) => setData({...state, last_name: val})}
-      />
-      </View>
-      
-      <View style={styles.form}>
-      <Text style={styles.text}>PHONE NUMBER</Text>
-      <TextInput value={state.phone_number}
-      placeholder="Phone Number"
-      style={styles.input} 
-      spellCheck={false}
-      autoCorrect={false}
-      onChangeText={(val) => setData({...state, phone_number: val})}
-      />
-      </View>
-      
-      <View style={styles.form}>
-      <Text style={styles.text}>Email</Text>
-      <TextInput 
-      value={state.email}
-      placeholder="Email address"
-      style={styles.input}
-      spellCheck={false}
-      autoCorrect={false}
-      onChangeText={(val) => setData({...state, email: val})}
-      />
-      </View>
-      
-      </View>
-      
-      
-      
-      
-      
-      <View style={styles.footer}>
-      <TouchableOpacity style={design.btnPrimary} onPress={handleProfileUpdate}>
-      <Text style={{color:'#fff', textTransform:'capitalize', fontSize:15}}>
-      {isLoading ? <UIActivityIndicator color='white' size={27} /> : 'Save Profile' } 
-      </Text>
-      </TouchableOpacity>
-      </View>
-      
-      </SafeAreaView>
-      
-      
-      
-      
-      </>
-      );
-      
-      
-    }
-    
-    
-    export default EditProfile
-    
-    const styles = StyleSheet.create({
-      container: {
-        flex:1,
-        backgroundColor: design.colors.white,
-      },
-      
-      header:{
-        // height:120,
-        justifyContent: 'center',
-        alignItems: 'center',
-        flex:1,
-        backgroundColor: design.colors.silver,
-        flexDirection: 'row',
-      },
-      
-      body:{
-        flex:3,
-        padding:15,
-        // height:'100%',
-        // marginTop:35,
-      },
-      
-      
-      
-      
-      
-      
-      text:{
-        color: design.colors.primary, 
-        fontWeight: 'bold',
-        opacity:0.8,
-        textTransform:'capitalize'
-      },
-      avatar: {
-        width: 120,
-        height: 120,
-        borderRadius: 70,
-        borderWidth: 1,
-        borderColor: "#e2e2e2",
-        backgroundColor:'white',
-        color: 'red',
-        marginTop:90,
-        position: 'absolute',
-      },
-      
-      
-      
-      
-      
-      avatar1: {
-        width: 120,
-        height: 120,
-        borderRadius: 70,
-        alignSelf:'center',
-        position: 'absolute',
-        marginTop:90, 
-        backgroundColor: design.colors.white,
-        borderWidth: 2,
-        borderColor: "white",
-      },
-      
-      imageStyle: {
-        width: 200,
-        height: 200,
-        margin: 5,
-      },
-      
-      name:{
-        fontSize:20,
-        color: "#696969",
-        fontWeight: "600"
-      },
-      
-      
-      
-      
-      form: {
-        padding: 12,
-      },
-      
-      divider:{
-        width:'90%',
-        height:1,
-        margin:15,
-        backgroundColor:'#e2e2e2',
-      },
-      
-      input:{
-        borderBottomColor: 'lightblue',
-        borderBottomWidth:1,
         
-      },
-      green:{
-        color:'green'
-      },
-      
-      red:{
-        color:'red'
-      },
-      
-      
-      
-      panel: {
-        padding: 20,
-        backgroundColor: '#FFFFFF',
-        paddingTop: 20,
-        height: 300,
-      },
-      
-      panelTitle: {
-        fontSize: 22,
-        height: 35,
-        textAlign: 'center',
-      },
-      panelSubtitle: {
-        fontSize: 14,
-        color: 'gray',
-        height: 30,
-        marginBottom: 10,
-        textAlign: 'center',
+        {
+          profile.image ? 
+          <TouchableOpacity style={{marginLeft: 55}} onPress={() =>  confirmRemovePicture()}>
+          <FontAwesome name={"trash"} size={30} color={design.colors.red} />
+          </TouchableOpacity>
+          : null
+        }
         
-      },
-      
-      
-      bottomSheetHeader: {
-        backgroundColor: '#FFFFFF',
-        shadowColor: '#333333',
-        borderTopLeftRadius: 20,
-        borderTopRightRadius: 20,
-      },
-      
-      panelHeader: {
-        alignItems: 'center',
-      },
-      
-      panelHandle: {
-        width: 40,
-        height: 8,
-        borderRadius: 4,
-        backgroundColor: '#00000040',
-        marginBottom: 10,
-      },
-      
-      
-      panelButton: {
-        padding: 13,
-        borderRadius: 150 / 2,
-        backgroundColor: '#FF6347',
-        alignItems: 'center',
-        marginVertical: 7,
-      },
-      
-      panelButtonTitle: {
-        fontSize: 17,
-        fontWeight: 'bold',
-        color: 'white',
-      },
-      
-      action: {
-        flexDirection: 'row',
-        marginTop: 20,
-        marginBottom: 20,
-        borderBottomWidth: 1,
-        borderBottomColor: '#f2f2f2',
-        paddingBottom: 5,
-      },
-      
-      actionError: {
-        flexDirection: 'row',
-        marginTop: 10,
-        borderBottomWidth: 1,
-        borderBottomColor: '#FF0000',
-        paddingBottom: 5,
-      },
-      
-      textInput: {
-        flex: 1,
-        marginTop: Platform.OS === 'ios' ? 0 : -4,
-        paddingLeft: 10,
-        color: 'green',
-        marginLeft: 10,
-        fontSize:15,
-      },
-      icon: {
-        padding: 20,
-        borderWidth: 1,
-        borderRadius: 50,
-      },
-      uploadOptions:{
-        flexDirection: 'column', 
-        justifyContent: 'center',
-        alignItems: 'center'
-      },
-      
-      image: {
-        flex: 1,
-        justifyContent: "center"
-      },
-      
-      camera: {
-        marginLeft:120,
-        backgroundColor: design.colors.success,
-        padding:10, borderRadius:50,
-        borderColor:'#f4f4f4'
-      },
-      
-      footer:{
-        marginBottom: 30,
-        flexDirection: 'row',
-        alignItems: 'center',
-        alignSelf: 'center',
-        justifyContent: 'center',
+        </View>
         
-      },
+        
+        <View style={{flexDirection: 'row', alignItems: 'center', margin:30, justifyContent: 'space-evenly'}}>
+        
+        <View style={styles.uploadOptions}>
+        <TouchableOpacity onPress={()=> setVisible(false) } style={[styles.icon, {borderColor:'red', backgroundColor: 'red'}]} >
+        <FontAwesome name={"trash"} size={22} color={"#fff"} />
+        </TouchableOpacity>
+        <Text>Cancel</Text>
+        </View>
+        
+        <View style={styles.uploadOptions}>
+        <TouchableOpacity  style={[styles.icon, {borderColor:'purple', backgroundColor: 'purple'}]}>
+        <FontAwesome name={"photo"} size={25}  color={"#fff"}  onPress={() => choosePhotoFromLibrary()}/>
+        </TouchableOpacity>
+        <Text>Gallery</Text>
+        </View>
+        
+        <View style={styles.uploadOptions}>
+        <TouchableOpacity onPress={() => takePhotoFromCamera()} style={[styles.icon, {borderColor:'green', backgroundColor: 'green'}]}> 
+        <FontAwesome name={"camera"} size={25} color={"#fff"}/>
+        </TouchableOpacity>
+        <Text>Camera</Text>
+        </View>
+        
+        </View>
+        
+        </View>
+        </BottomSheet>
+        
+        
+        <View style={styles.header}>
+        {
+          !isUpdatingImage ? 
+          state.image ?
+          <Avatar.Image size={120} style={styles.avatar} 
+          source={{uri: state.image }} />
+          : <Avatar.Image size={120} style={styles.avatar} 
+          source={require('../../assets/user-profile9.png')} />
+          : 
+          <View style={styles.avatar1}>
+          <UIActivityIndicator color='black' size={27}/>
+          </View>
+        } 
+        <TouchableOpacity onPress={toggleBottomNavigationView} style={styles.camera}>
+        <Icon name="camera" color={design.colors.white}  size={18}/>
+        </TouchableOpacity>    
+        </View>
+        
+        
+        <View style={styles.body}>
+        
+        <View style={styles.form}>
+        <Text style={styles.text}>FIRST NAME</Text>
+        <TextInput value={state.first_name} 
+        placeholder="First Name"
+        style={styles.input} 
+        spellCheck={false}
+        autoCorrect={false}
+        onChangeText={(val) => setData({...state, first_name: val})}
+        />
+        </View>
+        
+        <View style={styles.form}>
+        <Text style={styles.text}>LAST NAME</Text>
+        <TextInput value={state.last_name}
+        placeholder="Last Name"
+        style={styles.input} 
+        spellCheck={false}
+        autoCorrect={false}
+        onChangeText={(val) => setData({...state, last_name: val})}
+        />
+        </View>
+        
+        <View style={styles.form}>
+        <Text style={styles.text}>PHONE NUMBER</Text>
+        <TextInput value={state.phone_number}
+        placeholder="Phone Number"
+        style={styles.input} 
+        spellCheck={false}
+        autoCorrect={false}
+        onChangeText={(val) => setData({...state, phone_number: val})}
+        />
+        </View>
+        
+        <View style={styles.form}>
+        <Text style={styles.text}>Email</Text>
+        <TextInput 
+        value={state.email}
+        placeholder="Email address"
+        style={styles.input}
+        spellCheck={false}
+        autoCorrect={false}
+        onChangeText={(val) => setData({...state, email: val})}
+        />
+        </View>
+        </View>
+        
+        <View style={styles.footer}>
+        <TouchableOpacity style={design.btnPrimary} onPress={handleProfileUpdate}>
+        <Text style={{color:'#fff', textTransform:'capitalize', fontSize:15}}>
+        {isLoading ? <UIActivityIndicator color='white' size={27} /> : 'Save Profile' } 
+        </Text>
+        </TouchableOpacity>
+        </View>
+        
+        </SafeAreaView>
+        
+        
+        
+        
+        </>
+        );
+        
+        
+      }
       
-      button: {
-        color: '#fff',
-        borderRadius:5,
-        padding:15,
-        backgroundColor: design.colors.primary,
-        borderColor: design.colors.primary,
-        position: 'absolute',
-        bottom: 0,
-        width: '90%',
-        justifyContent: 'center',
-        alignItems: 'center',
-      },
+      
+      export default EditProfile
+      
+      const styles = StyleSheet.create({
+        container: {
+          flex:1,
+          backgroundColor: design.colors.white,
+        },
+        
+        header:{
+          justifyContent: 'center',
+          alignItems: 'center',
+          flex:1,
+          backgroundColor: design.colors.silver,
+          flexDirection: 'row',
+        },
+        
+        body:{
+          flex:3,
+          padding:15,
+        },
+        
+        text:{
+          color: design.colors.primary, 
+          fontWeight: 'bold',
+          opacity:0.8,
+          textTransform:'capitalize',
+          fontSize:16,
+        },
+        avatar: {
+          width: 120,
+          height: 120,
+          borderRadius: 70,
+          borderWidth: 1,
+          borderColor: "#e2e2e2",
+          backgroundColor:'white',
+          color: 'red',
+          marginTop:90,
+          position: 'absolute',
+        },
+        
+        avatar1: {
+          width: 120,
+          height: 120,
+          borderRadius: 70,
+          alignSelf:'center',
+          position: 'absolute',
+          marginTop:90, 
+          backgroundColor: design.colors.white,
+          borderWidth: 2,
+          borderColor: "white",
+        },
+        
+        imageStyle: {
+          width: 200,
+          height: 200,
+          margin: 5,
+        },
+        
+        name:{
+          fontSize:20,
+          color: "#696969",
+          fontWeight: "600"
+        },
+        
+        form: {
+          padding: 12,
+        },
+        
+        divider:{
+          width:'90%',
+          height:1,
+          margin:15,
+          backgroundColor:'#e2e2e2',
+        },
+        
+        input:{
+          borderBottomColor: 'lightblue',
+          borderBottomWidth:1,
+          fontSize:17,
+        },
+        green:{
+          color:'green'
+        },
+        
+        red:{
+          color:'red'
+        },
+        
+        panel: {
+          padding: 20,
+          backgroundColor: '#FFFFFF',
+          paddingTop: 20,
+          height: 300,
+        },
+        
+        panelTitle: {
+          fontSize: 22,
+          height: 35,
+          textAlign: 'center',
+        },
+        panelSubtitle: {
+          fontSize: 14,
+          color: 'gray',
+          height: 30,
+          marginBottom: 10,
+          textAlign: 'center',
+          
+        },
+        
+        
+        bottomSheetHeader: {
+          backgroundColor: '#FFFFFF',
+          shadowColor: '#333333',
+          borderTopLeftRadius: 20,
+          borderTopRightRadius: 20,
+        },
+        
+        panelHeader: {
+          alignItems: 'center',
+        },
+        
+        panelHandle: {
+          width: 40,
+          height: 8,
+          borderRadius: 4,
+          backgroundColor: '#00000040',
+          marginBottom: 10,
+        },
+        
+        
+        panelButton: {
+          padding: 13,
+          borderRadius: 150 / 2,
+          backgroundColor: '#FF6347',
+          alignItems: 'center',
+          marginVertical: 7,
+        },
+        
+        panelButtonTitle: {
+          fontSize: 17,
+          fontWeight: 'bold',
+          color: 'white',
+        },
+        
+        action: {
+          flexDirection: 'row',
+          marginTop: 20,
+          marginBottom: 20,
+          borderBottomWidth: 1,
+          borderBottomColor: '#f2f2f2',
+          paddingBottom: 5,
+        },
+        
+        actionError: {
+          flexDirection: 'row',
+          marginTop: 10,
+          borderBottomWidth: 1,
+          borderBottomColor: '#FF0000',
+          paddingBottom: 5,
+        },
+        
+        textInput: {
+          flex: 1,
+          marginTop: Platform.OS === 'ios' ? 0 : -4,
+          paddingLeft: 10,
+          color: 'green',
+          marginLeft: 10,
+          fontSize:15,
+        },
+        icon: {
+          padding: 20,
+          borderWidth: 1,
+          borderRadius: 50,
+        },
+        uploadOptions:{
+          flexDirection: 'column', 
+          justifyContent: 'center',
+          alignItems: 'center'
+        },
+        
+        image: {
+          flex: 1,
+          justifyContent: "center"
+        },
+        
+        camera: {
+          marginLeft:120,
+          backgroundColor: design.colors.success,
+          padding:10, borderRadius:50,
+          borderColor:'#f4f4f4'
+        },
+        
+        footer:{
+          marginBottom: 30,
+          flexDirection: 'row',
+          alignItems: 'center',
+          alignSelf: 'center',
+          justifyContent: 'center',
+          
+        },
+        
+        button: {
+          color: '#fff',
+          borderRadius:5,
+          padding:15,
+          backgroundColor: design.colors.primary,
+          borderColor: design.colors.primary,
+          position: 'absolute',
+          bottom: 0,
+          width: '90%',
+          justifyContent: 'center',
+          alignItems: 'center',
+        },
+        
+        
+      })
       
       
-    })
-    
-    
-    
-    
-    
+      
+      
+      

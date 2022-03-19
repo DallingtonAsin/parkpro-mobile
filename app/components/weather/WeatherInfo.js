@@ -34,7 +34,8 @@ const styles = StyleSheet.create({
         height: 100
     },
     weatherDescription: {
-        textTransform: 'capitalize'
+        textTransform: 'capitalize',
+        fontSize:14
     },
     textPrimary: {
         fontSize: 40,

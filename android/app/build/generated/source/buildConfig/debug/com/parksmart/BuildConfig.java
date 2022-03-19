@@ -12,7 +12,7 @@ public final class BuildConfig {
   // Field from default config.
   public static final String APP_NAME = "ParkPro";
   // Field from default config.
-  public static final String APP_URL = "https://f42d-41-210-159-31.ngrok.io/api/";
+  public static final String APP_URL = "https://dfd8-41-210-159-31.ngrok.io/api/";
   // Field from default config.
   public static final String COMPANY_EMAIL = "info@parkproug.com";
   // Field from default config.

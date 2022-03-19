@@ -46,4 +46,9 @@ module.exports = {
         const endpoint = 'parking_areas';
         return useNativeFetcher(endpoint);
     },
+
+    fetchParkingDetailsById : async(id) => {
+        const endpoint = `device/parking-area/find-by-id?id=${id}`;
+        return await http.ApiService.fetchData(endpoint);
+    },
 }

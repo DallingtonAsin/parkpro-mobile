@@ -341,7 +341,11 @@ import { View, ActivityIndicator, Image, RefreshControl,  Text,
             return result;
           },
 
-          
+          searchParkingArea: async(id) => {
+            const result = await Services.ParkingService.fetchParkingDetailsById(id);
+            return result;
+          },
+
           submitParkingRequest: async(data) => {
             return await Services.ParkingService.postParkingRequest(data).then(async(res) => {
               const statusCode = res.statusCode;

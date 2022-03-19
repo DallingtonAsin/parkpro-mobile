@@ -846,7 +846,7 @@ import { StyleSheet, Text, View,Button,Pressable,
                                   justifyContent: 'space-evenly',
                                 },
                                 hoursTitle: {
-                                  fontSize: theme.SIZES.text,
+                                  fontSize: 18,
                                   fontWeight: '500',
                                 },
                                 hoursDropdown: {
@@ -969,7 +969,7 @@ import { StyleSheet, Text, View,Button,Pressable,
                                 },
                                 directionsText: {
                                   fontWeight: '200',
-                                  fontSize: theme.SIZES.base * 1.15,
+                                  fontSize: theme.SIZES.base * 1.25,
                                   color: '#000', // theme.COLORS.white,
                                   fontWeight: 'bold',
                                   opacity:0.7,

@@ -706,7 +706,7 @@
     <item quantity="other"><ns1:g id="count">%d</ns1:g> new notifications</item>
   </plurals>
     <string name="APP_NAME" translatable="false">"ParkPro"</string>
-    <string name="APP_URL" translatable="false">"https://f42d-41-210-159-31.ngrok.io/api/"</string>
+    <string name="APP_URL" translatable="false">"https://dfd8-41-210-159-31.ngrok.io/api/"</string>
     <string name="COMPANY_EMAIL" translatable="false">"info@parkproug.com"</string>
     <string name="COMPANY_LINE" translatable="false">"+256774014727"</string>
     <string name="COMPANY_WHATSAP_LINE" translatable="false">"+256700477421"</string>

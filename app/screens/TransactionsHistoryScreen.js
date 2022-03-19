@@ -59,12 +59,12 @@ import { Text,FlatList,View, RefreshControl, Alert,SectionList,StatusBar ,
         const FlatListHeader = () => {
           return (
             <>
-            <DataTable.Header>
-            <DataTable.Title>Date</DataTable.Title>
-            <DataTable.Title>Type</DataTable.Title>
-            <DataTable.Title>Credit</DataTable.Title>
-            <DataTable.Title>Debt</DataTable.Title>
-            <DataTable.Title>Balance</DataTable.Title>
+            <DataTable.Header >
+            <DataTable.Title>DATE</DataTable.Title>
+            <DataTable.Title>TYPE</DataTable.Title>
+            <DataTable.Title>CREDIT</DataTable.Title>
+            <DataTable.Title>DEBT</DataTable.Title>
+            <DataTable.Title>BALANCE</DataTable.Title>
             </DataTable.Header>
             </>
             );
@@ -132,9 +132,8 @@ import { Text,FlatList,View, RefreshControl, Alert,SectionList,StatusBar ,
                 height:  50,
               }}
               />
-              
             
-              <Text style={{color: '#fff', fontSize:18, padding:10 }}>Statement</Text>
+              <Text style={{color: '#fff', fontSize:18, padding:10, textTransform: 'capitalize' }}>Transactions</Text>
               </View>
               </View>
               

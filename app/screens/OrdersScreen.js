@@ -90,10 +90,10 @@ import {APP_NAME, currency} from '@env';
         
         <View style={{ flexDirection: 'column'}}>
         <View>
-        <Text style={{ fontWeight:'bold',opacity:0.8 }}>{item.amount}</Text>
+        <Text style={{ fontWeight:'bold',opacity:0.8, fontSize:16 }}>{item.amount}</Text>
         </View>
         <View style={{ justifyContent: 'flex-end', alignItems: 'flex-end'}}>
-        <FontAwesome name="angle-right" size={25} style={{right:0}} color={"#808080"}/>
+        <FontAwesome name="angle-right" size={25} style={{right:0}} color={styles.colors.orange}/>
         </View>
         <View>
         <Text style={{color:'#808080', fontSize:15}}>{currency}</Text>
