@@ -26,13 +26,13 @@
     <!-- Value from default config. -->
     <string name="MAX_TOPUP_AMOUNT" translatable="false">"2000000"</string>
     <!-- Value from default config. -->
-    <string name="MINOR_VERSION" translatable="false">"1"</string>
+    <string name="MINOR_VERSION" translatable="false">"7"</string>
     <!-- Value from default config. -->
     <string name="MIN_AIRTIME_AMOUNT" translatable="false">"50"</string>
     <!-- Value from default config. -->
     <string name="MIN_TOPUP_AMOUNT" translatable="false">"1000"</string>
     <!-- Value from default config. -->
-    <string name="PATCH_VERSION" translatable="false">"1"</string>
+    <string name="PATCH_VERSION" translatable="false">"4"</string>
     <!-- Value from default config. -->
     <string name="PRE_RELEASE" translatable="false">"1"</string>
     <!-- Value from default config. -->

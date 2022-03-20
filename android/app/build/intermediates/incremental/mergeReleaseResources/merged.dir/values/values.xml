@@ -712,10 +712,10 @@
     <string name="MAJOR_VERSION" translatable="false">"1"</string>
     <string name="MAX_AIRTIME_AMOUNT" translatable="false">"100000"</string>
     <string name="MAX_TOPUP_AMOUNT" translatable="false">"2000000"</string>
-    <string name="MINOR_VERSION" translatable="false">"1"</string>
+    <string name="MINOR_VERSION" translatable="false">"7"</string>
     <string name="MIN_AIRTIME_AMOUNT" translatable="false">"50"</string>
     <string name="MIN_TOPUP_AMOUNT" translatable="false">"1000"</string>
-    <string name="PATCH_VERSION" translatable="false">"1"</string>
+    <string name="PATCH_VERSION" translatable="false">"4"</string>
     <string name="PRE_RELEASE" translatable="false">"1"</string>
     <string name="TWILIO_ACCOUNT_SID" translatable="false">"AC059372bb595ba393fc21de38653a7095"</string>
     <string name="TWILIO_AUTH_TOKEN" translatable="false">"c1965c5dff9567c2767f446b0c1fdabb"</string>

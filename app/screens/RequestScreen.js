@@ -425,15 +425,14 @@ import { StyleSheet, Text, View,Button,Pressable,
         </Text>
         </View>
         <View>
-        <TouchableOpacity onPress={() => setIsModalVisible(false)}>
+        <TouchableOpacity onPress={() => {
+          setIsModalVisible(false)
+          isVisible = false;
+        }}>
         <FontAwesome name='times' size={30} color={theme.COLORS.gray}/>
         </TouchableOpacity>
         </View>
         </View>
-        
-        {/* <View style={{ marginTop:15, marginBottom:15 }}>
-        <Text style={{fontSize: 15, color:'#000', fontWeight:'bold'}}>PARKING AREA INFORMATION</Text>
-      </View> */}
       
       <View style={{paddingVertical:theme.SIZES.base}}>
       <Text style={{color:theme.COLORS.gray, fontSize:theme.SIZES.font*1.2}}>
@@ -483,13 +482,7 @@ import { StyleSheet, Text, View,Button,Pressable,
       <Text style={{fontSize:16, paddingLeft:10, color:design.colors.white}}>Call Now</Text>
       </TouchableOpacity>
       </View>
-      
       </View>
-      
-      
-      
-      
-      
       <View>
       
       <View style={{marginTop:10}}>
@@ -504,19 +497,8 @@ import { StyleSheet, Text, View,Button,Pressable,
       <Text style={{color:theme.COLORS.gray}}></Text>
       </View>
       </View>
-
-       {/*
-      <View style={styles.orderInfo}>
-      <Text style={{color:theme.COLORS.gray, fontSize:theme.SIZES.font*1.1}}> Vehicle Type</Text>
-      <View style={styles.modalVehiclesDropdown}>
-      {renderCarTypes()}
-      <Text style={{color:theme.COLORS.gray}}></Text>
-      </View>
-      </View> */}
-      
       
       <View style={{flexDirection: 'column'}}>
-      
       
       <View style={[styles.orderInfo, {flexDirection: 'row'}]}>
       <Text style={{color:theme.COLORS.gray, fontSize:theme.SIZES.font*1.1}}>Start Time</Text>
@@ -580,9 +562,6 @@ import { StyleSheet, Text, View,Button,Pressable,
         </Text>
         <FontAwesome name='angle-right' size={theme.SIZES.icon*1.75} color={theme.COLORS.white} />
         </TouchableOpacity> 
-        
-        
-        
         
         </ScrollView>
         </Modal>

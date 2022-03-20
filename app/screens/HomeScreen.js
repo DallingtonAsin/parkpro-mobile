@@ -134,7 +134,6 @@ const HomeScreen = props => {
   const populateFavouriteParkings = () =>{
     try{
       dbParkingHelper.getFavouriteParkings(parkings => {
-        console.log("Got this favourite parkings list", parkings);
         if(parkings){
           setFavouriteParkings(parkings);
         }
@@ -309,7 +308,6 @@ const HomeScreen = props => {
             try{
               // select * from vehicles
               dbVehicleHelper.getVehicles(vehicles => {
-                console.log("Got this vehicles list", vehicles);
                 if(vehicles){
                   setVehicleState(vehicles);
                 }
@@ -1022,16 +1020,14 @@ const HomeScreen = props => {
                             
                             <Pressable style={styles.bottomSheetButton} onPress={showModal}>
                             <Text style={design.vehicle.textAdd}>
-                            add favourite parking 
+                              add favourite parking 
                             <FontAwesome name={"arrow-right"} size={10} style={design.vehicle.icon}/>
                             </Text>
                             </Pressable>
                             
-                            
                             </View>
                             </BottomSheetScrollView>
                             </BottomSheet>
-                            
                             
                             </View>
                             </ScrollView>

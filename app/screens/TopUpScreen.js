@@ -249,7 +249,7 @@ import { Text,
           
           
           <View style={{ margin: 20 }}>
-          <Text style={{ fontSize: 15, opacity: 0.7, textTransform: 'capitalize', fontWeight:'bold'  }}>Enter Amount </Text>
+          <Text style={{ fontSize: 15, opacity: 0.7, fontWeight:'bold'  }}>Enter amount </Text>
           <RNTextInput
           mode={'outlined'}
           placeholder="Eg. 10,000"

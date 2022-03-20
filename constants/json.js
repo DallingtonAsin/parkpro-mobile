@@ -82,7 +82,7 @@ export const brownStyle = [
       "elementType": "labels.text",
       "stylers": [
         {
-          "weight": 2,
+          "weight": 15,
         //   "color": "#FFA500"
 
 
@@ -94,7 +94,7 @@ export const brownStyle = [
       "elementType": "labels.text",
       "stylers": [
         {
-          "weight": 6
+          "weight": 15
         }
       ]
     },
@@ -184,7 +184,7 @@ export const brownStyle = [
       "elementType": "labels.text.fill",
       "stylers": [
         {
-          "weight": 14,
+          "weight": 18,
           "color": "#FFA500" // road labels
         }
       ]

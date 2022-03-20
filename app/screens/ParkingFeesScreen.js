@@ -14,19 +14,17 @@ import Toast from 'react-native-simple-toast';
 
 
 const dbParkingHelper = require("../database/favouriteParkings");
-const initialFeesData = [];
 
 const ParkingFeesScreen = ({route, navigation}) => {
     
-    const { parking_area_id, parking_area, photo, phone_number } = route.params;
-    const [fees, setFees] = useState(initialFeesData);
+    const { parking_area_id, address, parking_area, photo, phone_number } = route.params;
+    const [fees, setFees] = useState([]);
     const [done, setDone] = useState(false);
     const [refreshing, setRefreshing] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [doesParkingExistInFavourites, setParkingExistsInFavourites] = useState(false);
     
     dbParkingHelper.doesParkingExistinFavourites(parking_area_id, exists => {
-        console.log("Check Exists parking area in favourites response", exists);
         if(exists){
             setParkingExistsInFavourites(true);
         }else{
@@ -48,22 +46,20 @@ const ParkingFeesScreen = ({route, navigation}) => {
     
     const getParkingFees = async() => {
         if(parking_area_id){
-            console.log("Parking area is "+parking_area_id);
             await fetchParkingFees(parking_area_id).then(res => {
-                console.log("Response for parking fees is", res);
                 if(res.statusCode == 1){
                     setFees(res.data);
                 }
                 const timer = setTimeout(() => {
                     setDone(true);
-                }, 1000);
+                }, 2000);
                 return () => clearTimeout(timer);
             }).catch(error => { 
                 setDone(true);
-                Alert.alert("Error","Unable to fetch parking fees: " + error);
+                Toast.show("Error","Unable to fetch parking fees: " + error);
             });
         }else{
-            console.log("Unable to get parking area id");
+            Toast.show("Unable to get parking area id", Toast.LONG);
         }
     }
     
@@ -184,7 +180,7 @@ const ParkingFeesScreen = ({route, navigation}) => {
                                 <Card.Cover source={{ uri: photo }} style={{width:'90%', height:'40%', margin:5, borderRadius:5}}/>
                                 <Card.Content>
                                 <Title>{parking_area}</Title>
-                                
+                                <Title>{address}</Title>
                                 <FlatList
                                 data={fees}
                                 renderItem={({item}) => <CustomDataTable item={item}/>}

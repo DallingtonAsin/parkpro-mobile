@@ -6,6 +6,8 @@ import { AuthContext } from '../context/context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import styles from '../../assets/css/styles';
 import CustomLoader from '../components/CustomActivityIndicator';
+import Toast from 'react-native-simple-toast';
+
 
 const wait = (timeout) => {
   return new Promise(resolve => setTimeout(resolve, timeout));
@@ -36,14 +38,20 @@ const fetchNotifications = async() => {
     const userProfile = await AsyncStorage.getItem("userProfile");
     const profile = JSON.parse(userProfile);
     const id = profile.id;
-    let notifications = await getCustomerNotifications(id);
-    console.log("Notifications", notifications);
-    if(notifications.length > 0){
-       setNotifications(notifications);
-    }
+    let resp = await getCustomerNotifications(id);
     setIsLoading(false);
+    if(resp.statusCode == 1){
+      const notificationsData = resp.data;
+      console.log("Notifications", notificationsData);
+      if(notificationsData.length > 0){
+         setNotifications(notificationsData);
+      }
+    }else{
+      Toast.show(resp.message);
+    }
+  
   }catch(e){
-    console.log("Error on async storage", e);
+    Toast.show(e.message);
   }
 }
 

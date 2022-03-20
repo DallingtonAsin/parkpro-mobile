@@ -8,9 +8,9 @@ import {Text, SafeAreaView, Image, ScrollView,RefreshControl, TouchableWithoutFe
   import CustomLoader from '../components/CustomActivityIndicator';
   import FontAwesome from 'react-native-vector-icons/FontAwesome';
   import Toast from 'react-native-simple-toast';
-import ProfileContext from '../context/index';
-import { icons } from '../../constants';
-import {APP_NAME, currency} from '@env';
+  import ProfileContext from '../context/index';
+  import { icons } from '../../constants';
+  import {APP_NAME, currency} from '@env';
   
   
   const wait = (timeout) => {
@@ -23,7 +23,7 @@ import {APP_NAME, currency} from '@env';
     const [refreshing, setRefreshing] = React.useState(false);
     const [isLoading, setIsLoading] = React.useState(true);
     const {profile, setProfile} = useContext(ProfileContext);
-
+    
     const { fetchMyParkingRequests } = React.useContext(AuthContext);
     
     React.useEffect(() => {
@@ -41,25 +41,31 @@ import {APP_NAME, currency} from '@env';
     const fetchOrders = async() => {
       try{
         const id = profile.id;
-        let parkingRequests = await fetchMyParkingRequests(id);
-        console.log("Parking requests", parkingRequests);
-        if(parkingRequests.length > 0){
-          setParkingRequests(parkingRequests);
-        }
+        let resp = await fetchMyParkingRequests(id);
         setIsLoading(false);
+        if(resp.statusCode == 1){
+          const orders = resp.data;
+          console.log("Parking requests", orders);
+          if(orders.length > 0){
+            setParkingRequests(orders);
+          }
+        }else{
+          Toast.show(resp.message);
+        }
+        
       }catch(e){
-        console.log("Error on async storage", e);
+        Toast.show(e.message);
       }
     }
     
     const showOrderInfo =(item) => {
-        const order_no = item.order_no;
-        const customer_id = item.customer_id;
-        navigation.navigate('OrderDetails', {
-          screen: 'OrderDetails',
-          params: { orderNo: order_no,  customerId: customer_id},
-        });
-    
+      const order_no = item.order_no;
+      const customer_id = item.customer_id;
+      navigation.navigate('OrderDetails', {
+        screen: 'OrderDetails',
+        params: { orderNo: order_no,  customerId: customer_id},
+      });
+      
     }
     
     
@@ -75,11 +81,11 @@ import {APP_NAME, currency} from '@env';
         source={icons.parking6}
         resizeMode="contain"
         style={{
-            width: 55,
-            height: 55,
+          width: 55,
+          height: 55,
         }}
         />
-
+        
         </View>
         
         <View style={{ flexDirection: 'column'}}>

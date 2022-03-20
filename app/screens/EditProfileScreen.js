@@ -619,7 +619,6 @@ import { Text,TextInput, TouchableOpacity, View, StyleSheet, SafeAreaView,  Plat
           alignItems: 'center',
           alignSelf: 'center',
           justifyContent: 'center',
-          
         },
         
         button: {

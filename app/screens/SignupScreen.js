@@ -1,15 +1,5 @@
-import React, {useState} from 'react';
-import { 
-    View, 
-    Text, 
-    Alert,
-    TouchableOpacity, 
-    TextInput,
-    Platform,
-    StyleSheet,
-    ScrollView,
-    StatusBar
-} from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, Alert, TouchableOpacity, TextInput, Platform, StyleSheet, ScrollView, StatusBar} from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import LinearGradient from 'react-native-linear-gradient';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -18,15 +8,14 @@ import Feather from 'react-native-vector-icons/Feather';
 import { AuthContext } from '../context/context';
 import { UIActivityIndicator } from 'react-native-indicators';
 
-
 const initialState = {
     first_name: '',
-    last_name:'',
+    last_name: '',
     email: '',
     isValidFName: false,
     isValidLName: false,
-    
 }
+
 
 const SignupScreen = ({route, navigation}) => {
     

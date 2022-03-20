@@ -7,8 +7,8 @@ public final class BuildConfig {
   public static final boolean DEBUG = false;
   public static final String APPLICATION_ID = "com.parksmart";
   public static final String BUILD_TYPE = "release";
-  public static final int VERSION_CODE = 210010101;
-  public static final String VERSION_NAME = "1.1.1-1";
+  public static final int VERSION_CODE = 210010704;
+  public static final String VERSION_NAME = "1.7.4-1";
   // Field from default config.
   public static final String APP_NAME = "ParkPro";
   // Field from default config.
@@ -28,13 +28,13 @@ public final class BuildConfig {
   // Field from default config.
   public static final String MAX_TOPUP_AMOUNT = "2000000";
   // Field from default config.
-  public static final String MINOR_VERSION = "1";
+  public static final String MINOR_VERSION = "7";
   // Field from default config.
   public static final String MIN_AIRTIME_AMOUNT = "50";
   // Field from default config.
   public static final String MIN_TOPUP_AMOUNT = "1000";
   // Field from default config.
-  public static final String PATCH_VERSION = "1";
+  public static final String PATCH_VERSION = "4";
   // Field from default config.
   public static final String PRE_RELEASE = "1";
   // Field from default config.

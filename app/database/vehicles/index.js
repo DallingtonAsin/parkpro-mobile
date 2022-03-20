@@ -94,49 +94,74 @@ exports.createVehiclesTable = () => {
                         }
                         
                         
-                        exports.doesVehicleExist = (vehicle, callback) => {
+                        exports.searchVehicle = (number, name, callback) => {
+                            console.log("Vehicle number received", number);
+                            console.log("Vehicle name received", name);
+
+
                             try{
-                                const vehicle_number = trimString(vehicle.number.trim().toLowerCase());
-                                db.transaction(function (tx) {
+                                db.transaction((tx) => {
                                     tx.executeSql(
-                                        "SELECT * FROM vehicles WHERE LOWER(REPLACE(REPLACE(REPLACE(`number`, ' ', ''), '\t', ''), '\n', ''))=?",
-                                        [vehicle_number],
+                                        'SELECT * FROM vehicles where number=? AND name=?',
+                                        [number, name],
                                         (tx, results) => {
-                                            if(results.rows.length > 0){
-                                                console.log("row exists")
-                                                callback(true) 
-                                            }else{
-                                                console.log("No rows")
-                                                callback(false);
-                                            } 
-                                        }
-                                        );
+                                            var len = results.rows.length;
+                                            if (len > 0) {
+                                              let res = results.rows.item(0);
+                                              console.log("Iyeee results", res);
+                                              callback(res);
+                                            }
+                                        });
                                     });
                                 }catch(error){
-                                    console.log("Got error on checking if vehicle exists", error.message);
                                     throw error;
                                 }
                             }
                             
                             
-                            function trimString(str){
+                            exports.doesVehicleExist = (vehicle, callback) => {
                                 try{
-                                    let regex = /[.,\s]/g;
-                                    let formattedStr = str.replace(regex, '');
-                                    return formattedStr;
-                                }catch(err){
-                                    throw err;
+                                    const vehicle_number = trimString(vehicle.number.trim().toLowerCase());
+                                    db.transaction(function (tx) {
+                                        tx.executeSql(
+                                            "SELECT * FROM vehicles WHERE LOWER(REPLACE(REPLACE(REPLACE(`number`, ' ', ''), '\t', ''), '\n', ''))=?",
+                                            [vehicle_number],
+                                            (tx, results) => {
+                                                if(results.rows.length > 0){
+                                                    console.log("row exists")
+                                                    callback(true) 
+                                                }else{
+                                                    console.log("No rows")
+                                                    callback(false);
+                                                } 
+                                            }
+                                            );
+                                        });
+                                    }catch(error){
+                                        console.log("Got error on checking if vehicle exists", error.message);
+                                        throw error;
+                                    }
                                 }
-                            }
-                            
-                            function capitalizeFirstLetter(str) {
-                                return str.charAt(0).toUpperCase() + str.slice(1);
-                            }
-                            
-                            function convertToVehicleNumber(str){
-                                const position = 3
-                                let regex = /[.,\s]/g;
-                                str= str.replace(regex, '');
-                                str = [str.slice(0, position), str.slice(position)].join(' ');
-                                return str.toUpperCase();
-                            }
+                                
+                                
+                                function trimString(str){
+                                    try{
+                                        let regex = /[.,\s]/g;
+                                        let formattedStr = str.replace(regex, '');
+                                        return formattedStr;
+                                    }catch(err){
+                                        throw err;
+                                    }
+                                }
+                                
+                                function capitalizeFirstLetter(str) {
+                                    return str.charAt(0).toUpperCase() + str.slice(1);
+                                }
+                                
+                                function convertToVehicleNumber(str){
+                                    const position = 3
+                                    let regex = /[.,\s]/g;
+                                    str= str.replace(regex, '');
+                                    str = [str.slice(0, position), str.slice(position)].join(' ');
+                                    return str.toUpperCase();
+                                }
