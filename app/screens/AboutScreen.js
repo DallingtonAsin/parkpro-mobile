@@ -7,12 +7,14 @@ import OptionItem from '../components/OptionItem';
 import {icons, SIZES } from '../../constants';
 import { SocialIcon } from 'react-native-elements'
 import {APP_NAME, currency} from '@env';
+import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
+
 const AboutScreen = (props) => {
     
     return(
         
         <View style={{padding: 10, flex: 1, backgroundColor:'#e2e2e3'}}>
-        
+          <FocusAwareStatusBar barStyle="light-content" backgroundColor={design.colors.primary} />
         <ScrollView contentContainerStyle={{ height:'auto', paddingBottom: 60 }} style={{flex: 1}}>
         {/* <Text style={{ textTransform:'uppercase',fontSize:12,
         color:'#808080', textAlign:'center', top:10,marginBottom:10 }}>

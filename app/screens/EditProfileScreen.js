@@ -14,7 +14,8 @@ import { Text,TextInput, TouchableOpacity, View, StyleSheet, SafeAreaView,  Plat
   import AsyncStorage from '@react-native-async-storage/async-storage';
   import { BottomSheet } from 'react-native-btr';
   import {APP_NAME} from '@env';;
-  
+  import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
+
   const initialState = {
     user_id: '',
     first_name: '',
@@ -280,7 +281,8 @@ import { Text,TextInput, TouchableOpacity, View, StyleSheet, SafeAreaView,  Plat
         
         <SafeAreaView style={styles.container}>
         
-        
+          <FocusAwareStatusBar barStyle="light-content" backgroundColor={design.colors.primary} />
+
         <BottomSheet
         visible={visible}
         onBackButtonPress={toggleBottomNavigationView}

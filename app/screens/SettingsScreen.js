@@ -9,6 +9,7 @@ import Rate, { AndroidMarket } from 'react-native-rate';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {  AirbnbRating } from 'react-native-elements';
 import {getAppVersionName} from '../components/SharedCommons';
+import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
 
 const version  = getAppVersionName();
 
@@ -152,7 +153,7 @@ const initialState = {
     
       return(
         <View style={css.container}>
-
+  <FocusAwareStatusBar barStyle="light-content" backgroundColor={styles.colors.primary} />
 <View style={styles.container}>
 <Dialog
   visible={isVisible}

@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useRef} from 'react';
-import {StyleSheet, RefreshControl,Alert,Text, View,TouchableOpacity, FlatList } from 'react-native';
+import {StyleSheet, RefreshControl,StatusBar,Text, View,TouchableOpacity, FlatList } from 'react-native';
 import design from '../../assets/css/styles';
 import { DataTable, Divider } from 'react-native-paper';
 import {  Button, Card, Title } from 'react-native-paper';
@@ -11,7 +11,7 @@ import {callHelpLine} from '../components/SharedCommons';
 import { AuthContext } from '../context/context';
 import { UIActivityIndicator } from 'react-native-indicators';
 import Toast from 'react-native-simple-toast';
-
+import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
 
 const dbParkingHelper = require("../database/favouriteParkings");
 
@@ -127,11 +127,11 @@ const ParkingFeesScreen = ({route, navigation}) => {
                 const FlatListHeader = () => {
                     return (
                         <>
-
+                        
                         {
                             doesParkingExistInFavourites ? 
-                             <Text style={{color: design.colors.orange, fontSize:15, fontWeight: 'bold', fontStyle: 'italic'}}>
-                                    <FontAwesome5 name={"heart"} size={16} color={design.colors.orange} /> Marked Favourite</Text>
+                            <Text style={{color: design.colors.orange, fontSize:15, fontWeight: 'bold', fontStyle: 'italic'}}>
+                            <FontAwesome5 name={"heart"} size={16} color={design.colors.orange} /> Marked Favourite</Text>
                             :   <TouchableOpacity onPress={() => addParkingToFavourites()} 
                             style={{ backgroundColor: design.colors.primary, 
                                 borderRadius:5, alignContent:'center', 
@@ -144,10 +144,10 @@ const ParkingFeesScreen = ({route, navigation}) => {
                                     </Text> 
                                 }
                                 </TouchableOpacity>
-                        }
-                        
-                        
-                     
+                            }
+                            
+                            
+                            
                             <DataTable.Header>
                             <DataTable.Title>Vehicle Type</DataTable.Title>
                             <DataTable.Title>Fee/hour</DataTable.Title>
@@ -172,6 +172,9 @@ const ParkingFeesScreen = ({route, navigation}) => {
                         
                         return (
                             <View style={styles.container}>
+                            
+                            <FocusAwareStatusBar barStyle="light-content" backgroundColor={design.colors.primary} />
+                            
                             <View style={styles.semicontainer}>
                             
                             { done ?

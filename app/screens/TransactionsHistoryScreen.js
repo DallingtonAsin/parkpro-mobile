@@ -7,7 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AuthContext } from '../context/context';
 import { icons } from '../../constants';
 import Toast from 'react-native-simple-toast';
-
+import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
 
 const wait = (timeout) => {
   return new Promise(resolve => setTimeout(resolve, timeout));
@@ -31,22 +31,22 @@ const TransactionsHistoryScreen = () => {
     };
     
     const getDate = (date) => {
-      var dateinfo = new Date(date);
+      let dateinfo = new Date(date);
       const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
       "Jul", "Aug", "Sept", "Oc", "Nov", "Dec"
     ];
-    let day = dateinfo.getDate();
-    let month = dateinfo.getMonth();
-    return monthNames[month]+'-'+day;
+    const dd = String(dateinfo.getDate()).padStart(2, '0');
+    const month = dateinfo.getMonth();
+    return dd+'-'+monthNames[month];
   }
   
   const CustomDataTable = (props) => (
     <DataTable.Row>
-    <DataTable.Cell>{getDate(props.item.date)}</DataTable.Cell>
-    <DataTable.Cell>{props.item.type}</DataTable.Cell>
-    <DataTable.Cell>{props.item.credit}</DataTable.Cell>
-    <DataTable.Cell>{props.item.debt}</DataTable.Cell>
-    <DataTable.Cell>{props.item.balance}</DataTable.Cell>
+    <DataTable.Cell><Text style={styles.cellText}>{getDate(props.item.date)}</Text></DataTable.Cell>
+    <DataTable.Cell><Text style={styles.cellText}>{props.item.type}</Text></DataTable.Cell>
+    <DataTable.Cell><Text style={styles.cellText}>{props.item.credit}</Text></DataTable.Cell>
+    <DataTable.Cell><Text style={styles.cellText}>{props.item.debt}</Text></DataTable.Cell>
+    <DataTable.Cell><Text style={styles.cellText}>{props.item.balance}</Text></DataTable.Cell>
     </DataTable.Row>
     );
     
@@ -60,11 +60,11 @@ const TransactionsHistoryScreen = () => {
         return (
           <>
           <DataTable.Header>
-          <DataTable.Title>DATE</DataTable.Title>
-          <DataTable.Title>TYPE</DataTable.Title>
-          <DataTable.Title>CREDIT</DataTable.Title>
-          <DataTable.Title>DEBT</DataTable.Title>
-          <DataTable.Title>BALANCE</DataTable.Title>
+          <DataTable.Title><Text style={styles.rowHeaderText}>DATE</Text></DataTable.Title>
+          <DataTable.Title><Text style={styles.rowHeaderText}>TYPE</Text></DataTable.Title>
+          <DataTable.Title><Text style={styles.rowHeaderText}>CREDIT</Text></DataTable.Title>
+          <DataTable.Title><Text style={styles.rowHeaderText}>DEBT</Text></DataTable.Title>
+          <DataTable.Title><Text style={styles.rowHeaderText}>BALANCE</Text></DataTable.Title>
           </DataTable.Header>
           </>
           );
@@ -119,11 +119,7 @@ const TransactionsHistoryScreen = () => {
             <>
             <View style={{flex:1, width: '100%',}}>
             
-            <StatusBar
-            animated={true}
-            backgroundColor={design.colors.primary}
-            hidden={false} 
-            />
+            <FocusAwareStatusBar barStyle="light-content" backgroundColor={design.colors.primary} />
             
             <View style={{height:130,backgroundColor: design.colors.primary}}>
             <View style={{alignItems: 'center', margin:20}}>
@@ -229,5 +225,11 @@ const TransactionsHistoryScreen = () => {
                 title: {
                   fontSize: 24
                 },
+                cellText:{
+                  fontSize:16
+                },
+                rowHeaderText:{
+                  fontWeight: 'bold',
+                }
                 
               });

@@ -6,6 +6,7 @@ import {TimePicker} from 'react-native-simple-time-picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import design from '../../assets/css/styles';
 import { Avatar, Button, Card, Title, Paragraph, Searchbar  } from 'react-native-paper';
+import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
 
 const parkingAreas = [
     {id: 1, name: 'Nkrumah', image: 'https://picsum.photos/0', address: 'Makerere'},

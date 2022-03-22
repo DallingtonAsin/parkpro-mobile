@@ -14,14 +14,14 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useTheme } from 'react-native-paper';
 import design from '../../assets/css/styles';
 import {APP_NAME} from '@env';
-
+import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
 
 const SplashScreen = ({navigation}) => {
     const { colors } = useTheme();
     
     return (
         <View style={styles.container}>
-        <StatusBar backgroundColor={design.colors.darktheme} barStyle="light-content"/> 
+         <FocusAwareStatusBar barStyle="light-content" backgroundColor={design.colors.primary} />
         <View style={styles.header}>
         <Animatable.Image 
         animation="bounceIn"

@@ -5,6 +5,7 @@ import design from '../../assets/css/styles';
 import FontAwesome from 'react-native-vector-icons/FontAwesome5';
 import { AuthContext } from '../context/context';
 import { UIActivityIndicator } from 'react-native-indicators';
+import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
 
 const OtpInputScreen = ({ route, navigation }) => {
  const { otp, phoneNumber } = route.params;
@@ -53,6 +54,7 @@ const OtpInputScreen = ({ route, navigation }) => {
 
  return (
    <SafeAreaView style={styles.wrapper}>
+      <FocusAwareStatusBar barStyle="light-content" backgroundColor={design.colors.primary} />
      <Text style={styles.prompt}>Enter the code we sent you</Text>
      <Text style={styles.message}>
        {`Your phone (${phoneNumber}) will be used to protect your account each time you log in.`}
@@ -77,7 +79,7 @@ const OtpInputScreen = ({ route, navigation }) => {
            onPress={() => onClickContinue()}
          >
           
-           <Text style={styles.continueText, {color: design.colors.dark}}> 
+           <Text style={[styles.continueText, {color: design.colors.dark}]}> 
            {isSending ? <UIActivityIndicator color='black' size={27} /> : 
             <> <FontAwesome name="arrow-right" size={15} color={design.colors.dark}/> <Text>Continue</Text></>
            } 

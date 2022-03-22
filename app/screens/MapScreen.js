@@ -25,6 +25,7 @@ import { StyleSheet, Text, View,Button,Pressable,
   import RequestScreen from '../screens/RequestScreen';
   import DropDownPicker from 'react-native-dropdown-picker';
   import { openDatabase } from 'react-native-sqlite-storage';
+  import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
   const db = openDatabase({ name: 'Customers.db' });
   const dbVehicleHelper = require("../database/vehicles");
   
@@ -866,8 +867,8 @@ import { StyleSheet, Text, View,Button,Pressable,
                       
                       
                       <TouchableOpacity style={[styles.payBtn,
-                        activeModal.is_open ? {backgroundColor: theme.COLORS.primary}: {backgroundColor: theme.COLORS.primary}]} 
-                        // disabled={activeModal.is_open ? false : true}
+                        activeModal.is_open ? {backgroundColor: theme.COLORS.primary}: {backgroundColor: theme.COLORS.gray}]} 
+                        disabled={activeModal.is_open ? false : true}
                         onPress={() => submitRequest()}
                         >  
                         <Text style={styles.payText}> 
@@ -884,6 +885,8 @@ import { StyleSheet, Text, View,Button,Pressable,
                       // const {currentPosition, parkings} = props;
                       return(
                         <View style={styles.container}>
+                           <FocusAwareStatusBar barStyle="dark-content" backgroundColor={design.colors.white} />
+                            
                         {renderHeader()}
                         <MapView 
                         initialRegion={region.currentPosition}

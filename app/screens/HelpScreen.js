@@ -4,7 +4,7 @@ import design from '../../assets/css/styles';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {callHelpLine, SendEmail, SendSms, inboxFromWhatsapp} from '../components/SharedCommons';
 import {COMPANY_LINE, COMPANY_WHATSAP_LINE, COMPANY_EMAIL} from '@env';
-
+import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
 
 
 const CardComponent = ({info}) => (
@@ -32,6 +32,7 @@ const CardComponent = ({info}) => (
 
     return(
       <View style={styles.container}>
+         <FocusAwareStatusBar barStyle="light-content" backgroundColor={design.colors.primary} />
       <View style={styles.top}>
       <Icon name={'question-circle'} size={75} color={design.colors.white}/>
       </View>

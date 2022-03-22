@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, Alert, TouchableOpacity, TextInput, Platform, StyleSheet, ScrollView, StatusBar} from 'react-native';
+import { View, Text, Alert, TouchableOpacity, TextInput, Platform, StyleSheet, ScrollView} from 'react-native';
+import design from '../../assets/css/styles';
 import * as Animatable from 'react-native-animatable';
 import LinearGradient from 'react-native-linear-gradient';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -7,6 +8,7 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Feather from 'react-native-vector-icons/Feather';
 import { AuthContext } from '../context/context';
 import { UIActivityIndicator } from 'react-native-indicators';
+import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
 
 const initialState = {
     first_name: '',
@@ -146,7 +148,7 @@ const SignupScreen = ({route, navigation}) => {
     
     return (
         <View style={styles.container}>
-        <StatusBar backgroundColor='#273746' barStyle="light-content"/>
+        <FocusAwareStatusBar barStyle="light-content" backgroundColor={design.colors.primary} />
         <View style={styles.header}>
         <Text style={styles.text_header}>Register Now!</Text>
         </View>

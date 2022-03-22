@@ -6,6 +6,7 @@ import { AuthContext } from '../context/context';
 import { UIActivityIndicator } from 'react-native-indicators';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import ProfileContext from '../context/index';
+import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
 
 const initialState = {
   old_password: '',
@@ -94,7 +95,7 @@ const Password = () => {
 <>
     <SafeAreaView style={innerStyles.container}>
 
-
+    <FocusAwareStatusBar barStyle="light-content" backgroundColor={styles.colors.primary} />
     <View style={innerStyles.top}>
     <View style={innerStyles.imageSection}>
     <Image 

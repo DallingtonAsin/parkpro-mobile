@@ -14,7 +14,8 @@ import { Text,Image,
   import { UIActivityIndicator } from 'react-native-indicators';
   import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
   import { TextInput } from 'react-native-paper';
-  
+  import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
+
   const emojis = [
     {id:1, name: 'grin-beam', value: 'Happy', color: '#F9FEE', active: false},
     {id:2, name: 'frown-open', value: 'Angry', color: '#F9F6EE', active: false},
@@ -83,7 +84,7 @@ import { Text,Image,
       
       <SafeAreaView style={css.container}>
       
-      
+        <FocusAwareStatusBar barStyle="light-content" backgroundColor={styles.colors.primary} />
       <View style={css.top}>
       <Text style={{color: '#fff', fontSize:22, fontWeight:'bold',  marginTop:15}}>How do you feel?</Text>
       <FlatList

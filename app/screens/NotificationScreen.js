@@ -1,13 +1,13 @@
 import React, {useState, useEffect} from 'react';
 import {Text, SafeAreaView, Image, ScrollView,RefreshControl,
         TouchableOpacity,View, FlatList, StyleSheet} from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome5';
+import design from '../../assets/css/styles';
 import { AuthContext } from '../context/context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import styles from '../../assets/css/styles';
 import CustomLoader from '../components/CustomActivityIndicator';
 import Toast from 'react-native-simple-toast';
-
+import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
 
 const wait = (timeout) => {
   return new Promise(resolve => setTimeout(resolve, timeout));
@@ -89,6 +89,7 @@ const fetchNotifications = async() => {
 
   return ( 
   <>
+   <FocusAwareStatusBar barStyle="light-content" backgroundColor={design.colors.primary} />
   {  !isLoading ?
  <FlatList style= {{ backgroundColor:'#ffffff', height:'100%' }}
  data={notifications}

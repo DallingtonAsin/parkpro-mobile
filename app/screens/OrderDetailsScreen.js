@@ -7,7 +7,9 @@ import {Text, SafeAreaView, Image,
   import CustomLoader from '../components/CustomActivityIndicator';
 import { icons } from '../../constants';
   import {APP_NAME, currency} from '@env';
-  
+  import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
+
+
   const wait = (timeout) => {
     return new Promise(resolve => setTimeout(resolve, timeout));
   }
@@ -55,6 +57,7 @@ import { icons } from '../../constants';
 
 
         <SafeAreaView>
+           <FocusAwareStatusBar barStyle="light-content" backgroundColor={styles.colors.primary} />
         <ScrollView 
         style={{flexDirection: 'column'}}
         >

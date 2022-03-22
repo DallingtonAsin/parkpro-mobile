@@ -7,7 +7,7 @@ import {
     RefreshControl,
 } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-
+import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
 
 
 const wait = (timeout) => {
@@ -24,6 +24,7 @@ const OfflineScreen = (props) => {
     
     return (
         <SafeAreaView style={styles.container}>
+             <FocusAwareStatusBar barStyle="dark-content" backgroundColor={design.colors.white} />
         <ScrollView contentContainerStyle={styles.scrollView}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>}
         >

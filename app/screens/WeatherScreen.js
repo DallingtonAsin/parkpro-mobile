@@ -10,6 +10,7 @@ import {colors} from '../components/utils/index'
 import { config } from '../config/env'
 import design from '../../assets/css/styles';
 import {WEATHER_API_KEY} from '@env';
+import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
 
 const BASE_WEATHER_URL = "https://api.openweathermap.org/data/2.5/weather?";
 const url =  `https://api.openweathermap.org/data/2.5/onecall?&units=metric&exclude=minutely&appid=${WEATHER_API_KEY}`;
@@ -112,6 +113,8 @@ const WeatherScreen = () => {
     // const  {main : temp} = currentWeather
     return (
       <SafeAreaView style={styles.container}>
+         <FocusAwareStatusBar barStyle="light-content" backgroundColor={design.colors.primary} />
+                            
       <ScrollView 
         refreshControl={
           <RefreshControl 

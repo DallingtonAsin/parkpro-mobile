@@ -14,7 +14,7 @@ import { Text,
   import { AuthContext } from '../context/context';
   import ProfileContext from '../context/index';
   import {MIN_TOPUP_AMOUNT, MAX_TOPUP_AMOUNT} from '@env';
-  
+  import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
   // import ReactDOM from "react-dom";
   
   
@@ -224,9 +224,7 @@ import { Text,
       <KeyboardAvoidingView style={styles.container}  behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       keyboardVerticalOffset={Platform.OS === 'ios' ? 40 : -200}>
       
-      <StatusBar
-      backgroundColor={design.colors.primary}
-      /> 
+      <FocusAwareStatusBar barStyle="light-content" backgroundColor={design.colors.primary} />
       
       <ScrollView  style={styles.contentContainer}
       

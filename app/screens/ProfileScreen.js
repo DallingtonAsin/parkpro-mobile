@@ -5,6 +5,7 @@ import { Avatar, Paragraph, Divider } from 'react-native-paper';
 import ProfileContext from '../context/index';
 import ProfilePicture from 'react-native-profile-picture';
 import {APP_NAME} from '@env';
+import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
 
 const initialState = {
   id: '',
@@ -56,7 +57,7 @@ const Profile = props => {
   return(
       <SafeAreaView style={{flex: 1}}>
 
-  
+<FocusAwareStatusBar barStyle="light-content" backgroundColor={design.colors.primary} />
    <View style={styles.header}>
 
    { profile.image ?

@@ -11,7 +11,7 @@ import {Text, SafeAreaView, Image, ScrollView,RefreshControl, TouchableWithoutFe
   import ProfileContext from '../context/index';
   import { icons } from '../../constants';
   import {APP_NAME, currency} from '@env';
-  
+  import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
   
   const wait = (timeout) => {
     return new Promise(resolve => setTimeout(resolve, timeout));
@@ -129,6 +129,7 @@ import {Text, SafeAreaView, Image, ScrollView,RefreshControl, TouchableWithoutFe
           
           return ( 
             <SafeAreaView style={{flex: 1, backgroundColor:'#fff'}}>
+              <FocusAwareStatusBar barStyle="light-content" backgroundColor={styles.colors.primary} />
             <Text style={{fontSize:19, color:'#808080', padding:5, marginLeft:5}}>Last Orders</Text>
             {  !isLoading ?
               <FlatList style= {{ backgroundColor:'#ffffff', height:'100%' }}

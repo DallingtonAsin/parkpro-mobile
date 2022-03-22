@@ -16,6 +16,8 @@ import { useTheme  } from 'react-native-paper';
 import { AuthContext } from '../context/context';
 import PhoneInput from "react-native-phone-number-input";
 import { UIActivityIndicator } from 'react-native-indicators';
+import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
+import design from '../../assets/css/styles';
 
 
 const initialState =  {
@@ -71,7 +73,7 @@ const SigninScreen = ({ navigation }) => {
         
         <View style={styles.container}>
         <SafeAreaView style={styles.wrapper}>
-        <StatusBar backgroundColor='#273746' barStyle="light-content"/>
+        <FocusAwareStatusBar barStyle="light-content" backgroundColor={design.colors.primary} />
         <View style={styles.header}>
         <View style={styles.header1}>
         <Text style={styles.text_header1}>Welcome!</Text>
