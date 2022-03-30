@@ -65,6 +65,8 @@ import cl.json.RNSharePackage;
 import org.devio.rn.splashscreen.SplashScreenReactPackage;
 // react-native-sqlite-storage
 import org.pgsqlite.SQLitePluginPackage;
+// react-native-svg
+import com.horcrux.svg.SvgPackage;
 // react-native-vector-icons
 import com.oblador.vectoricons.VectorIconsPackage;
 
@@ -139,6 +141,7 @@ public class PackageList {
       new RNSharePackage(),
       new SplashScreenReactPackage(),
       new SQLitePluginPackage(),
+      new SvgPackage(),
       new VectorIconsPackage()
     ));
   }

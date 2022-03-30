@@ -10,7 +10,7 @@
     <!-- Value from default config. -->
     <string name="APP_NAME" translatable="false">"ParkPro"</string>
     <!-- Value from default config. -->
-    <string name="APP_URL" translatable="false">"https://api.parkproug.com/api/"</string>
+    <string name="APP_URL" translatable="false">"https://0968-41-210-146-70.ngrok.io/api/"</string>
     <!-- Value from default config. -->
     <string name="COMPANY_EMAIL" translatable="false">"info@parkproug.com"</string>
     <!-- Value from default config. -->

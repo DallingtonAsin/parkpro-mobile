@@ -64,6 +64,24 @@ module.exports = {
             throw error;
         }
     },
+
+    fetchNearByParkingAreas : async(latitude, longitude) => {
+        try{
+            const endpoint = `device/parking-area/near-by?latitude=${latitude}&longitude=${longitude}`;
+            return await http.ApiService.fetchData(endpoint);
+        }catch(error){
+            throw error;
+        }
+    },
+
+    fetchTopRatedParkingAreas : async() => {
+        try{
+            const endpoint = `device/parking-area/top-rated`;
+            return await http.ApiService.fetchData(endpoint);
+        }catch(error){
+            throw error;
+        }
+    },
     
     getCarTypes: async() => {
         try{

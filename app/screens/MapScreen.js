@@ -16,7 +16,9 @@ import { StyleSheet, Text, View,Button,Pressable,
   import ProfileContext from '../context/index';
   import { AuthContext } from '../context/context';
   import {  icons, mapStyles } from '../../constants';
-  import Location from 'expo-location';
+  // import Location from 'expo-location';
+  import * as Location from 'expo-location';
+  // import { Constants, Location, Permissions } from 'expo';
   import Geocoder from 'react-native-geocoding';
   import {currency} from '@env';
   import { UIActivityIndicator } from 'react-native-indicators';
@@ -92,13 +94,64 @@ import { StyleSheet, Text, View,Button,Pressable,
     const [start_time, setStartHourTime] = useState(null);
     const [end_time, setEndHourTime] = useState(null);
     const [amount, setAmount] = useState("0");
+
+    const [locationServiceEnabled, setLocationServiceEnabled] = useState(false);
+    const [displayCurrentAddress, setDisplayCurrentAddress] = useState('fetching your location...');
     
     
     const {getParkingAreas, getVehicleCategories, submitParkingRequest} = React.useContext(AuthContext);
     
     const [isStartTimePickerVisible, setStartTimePickerVisibility] = useState(false);
     const [isEndTimePickerVisible, setEndTimePickerVisibility] = useState(false);
+
+
+    const CheckIfLocationEnabled = async () => {
+      let enabled = await Location.hasServicesEnabledAsync();
+  
+      if (!enabled) {
+        Alert.alert(
+          'Location Service not enabled',
+          'Please enable your location services to continue',
+          [{ text: 'OK' }],
+          { cancelable: false }
+        );
+      } else {
+        setLocationServiceEnabled(enabled);
+      }
+    };
+
+    const GetCurrentLocation = async () => {
+      const granted = await PermissionsAndroid.check( PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION );
+      console.log("Permission status", granted);
     
+      if (!granted) {
+        Alert.alert(
+          'Permission not granted',
+          'Allow the app to use location service.',
+          [{ text: 'OK' }],
+          { cancelable: false }
+        );
+      }
+    
+      let { coords } = await Location.getCurrentPositionAsync({ enableHighAccuracy: false });
+      console.log("Your coords", coords);
+    
+      if (coords) {
+        const { latitude, longitude } = coords;
+        let response = await Location.reverseGeocodeAsync({
+          latitude,
+          longitude
+        });
+    
+        for (let item of response) {
+          let address = `${item.name}, ${item.street}, ${item.postalCode}, ${item.city}`;
+    
+          setDisplayCurrentAddress(address);
+        }
+      }
+    };
+
+
     const getTime = (selectedDate) => {
       let currentDate = selectedDate || date;
       let hours = currentDate.getHours();
@@ -227,7 +280,7 @@ import { StyleSheet, Text, View,Button,Pressable,
         buttonPositive: "OK"
       } );
       
-      // if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
       Geolocation.getCurrentPosition(
         (position) => {
           
@@ -235,17 +288,7 @@ import { StyleSheet, Text, View,Button,Pressable,
           
           let lat = parseFloat(position.coords.latitude);
           let long = parseFloat(position.coords.longitude);
-          
-          Geocoder.from(position.coords.latitude, position.coords.longitude)
-          .then(json => {
-            //  console.log("Response from Geocoder", json);
-            var addressComponent = json.results[0].address_components;
-            setCurrentAddress(addressComponent);
-            // console.log("Your current location", addressComponent);
-          })
-          .catch(error => console.warn(error));
-          
-          
+
           setRegion({
             ...region,
             latitude: lat,
@@ -271,6 +314,18 @@ import { StyleSheet, Text, View,Button,Pressable,
             
             
           });
+          
+          Geocoder.from(position.coords.latitude, position.coords.longitude)
+          .then(json => {
+            //  console.log("Response from Geocoder", json);
+            var addressComponent = json.results[0].address_components;
+            setCurrentAddress(addressComponent);
+            // console.log("Your current location", addressComponent);
+          })
+          .catch(error => console.warn(error));
+          
+          
+       
           // console.log("Marker region", region.markerCoords);
         },
         (error) => {
@@ -278,7 +333,7 @@ import { StyleSheet, Text, View,Button,Pressable,
         },
         { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
         );
-        // }
+        }
         
       }
       
@@ -439,34 +494,7 @@ import { StyleSheet, Text, View,Button,Pressable,
           
         }
         
-        const GetCurrentLocation = async () => {
-          // let { status } = await Location.requestForegroundPermissionsAsync();
-          // if (status !== 'granted') {
-          //   Alert.alert(
-          //     'Permission not granted',
-          //     'Allow the app to use location service.',
-          //     [{ text: 'OK' }],
-          //     { cancelable: false }
-          //   );
-          // }
-          
-          await Location.getCurrentPositionAsync({ enableHighAccuracy: false, maximumAge: 15000 }).then( async coords =>{
-            if (coords) {
-              const { latitude, longitude } = coords;
-              let response = await Location.reverseGeocodeAsync({
-                latitude,
-                longitude
-              });
-              
-              for (let item of response) {
-                let address = `${item.name}, ${item.street}, ${item.postalCode}, ${item.city}`;
-                setCurrentAddress(address);
-              }
-              console.log("Your address", address);
-            }
-          });
-          
-        };
+   
         
         
         const fetchNearByParkings = async() => {
@@ -501,11 +529,13 @@ import { StyleSheet, Text, View,Button,Pressable,
         }
         
         useEffect(() => {
+          // requestLocationPermission();
+          CheckIfLocationEnabled();
+          GetCurrentLocation();
           populateHours();
           populateVehicles();
           fetchVehicleCategories();
           fetchNearByParkings();
-          requestLocationPermission();
           
         }, []);
         
@@ -542,7 +572,7 @@ import { StyleSheet, Text, View,Button,Pressable,
             </View>
             <View style={{flex:1, justifyContent:'center', alignItems:"flex-end"}}>
             <Text style={styles.headerTitle}>Your Current Location</Text>
-            <Text style={styles.headerLocation}>{currentAddress}
+            <Text style={styles.headerLocation}>{displayCurrentAddress}
             
             </Text>
             </View>

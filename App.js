@@ -377,6 +377,24 @@ import { View, ActivityIndicator, Image, RefreshControl,  Text,
             return {"message": e.message, "statusCode": 0};
           }
         },
+
+        getNearByParkingAreas: async(lat, long) => {
+          try{
+            const result = await Services.ParkingService.fetchNearByParkingAreas(lat, long);
+            return result;
+          }catch(e){
+            return {"message": e.message, "statusCode": 0};
+          }
+        },
+
+        getTopRatedParkingAreas: async() => {
+          try{
+            const result = await Services.ParkingService.fetchTopRatedParkingAreas();
+            return result;
+          }catch(e){
+            return {"message": e.message, "statusCode": 0};
+          }
+        },
         
         submitParkingRequest: async(data) => {
           try{

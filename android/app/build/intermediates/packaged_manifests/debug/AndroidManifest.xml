@@ -13,7 +13,10 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
@@ -27,7 +30,6 @@
     <uses-feature android:name="android.hardware.location.network" />
 
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <queries>
         <intent>
@@ -63,9 +65,7 @@
     <uses-permission android:name="com.oppo.launcher.permission.READ_SETTINGS" />
     <uses-permission android:name="com.oppo.launcher.permission.WRITE_SETTINGS" /> <!-- for EvMe -->
     <uses-permission android:name="me.everything.badger.permission.BADGE_COUNT_READ" />
-    <uses-permission android:name="me.everything.badger.permission.BADGE_COUNT_WRITE" /> <!-- Permission will be merged into the manifest of the hosting app. -->
-    <!-- Is required to launch foreground extraction service for targetSdkVersion 28+. -->
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="me.everything.badger.permission.BADGE_COUNT_WRITE" />
 
     <application
         android:name="com.parksmart.MainApplication"

@@ -23,212 +23,214 @@
 15    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 15-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:7:5-79
 15-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:7:22-76
-16    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-16-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:8:5-79
-16-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:8:22-76
-17    <uses-permission android:name="android.permission.VIBRATE" />
-17-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:9:5-66
-17-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:9:22-63
-18    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-18-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:10:5-80
-18-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:10:22-78
-19
-20    <uses-feature
-20-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:11:5-85
-21        android:name="android.hardware.camera"
-21-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:11:19-57
-22        android:required="false" />
-22-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:11:58-82
+16    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+16-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:8:5-81
+16-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:8:22-78
+17    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+17-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:9:5-79
+17-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:9:22-76
+18    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+18-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:10:5-77
+18-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:10:22-74
+19    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+19-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:11:5-85
+19-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:11:22-82
+20    <uses-permission android:name="android.permission.VIBRATE" />
+20-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:12:5-66
+20-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:12:22-63
+21    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+21-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:13:5-80
+21-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:13:22-78
+22
 23    <uses-feature
-23-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:12:5-91
-24        android:name="android.hardware.camera.front"
-24-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:12:19-63
-25        android:required="false" /> <!-- for Android 5.0 (API level 21) or higher. -->
-25-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:12:64-88
-26    <uses-feature android:name="android.hardware.location.gps" />
-26-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:16:5-66
-26-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:16:19-63
-27    <uses-feature android:name="android.hardware.location.network" />
-27-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:17:5-70
-27-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:17:19-67
-28
-29    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-29-->[com.facebook.flipper:flipper:0.75.1] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\a8f6015f96666ab8d93bfe5b64998bc8\jetified-flipper-0.75.1\AndroidManifest.xml:16:5-76
-29-->[com.facebook.flipper:flipper:0.75.1] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\a8f6015f96666ab8d93bfe5b64998bc8\jetified-flipper-0.75.1\AndroidManifest.xml:16:22-73
-30    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-30-->[:react-native-maps] C:\laragon\www\ps-mobile\node_modules\react-native-maps\lib\android\build\intermediates\library_manifest\debug\AndroidManifest.xml:10:5-81
-30-->[:react-native-maps] C:\laragon\www\ps-mobile\node_modules\react-native-maps\lib\android\build\intermediates\library_manifest\debug\AndroidManifest.xml:10:22-78
+23-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:14:5-85
+24        android:name="android.hardware.camera"
+24-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:14:19-57
+25        android:required="false" />
+25-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:14:58-82
+26    <uses-feature
+26-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:15:5-91
+27        android:name="android.hardware.camera.front"
+27-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:15:19-63
+28        android:required="false" /> <!-- for Android 5.0 (API level 21) or higher. -->
+28-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:15:64-88
+29    <uses-feature android:name="android.hardware.location.gps" />
+29-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:19:5-66
+29-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:19:19-63
+30    <uses-feature android:name="android.hardware.location.network" />
+30-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:20:5-70
+30-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:20:19-67
 31
-32    <queries>
-32-->[:react-native-image-crop-picker] C:\laragon\www\ps-mobile\node_modules\react-native-image-crop-picker\android\build\intermediates\library_manifest\debug\AndroidManifest.xml:10:5-14:15
-33        <intent>
-33-->[:react-native-image-crop-picker] C:\laragon\www\ps-mobile\node_modules\react-native-image-crop-picker\android\build\intermediates\library_manifest\debug\AndroidManifest.xml:11:9-13:18
-34            <action android:name="android.media.action.IMAGE_CAPTURE" />
-34-->[:react-native-image-crop-picker] C:\laragon\www\ps-mobile\node_modules\react-native-image-crop-picker\android\build\intermediates\library_manifest\debug\AndroidManifest.xml:12:13-73
-34-->[:react-native-image-crop-picker] C:\laragon\www\ps-mobile\node_modules\react-native-image-crop-picker\android\build\intermediates\library_manifest\debug\AndroidManifest.xml:12:21-70
-35        </intent>
-36        <!-- Needs to be explicitly declared on Android R+ -->
-37        <package android:name="com.google.android.apps.maps" />
-37-->[com.google.android.gms:play-services-maps:17.0.1] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\efd0d19bbfbb8be14911aca5f5f8466c\jetified-play-services-maps-17.0.1\AndroidManifest.xml:33:9-64
-37-->[com.google.android.gms:play-services-maps:17.0.1] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\efd0d19bbfbb8be14911aca5f5f8466c\jetified-play-services-maps-17.0.1\AndroidManifest.xml:33:18-61
-38    </queries>
-39
-40    <uses-feature
-40-->[com.google.android.gms:play-services-maps:17.0.1] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\efd0d19bbfbb8be14911aca5f5f8466c\jetified-play-services-maps-17.0.1\AndroidManifest.xml:26:5-28:35
-41        android:glEsVersion="0x00020000"
-41-->[com.google.android.gms:play-services-maps:17.0.1] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\efd0d19bbfbb8be14911aca5f5f8466c\jetified-play-services-maps-17.0.1\AndroidManifest.xml:27:9-41
-42        android:required="true" />
-42-->[com.google.android.gms:play-services-maps:17.0.1] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\efd0d19bbfbb8be14911aca5f5f8466c\jetified-play-services-maps-17.0.1\AndroidManifest.xml:28:9-32
-43
-44    <uses-permission android:name="android.permission.WAKE_LOCK" /> <!-- Required by older versions of Google Play services to create IID tokens -->
-44-->[com.google.firebase:firebase-messaging:23.0.2] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\e18085303ddf00fd4793759480149441\jetified-firebase-messaging-23.0.2\AndroidManifest.xml:26:5-68
-44-->[com.google.firebase:firebase-messaging:23.0.2] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\e18085303ddf00fd4793759480149441\jetified-firebase-messaging-23.0.2\AndroidManifest.xml:26:22-65
-45    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" /> <!-- for android -->
-45-->[com.google.firebase:firebase-messaging:23.0.2] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\e18085303ddf00fd4793759480149441\jetified-firebase-messaging-23.0.2\AndroidManifest.xml:28:5-82
-45-->[com.google.firebase:firebase-messaging:23.0.2] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\e18085303ddf00fd4793759480149441\jetified-firebase-messaging-23.0.2\AndroidManifest.xml:28:22-79
-46    <!-- <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS"/> -->
-47    <!-- <uses-permission android:name="com.android.launcher.permission.WRITE_SETTINGS"/> -->
-48    <!-- <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" /> -->
-49    <!-- <uses-permission android:name="com.android.launcher.permission.UNINSTALL_SHORTCUT" /> -->
-50    <!-- for Samsung -->
-51    <uses-permission android:name="com.sec.android.provider.badge.permission.READ" />
-51-->[me.leolin:ShortcutBadger:1.1.22] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\091dc4e4cdcc7b8ff4528057aeb8408e\jetified-ShortcutBadger-1.1.22\AndroidManifest.xml:19:5-86
-51-->[me.leolin:ShortcutBadger:1.1.22] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\091dc4e4cdcc7b8ff4528057aeb8408e\jetified-ShortcutBadger-1.1.22\AndroidManifest.xml:19:22-83
-52    <uses-permission android:name="com.sec.android.provider.badge.permission.WRITE" /> <!-- for htc -->
-52-->[me.leolin:ShortcutBadger:1.1.22] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\091dc4e4cdcc7b8ff4528057aeb8408e\jetified-ShortcutBadger-1.1.22\AndroidManifest.xml:20:5-87
-52-->[me.leolin:ShortcutBadger:1.1.22] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\091dc4e4cdcc7b8ff4528057aeb8408e\jetified-ShortcutBadger-1.1.22\AndroidManifest.xml:20:22-84
-53    <uses-permission android:name="com.htc.launcher.permission.READ_SETTINGS" />
-53-->[me.leolin:ShortcutBadger:1.1.22] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\091dc4e4cdcc7b8ff4528057aeb8408e\jetified-ShortcutBadger-1.1.22\AndroidManifest.xml:23:5-81
-53-->[me.leolin:ShortcutBadger:1.1.22] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\091dc4e4cdcc7b8ff4528057aeb8408e\jetified-ShortcutBadger-1.1.22\AndroidManifest.xml:23:22-78
-54    <uses-permission android:name="com.htc.launcher.permission.UPDATE_SHORTCUT" /> <!-- for sony -->
-54-->[me.leolin:ShortcutBadger:1.1.22] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\091dc4e4cdcc7b8ff4528057aeb8408e\jetified-ShortcutBadger-1.1.22\AndroidManifest.xml:24:5-83
-54-->[me.leolin:ShortcutBadger:1.1.22] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\091dc4e4cdcc7b8ff4528057aeb8408e\jetified-ShortcutBadger-1.1.22\AndroidManifest.xml:24:22-80
-55    <uses-permission android:name="com.sonyericsson.home.permission.BROADCAST_BADGE" />
-55-->[me.leolin:ShortcutBadger:1.1.22] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\091dc4e4cdcc7b8ff4528057aeb8408e\jetified-ShortcutBadger-1.1.22\AndroidManifest.xml:27:5-88
-55-->[me.leolin:ShortcutBadger:1.1.22] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\091dc4e4cdcc7b8ff4528057aeb8408e\jetified-ShortcutBadger-1.1.22\AndroidManifest.xml:27:22-85
-56    <uses-permission android:name="com.sonymobile.home.permission.PROVIDER_INSERT_BADGE" /> <!-- for apex -->
-56-->[me.leolin:ShortcutBadger:1.1.22] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\091dc4e4cdcc7b8ff4528057aeb8408e\jetified-ShortcutBadger-1.1.22\AndroidManifest.xml:28:5-92
-56-->[me.leolin:ShortcutBadger:1.1.22] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\091dc4e4cdcc7b8ff4528057aeb8408e\jetified-ShortcutBadger-1.1.22\AndroidManifest.xml:28:22-89
-57    <uses-permission android:name="com.anddoes.launcher.permission.UPDATE_COUNT" /> <!-- for solid -->
-57-->[me.leolin:ShortcutBadger:1.1.22] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\091dc4e4cdcc7b8ff4528057aeb8408e\jetified-ShortcutBadger-1.1.22\AndroidManifest.xml:31:5-84
-57-->[me.leolin:ShortcutBadger:1.1.22] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\091dc4e4cdcc7b8ff4528057aeb8408e\jetified-ShortcutBadger-1.1.22\AndroidManifest.xml:31:22-81
-58    <uses-permission android:name="com.majeur.launcher.permission.UPDATE_BADGE" /> <!-- for huawei -->
-58-->[me.leolin:ShortcutBadger:1.1.22] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\091dc4e4cdcc7b8ff4528057aeb8408e\jetified-ShortcutBadger-1.1.22\AndroidManifest.xml:34:5-83
-58-->[me.leolin:ShortcutBadger:1.1.22] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\091dc4e4cdcc7b8ff4528057aeb8408e\jetified-ShortcutBadger-1.1.22\AndroidManifest.xml:34:22-80
-59    <uses-permission android:name="com.huawei.android.launcher.permission.CHANGE_BADGE" />
-59-->[me.leolin:ShortcutBadger:1.1.22] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\091dc4e4cdcc7b8ff4528057aeb8408e\jetified-ShortcutBadger-1.1.22\AndroidManifest.xml:37:5-91
-59-->[me.leolin:ShortcutBadger:1.1.22] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\091dc4e4cdcc7b8ff4528057aeb8408e\jetified-ShortcutBadger-1.1.22\AndroidManifest.xml:37:22-88
-60    <uses-permission android:name="com.huawei.android.launcher.permission.READ_SETTINGS" />
-60-->[me.leolin:ShortcutBadger:1.1.22] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\091dc4e4cdcc7b8ff4528057aeb8408e\jetified-ShortcutBadger-1.1.22\AndroidManifest.xml:38:5-92
-60-->[me.leolin:ShortcutBadger:1.1.22] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\091dc4e4cdcc7b8ff4528057aeb8408e\jetified-ShortcutBadger-1.1.22\AndroidManifest.xml:38:22-89
-61    <uses-permission android:name="com.huawei.android.launcher.permission.WRITE_SETTINGS" /> <!-- for ZUK -->
-61-->[me.leolin:ShortcutBadger:1.1.22] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\091dc4e4cdcc7b8ff4528057aeb8408e\jetified-ShortcutBadger-1.1.22\AndroidManifest.xml:39:5-93
-61-->[me.leolin:ShortcutBadger:1.1.22] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\091dc4e4cdcc7b8ff4528057aeb8408e\jetified-ShortcutBadger-1.1.22\AndroidManifest.xml:39:22-90
-62    <uses-permission android:name="android.permission.READ_APP_BADGE" /> <!-- for OPPO -->
-62-->[me.leolin:ShortcutBadger:1.1.22] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\091dc4e4cdcc7b8ff4528057aeb8408e\jetified-ShortcutBadger-1.1.22\AndroidManifest.xml:42:5-73
-62-->[me.leolin:ShortcutBadger:1.1.22] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\091dc4e4cdcc7b8ff4528057aeb8408e\jetified-ShortcutBadger-1.1.22\AndroidManifest.xml:42:22-70
-63    <uses-permission android:name="com.oppo.launcher.permission.READ_SETTINGS" />
-63-->[me.leolin:ShortcutBadger:1.1.22] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\091dc4e4cdcc7b8ff4528057aeb8408e\jetified-ShortcutBadger-1.1.22\AndroidManifest.xml:45:5-82
-63-->[me.leolin:ShortcutBadger:1.1.22] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\091dc4e4cdcc7b8ff4528057aeb8408e\jetified-ShortcutBadger-1.1.22\AndroidManifest.xml:45:22-79
-64    <uses-permission android:name="com.oppo.launcher.permission.WRITE_SETTINGS" /> <!-- for EvMe -->
-64-->[me.leolin:ShortcutBadger:1.1.22] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\091dc4e4cdcc7b8ff4528057aeb8408e\jetified-ShortcutBadger-1.1.22\AndroidManifest.xml:46:5-83
-64-->[me.leolin:ShortcutBadger:1.1.22] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\091dc4e4cdcc7b8ff4528057aeb8408e\jetified-ShortcutBadger-1.1.22\AndroidManifest.xml:46:22-80
-65    <uses-permission android:name="me.everything.badger.permission.BADGE_COUNT_READ" />
-65-->[me.leolin:ShortcutBadger:1.1.22] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\091dc4e4cdcc7b8ff4528057aeb8408e\jetified-ShortcutBadger-1.1.22\AndroidManifest.xml:49:5-88
-65-->[me.leolin:ShortcutBadger:1.1.22] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\091dc4e4cdcc7b8ff4528057aeb8408e\jetified-ShortcutBadger-1.1.22\AndroidManifest.xml:49:22-85
-66    <uses-permission android:name="me.everything.badger.permission.BADGE_COUNT_WRITE" /> <!-- Permission will be merged into the manifest of the hosting app. -->
-66-->[me.leolin:ShortcutBadger:1.1.22] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\091dc4e4cdcc7b8ff4528057aeb8408e\jetified-ShortcutBadger-1.1.22\AndroidManifest.xml:50:5-89
-66-->[me.leolin:ShortcutBadger:1.1.22] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\091dc4e4cdcc7b8ff4528057aeb8408e\jetified-ShortcutBadger-1.1.22\AndroidManifest.xml:50:22-86
-67    <!-- Is required to launch foreground extraction service for targetSdkVersion 28+. -->
-68    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-68-->[com.google.android.play:core:1.8.0] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\aec96a2403341eb62cd82223637d28f8\jetified-core-1.8.0\AndroidManifest.xml:8:3-74
-68-->[com.google.android.play:core:1.8.0] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\aec96a2403341eb62cd82223637d28f8\jetified-core-1.8.0\AndroidManifest.xml:8:20-72
+32    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+32-->[com.facebook.flipper:flipper:0.75.1] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\a8f6015f96666ab8d93bfe5b64998bc8\jetified-flipper-0.75.1\AndroidManifest.xml:16:5-76
+32-->[com.facebook.flipper:flipper:0.75.1] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\a8f6015f96666ab8d93bfe5b64998bc8\jetified-flipper-0.75.1\AndroidManifest.xml:16:22-73
+33
+34    <queries>
+34-->[:react-native-image-crop-picker] C:\laragon\www\ps-mobile\node_modules\react-native-image-crop-picker\android\build\intermediates\library_manifest\debug\AndroidManifest.xml:10:5-14:15
+35        <intent>
+35-->[:react-native-image-crop-picker] C:\laragon\www\ps-mobile\node_modules\react-native-image-crop-picker\android\build\intermediates\library_manifest\debug\AndroidManifest.xml:11:9-13:18
+36            <action android:name="android.media.action.IMAGE_CAPTURE" />
+36-->[:react-native-image-crop-picker] C:\laragon\www\ps-mobile\node_modules\react-native-image-crop-picker\android\build\intermediates\library_manifest\debug\AndroidManifest.xml:12:13-73
+36-->[:react-native-image-crop-picker] C:\laragon\www\ps-mobile\node_modules\react-native-image-crop-picker\android\build\intermediates\library_manifest\debug\AndroidManifest.xml:12:21-70
+37        </intent>
+38        <!-- Needs to be explicitly declared on Android R+ -->
+39        <package android:name="com.google.android.apps.maps" />
+39-->[com.google.android.gms:play-services-maps:17.0.1] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\efd0d19bbfbb8be14911aca5f5f8466c\jetified-play-services-maps-17.0.1\AndroidManifest.xml:33:9-64
+39-->[com.google.android.gms:play-services-maps:17.0.1] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\efd0d19bbfbb8be14911aca5f5f8466c\jetified-play-services-maps-17.0.1\AndroidManifest.xml:33:18-61
+40    </queries>
+41
+42    <uses-feature
+42-->[com.google.android.gms:play-services-maps:17.0.1] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\efd0d19bbfbb8be14911aca5f5f8466c\jetified-play-services-maps-17.0.1\AndroidManifest.xml:26:5-28:35
+43        android:glEsVersion="0x00020000"
+43-->[com.google.android.gms:play-services-maps:17.0.1] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\efd0d19bbfbb8be14911aca5f5f8466c\jetified-play-services-maps-17.0.1\AndroidManifest.xml:27:9-41
+44        android:required="true" />
+44-->[com.google.android.gms:play-services-maps:17.0.1] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\efd0d19bbfbb8be14911aca5f5f8466c\jetified-play-services-maps-17.0.1\AndroidManifest.xml:28:9-32
+45
+46    <uses-permission android:name="android.permission.WAKE_LOCK" /> <!-- Required by older versions of Google Play services to create IID tokens -->
+46-->[com.google.firebase:firebase-messaging:23.0.2] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\e18085303ddf00fd4793759480149441\jetified-firebase-messaging-23.0.2\AndroidManifest.xml:26:5-68
+46-->[com.google.firebase:firebase-messaging:23.0.2] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\e18085303ddf00fd4793759480149441\jetified-firebase-messaging-23.0.2\AndroidManifest.xml:26:22-65
+47    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" /> <!-- for android -->
+47-->[com.google.firebase:firebase-messaging:23.0.2] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\e18085303ddf00fd4793759480149441\jetified-firebase-messaging-23.0.2\AndroidManifest.xml:28:5-82
+47-->[com.google.firebase:firebase-messaging:23.0.2] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\e18085303ddf00fd4793759480149441\jetified-firebase-messaging-23.0.2\AndroidManifest.xml:28:22-79
+48    <!-- <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS"/> -->
+49    <!-- <uses-permission android:name="com.android.launcher.permission.WRITE_SETTINGS"/> -->
+50    <!-- <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" /> -->
+51    <!-- <uses-permission android:name="com.android.launcher.permission.UNINSTALL_SHORTCUT" /> -->
+52    <!-- for Samsung -->
+53    <uses-permission android:name="com.sec.android.provider.badge.permission.READ" />
+53-->[me.leolin:ShortcutBadger:1.1.22] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\091dc4e4cdcc7b8ff4528057aeb8408e\jetified-ShortcutBadger-1.1.22\AndroidManifest.xml:19:5-86
+53-->[me.leolin:ShortcutBadger:1.1.22] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\091dc4e4cdcc7b8ff4528057aeb8408e\jetified-ShortcutBadger-1.1.22\AndroidManifest.xml:19:22-83
+54    <uses-permission android:name="com.sec.android.provider.badge.permission.WRITE" /> <!-- for htc -->
+54-->[me.leolin:ShortcutBadger:1.1.22] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\091dc4e4cdcc7b8ff4528057aeb8408e\jetified-ShortcutBadger-1.1.22\AndroidManifest.xml:20:5-87
+54-->[me.leolin:ShortcutBadger:1.1.22] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\091dc4e4cdcc7b8ff4528057aeb8408e\jetified-ShortcutBadger-1.1.22\AndroidManifest.xml:20:22-84
+55    <uses-permission android:name="com.htc.launcher.permission.READ_SETTINGS" />
+55-->[me.leolin:ShortcutBadger:1.1.22] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\091dc4e4cdcc7b8ff4528057aeb8408e\jetified-ShortcutBadger-1.1.22\AndroidManifest.xml:23:5-81
+55-->[me.leolin:ShortcutBadger:1.1.22] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\091dc4e4cdcc7b8ff4528057aeb8408e\jetified-ShortcutBadger-1.1.22\AndroidManifest.xml:23:22-78
+56    <uses-permission android:name="com.htc.launcher.permission.UPDATE_SHORTCUT" /> <!-- for sony -->
+56-->[me.leolin:ShortcutBadger:1.1.22] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\091dc4e4cdcc7b8ff4528057aeb8408e\jetified-ShortcutBadger-1.1.22\AndroidManifest.xml:24:5-83
+56-->[me.leolin:ShortcutBadger:1.1.22] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\091dc4e4cdcc7b8ff4528057aeb8408e\jetified-ShortcutBadger-1.1.22\AndroidManifest.xml:24:22-80
+57    <uses-permission android:name="com.sonyericsson.home.permission.BROADCAST_BADGE" />
+57-->[me.leolin:ShortcutBadger:1.1.22] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\091dc4e4cdcc7b8ff4528057aeb8408e\jetified-ShortcutBadger-1.1.22\AndroidManifest.xml:27:5-88
+57-->[me.leolin:ShortcutBadger:1.1.22] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\091dc4e4cdcc7b8ff4528057aeb8408e\jetified-ShortcutBadger-1.1.22\AndroidManifest.xml:27:22-85
+58    <uses-permission android:name="com.sonymobile.home.permission.PROVIDER_INSERT_BADGE" /> <!-- for apex -->
+58-->[me.leolin:ShortcutBadger:1.1.22] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\091dc4e4cdcc7b8ff4528057aeb8408e\jetified-ShortcutBadger-1.1.22\AndroidManifest.xml:28:5-92
+58-->[me.leolin:ShortcutBadger:1.1.22] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\091dc4e4cdcc7b8ff4528057aeb8408e\jetified-ShortcutBadger-1.1.22\AndroidManifest.xml:28:22-89
+59    <uses-permission android:name="com.anddoes.launcher.permission.UPDATE_COUNT" /> <!-- for solid -->
+59-->[me.leolin:ShortcutBadger:1.1.22] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\091dc4e4cdcc7b8ff4528057aeb8408e\jetified-ShortcutBadger-1.1.22\AndroidManifest.xml:31:5-84
+59-->[me.leolin:ShortcutBadger:1.1.22] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\091dc4e4cdcc7b8ff4528057aeb8408e\jetified-ShortcutBadger-1.1.22\AndroidManifest.xml:31:22-81
+60    <uses-permission android:name="com.majeur.launcher.permission.UPDATE_BADGE" /> <!-- for huawei -->
+60-->[me.leolin:ShortcutBadger:1.1.22] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\091dc4e4cdcc7b8ff4528057aeb8408e\jetified-ShortcutBadger-1.1.22\AndroidManifest.xml:34:5-83
+60-->[me.leolin:ShortcutBadger:1.1.22] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\091dc4e4cdcc7b8ff4528057aeb8408e\jetified-ShortcutBadger-1.1.22\AndroidManifest.xml:34:22-80
+61    <uses-permission android:name="com.huawei.android.launcher.permission.CHANGE_BADGE" />
+61-->[me.leolin:ShortcutBadger:1.1.22] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\091dc4e4cdcc7b8ff4528057aeb8408e\jetified-ShortcutBadger-1.1.22\AndroidManifest.xml:37:5-91
+61-->[me.leolin:ShortcutBadger:1.1.22] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\091dc4e4cdcc7b8ff4528057aeb8408e\jetified-ShortcutBadger-1.1.22\AndroidManifest.xml:37:22-88
+62    <uses-permission android:name="com.huawei.android.launcher.permission.READ_SETTINGS" />
+62-->[me.leolin:ShortcutBadger:1.1.22] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\091dc4e4cdcc7b8ff4528057aeb8408e\jetified-ShortcutBadger-1.1.22\AndroidManifest.xml:38:5-92
+62-->[me.leolin:ShortcutBadger:1.1.22] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\091dc4e4cdcc7b8ff4528057aeb8408e\jetified-ShortcutBadger-1.1.22\AndroidManifest.xml:38:22-89
+63    <uses-permission android:name="com.huawei.android.launcher.permission.WRITE_SETTINGS" /> <!-- for ZUK -->
+63-->[me.leolin:ShortcutBadger:1.1.22] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\091dc4e4cdcc7b8ff4528057aeb8408e\jetified-ShortcutBadger-1.1.22\AndroidManifest.xml:39:5-93
+63-->[me.leolin:ShortcutBadger:1.1.22] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\091dc4e4cdcc7b8ff4528057aeb8408e\jetified-ShortcutBadger-1.1.22\AndroidManifest.xml:39:22-90
+64    <uses-permission android:name="android.permission.READ_APP_BADGE" /> <!-- for OPPO -->
+64-->[me.leolin:ShortcutBadger:1.1.22] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\091dc4e4cdcc7b8ff4528057aeb8408e\jetified-ShortcutBadger-1.1.22\AndroidManifest.xml:42:5-73
+64-->[me.leolin:ShortcutBadger:1.1.22] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\091dc4e4cdcc7b8ff4528057aeb8408e\jetified-ShortcutBadger-1.1.22\AndroidManifest.xml:42:22-70
+65    <uses-permission android:name="com.oppo.launcher.permission.READ_SETTINGS" />
+65-->[me.leolin:ShortcutBadger:1.1.22] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\091dc4e4cdcc7b8ff4528057aeb8408e\jetified-ShortcutBadger-1.1.22\AndroidManifest.xml:45:5-82
+65-->[me.leolin:ShortcutBadger:1.1.22] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\091dc4e4cdcc7b8ff4528057aeb8408e\jetified-ShortcutBadger-1.1.22\AndroidManifest.xml:45:22-79
+66    <uses-permission android:name="com.oppo.launcher.permission.WRITE_SETTINGS" /> <!-- for EvMe -->
+66-->[me.leolin:ShortcutBadger:1.1.22] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\091dc4e4cdcc7b8ff4528057aeb8408e\jetified-ShortcutBadger-1.1.22\AndroidManifest.xml:46:5-83
+66-->[me.leolin:ShortcutBadger:1.1.22] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\091dc4e4cdcc7b8ff4528057aeb8408e\jetified-ShortcutBadger-1.1.22\AndroidManifest.xml:46:22-80
+67    <uses-permission android:name="me.everything.badger.permission.BADGE_COUNT_READ" />
+67-->[me.leolin:ShortcutBadger:1.1.22] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\091dc4e4cdcc7b8ff4528057aeb8408e\jetified-ShortcutBadger-1.1.22\AndroidManifest.xml:49:5-88
+67-->[me.leolin:ShortcutBadger:1.1.22] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\091dc4e4cdcc7b8ff4528057aeb8408e\jetified-ShortcutBadger-1.1.22\AndroidManifest.xml:49:22-85
+68    <uses-permission android:name="me.everything.badger.permission.BADGE_COUNT_WRITE" />
+68-->[me.leolin:ShortcutBadger:1.1.22] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\091dc4e4cdcc7b8ff4528057aeb8408e\jetified-ShortcutBadger-1.1.22\AndroidManifest.xml:50:5-89
+68-->[me.leolin:ShortcutBadger:1.1.22] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\091dc4e4cdcc7b8ff4528057aeb8408e\jetified-ShortcutBadger-1.1.22\AndroidManifest.xml:50:22-86
 69
 70    <application
-70-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:19:5-56:19
+70-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:22:5-59:19
 71        android:name="com.parksmart.MainApplication"
-71-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:20:7-38
+71-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:23:7-38
 72        android:allowBackup="false"
-72-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:24:7-34
+72-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:27:7-34
 73        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
 73-->[androidx.core:core:1.3.1] C:\Users\HP\.gradle\caches\transforms-2\files-2.1\3975ffd70914deb17405b14313b8e4ba\core-1.3.1\AndroidManifest.xml:24:18-86
 74        android:debuggable="true"
 75        android:icon="@mipmap/ic_launcher"
-75-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:22:7-41
+75-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:25:7-41
 76        android:label="@string/app_name"
-76-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:21:7-39
+76-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:24:7-39
 77        android:roundIcon="@mipmap/ic_launcher_round"
-77-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:23:7-52
+77-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:26:7-52
 78        android:theme="@style/AppTheme"
-78-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:26:7-38
+78-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:29:7-38
 79        android:usesCleartextTraffic="true" >
-79-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:25:7-42
+79-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:28:7-42
 80        <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
 80-->C:\laragon\www\ps-mobile\android\app\src\debug\AndroidManifest.xml:11:9-86
 80-->C:\laragon\www\ps-mobile\android\app\src\debug\AndroidManifest.xml:11:19-83
 81
 82        <meta-data
-82-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:27:7-121
+82-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:30:7-121
 83            android:name="com.google.android.geo.API_KEY"
-83-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:27:18-63
+83-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:30:18-63
 84            android:value="AIzaSyCi37U2RYVZidLevjqPPyHZaAZLV9JODDg" /> <!-- Change the value to true to enable pop-up for in foreground on receiving remote notifications (for prevent duplicating while showing local notifications set this to false) -->
-84-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:27:64-119
+84-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:30:64-119
 85        <meta-data
-85-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:29:9-30:44
+85-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:32:9-33:44
 86            android:name="com.dieam.reactnativepushnotification.notification_foreground"
-86-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:29:21-97
+86-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:32:21-97
 87            android:value="false" /> <!-- Change the resource name to your App's accent color - or any other color you want -->
-87-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:30:21-42
+87-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:33:21-42
 88        <meta-data
-88-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:32:9-33:54
+88-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:35:9-36:54
 89            android:name="com.dieam.reactnativepushnotification.notification_color"
-89-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:32:21-92
+89-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:35:21-92
 90            android:resource="@color/white" /> <!-- or @android:color/{name} to use a standard color -->
-90-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:33:21-52
+90-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:36:21-52
 91        <receiver android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationActions" />
-91-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:35:9-108
-91-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:35:19-105
+91-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:38:9-108
+91-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:38:19-105
 92        <receiver android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationPublisher" />
-92-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:36:9-110
-92-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:36:19-107
+92-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:39:9-110
+92-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:39:19-107
 93        <receiver android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationBootEventReceiver" >
-93-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:37:9-43:20
-93-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:37:19-115
+93-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:40:9-46:20
+93-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:40:19-115
 94            <intent-filter>
-94-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:38:13-42:29
+94-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:41:13-45:29
 95                <action android:name="android.intent.action.BOOT_COMPLETED" />
-95-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:39:17-79
-95-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:39:25-76
+95-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:42:17-79
+95-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:42:25-76
 96                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
-96-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:40:17-82
-96-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:40:25-79
+96-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:43:17-82
+96-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:43:25-79
 97                <action android:name="com.htc.intent.action.QUICKBOOT_POWERON" />
-97-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:41:17-81
-97-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:41:25-79
+97-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:44:17-81
+97-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:44:25-79
 98            </intent-filter>
 99        </receiver>
 100
 101        <activity
-101-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:45:7-55:18
+101-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:48:7-58:18
 102            android:name="com.parksmart.MainActivity"
-102-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:46:9-37
+102-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:49:9-37
 103            android:configChanges="keyboard|keyboardHidden|orientation|screenSize|uiMode"
-103-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:48:9-86
+103-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:51:9-86
 104            android:label="@string/app_name"
-104-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:47:9-41
+104-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:50:9-41
 105            android:launchMode="singleTask"
-105-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:49:9-40
+105-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:52:9-40
 106            android:windowSoftInputMode="adjustPan" >
-106-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:50:9-48
+106-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:53:9-48
 107            <intent-filter>
-107-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:51:9-54:25
+107-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:54:9-57:25
 108                <action android:name="android.intent.action.MAIN" />
-108-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:52:13-65
-108-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:52:21-62
+108-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:55:13-65
+108-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:55:21-62
 109
 110                <category android:name="android.intent.category.LAUNCHER" />
-110-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:53:13-73
-110-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:53:23-70
+110-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:56:13-73
+110-->C:\laragon\www\ps-mobile\android\app\src\main\AndroidManifest.xml:56:23-70
 111            </intent-filter>
 112        </activity>
 113
