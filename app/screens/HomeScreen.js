@@ -35,6 +35,7 @@ import BottomSheet, {
   BottomSheetScrollView
 } from '@gorhom/bottom-sheet';
 import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
+import crashlytics from "@react-native-firebase/crashlytics";
 
 
 const dbVehicleHelper = require("../database/vehicles");
@@ -75,7 +76,7 @@ const HomeScreen = props => {
   const [nearByParkings, setNearByParkings] = useState([]);
   const [vehicleTypes, setVehicleTypes] = useState([]);
   const [airtimeAmount, setAirtimeAmount] =useState(0);
-  
+  const [userCounts, setUserCounts] = useState(null);
   const [favouriteParkings, setFavouriteParkings] = useState([]);
   
   const [isSheetVisible, setIsSheetVisible] = useState(false);
@@ -118,9 +119,15 @@ const HomeScreen = props => {
   
   
   useEffect(() => {
-    dbVehicleHelper.createVehiclesTable();
-    dbParkingHelper.createTableFavouriteParkings();
-    populateVehicleTypes();
+    let isMounted = true; 
+    crashlytics().log("App mounted.");
+    if (isMounted){
+      dbVehicleHelper.createVehiclesTable();
+      dbParkingHelper.createTableFavouriteParkings();
+      populateVehicleTypes();
+    }
+    return () => { isMounted = false };
+    
   }, []);
   
   
@@ -142,6 +149,36 @@ const HomeScreen = props => {
     }
     
   }
+
+  const logCrashlytics = async () => {
+    crashlytics().log("Dummy Details Added");
+    await Promise.all([
+      crashlytics().setUserId("101"),
+      crashlytics().setAttribute("credits", String(50)),
+      crashlytics().setAttributes({
+        email: "aboutreact11@gmail.com",
+        username: "aboutreact11",
+      }),
+    ]);
+  };
+
+  const logCrash = async (user) => {
+    crashlytics().crash();
+  };
+
+  const logError = async (user) => {
+    crashlytics().log("Updating user count.");
+    try {
+      if (users) {
+        // An empty array is truthy, but not actually true.
+        // Therefore the array was never initialised.
+        setUserCounts(userCounts.push(users.length));
+      }
+    } catch (error) {
+      crashlytics().recordError(error);
+      console.log(error);
+    }
+  };
   
 
   const removeParkingAreaFromFavourites = (parking) => {
@@ -558,7 +595,7 @@ const HomeScreen = props => {
                           }
                           
                           return (
-                            <ScrollView contentContainerStyle={{flex:1}}>
+                            <SafeAreaView style={{flex: 1}}>
                             
                             <FocusAwareStatusBar barStyle="light-content" backgroundColor={design.colors.primary} />
                             
@@ -568,7 +605,6 @@ const HomeScreen = props => {
                             onBackButtonPress={toggleBottomNavigationView}
                             onBackdropPress={toggleBottomNavigationView}
                             >
-                            <SafeAreaView>
                             <ScrollView style={styles.panel}>
                             
                             <View style={{ flex: 3, alignItems: 'center',padding:20, justifyContent: 'center', backgroundColor: design.colors.gray,}}>
@@ -657,7 +693,6 @@ const HomeScreen = props => {
                               </View>
                               
                               </ScrollView>
-                              </SafeAreaView>
                               </BrSheet>
                               
                               
@@ -666,7 +701,6 @@ const HomeScreen = props => {
                               onBackButtonPress={toggleEditBottomNavigationView}
                               onBackdropPress={toggleEditBottomNavigationView}
                               >
-                              <SafeAreaView>
                               <ScrollView style={styles.panel}>
                               
                               <View style={{ flex: 3, alignItems: 'center',padding:20, justifyContent: 'center', backgroundColor: design.colors.gray,}}>
@@ -753,7 +787,6 @@ const HomeScreen = props => {
                                 </View>
                                 
                                 </ScrollView>
-                                </SafeAreaView>
                                 </BrSheet>
                                 
                                 
@@ -982,7 +1015,7 @@ const HomeScreen = props => {
                                 <View style={styles.SheetContentContainer}>
                                 <Divider style={styles.divider}/>
                                 
-                                <SafeAreaView>
+                               
                                 <FlatList
                                 data={favouriteParkings}
                                 renderItem={({item}) => parkingsComponent(item) }
@@ -992,7 +1025,6 @@ const HomeScreen = props => {
                                 <Text style={styles.text}>You haven't added any parkings in favourite section</Text>
                                 </View>}
                                 />
-                                </SafeAreaView>
                                 
                                 <Pressable style={styles.bottomSheetButton} onPress={showModal}>
                                 <Text style={design.vehicle.textAdd}>
@@ -1006,7 +1038,7 @@ const HomeScreen = props => {
                                 </BottomSheet>
                                 
                                 </View>
-                                </ScrollView>
+                                </SafeAreaView>
                                 );
                               };
                               

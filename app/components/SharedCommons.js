@@ -37,7 +37,7 @@ export const numberWithCommas = (x) => {
 
 export const getAppVersionName = () => {
   let version = `${MAJOR_VERSION}.${MINOR_VERSION}.${PATCH_VERSION}`;
-  if (!PRE_RELEASE) {
+  if (PRE_RELEASE) {
       version = version.concat(`-${PRE_RELEASE}`);
   }
   return version;

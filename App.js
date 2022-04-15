@@ -16,6 +16,7 @@ import { View, ActivityIndicator, Image, RefreshControl,  Text,
   import {  icons} from './constants';
   import GlobalFont from 'react-native-global-font'
   const Services = require("./app/services");
+  import crashlytics from "@react-native-firebase/crashlytics";
   
   // import OfflineScreen from  './app/screens/OfflineScreen';
   
@@ -463,8 +464,6 @@ import { View, ActivityIndicator, Image, RefreshControl,  Text,
       
       
       useEffect(() => {
-        
-        
         let isMounted = true;
         NetInfo.fetch().then(state => {
           if(isMounted){

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "151063581419",
+    "project_id": "parkpro-fedd1",
+    "storage_bucket": "parkpro-fedd1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:151063581419:android:980626b2afe4a58aa464ae",
+        "android_client_info": {
+          "package_name": "com.parkpro"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "151063581419-k3jiinkpldb09ksimb4tpiqhf65cdhv4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDqBTP1z0grXqZNTWTkFK03wl86axx0sVk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "151063581419-k3jiinkpldb09ksimb4tpiqhf65cdhv4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
