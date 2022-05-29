@@ -22,6 +22,7 @@ import { Text,TextInput, TouchableOpacity, View, StyleSheet, SafeAreaView,  Plat
     last_name: '',
     name: '',
     username: '',
+    country_code: '',
     phone_number: '',
     email: '',
     role: APP_NAME + " Customer",
@@ -42,9 +43,7 @@ import { Text,TextInput, TouchableOpacity, View, StyleSheet, SafeAreaView,  Plat
     const [visible, setVisible] = useState(false);
     const {profile, setProfile} = useContext(ProfileContext);
     const { updateProfile, UpdateProfileImage, syncProfileData, deleteProfilePicture } = React.useContext(AuthContext);
-    
- 
-
+  
     const [image, setImage] = useState('https://dallingtonasingwire.com/img/user-profile9.png');
     
     const toggleBottomNavigationView = () => {
@@ -91,12 +90,16 @@ import { Text,TextInput, TouchableOpacity, View, StyleSheet, SafeAreaView,  Plat
       let formData = new FormData();
       const user_id = state.user_id;
       const phone_number = state.phone_number;
+      const country_code = state.country_code;
+
       if(user_id && phone_number){
         formData.append('id', user_id);
+        formData.append('country_code', country_code);
         formData.append('phone_number', phone_number);
         formData.append('extension', fileExtension);
         formData.append('image', ImageData);
         console.log("Form data", formData);
+        
         setIsUpdatingImage(true);
         let result = await UpdateProfileImage(formData);
         const statusCode = result.statusCode;
@@ -131,6 +134,7 @@ import { Text,TextInput, TouchableOpacity, View, StyleSheet, SafeAreaView,  Plat
       const user_id = state.user_id;
       const first_name = state.first_name;
       const last_name = state.last_name;
+      const country_code = state.country_code;
       const phone_number = state.phone_number;
       const email = state.email;
       
@@ -166,6 +170,7 @@ import { Text,TextInput, TouchableOpacity, View, StyleSheet, SafeAreaView,  Plat
           id: user_id,
           first_name: first_name,
           last_name: last_name,
+          country_code: country_code,
           phone_number: phone_number,
           email: email,
         }
@@ -199,6 +204,7 @@ import { Text,TextInput, TouchableOpacity, View, StyleSheet, SafeAreaView,  Plat
           const first_name = profile.first_name;
           const last_name = profile.last_name;
           const name = (first_name && last_name) ? first_name + " " + last_name : '';
+          const country_code = profile.country_code;
           const phone_number = profile.phone_number;
           const email = profile.email;
           const balance = profile.account_balance;
@@ -209,6 +215,7 @@ import { Text,TextInput, TouchableOpacity, View, StyleSheet, SafeAreaView,  Plat
             name: name,
             first_name: first_name,
             last_name: last_name,
+            country_code: country_code,
             phone_number: phone_number,
             email: email,
             account_balance: balance,
@@ -225,6 +232,7 @@ import { Text,TextInput, TouchableOpacity, View, StyleSheet, SafeAreaView,  Plat
       if(profile.id && profile.phone_number){
         const data = {
           id: profile.id,
+          country_code: profile.country_code,
           phone_number: profile.phone_number
         }
         setIsUpdatingImage(true);
@@ -381,11 +389,12 @@ import { Text,TextInput, TouchableOpacity, View, StyleSheet, SafeAreaView,  Plat
         
         <View style={styles.form}>
         <Text style={styles.text}>PHONE NUMBER</Text>
-        <TextInput value={state.phone_number}
+        <TextInput value={`${state.country_code}${state.phone_number}`}
         placeholder="Phone Number"
         style={styles.input} 
         spellCheck={false}
         autoCorrect={false}
+        editable={false}
         onChangeText={(val) => setData({...state, phone_number: val})}
         />
         </View>

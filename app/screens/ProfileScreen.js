@@ -80,7 +80,7 @@ const Profile = props => {
 
     <View style={{justifyContent: 'center', alignSelf: 'center'}}>
     <Text style={styles.name}>{name}</Text>
-    <Paragraph style={styles.info}>{profile.phone_number}</Paragraph>
+    <Paragraph style={styles.info}>{`${profile.country_code}${profile.phone_number}`}</Paragraph>
     </View>
    
     <Divider style={ design.divider1 }/>
@@ -101,7 +101,7 @@ const Profile = props => {
 
     <View style={styles.formData}>
     <Text style={styles.text}>PHONE NUMBER</Text>
-    <Text style={styles.userinfo}>{profile.phone_number}</Text>
+    <Text style={styles.userinfo}>{`${profile.country_code}${profile.phone_number}`}</Text>
     </View>
 
 

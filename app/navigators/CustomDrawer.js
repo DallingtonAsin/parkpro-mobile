@@ -149,7 +149,7 @@ const CustomDrawer = (props) => {
     
     
     <Text style={{ marginTop:5, color:'#000', fontSize:16  }}>{ profile.first_name }</Text>
-    <Text style={{ marginBottom:15, color:'#000', fontSize:16 }}>{ profile.phone_number}</Text>
+    <Text style={{ marginBottom:15, color:'#000', fontSize:16 }}>{ `${profile.country_code}${profile.phone_number}`}</Text>
     
     <View style={styles.divider}></View>
     <View style={{ width: '100%' }}>

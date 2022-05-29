@@ -21,7 +21,7 @@ const initialState = {
 
 const SignupScreen = ({route, navigation}) => {
     
-    const { userId, phoneNumber } = route.params;
+    const { userId, countryCode, phoneNumber } = route.params;
     const [state, setData] = useState(initialState);
     const { createProfile, goToHomeScreen } = React.useContext(AuthContext);
     const [isLoading, setIsLoading] = useState(false);
@@ -90,9 +90,7 @@ const SignupScreen = ({route, navigation}) => {
         const email = state.email;
         const isValidFName = state.isValidFName;
         const isValidLName = state.isValidLName;
-
-        console.log("Yess,, working!!")
-
+        
         if(!first_name || !isValidFName){
             alert("Enter a valid first name");
             return;
@@ -125,6 +123,7 @@ const SignupScreen = ({route, navigation}) => {
                 id: userId,
                 first_name: first_name,
                 last_name: last_name,
+                country_code: countryCode,
                 phone_number: phoneNumber,
                 email: email,
             }
@@ -136,7 +135,7 @@ const SignupScreen = ({route, navigation}) => {
             let statusCode = response.statusCode;
             if(statusCode == 1){
                 let user = response.data;
-                console.log("User data bhdhdhdh", user);
+                console.log("User profile is xx", user);
                 await goToHomeScreen(user);
                 setIsLoading(false);
             }else{
@@ -168,7 +167,7 @@ const SignupScreen = ({route, navigation}) => {
         <TextInput 
         style={styles.textInput}
         autoCapitalize="none"
-        value={phoneNumber}
+        value={`${countryCode}${phoneNumber}`}
         editable={false}
         selectTextOnFocus={false}
         />

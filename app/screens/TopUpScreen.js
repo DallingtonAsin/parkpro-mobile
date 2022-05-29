@@ -44,6 +44,7 @@ import { Text,
     firstname: '',
     lastname: '',
     username: '',
+    country_code: '',
     phone_number: '',
     email: '',
     
@@ -92,8 +93,10 @@ import { Text,
               const data = {
                 customer_id: state.id,
                 amount: state.rechargeAmount,
+                country_code: state.country_code,
                 phone_number: state.phone_number,
               }
+              console.log("Mobile money object", data);
               
               await depositMoney(data).then(async res => {
                 console.log("Response for top up is", res);
@@ -186,6 +189,7 @@ import { Text,
       const first_name = user.first_name;
       const last_name = user.last_name;
       const name = (first_name && last_name) ? first_name + " " + last_name : '';
+      const country_code = user.country_code;
       const phone_number = user.phone_number;
       const email = user.email;
       const account_balance = user.account_balance;
@@ -195,6 +199,7 @@ import { Text,
         name: name,
         first_name: first_name,
         last_name: last_name,
+        country_code: country_code,
         phone_number: phone_number,
         email: email,
         balance: account_balance
@@ -280,13 +285,13 @@ import { Text,
           
           <TouchableOpacity>    
           {
-            !state.editMode ? <Text style={{ fontSize: 18 }}>{state.phone_number}</Text>
-            : <TextInput mode={'outlined'}
+            !state.editMode ? <Text style={{ fontSize: 18 }}>{state.country_code}{state.phone_number}</Text>
+            : <View style={{flexDirection: 'row'}}><TextInput mode={'outlined'}
             placeholder="Your phone number"
             value={state.phone_number} 
             keyboardType='numeric'
             style={styles.inputBox}
-            onChangeText={(text) => { onChangePhoneNumber(text) }}  />
+            onChangeText={(text) => { onChangePhoneNumber(text) }}  /></View>
           }
           </TouchableOpacity>  
           

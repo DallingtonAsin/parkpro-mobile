@@ -67,13 +67,10 @@ const initialFavouriteParking = {
 
 const HomeScreen = props => {
   
-  
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingAirtime, setIsLoadingAirtime] = useState(false);
-  const [isParkingsLoading, setIsParkingsLoading] = useState(true);
   const [vehicles, setVehicleState] = useState({});
   const [vehicle, setVehicleData] = React.useState(initialVehicleState);
-  const [nearByParkings, setNearByParkings] = useState([]);
   const [vehicleTypes, setVehicleTypes] = useState([]);
   const [airtimeAmount, setAirtimeAmount] =useState(0);
   const [userCounts, setUserCounts] = useState(null);
@@ -82,15 +79,12 @@ const HomeScreen = props => {
   const [isSheetVisible, setIsSheetVisible] = useState(false);
   const [isEditSheetVisible, setIsEditSheetVisible] = useState(false);
   const {profile, setProfile} = useContext(ProfileContext);
-  const { getParkingAreas, getVehicleCategories, loadAirtimeCredit, syncProfileData } = React.useContext(AuthContext);
+  const {getVehicleCategories, loadAirtimeCredit, syncProfileData } = React.useContext(AuthContext);
   
-  // ref
   const vehicleBottomSheetRef = useRef(0);
   const buyAirtimeBottomSheetRef = useRef(0);
   const favouritesBottomSheetRef = useRef(0);
   
-  
-  // variables
   const snapPoints = useMemo(() => ['25%', '70%'], []);
   const airtimeSnapPoints = useMemo(() => ['25%', '50%'], []);
   

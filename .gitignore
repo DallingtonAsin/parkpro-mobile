@@ -57,3 +57,6 @@ buck-out/
 # Bundle artifact
 *.jsbundle
 .env
+node_modules
+android/build
+android/app/build

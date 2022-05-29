@@ -16,6 +16,8 @@ target 'ParkSmart' do
 
   pod 'RNReanimated', :path => '../node_modules/react-native-reanimated'
 
+  pod 'react-native-network-info', :path => '../node_modules/react-native-network-info'
+
   target 'ParkSmartTests' do
     inherit! :complete
     # Pods for testing

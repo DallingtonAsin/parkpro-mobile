@@ -10,7 +10,6 @@ import {
     Alert
 } from 'react-native';
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Animatable from 'react-native-animatable';
 import { useTheme  } from 'react-native-paper';
 import { AuthContext } from '../context/context';
@@ -18,22 +17,7 @@ import PhoneInput from "react-native-phone-number-input";
 import { UIActivityIndicator } from 'react-native-indicators';
 import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
 import design from '../../assets/css/styles';
-
-
-const initialState =  {
-    phone_number: '',
-    password: '',
-    check_textInputChange: false,
-    secureTextEntry: true,
-    isValidPhoneNumber: null,
-    isValidPassword: null,
-    isValidUser: null,
-    isValidForm: null,
-    formMessage: null,
-    cca2: '',
-    countryCode: '',
-    phoneNumber: '',
-}
+import { getDeviceId, getDeviceIpAddress, getAppVersionName } from '../components/SharedCommons';
 
 const SigninScreen = ({ navigation }) => {
     
@@ -45,24 +29,52 @@ const SigninScreen = ({ navigation }) => {
     const { sendSmsVerification } = React.useContext(AuthContext);
     
     const sendOTP = async() => {
+
         if(phoneNumber.length < 13){
             Alert.alert("Error", "Enter a valid phone number");
         }
         else{
-            setIsSending(true);
-            const requestParams = {
-                phone_number: phoneNumber,
-            }
-            let response = await sendSmsVerification(requestParams);
-            if(response.statusCode == 1){
-                navigation.navigate("Otp",{
-                    otp: response.data.otp, 
-                    phoneNumber: phoneNumber
-                });
+
+            const phoneObj = phoneInput.current?.getNumberAfterPossiblyEliminatingZero();
+            const number = phoneObj.number;
+            const isNumberValid = phoneInput.current?.isValidNumber(number);
+            
+            if(isNumberValid){
+                
+                const countryIsoCode = phoneInput.current?.getCountryCode();
+                const countryCode = phoneInput.current?.getCallingCode();
+                
+                const formattedNumber = phoneObj.formattedNumber;
+                const deviceId = getDeviceId();
+                const ipAddress = await getDeviceIpAddress();
+                const currentVersion = getAppVersionName();
+              
+                const requestParams = {
+                    countryIsoCode: countryIsoCode,
+                    countryCode: `+${countryCode}`,
+                    number: number,
+                    formattedNumber: formattedNumber,
+                    uniqueDeviceId: deviceId,
+                    ipAddress: ipAddress,
+                    currentVersion: currentVersion
+                }
+                setIsSending(true);
+                
+                let response = await sendSmsVerification(requestParams);
+                console.log("API response", response);
+                if(response.statusCode == 1){
+                    navigation.navigate("Otp",{
+                        countryCode: response.data.country_code,
+                        phoneNumber: response.data.phone_number,
+                        otp: response.data.otp
+                    });
+                }else{
+                    Alert.alert("Message", response.message);
+                }
+                setIsSending(false);
             }else{
-                Alert.alert("Message", response.message);
+                Alert.alert("Error", "Enter a valid phone number");
             }
-            setIsSending(false);
         }
         
     }
@@ -115,7 +127,7 @@ const SigninScreen = ({ navigation }) => {
         />
         
         </View>
-
+        
         <TouchableOpacity 
         style={styles.btnPrimary}
         onPress={() => sendOTP()}
@@ -127,8 +139,8 @@ const SigninScreen = ({ navigation }) => {
         
         <View style={styles.footer}>
         </View>
-
-
+        
+        
         </Animatable.View>
         </SafeAreaView>
         </View>
@@ -146,8 +158,8 @@ const SigninScreen = ({ navigation }) => {
         },
         wrapper: {
             flex: 1,
-          },
-          
+        },
+        
         header: {
             flex: 1,
             justifyContent: 'flex-end',
@@ -199,10 +211,10 @@ const SigninScreen = ({ navigation }) => {
             
         },
         buttonText:{
-           color: "#fff",
-           textTransform: 'capitalize',
-           fontSize:18,
-           fontWeight: 'bold',
+            color: "#fff",
+            textTransform: 'capitalize',
+            fontSize:18,
+            fontWeight: 'bold',
         },
         
         text_footer: {

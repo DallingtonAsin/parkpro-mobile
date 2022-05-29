@@ -8,7 +8,7 @@ import { UIActivityIndicator } from 'react-native-indicators';
 import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
 
 const OtpInputScreen = ({ route, navigation }) => {
- const { otp, phoneNumber } = route.params;
+ const { otp, countryCode, phoneNumber } = route.params;
  const [invalidCode, setInvalidCode] = useState(false);
  const [message, setMessage] = useState("");
  const { verifyOTP, goToHomeScreen } = React.useContext(AuthContext);
@@ -28,6 +28,7 @@ const OtpInputScreen = ({ route, navigation }) => {
     Alert.alert("Info", "Please enter the sent OTP");
    }else{
    const data = {
+      country_code: countryCode,
       phone_number: phoneNumber,
       otp: code
    }
@@ -36,12 +37,17 @@ const OtpInputScreen = ({ route, navigation }) => {
     const statusCode = response.statusCode;
     const message = response.message;
     const data = response.data;
-    console.log("Got this response", response);
+   
     if(statusCode == 1){
       if(data.is_registered){
         await goToHomeScreen(data);
       }else{
-        navigation.navigate("Signup", {userId: data.id, phoneNumber: phoneNumber });
+        console.log("OTP user id", data.id);
+           navigation.navigate("Signup",
+            {userId: data.id,
+             countryCode: data.country_code,
+             phoneNumber: data.phone_number, 
+          });
       }
     }else{
       setInvalidCode(true);
