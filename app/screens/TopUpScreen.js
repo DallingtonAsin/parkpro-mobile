@@ -10,7 +10,6 @@ import { Text,
   import design from '../../assets/css/styles';
   import { TextInput as RNTextInput, Avatar, Card, Title, Paragraph } from 'react-native-paper';
   import PushNotification, {Importance} from "react-native-push-notification";
-  import { UIActivityIndicator } from 'react-native-indicators';
   import { AuthContext } from '../context/context';
   import ProfileContext from '../context/index';
   import {MIN_TOPUP_AMOUNT, MAX_TOPUP_AMOUNT} from '@env';
