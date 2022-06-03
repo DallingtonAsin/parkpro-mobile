@@ -9,6 +9,8 @@ import Feather from 'react-native-vector-icons/Feather';
 import { AuthContext } from '../context/context';
 import { UIActivityIndicator } from 'react-native-indicators';
 import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
+import { useTheme  } from 'react-native-paper';
+
 
 const initialState = {
     first_name: '',
@@ -21,10 +23,12 @@ const initialState = {
 
 const SignupScreen = ({route, navigation}) => {
     
-    const { userId, phoneNumber } = route.params;
+    const { userId, countryCode, phoneNumber } = route.params;
     const [state, setData] = useState(initialState);
     const { createProfile, goToHomeScreen } = React.useContext(AuthContext);
     const [isLoading, setIsLoading] = useState(false);
+    const { colors } = useTheme();
+    const styles = makeStyles(colors);
     
     
     const handleFirstNameInputChange = (val) => {
@@ -90,9 +94,7 @@ const SignupScreen = ({route, navigation}) => {
         const email = state.email;
         const isValidFName = state.isValidFName;
         const isValidLName = state.isValidLName;
-
-        console.log("Yess,, working!!")
-
+        
         if(!first_name || !isValidFName){
             alert("Enter a valid first name");
             return;
@@ -125,6 +127,7 @@ const SignupScreen = ({route, navigation}) => {
                 id: userId,
                 first_name: first_name,
                 last_name: last_name,
+                country_code: countryCode,
                 phone_number: phoneNumber,
                 email: email,
             }
@@ -136,7 +139,7 @@ const SignupScreen = ({route, navigation}) => {
             let statusCode = response.statusCode;
             if(statusCode == 1){
                 let user = response.data;
-                console.log("User data bhdhdhdh", user);
+                console.log("User profile is xx", user);
                 await goToHomeScreen(user);
                 setIsLoading(false);
             }else{
@@ -148,7 +151,7 @@ const SignupScreen = ({route, navigation}) => {
     
     return (
         <View style={styles.container}>
-        <FocusAwareStatusBar barStyle="light-content" backgroundColor={design.colors.primary} />
+        <FocusAwareStatusBar barStyle="light-content" backgroundColor={colors.primary} />
         <View style={styles.header}>
         <Text style={styles.text_header}>Register Now!</Text>
         </View>
@@ -162,13 +165,13 @@ const SignupScreen = ({route, navigation}) => {
         <View style={styles.action}>
         <FontAwesome 
         name="phone"
-        color="#05375a"
+        color={colors.primary}
         size={20}
         />
         <TextInput 
         style={styles.textInput}
         autoCapitalize="none"
-        value={phoneNumber}
+        value={`${countryCode}${phoneNumber}`}
         editable={false}
         selectTextOnFocus={false}
         />
@@ -190,7 +193,7 @@ const SignupScreen = ({route, navigation}) => {
             <View style={styles.action}>
             <FontAwesome 
             name="user"
-            color="#05375a"
+            color={colors.primary}
             size={20}
             />
             <TextInput 
@@ -218,7 +221,7 @@ const SignupScreen = ({route, navigation}) => {
                 <View style={styles.action}>
                 <FontAwesome 
                 name="user"
-                color="#05375a"
+                color={colors.primary}
                 size={20}
                 />
                 <TextInput 
@@ -248,7 +251,7 @@ const SignupScreen = ({route, navigation}) => {
                     <View style={styles.action}>
                     <FontAwesome5 
                     name="envelope"
-                    color="#05375a"
+                    color={colors.primary}
                     size={20}
                     />
                     <TextInput 
@@ -299,7 +302,7 @@ const SignupScreen = ({route, navigation}) => {
                         onPress={handleCustomerRegistration}
                         >
                         <LinearGradient
-                        colors={['#273746', '#01ab9d']}
+                        colors={[colors.primary, '#01ab9d']}
                         style={styles.signIn}
                         >
                         <Text style={[styles.textSign, {
@@ -326,10 +329,10 @@ const SignupScreen = ({route, navigation}) => {
                     
                     
                     
-                    const styles = StyleSheet.create({
+                    const makeStyles = (colors) => StyleSheet.create({
                         container: {
                             flex: 1, 
-                            backgroundColor: '#273746'
+                            backgroundColor: colors.primary
                         },
                         header: {
                             flex: 1,
@@ -339,7 +342,7 @@ const SignupScreen = ({route, navigation}) => {
                         },
                         footer: {
                             flex: Platform.OS === 'ios' ? 3 : 5,
-                            backgroundColor: '#fff',
+                            backgroundColor: colors.secondary,
                             borderTopLeftRadius: 30,
                             borderTopRightRadius: 30,
                             paddingHorizontal: 20,

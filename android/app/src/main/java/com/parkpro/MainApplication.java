@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
+import com.pusherman.networkinfo.RNNetworkInfoPackage;
 import com.swmansion.reanimated.ReanimatedPackage;
 import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
 import com.facebook.react.ReactInstanceManager;
@@ -37,6 +38,7 @@ public class MainApplication extends Application implements ReactApplication {
           // Packages that cannot be autolinked yet can be added manually here, for example:
           // packages.add(new MyReactNativePackage());
           // packages.add(new MainReactPackage(),
+            // new RNNetworkInfoPackage(),-
             // new ReanimatedPackage(),
             // new ReactNativePushNotificationPackage());
           // packages.add(new MapsPackage());

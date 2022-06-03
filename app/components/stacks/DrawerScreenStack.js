@@ -1,6 +1,6 @@
 import React from 'react';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import CustomDrawer from '../../navigators/CustomDrawer';
+import CustomDrawer from '../drawers/DrawerContent';
 import { Dimensions } from 'react-native';
 
 import AboutStack from  './AboutStack';
@@ -8,10 +8,9 @@ import ParkingAreasStack from  './ParkingAreasStack';
 import ProfileStack from  './ProfileStack';
 import ParkingFeesStack from  './ParkingFeesStack';
 
-import ExtraServicesStack from  './ExtraServicesStack';
 import TransactionsHistoryStack from  './TransactionsHistoryStack';
 import TopupStack from  './TopupStack';
-import HelpStack from  './HelpStack';
+import HelpStack from  './ContactUsStack';
 import EditProfileStack from  './EditProfileStack';
 import NotificationStack from  './NotificationStack';
 import OrdersStack from  './OrdersStack';
@@ -52,8 +51,7 @@ const DrawerScreenStack = () => {
 
         <Drawer.Screen name="Suggestions" component={SuggestionsStack}/>
 
-        
-        <Drawer.Screen name="OtherServices" component={ExtraServicesStack}/>
+
         <Drawer.Screen name="TopUp" component={TopupStack}/>
         <Drawer.Screen name="About" component={AboutStack}/>
         </Drawer.Navigator>

@@ -1,7 +1,7 @@
 import React from 'react';
-import { createStackNavigator, HeaderBackButton} from '@react-navigation/stack';
+import { createStackNavigator } from '@react-navigation/stack';
 import OrderDetailsScreen from '../../screens/OrderDetailsScreen';
-import styles from '../../../assets/css/styles';
+import StackOption from '../common/StackOption';
 
 const Stack = createStackNavigator();
 
@@ -10,19 +10,7 @@ const Stack = createStackNavigator();
     return(
       <Stack.Navigator initialRouteName="OrderDetails">
       <Stack.Screen name="OrderDetails" component={OrderDetailsScreen}
-      options = {() => ({
-        headerTitle: 'Order Details',
-        headerLeft: () => <HeaderBackButton tintColor={'#ffffff'}
-        onPress={() => navigation.goBack(null)}/>,
-        headerStyle:{
-          backgroundColor:styles.colors.parksmart,
-        },
-        headerTitleStyle:{
-          fontSize:18,
-          fontWeight:'bold',
-        },
-        headerTintColor: '#ffffff',
-      })
+      options = {() => (StackOption(navigation, 'Order Details'))
     }>
     </Stack.Screen>
     </Stack.Navigator>

@@ -20,7 +20,7 @@ import { StyleSheet, Text, View,Button,Pressable,
   import * as Location from 'expo-location';
   // import { Constants, Location, Permissions } from 'expo';
   import Geocoder from 'react-native-geocoding';
-  import {currency} from '@env';
+  import {CURRENCY} from '@env';
   import { UIActivityIndicator } from 'react-native-indicators';
   import DateTimePickerModal from "react-native-modal-datetime-picker";
   import {callHelpLine} from '../components/SharedCommons';
@@ -28,6 +28,9 @@ import { StyleSheet, Text, View,Button,Pressable,
   import DropDownPicker from 'react-native-dropdown-picker';
   import { openDatabase } from 'react-native-sqlite-storage';
   import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
+  import { useTheme } from '@react-navigation/native';
+
+
   const db = openDatabase({ name: 'Customers.db' });
   const dbVehicleHelper = require("../database/vehicles");
   
@@ -94,6 +97,7 @@ import { StyleSheet, Text, View,Button,Pressable,
     const [start_time, setStartHourTime] = useState(null);
     const [end_time, setEndHourTime] = useState(null);
     const [amount, setAmount] = useState("0");
+    const { colors } = useTheme();
 
     const [locationServiceEnabled, setLocationServiceEnabled] = useState(false);
     const [displayCurrentAddress, setDisplayCurrentAddress] = useState('fetching your location...');
@@ -718,19 +722,19 @@ import { StyleSheet, Text, View,Button,Pressable,
                 
                 const renderVehicles = () => {
                   return (
-                    
-                    <ModalDropdown 
-                    defaultIndex={-1}
-                    options={vehicles}
-                    style={styles.vehiclesDropdown}
-                    defaultValue={vehicles[0]}
-                    defaultTextStyle={{fontSize:16}}
-                    textStyle={{fontSize:16}}
-                    onSelect={(index, value) => handleVehicle(value)}
-                    renderRow={(option) => (
-                      <Text style={styles.hoursDropdownOption}>{option}</Text>
-                      )}
-                      />
+                    null
+                    // <ModalDropdown 
+                    // defaultIndex={1}
+                    // options={vehicles}
+                    // style={styles.vehiclesDropdown}
+                    // defaultValue={vehicles[0]}
+                    // defaultTextStyle={{fontSize:16}}
+                    // textStyle={{fontSize:16}}
+                    // onSelect={(index, value) => handleVehicle(value)}
+                    // renderRow={(option) => (
+                    //   <Text style={styles.hoursDropdownOption}>{option}</Text>
+                    //   )}
+                    //   />
                       )
                     }
                     
@@ -887,7 +891,7 @@ import { StyleSheet, Text, View,Button,Pressable,
                       <View style={styles.orderInfo}>
                       <Text style={{color:theme.COLORS.gray, fontSize:theme.SIZES.font*1.1}}>Amount</Text>
                       <Text style={{color:theme.COLORS.gray, fontSize:theme.SIZES.icon*1.15}}>
-                      {currency}. {amount} 
+                      {CURRENCY}. {amount} 
                       </Text>
                       {/*  {activeModal.fees[`${carType}`]} */}
                       </View>
@@ -902,7 +906,8 @@ import { StyleSheet, Text, View,Button,Pressable,
                         onPress={() => submitRequest()}
                         >  
                         <Text style={styles.payText}> 
-                        {isReqProcessing ? <UIActivityIndicator color='#fff' size={25}/> : 'Submit Request' }
+                        {isReqProcessing ? 
+                        <UIActivityIndicator color='#fff' size={25}/> : 'Submit Request' }
                         </Text>
                         <FontAwesome name='angle-right' size={theme.SIZES.icon*1.75} color={theme.COLORS.white} style={{marginLeft:10}} />
                         </TouchableOpacity> 
@@ -915,7 +920,8 @@ import { StyleSheet, Text, View,Button,Pressable,
                       // const {currentPosition, parkings} = props;
                       return(
                         <View style={styles.container}>
-                           <FocusAwareStatusBar barStyle="dark-content" backgroundColor={design.colors.white} />
+                           <FocusAwareStatusBar barStyle="dark-content" 
+                           backgroundColor={colors.primary} />
                             
                         {renderHeader()}
                         <MapView 
@@ -955,7 +961,7 @@ import { StyleSheet, Text, View,Button,Pressable,
                               styles.shadow, 
                               state.active === parking.id ? styles.active: null
                             ]}>
-                            <Text style={[styles.markerStatus, {fontSize:9}]}>{currency} </Text>
+                            <Text style={[styles.markerStatus, {fontSize:9}]}>{CURRENCY} </Text>
                             <Text style={styles.markerPrice}>{parking.fees[`${carType}`]}</Text>
                             <Text style={[styles.markerStatus, {fontSize:11}]}>({parking.free}/{parking.spots})</Text>
                             </View>
