@@ -91,6 +91,7 @@
     "react-native-platform-searchbar": "^1.2.3",
     "react-native-popup-dialog": "^0.18.3",
     "react-native-profile-picture": "^1.0.0",
+    "react-native-progress": "^5.0.0",
     "react-native-push-notification": "^8.0.1",
     "react-native-push-notification-popup": "^1.6.0",
     "react-native-rate": "^1.2.9",
