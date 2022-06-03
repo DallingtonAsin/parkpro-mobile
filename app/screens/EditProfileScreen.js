@@ -16,6 +16,7 @@ import { Text,TextInput, TouchableOpacity, View, StyleSheet, SafeAreaView,  Plat
   import {APP_NAME} from '@env';;
   import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
   import { useTheme } from '@react-navigation/native';
+  import AppLoader from '../components/loaders/AppLoader';
 
 
   const initialState = {
@@ -423,7 +424,7 @@ import { Text,TextInput, TouchableOpacity, View, StyleSheet, SafeAreaView,  Plat
                borderColor: colors.primary}]}
                 onPress={handleProfileUpdate}>
         <Text style={{color:'#fff', textTransform:'capitalize', fontSize:15}}>
-        {isLoading ? <UIActivityIndicator color='white' size={27} /> : 'Save Profile' } 
+        {isLoading ? 'Updating...' : 'Save Profile' } 
         </Text>
         </TouchableOpacity>
         </View>
@@ -431,7 +432,7 @@ import { Text,TextInput, TouchableOpacity, View, StyleSheet, SafeAreaView,  Plat
         </SafeAreaView>
         
         
-        
+        {  isLoading ?  <AppLoader /> : null }
         
         </>
         );

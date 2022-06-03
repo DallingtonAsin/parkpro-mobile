@@ -17,7 +17,7 @@ import PhoneInput from "react-native-phone-number-input";
 import { UIActivityIndicator } from 'react-native-indicators';
 import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
 import { getDeviceId, getDeviceIpAddress, getAppVersionName } from '../components/SharedCommons';
-import { color } from 'react-native-reanimated';
+import AppLoader from '../components/loaders/AppLoader';
 
 const SigninScreen = ({ navigation }) => {
     
@@ -25,7 +25,7 @@ const SigninScreen = ({ navigation }) => {
     const styles = makeStyles(colors);
     const [value, setValue] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
-    const [isSending, setIsSending] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const phoneInput = useRef(null);
     const { sendSmsVerification } = React.useContext(AuthContext);
     
@@ -59,7 +59,7 @@ const SigninScreen = ({ navigation }) => {
                     ipAddress: ipAddress,
                     currentVersion: currentVersion
                 }
-                setIsSending(true);
+                setIsLoading(true);
                 
                 let response = await sendSmsVerification(requestParams);
                 console.log("API response", response);
@@ -72,7 +72,7 @@ const SigninScreen = ({ navigation }) => {
                 }else{
                     Alert.alert("Message", response.message);
                 }
-                setIsSending(false);
+                setIsLoading(false);
             }else{
                 Alert.alert("Error", "Enter a valid phone number");
             }
@@ -89,7 +89,7 @@ const SigninScreen = ({ navigation }) => {
         <FocusAwareStatusBar barStyle="light-content" backgroundColor={colors.primary} />
         <View style={styles.header}>
         <View style={styles.header1}>
-        <Text style={styles.text_header1}>Welcome!</Text>
+        <Text style={styles.text_header1}>Welcome</Text>
         </View>
         <View style={styles.header2}>
         <Text style={styles.text_header2}>Register/Login</Text>
@@ -103,10 +103,8 @@ const SigninScreen = ({ navigation }) => {
         }]}
         >
         
-        
-        
         <Text style={[styles.text_footer, {
-            color: colors.text
+            color: colors.dark
         }]}>Enter your Phone Number</Text>
         <View style={styles.action2}>
         
@@ -134,7 +132,8 @@ const SigninScreen = ({ navigation }) => {
         onPress={() => sendOTP()}
         >
         <Text style={styles.buttonText}>
-        {isSending ? <UIActivityIndicator color='white' size={27} /> : 'Continue' } 
+        {isLoading ?  'Loading...' : 'Continue' } 
+        {/* <UIActivityIndicator color='white' size={27} />  */}
         </Text>
         </TouchableOpacity>
         
@@ -145,6 +144,8 @@ const SigninScreen = ({ navigation }) => {
         </Animatable.View>
         </SafeAreaView>
         </View>
+
+       {  isLoading ?  <AppLoader /> : null }
         
         </>
         );
@@ -269,7 +270,7 @@ const SigninScreen = ({ navigation }) => {
         btnPrimary: {
             color: colors.text,
             borderRadius:25,
-            height:60,
+            height:55,
             backgroundColor: colors.primary,
             borderColor: colors.primary,
             position: 'absolute',

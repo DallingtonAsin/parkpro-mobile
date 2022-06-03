@@ -7,6 +7,7 @@ import { AuthContext } from '../context/context';
 import { UIActivityIndicator } from 'react-native-indicators';
 import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
 import { useTheme } from '@react-navigation/native';
+import AppLoader from '../components/loaders/AppLoader';
 
 
 const OtpInputScreen = ({ route, navigation }) => {
@@ -15,7 +16,7 @@ const OtpInputScreen = ({ route, navigation }) => {
  const [message, setMessage] = useState("");
  const { verifyOTP, goToHomeScreen } = React.useContext(AuthContext);
  const [otpCode, setOTP] = useState("");
- const [isSending, setIsSending] = useState(false);
+ const [isLoading, setIsLoading] = useState(false);
  const { colors } = useTheme();
  const styles = makeStyles(colors);
 
@@ -37,7 +38,7 @@ const OtpInputScreen = ({ route, navigation }) => {
       phone_number: phoneNumber,
       otp: code
    }
-   setIsSending(true);
+   setIsLoading(true);
   await verifyOTP(data).then(async(response) => {
     const statusCode = response.statusCode;
     const message = response.message;
@@ -58,12 +59,13 @@ const OtpInputScreen = ({ route, navigation }) => {
       setInvalidCode(true);
       setMessage(message);
     }
-    setIsSending(false);
+    setIsLoading(false);
    });
   }
  }
 
  return (
+   <>
    <SafeAreaView style={styles.wrapper}>
       <FocusAwareStatusBar barStyle="light-content" backgroundColor={colors.primary} />
      <Text style={styles.prompt}>Enter the code we sent you</Text>
@@ -91,7 +93,7 @@ const OtpInputScreen = ({ route, navigation }) => {
          >
           
            <Text style={[styles.continueText, {color: design.colors.dark}]}> 
-           {isSending ? <UIActivityIndicator color='black' size={27} /> : 
+           {isLoading ? 'Loading...' : 
             <> <FontAwesome name="arrow-right" size={15} color={design.colors.dark}/> <Text>Continue</Text></>
            } 
            </Text>
@@ -108,6 +110,9 @@ const OtpInputScreen = ({ route, navigation }) => {
            <Text style={styles.backText} >Go Back</Text>
          </TouchableOpacity>
    </SafeAreaView>
+   {  isLoading ?  <AppLoader /> : null }
+
+ </>
  );
 };
 
