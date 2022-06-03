@@ -6,6 +6,8 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome5';
 import { AuthContext } from '../context/context';
 import { UIActivityIndicator } from 'react-native-indicators';
 import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
+import { useTheme } from '@react-navigation/native';
+
 
 const OtpInputScreen = ({ route, navigation }) => {
  const { otp, countryCode, phoneNumber } = route.params;
@@ -14,6 +16,9 @@ const OtpInputScreen = ({ route, navigation }) => {
  const { verifyOTP, goToHomeScreen } = React.useContext(AuthContext);
  const [otpCode, setOTP] = useState("");
  const [isSending, setIsSending] = useState(false);
+ const { colors } = useTheme();
+ const styles = makeStyles(colors);
+
 
  const verifyOTPCode = async(code) => {
       verifyCustomerOtp(code);
@@ -60,10 +65,10 @@ const OtpInputScreen = ({ route, navigation }) => {
 
  return (
    <SafeAreaView style={styles.wrapper}>
-      <FocusAwareStatusBar barStyle="light-content" backgroundColor={design.colors.primary} />
+      <FocusAwareStatusBar barStyle="light-content" backgroundColor={colors.primary} />
      <Text style={styles.prompt}>Enter the code we sent you</Text>
      <Text style={styles.message}>
-       {`Your phone (${phoneNumber}) will be used to protect your account each time you log in.`}
+       {`Your phone (${countryCode}${phoneNumber}) will be used to protect your account each time you log in.`}
      </Text>
     
      <OTPInputView
@@ -101,17 +106,17 @@ const OtpInputScreen = ({ route, navigation }) => {
          >
            <FontAwesome name="arrow-left" size={15} color={design.colors.white}/>
            <Text style={styles.backText} >Go Back</Text>
-       
          </TouchableOpacity>
    </SafeAreaView>
  );
 };
 
-const styles = StyleSheet.create({
+const makeStyles = (colors) => StyleSheet.create({
  wrapper: {
    flex: 1,
    justifyContent: "center",
    alignItems: "center",
+   backgroundColor: colors.body,
  },
 
  borderStyleBase: {
@@ -158,7 +163,7 @@ const styles = StyleSheet.create({
   width: 330,
   justifyContent: "center",
   alignItems: "center",
-  backgroundColor: design.colors.primary, 
+  backgroundColor: colors.primary, 
   shadowColor: "rgba(0,0,0,0.4)",
   shadowOffset: {
     width: 1,
@@ -177,7 +182,7 @@ btnContinue: {
   width: 330,
   justifyContent: "center",
   alignItems: "center",
-  backgroundColor: design.colors.white, 
+  backgroundColor: colors.secondary, 
   shadowColor: "rgba(0,0,0,0.4)",
   shadowOffset: {
     width: 1,
@@ -188,7 +193,7 @@ btnContinue: {
   elevation: 20,
   borderRadius:5,
   flexDirection: 'row',
-  borderColor: design.colors.primary,
+  borderColor: colors.primary,
   borderWidth:1,
 },
 
@@ -207,11 +212,11 @@ backText: {
 },
 
 btnPrimary: {
-  color: '#fff',
+  color: colors.text,
   borderRadius:25,
   height:60,
-  backgroundColor: '#273746',
-  borderColor: '#273746',
+  backgroundColor: colors.primary,
+  borderColor: colors.primary,
   position: 'absolute',
   bottom: 0,
   width: '100%',

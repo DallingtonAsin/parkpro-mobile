@@ -16,12 +16,13 @@ import { AuthContext } from '../context/context';
 import PhoneInput from "react-native-phone-number-input";
 import { UIActivityIndicator } from 'react-native-indicators';
 import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
-import design from '../../assets/css/styles';
 import { getDeviceId, getDeviceIpAddress, getAppVersionName } from '../components/SharedCommons';
+import { color } from 'react-native-reanimated';
 
 const SigninScreen = ({ navigation }) => {
     
     const { colors } = useTheme();
+    const styles = makeStyles(colors);
     const [value, setValue] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
     const [isSending, setIsSending] = useState(false);
@@ -85,7 +86,7 @@ const SigninScreen = ({ navigation }) => {
         
         <View style={styles.container}>
         <SafeAreaView style={styles.wrapper}>
-        <FocusAwareStatusBar barStyle="light-content" backgroundColor={design.colors.primary} />
+        <FocusAwareStatusBar barStyle="light-content" backgroundColor={colors.primary} />
         <View style={styles.header}>
         <View style={styles.header1}>
         <Text style={styles.text_header1}>Welcome!</Text>
@@ -98,7 +99,7 @@ const SigninScreen = ({ navigation }) => {
         <Animatable.View 
         animation="fadeInUpBig"
         style={[styles.body, {
-            backgroundColor: colors.background
+            backgroundColor: colors.secondary
         }]}
         >
         
@@ -151,10 +152,10 @@ const SigninScreen = ({ navigation }) => {
     
     export default SigninScreen
     
-    const styles = StyleSheet.create({
+    const makeStyles = (colors) => StyleSheet.create({
         container: {
             flex: 1, 
-            backgroundColor: '#273746'
+            backgroundColor: colors.primary
         },
         wrapper: {
             flex: 1,
@@ -197,21 +198,21 @@ const SigninScreen = ({ navigation }) => {
         
         
         text_header1: {
-            color: '#fff',
+            color: colors.text,
             fontWeight: 'bold',
             fontSize: 30,
             textAlign: 'center',
         },
         
         text_header2: {
-            color: '#fff',
+            color: colors.text,
             fontWeight: 'bold',
             fontSize: 25,
             textAlign: 'center',
             
         },
         buttonText:{
-            color: "#fff",
+            color: colors.text,
             textTransform: 'capitalize',
             fontSize:18,
             fontWeight: 'bold',
@@ -266,11 +267,11 @@ const SigninScreen = ({ navigation }) => {
             borderRadius: 8,
         },
         btnPrimary: {
-            color: '#fff',
+            color: colors.text,
             borderRadius:25,
             height:60,
-            backgroundColor: '#273746',
-            borderColor: '#273746',
+            backgroundColor: colors.primary,
+            borderColor: colors.primary,
             position: 'absolute',
             bottom: 0,
             width: '100%',

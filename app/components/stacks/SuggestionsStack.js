@@ -1,8 +1,8 @@
 
 import React from 'react';
-import { createStackNavigator, HeaderBackButton} from '@react-navigation/stack';
+import { createStackNavigator } from '@react-navigation/stack';
 import SuggestionsScreen from '../../screens/SuggestionsScreen';
-import styles from '../../../assets/css/styles';
+import StackOption from '../common/StackOption';
 
 const Stack = createStackNavigator();
 
@@ -12,22 +12,8 @@ const Stack = createStackNavigator();
     return(
       <Stack.Navigator initialRouteName="Suggestions">
       <Stack.Screen name="Suggestions" component={SuggestionsScreen}
-      options = {() => ({
-        headerTitle: 'Feedback',
-        icon: () => <Icon name='cog'/>,
-        headerLeft: () => <HeaderBackButton tintColor={'#ffffff'}
-        onPress={() => navigation.goBack(null)}/>,
-        
-        headerStyle:{
-          backgroundColor:styles.colors.parksmart,
-        },
-        headerTitleStyle:{
-          fontSize:18,
-          fontWeight:'bold',
-        },
-        headerTintColor: '#ffffff',
-      })
-    }>
+       options = {() => (StackOption(navigation, 'Feedback'))
+      }>
     </Stack.Screen>
     </Stack.Navigator>
     

@@ -5,21 +5,13 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import {callHelpLine, SendEmail, SendSms, inboxFromWhatsapp} from '../components/SharedCommons';
 import {COMPANY_LINE, COMPANY_WHATSAP_LINE, COMPANY_EMAIL} from '@env';
 import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
+import { useTheme } from '@react-navigation/native';
 
 
-const CardComponent = ({info}) => (
-  <TouchableOpacity  style={{ backgroundColor:'#ffffff', borderWidth:1, borderColor:'#e2e2e2',margin:5, borderRadius:6 }} onPress={info.method}>
-  <View style = { design.helpContainer} >
-  <Icon name={info.iconName} style={design.helpIcon} size={20}/>
-  <View style={{flexDirection: 'column', marginLeft:15}}>
-  <Text style={styles.channel}>{info.name}</Text>
-  <Text style={{fontSize:16}}>{info.text}</Text>
-  </View>
-  </View>
-  </TouchableOpacity>
-  );
-  
-  const Help = ({navigation}) => {
+  const ContactUs = ({navigation}) => {
+    
+    const { colors } = useTheme();
+    const styles = makeStyles(colors);
   
     const communicationChannels = [
       {id: 1, iconName: "phone-alt", name:'Phone', text: COMPANY_LINE, 'method': () => {callHelpLine(COMPANY_LINE)}},
@@ -30,9 +22,24 @@ const CardComponent = ({info}) => (
       
     ];
 
+    const CardComponent = ({info}) => (
+      <TouchableOpacity  style={{ backgroundColor:'#ffffff', borderWidth:1, borderColor:'#e2e2e2',margin:5, borderRadius:6 }} onPress={info.method}>
+      <View style = { design.helpContainer} >
+      <Icon name={info.iconName} style={design.helpIcon} size={20}/>
+      <View style={{flexDirection: 'column', marginLeft:15}}>
+      <Text style={styles.channel}>{info.name}</Text>
+      <Text style={{fontSize:16}}>{info.text}</Text>
+      </View>
+      </View>
+      </TouchableOpacity>
+      );
+      
+    
     return(
       <View style={styles.container}>
-         <FocusAwareStatusBar barStyle="light-content" backgroundColor={design.colors.primary} />
+      <FocusAwareStatusBar barStyle="light-content"
+      backgroundColor={colors.primary}
+      />
       <View style={styles.top}>
       <Icon name={'question-circle'} size={75} color={design.colors.white}/>
       </View>
@@ -40,8 +47,8 @@ const CardComponent = ({info}) => (
       <Text style={{fontSize: 16, color: '#000', textAlign: 'center', paddingTop:5, paddingBottom:15,
     }}>Kindly contact us for any kind of assistance.</Text>
     <FlatList
-     showsVerticalScrollIndicator={false}
-     showsHorizontalScrollIndicator={false}
+    showsVerticalScrollIndicator={false}
+    showsHorizontalScrollIndicator={false}
     data={communicationChannels}
     renderItem={({item}) => <CardComponent info={item} />}
     />
@@ -53,18 +60,18 @@ const CardComponent = ({info}) => (
     
   }
   
-  export default Help
+  export default ContactUs
   
-  const styles = StyleSheet.create({
+  const makeStyles = (colors) => StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: design.colors.primary,
+      backgroundColor: colors.primary,
     },
     
     
     top:{
       flex:1,
-      backgroundColor: design.colors.primary,
+      // backgroundColor: colors.primary,
       justifyContent: 'center', 
       alignItems: 'center',
       padding:20,

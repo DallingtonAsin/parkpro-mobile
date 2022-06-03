@@ -15,6 +15,8 @@ import { Text,TextInput, TouchableOpacity, View, StyleSheet, SafeAreaView,  Plat
   import { BottomSheet } from 'react-native-btr';
   import {APP_NAME} from '@env';;
   import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
+  import { useTheme } from '@react-navigation/native';
+
 
   const initialState = {
     user_id: '',
@@ -43,6 +45,8 @@ import { Text,TextInput, TouchableOpacity, View, StyleSheet, SafeAreaView,  Plat
     const [visible, setVisible] = useState(false);
     const {profile, setProfile} = useContext(ProfileContext);
     const { updateProfile, UpdateProfileImage, syncProfileData, deleteProfilePicture } = React.useContext(AuthContext);
+    const { colors } = useTheme();
+    const styles = makeStyles(colors);
   
     const [image, setImage] = useState('https://dallingtonasingwire.com/img/user-profile9.png');
     
@@ -289,7 +293,7 @@ import { Text,TextInput, TouchableOpacity, View, StyleSheet, SafeAreaView,  Plat
         
         <SafeAreaView style={styles.container}>
         
-          <FocusAwareStatusBar barStyle="light-content" backgroundColor={design.colors.primary} />
+          <FocusAwareStatusBar barStyle="light-content" backgroundColor={colors.primary} />
 
         <BottomSheet
         visible={visible}
@@ -413,7 +417,11 @@ import { Text,TextInput, TouchableOpacity, View, StyleSheet, SafeAreaView,  Plat
         </View>
         
         <View style={styles.footer}>
-        <TouchableOpacity style={design.btnPrimary} onPress={handleProfileUpdate}>
+        <TouchableOpacity 
+        style={[design.btnPrimary, { color: '#fff',
+               backgroundColor: colors.primary,
+               borderColor: colors.primary}]}
+                onPress={handleProfileUpdate}>
         <Text style={{color:'#fff', textTransform:'capitalize', fontSize:15}}>
         {isLoading ? <UIActivityIndicator color='white' size={27} /> : 'Save Profile' } 
         </Text>
@@ -434,10 +442,10 @@ import { Text,TextInput, TouchableOpacity, View, StyleSheet, SafeAreaView,  Plat
       
       export default EditProfile
       
-      const styles = StyleSheet.create({
+      const makeStyles = (colors) => StyleSheet.create({
         container: {
           flex:1,
-          backgroundColor: design.colors.white,
+          backgroundColor: colors.body,
         },
         
         header:{
@@ -454,7 +462,7 @@ import { Text,TextInput, TouchableOpacity, View, StyleSheet, SafeAreaView,  Plat
         },
         
         text:{
-          color: design.colors.primary, 
+          color: colors.primary, 
           fontWeight: 'bold',
           opacity:0.8,
           textTransform:'capitalize',

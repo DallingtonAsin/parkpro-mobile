@@ -12,7 +12,9 @@ import {Text, SafeAreaView, Image, ScrollView,RefreshControl, TouchableWithoutFe
   import { icons } from '../../constants';
   import {APP_NAME, currency} from '@env';
   import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
+  import { useTheme } from '@react-navigation/native';
   
+
   const wait = (timeout) => {
     return new Promise(resolve => setTimeout(resolve, timeout));
   }
@@ -23,6 +25,8 @@ import {Text, SafeAreaView, Image, ScrollView,RefreshControl, TouchableWithoutFe
     const [refreshing, setRefreshing] = React.useState(false);
     const [isLoading, setIsLoading] = React.useState(true);
     const {profile, setProfile} = useContext(ProfileContext);
+    const { colors } = useTheme();
+
     
     const { fetchMyParkingRequests } = React.useContext(AuthContext);
     
@@ -129,7 +133,7 @@ import {Text, SafeAreaView, Image, ScrollView,RefreshControl, TouchableWithoutFe
           
           return ( 
             <SafeAreaView style={{flex: 1, backgroundColor:'#fff'}}>
-              <FocusAwareStatusBar barStyle="light-content" backgroundColor={styles.colors.primary} />
+              <FocusAwareStatusBar barStyle="light-content" backgroundColor={colors.primary} />
             <Text style={{fontSize:19, color:'#808080', padding:5, marginLeft:5}}>Last Orders</Text>
             {  !isLoading ?
               <FlatList style= {{ backgroundColor:'#ffffff', height:'100%' }}

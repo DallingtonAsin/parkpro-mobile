@@ -13,6 +13,8 @@ import {SafeAreaView,Dimensions,
     import Toast from 'react-native-simple-toast';
     import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
     import Geolocation from 'react-native-geolocation-service';
+    import { useTheme } from '@react-navigation/native';
+
     
     const initialLayout = { width: Dimensions.get('window').width };
     const ParkingAreasScreen = (props) => {
@@ -26,6 +28,7 @@ import {SafeAreaView,Dimensions,
         const [topRatedParkingAreas, setTopRatedParkingAreas] = useState([]);
         
         const [filteredParkingAreas, setFilteredParkingAreas] = useState([]);
+        const { colors } = useTheme();
         
         const [query, setSearch] = useState('');
         const [index, setIndex] = React.useState(0);
@@ -209,20 +212,20 @@ import {SafeAreaView,Dimensions,
                             />
                             <View style={{flexDirection:'column', padding:10}}>
                             <View style={{flexDirection:'column'}}>
-                            <Title>{item.name}</Title>
+                            <Title style={{ color: design.colors.dark }}>{item.name}</Title>
                             
-                            <Paragraph style={{fontSize:16}}>{item.address}</Paragraph>
+                            <Paragraph style={{fontSize:16, color: design.colors.dark  }}>{item.address}</Paragraph>
                             </View>
                             
                             <View style={{flexDirection:'row', justifyContent:'space-between'}}>
                             
                             <View style={{justifyContent:'flex-start'}}>
-                            <Text style={{color:design.colors.warning}}>
-                            Capacity: <Text style={{color:design.colors.warning, fontSize:16}}>{item.spots}</Text>
+                            <Text style={{color:design.colors.dark}}>
+                            Capacity: <Text style={{color:design.colors.dark, fontSize:16}}>{item.spots}</Text>
                             </Text> 
                             
-                            <Text style={{color:design.colors.green}}>
-                            Available:  <Text style={{color:design.colors.green, fontSize:16}}>{item.free}</Text>
+                            <Text style={{color:design.colors.dark}}>
+                            Available:  <Text style={{color:design.colors.dark, fontSize:16}}>{item.free}</Text>
                             </Text>
                             </View>
                             
@@ -302,7 +305,8 @@ import {SafeAreaView,Dimensions,
                                                 >
                                                 
                                                 
-                                                <FocusAwareStatusBar barStyle="dark-content" backgroundColor={design.colors.white} />
+                                                <FocusAwareStatusBar barStyle="dark-content" 
+                                                backgroundColor={colors.primary} />
                                                 
                                                 <View style={{flexDirection:'row', justifyContent: 'center', alignItems: 'center', marginTop:10}}>
                                                 
@@ -315,10 +319,13 @@ import {SafeAreaView,Dimensions,
                                                 onChangeText={(text) => handleSearch(text)}
                                                 value={query}
                                                 onIconPress={onClickSearchBtn}
-                                                style={{ width: '85%'}}
+                                                style={{ width: '85%', 
+                                                backgroundColor: design.colors.white,
+                                                color: design.colors.dark
+                                            }}
                                                 />
                                                 <TouchableOpacity onPress={()=>onRefresh()} style={{paddingLeft:10}}>
-                                                <FontAwesome name="refresh" size={25} color={design.colors.orange}/>
+                                                <FontAwesome name="refresh" size={25} color={colors.primary}/>
                                                 </TouchableOpacity>
                                                 </View>
                                                 

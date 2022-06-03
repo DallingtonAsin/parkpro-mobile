@@ -12,6 +12,7 @@ import { AuthContext } from '../context/context';
 import { UIActivityIndicator } from 'react-native-indicators';
 import Toast from 'react-native-simple-toast';
 import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
+import { useTheme } from '@react-navigation/native';
 
 const dbParkingHelper = require("../database/favouriteParkings");
 
@@ -23,6 +24,8 @@ const ParkingFeesScreen = ({route, navigation}) => {
     const [refreshing, setRefreshing] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [doesParkingExistInFavourites, setParkingExistsInFavourites] = useState(false);
+    const { colors } = useTheme();
+
     
     dbParkingHelper.doesParkingExistinFavourites(parking_area_id, exists => {
         if(exists){
@@ -173,7 +176,8 @@ const ParkingFeesScreen = ({route, navigation}) => {
                         return (
                             <View style={styles.container}>
                             
-                            <FocusAwareStatusBar barStyle="light-content" backgroundColor={design.colors.primary} />
+                            <FocusAwareStatusBar barStyle="light-content" 
+                            backgroundColor={colors.primary} />
                             
                             <View style={styles.semicontainer}>
                             

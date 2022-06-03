@@ -3,7 +3,7 @@ import { BottomTabBar, createBottomTabNavigator } from '@react-navigation/bottom
 import { MultiBarProvider, BottomTabBarWrapper} from 'react-native-multibar';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import HomeStack from './HomeStack';
-import HelpStack from './HelpStack';
+import HelpStack from './ContactUsStack';
 import WeatherStack from './WeatherStack';
 import NotificationStack from './NotificationStack';
 import OrdersStack from './OrdersStack';

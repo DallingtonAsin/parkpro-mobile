@@ -7,6 +7,8 @@ import { UIActivityIndicator } from 'react-native-indicators';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import ProfileContext from '../context/index';
 import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
+import { useTheme } from '@react-navigation/native';
+
 
 const initialState = {
   old_password: '',
@@ -20,6 +22,8 @@ const Password = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { updatePassword } = React.useContext(AuthContext);
   const {profile, setProfile} = useContext(ProfileContext);
+  const { colors } = useTheme();
+
   
   React.useEffect(() => {
     LogBox.ignoreLogs(['Animated: `useNativeDriver`']);
@@ -95,7 +99,7 @@ const Password = () => {
 <>
     <SafeAreaView style={innerStyles.container}>
 
-    <FocusAwareStatusBar barStyle="light-content" backgroundColor={styles.colors.primary} />
+    <FocusAwareStatusBar barStyle="light-content" backgroundColor={colors.primary} />
     <View style={innerStyles.top}>
     <View style={innerStyles.imageSection}>
     <Image 

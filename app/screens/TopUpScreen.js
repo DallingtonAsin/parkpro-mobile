@@ -15,6 +15,8 @@ import { Text,
   import ProfileContext from '../context/index';
   import {MIN_TOPUP_AMOUNT, MAX_TOPUP_AMOUNT} from '@env';
   import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
+  import { useTheme  } from 'react-native-paper';
+
   // import ReactDOM from "react-dom";
   
   
@@ -71,6 +73,9 @@ import { Text,
     const {profile, setProfile} = useContext(ProfileContext);
     const min_recharge_amount = MIN_TOPUP_AMOUNT;
     const max_recharge_amount = MAX_TOPUP_AMOUNT;
+    const { colors } = useTheme();
+    const styles = makeStyles(colors);
+
     
     const RechargeUserAccount = async() => {
       try{
@@ -229,14 +234,16 @@ import { Text,
       <KeyboardAvoidingView style={styles.container}  behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       keyboardVerticalOffset={Platform.OS === 'ios' ? 40 : -200}>
       
-      <FocusAwareStatusBar barStyle="light-content" backgroundColor={design.colors.primary} />
+      <FocusAwareStatusBar barStyle="light-content" backgroundColor={colors.primary} />
       
       <ScrollView  style={styles.contentContainer}
       
       >
+
       <Card style={{ margin: 15, padding:30, borderWidth:1, borderRadius: 10, borderColor:'#e2e2e2',
-      JustifyContent: 'center', backgroundColor:design.colors.primary, alignItems:'center' }}>
+      JustifyContent: 'center', backgroundColor: colors.primary, alignItems:'center' }}>
       <Card.Content>
+
       <Text style={{color:'#fff', opacity:0.7, textAlign: 'center', fontSize:22}}>Wallet Balance</Text>
       <Paragraph style={{color:'#fff', opacity:0.9, fontWeight:'bold', fontSize:19,padding:10, textAlign: 'center'}}>UGX.<Text>{profile.account_balance}</Text></Paragraph>
       </Card.Content>
@@ -258,14 +265,15 @@ import { Text,
           placeholder="Eg. 10,000"
           value={state.rechargeAmount}
           keyboardType='numeric'
-          selectionColor={design.colors.primary}
-          underlineColor={design.colors.primary}
-          outlineColor={design.colors.primary}
-          activeUnderlineColor={design.colors.primary}
-          activeOutlineColor={design.colors.primary}
+          selectionColor={colors.primary}
+          underlineColor={colors.primary}
+          outlineColor={colors.primary}
+          activeUnderlineColor={colors.primary}
+          activeOutlineColor={colors.primary}
           onChangeText={(text) => { onChangeAmount(text) }}
+          style={{backgroundColor: colors.body, color: colors.primary }}
           //  label="Topup amount"
-            />
+          />
           <Text style={{ opacity: 0.5, color: state.warningColor, fontSize:15 }}>Min: {min_recharge_amount} and Max: {max_recharge_amount}</Text>
           </View>
           
@@ -336,27 +344,32 @@ import { Text,
         export default TopUpScreen
         
         
-        const styles = StyleSheet.create({
+        const makeStyles = (colors) => StyleSheet.create({
           container:{
             flex:1,
-            margin: 15, 
-            borderWidth:0.8,
-            borderRadius:10,
+            // margin: 15, 
+            // borderWidth:2,
+            // borderRadius:10,
             borderColor:'#C0C0C0',
-            backgroundColor:'#fff',
+            backgroundColor: colors.body,
+            shadowColor: '#e2e2e2',
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.7,
+            shadowRadius: 2,
+            elevation: 1,
           },
           contentContainer:{
             flex:1,
+           
           },
           TopupBtn: {
             alignSelf:'center' , 
           },
           
           paymentButton: {
-            color: '#fff',
             borderRadius:5,
-            backgroundColor: design.colors.primary,
-            borderColor: design.colors.primary,
+            backgroundColor: colors.primary,
+            borderColor: colors.primary,
             position: 'absolute',
             bottom: 0,
             width: '90%',
@@ -387,5 +400,5 @@ import { Text,
           inputBox: {
             borderBottomWidth: 1,
             borderBottomColor: 'gray',
-         }
+          }
         })

@@ -1,16 +1,15 @@
 
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View , ActivityIndicator, StatusBar, ScrollView, SafeAreaView, RefreshControl, LogBox, FlatList, Image   } from "react-native";
+import { StyleSheet, Text, View , ActivityIndicator, ScrollView, SafeAreaView, RefreshControl, LogBox, FlatList, Image   } from "react-native";
 import Geolocation from 'react-native-geolocation-service';
 import WeatherInfo from '../components/weather/WeatherInfo'
 import UnitsPicker from '../components/weather/UnitsPicker'
 import ReloadIcon from '../components/weather/ReloadIcon'
 import WeatherDetails from '../components/weather/WeatherDetails'
-import {colors} from '../components/utils/index'
-import { config } from '../config/env'
-import design from '../../assets/css/styles';
 import {WEATHER_API_KEY} from '@env';
 import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
+import { useTheme  } from 'react-native-paper';
+
 
 const BASE_WEATHER_URL = "https://api.openweathermap.org/data/2.5/weather?";
 const url =  `https://api.openweathermap.org/data/2.5/onecall?&units=metric&exclude=minutely&appid=${WEATHER_API_KEY}`;
@@ -24,6 +23,7 @@ const WeatherScreen = () => {
   const [unitsSystem , setUnitsSystem] = useState('metric');
   const [refreshing, setRefreshing] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const { colors } = useTheme();
 
 
   useEffect(() => {
@@ -113,7 +113,7 @@ const WeatherScreen = () => {
     // const  {main : temp} = currentWeather
     return (
       <SafeAreaView style={styles.container}>
-         <FocusAwareStatusBar barStyle="light-content" backgroundColor={design.colors.primary} />
+         <FocusAwareStatusBar barStyle="light-content" backgroundColor={colors.primary} />
                             
       <ScrollView 
         refreshControl={
@@ -122,10 +122,7 @@ const WeatherScreen = () => {
             refreshing={refreshing}
           />}
       >
-        
-        <StatusBar
-          backgroundColor={design.colors.primary}
-        />
+    
         <View style={styles.main}>
         <UnitsPicker unitsSystem={unitsSystem} setUnitsSystem={setUnitsSystem}/>
         <ReloadIcon load={load}/>
@@ -168,7 +165,6 @@ const WeatherScreen = () => {
     return (
       <View style={styles.container}>
         <Text>{errorMessage}</Text>
-        <StatusBar style="auto" />
         
       </View>
     );
@@ -177,8 +173,6 @@ const WeatherScreen = () => {
     return (
       <View style={styles.container}>
         <ActivityIndicator size="large" color={colors.PRIMARY_COLOR} />
-        <StatusBar style="auto" />
-        
       </View>
     );
   }
