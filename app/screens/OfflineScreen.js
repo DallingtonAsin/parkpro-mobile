@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
+import { useTheme } from '@react-navigation/native';
 
 
 const wait = (timeout) => {
@@ -15,7 +16,10 @@ const wait = (timeout) => {
 }
 
 const OfflineScreen = (props) => {
+
     const [refreshing, setRefreshing] = React.useState(false);
+    const { colors } = useTheme();
+
 
     const onRefresh = React.useCallback(() => {
      setRefreshing(true);
@@ -24,7 +28,7 @@ const OfflineScreen = (props) => {
     
     return (
         <SafeAreaView style={styles.container}>
-             <FocusAwareStatusBar barStyle="dark-content" backgroundColor={design.colors.white} />
+             <FocusAwareStatusBar barStyle="dark-content" backgroundColor={colors.primary} />
         <ScrollView contentContainerStyle={styles.scrollView}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>}
         >

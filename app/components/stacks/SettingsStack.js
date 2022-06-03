@@ -1,7 +1,7 @@
 import React from 'react';
-import { createStackNavigator, HeaderBackButton} from '@react-navigation/stack';
+import { createStackNavigator } from '@react-navigation/stack';
 import SettingsScreen from '../../screens/SettingsScreen';
-import styles from '../../../assets/css/styles';
+import StackOption from '../common/StackOption';
 
 const Stack = createStackNavigator();
 
@@ -10,21 +10,7 @@ const SettingsStack = ({ navigation }) => {
     return(
       <Stack.Navigator initialRouteName="Settings">
       <Stack.Screen name="Settings" component={SettingsScreen}
-      options = {() => ({
-        headerTitle: 'Settings',
-        icon: () => <Icon name='cog'/>,
-        headerLeft: () =><HeaderBackButton tintColor={'#ffffff'}
-        onPress={() => navigation.goBack(null)}  />,
-        
-        headerStyle:{
-          backgroundColor:styles.colors.parksmart,
-        },
-        headerTitleStyle:{
-          fontSize:18,
-          fontWeight:'bold',
-        },
-        headerTintColor: '#ffffff',
-      })
+      options = {() => (StackOption(navigation, 'Settings'))
     }>
     </Stack.Screen>
     </Stack.Navigator>

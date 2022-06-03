@@ -15,6 +15,9 @@ import { Text,
   import ProfileContext from '../context/index';
   import {MIN_TOPUP_AMOUNT, MAX_TOPUP_AMOUNT} from '@env';
   import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
+  import { useTheme  } from 'react-native-paper';
+  import AppLoader from '../components/loaders/AppLoader';
+  
   // import ReactDOM from "react-dom";
   
   
@@ -44,6 +47,7 @@ import { Text,
     firstname: '',
     lastname: '',
     username: '',
+    country_code: '',
     phone_number: '',
     email: '',
     
@@ -70,6 +74,9 @@ import { Text,
     const {profile, setProfile} = useContext(ProfileContext);
     const min_recharge_amount = MIN_TOPUP_AMOUNT;
     const max_recharge_amount = MAX_TOPUP_AMOUNT;
+    const { colors } = useTheme();
+    const styles = makeStyles(colors);
+    
     
     const RechargeUserAccount = async() => {
       try{
@@ -77,30 +84,25 @@ import { Text,
           
           const rechargeAmount = parseFloat(state.rechargeAmount);
           
-          console.log(state.rechargeAmount);
-          console.log(MIN_TOPUP_AMOUNT);
-          console.log(MAX_TOPUP_AMOUNT);
-          
           if (state.phone_number && state.rechargeAmount ) {
             if(rechargeAmount >= MIN_TOPUP_AMOUNT && rechargeAmount <= MAX_TOPUP_AMOUNT){
               let amount = state.rechargeAmount;
               amount = parseFloat(amount.replace(/[^\d.]+/g, ''));
               
-              console.log('Mobile money', state.phone_number);
-              console.log('Amount', state.rechargeAmount);
               setIsLoading(true);
+              
               const data = {
                 customer_id: state.id,
                 amount: state.rechargeAmount,
+                country_code: state.country_code,
                 phone_number: state.phone_number,
               }
-              
+
               await depositMoney(data).then(async res => {
                 console.log("Response for top up is", res);
                 const statusCode = res.statusCode;
                 const message = res.message;
                 
-                setIsLoading(false);
                 if(statusCode == 1){
                   const customer = res.data;
                   let result = await asyncCustomerProfile(state.id);
@@ -125,6 +127,8 @@ import { Text,
                 setIsLoading(false);
                 Alert.alert("Error","Unable to topup account: " + error);
               });
+              
+              setIsLoading(false);
               
             }else{
               Alert.alert("Message", "Enter amount greater than "+min_recharge_amount+" and less than "+max_recharge_amount+"  to top up your account.")
@@ -186,6 +190,7 @@ import { Text,
       const first_name = user.first_name;
       const last_name = user.last_name;
       const name = (first_name && last_name) ? first_name + " " + last_name : '';
+      const country_code = user.country_code;
       const phone_number = user.phone_number;
       const email = user.email;
       const account_balance = user.account_balance;
@@ -195,6 +200,7 @@ import { Text,
         name: name,
         first_name: first_name,
         last_name: last_name,
+        country_code: country_code,
         phone_number: phone_number,
         email: email,
         balance: account_balance
@@ -221,17 +227,22 @@ import { Text,
     
     return (
       
+      <>
       <KeyboardAvoidingView style={styles.container}  behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       keyboardVerticalOffset={Platform.OS === 'ios' ? 40 : -200}>
       
-      <FocusAwareStatusBar barStyle="light-content" backgroundColor={design.colors.primary} />
+      {  isLoading ?  <AppLoader /> : null }
+      
+      <FocusAwareStatusBar barStyle="light-content" backgroundColor={colors.primary} />
       
       <ScrollView  style={styles.contentContainer}
       
       >
+      
       <Card style={{ margin: 15, padding:30, borderWidth:1, borderRadius: 10, borderColor:'#e2e2e2',
-      JustifyContent: 'center', backgroundColor:design.colors.primary, alignItems:'center' }}>
+      JustifyContent: 'center', backgroundColor: colors.primary, alignItems:'center' }}>
       <Card.Content>
+      
       <Text style={{color:'#fff', opacity:0.7, textAlign: 'center', fontSize:22}}>Wallet Balance</Text>
       <Paragraph style={{color:'#fff', opacity:0.9, fontWeight:'bold', fontSize:19,padding:10, textAlign: 'center'}}>UGX.<Text>{profile.account_balance}</Text></Paragraph>
       </Card.Content>
@@ -248,19 +259,20 @@ import { Text,
           
           <View style={{ margin: 20 }}>
           <Text style={{ fontSize: 15, opacity: 0.7, fontWeight:'bold'  }}>Enter amount </Text>
-          <RNTextInput
+          <TextInput
           mode={'outlined'}
           placeholder="Eg. 10,000"
           value={state.rechargeAmount}
           keyboardType='numeric'
-          selectionColor={design.colors.primary}
-          underlineColor={design.colors.primary}
-          outlineColor={design.colors.primary}
-          activeUnderlineColor={design.colors.primary}
-          activeOutlineColor={design.colors.primary}
+          // selectionColor={colors.primary}
+          // underlineColor={colors.primary}
+          // outlineColor={colors.primary}
+          // activeUnderlineColor={colors.primary}
+          // activeOutlineColor={colors.primary}
           onChangeText={(text) => { onChangeAmount(text) }}
+          style={{backgroundColor: colors.body, color: colors.primary }}
           //  label="Topup amount"
-            />
+          />
           <Text style={{ opacity: 0.5, color: state.warningColor, fontSize:15 }}>Min: {min_recharge_amount} and Max: {max_recharge_amount}</Text>
           </View>
           
@@ -280,13 +292,13 @@ import { Text,
           
           <TouchableOpacity>    
           {
-            !state.editMode ? <Text style={{ fontSize: 18 }}>{state.phone_number}</Text>
-            : <TextInput mode={'outlined'}
+            !state.editMode ? <Text style={{ fontSize: 18 }}>{state.country_code}{state.phone_number}</Text>
+            : <View style={{flexDirection: 'row'}}><TextInput mode={'outlined'}
             placeholder="Your phone number"
             value={state.phone_number} 
             keyboardType='numeric'
             style={styles.inputBox}
-            onChangeText={(text) => { onChangePhoneNumber(text) }}  />
+            onChangeText={(text) => { onChangePhoneNumber(text) }}  /></View>
           }
           </TouchableOpacity>  
           
@@ -314,16 +326,17 @@ import { Text,
           onPress={RechargeUserAccount}
           disabled={false}>
           <Text style={styles.paymentButtonText}> 
-          {isLoading ? <UIActivityIndicator color='#000' size={22} /> : 'CONFIRM TOP UP' }
+          {isLoading ? 'Loading...' : 'CONFIRM TOP UP' }
           </Text>
           </TouchableOpacity>
           
           </View>
           
-          
-          
-          
           </KeyboardAvoidingView>
+          
+          
+          
+          </>
           
           );
         }
@@ -331,27 +344,29 @@ import { Text,
         export default TopUpScreen
         
         
-        const styles = StyleSheet.create({
+        const makeStyles = (colors) => StyleSheet.create({
           container:{
             flex:1,
-            margin: 15, 
-            borderWidth:0.8,
-            borderRadius:10,
             borderColor:'#C0C0C0',
-            backgroundColor:'#fff',
+            backgroundColor: colors.body,
+            shadowColor: '#e2e2e2',
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.7,
+            shadowRadius: 2,
+            elevation: 1,
           },
           contentContainer:{
             flex:1,
+            
           },
           TopupBtn: {
             alignSelf:'center' , 
           },
           
           paymentButton: {
-            color: '#fff',
             borderRadius:5,
-            backgroundColor: design.colors.primary,
-            borderColor: design.colors.primary,
+            backgroundColor: colors.primary,
+            borderColor: colors.primary,
             position: 'absolute',
             bottom: 0,
             width: '90%',
@@ -382,5 +397,5 @@ import { Text,
           inputBox: {
             borderBottomWidth: 1,
             borderBottomColor: 'gray',
-         }
+          }
         })

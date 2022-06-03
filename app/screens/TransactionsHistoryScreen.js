@@ -8,6 +8,8 @@ import { AuthContext } from '../context/context';
 import { icons } from '../../constants';
 import Toast from 'react-native-simple-toast';
 import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
+import { useTheme  } from 'react-native-paper';
+
 
 const wait = (timeout) => {
   return new Promise(resolve => setTimeout(resolve, timeout));
@@ -20,7 +22,11 @@ const TransactionsHistoryScreen = () => {
   const [isLoading, setIsLoading] = React.useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const { getCustomerTransactions } = React.useContext(AuthContext);
+  const { colors } = useTheme();
+  const styles = makeStyles(colors);
+
   
+
   const EmptyFlastListMessage = ({item}) => {
     return (
       <Text
@@ -116,12 +122,11 @@ const TransactionsHistoryScreen = () => {
           });
           
           return(
-            <>
-            <View style={{flex:1, width: '100%',}}>
+            <View style={{flex:1, width: '100%', backgroundColor: colors.body}}>
             
-            <FocusAwareStatusBar barStyle="light-content" backgroundColor={design.colors.primary} />
+            <FocusAwareStatusBar barStyle="light-content" backgroundColor={colors.primary} />
             
-            <View style={{height:130,backgroundColor: design.colors.primary}}>
+            <View style={{height:130,backgroundColor: colors.primary}}>
             <View style={{alignItems: 'center', margin:20}}>
             
             <Image
@@ -148,7 +153,7 @@ const TransactionsHistoryScreen = () => {
                 <Text style={styles.header}>{year}</Text>
                 )}
                 SectionSeparatorComponent={FlatListItemSeparator}
-                ListFooterComponent={FlatListFooter}
+                // ListFooterComponent={FlatListFooter}
                 ListEmptyComponent={EmptyFlastListMessage}
                 refreshControl={
                   <RefreshControl
@@ -159,21 +164,18 @@ const TransactionsHistoryScreen = () => {
                   : <CustomLoader color={design.colors.orange}/>
                 }
                 </View>
-                
-                
-                </>
                 ); 
               }
               
               export default TransactionsHistoryScreen
               
-              const styles = StyleSheet.create({
+              const makeStyles = (colors)  =>StyleSheet.create({
                 item :{
                   padding:15,
                 },
                 tableTitleText: {
                   fontSize:15,
-                  color:'#000',
+                  color: colors.bodyText,
                   fontWeight:'bold', 
                 },
                 emptyListStyle: {
@@ -187,7 +189,7 @@ const TransactionsHistoryScreen = () => {
                 headerFooterStyle: {
                   width: '100%',
                   height: 45,
-                  backgroundColor: design.colors.primary,
+                  backgroundColor: colors.body,
                   bottom: 0, 
                   position: 'relative',
                 },
@@ -195,7 +197,7 @@ const TransactionsHistoryScreen = () => {
                 bottomView: {
                   width: '100%',
                   height: 50,
-                  backgroundColor: '#EE5407',
+                  // backgroundColor: '#EE5407',
                   justifyContent: 'center',
                   alignItems: 'center',
                   position: 'absolute', 
@@ -205,20 +207,20 @@ const TransactionsHistoryScreen = () => {
                 textStyle: {
                   textAlign: 'center',
                   justifyContent: 'center',
-                  color: '#fff',
+                  color: colors.bodyText,
                   fontSize: 14,
                   alignItems: 'center',
                   marginTop: 10,
                 },
                 
                 item: {
-                  backgroundColor: '#fff', 
+                  backgroundColor: colors.bodyText, 
                   padding: 20,
                   marginVertical: 8
                 },
                 header: {
                   fontSize: 20,
-                  backgroundColor: "#fff",
+                  backgroundColor: colors.bodyText,
                   fontWeight: 'bold',
                   textAlign: 'center',
                 },
@@ -230,6 +232,7 @@ const TransactionsHistoryScreen = () => {
                 },
                 rowHeaderText:{
                   fontWeight: 'bold',
+                  color: colors.primary,
                 }
                 
               });

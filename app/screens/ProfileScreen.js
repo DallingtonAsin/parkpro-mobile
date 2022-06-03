@@ -1,11 +1,13 @@
 import React, {useState, useContext} from 'react';
-import { Text,TouchableOpacity,ScrollView,SafeAreaView, View, StyleSheet} from 'react-native';
+import { Text,TouchableOpacity,SafeAreaView, View, StyleSheet} from 'react-native';
 import design from '../../assets/css/styles';
 import { Avatar, Paragraph, Divider } from 'react-native-paper';
 import ProfileContext from '../context/index';
 import ProfilePicture from 'react-native-profile-picture';
 import {APP_NAME} from '@env';
 import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
+import { useTheme } from '@react-navigation/native';
+
 
 const initialState = {
   id: '',
@@ -18,13 +20,14 @@ const initialState = {
   role: APP_NAME + " User",
 };
 
-const Profile = props => {
-
+const Profile = (props) => {
+  
   const [state, setData] = useState(initialState);
   const {profile, setProfile} = useContext(ProfileContext);
   const name = profile.first_name + " " + profile.last_name;
   const [image, setImage] = useState('https://dallingtonasingwire.com/img/user-profile9.png');
-
+  const { colors } = useTheme();
+  const styles = makeStyles(colors);
   
   React.useEffect(() => {
     const unsubscribe = props.navigation.addListener('focus', () => {
@@ -32,7 +35,7 @@ const Profile = props => {
     });
     return unsubscribe;
   }, [props.navigation]);
-
+  
   const getProfile = () => {
     const id = profile.id;
     const first_name = profile.first_name;
@@ -41,7 +44,7 @@ const Profile = props => {
     const phone_number = profile.phone_number;
     const email = profile.email;
     const account_balance = profile.account_balance;
-
+    
     setData({
       ...state,
       id: id,
@@ -52,39 +55,40 @@ const Profile = props => {
       email: email,
       balance: account_balance
     });
-}
-
+  }
+  
   return(
-      <SafeAreaView style={{flex: 1}}>
-
-<FocusAwareStatusBar barStyle="light-content" backgroundColor={design.colors.primary} />
-   <View style={styles.header}>
-
-   { profile.image ?
-          <ProfilePicture
-          isPicture={true}
-          URLPicture={profile.image}
-          shape='circle'
-          pictureStyle={styles.avatar} 
+    <SafeAreaView style={{flex: 1, backgroundColor: colors.body}}>
+    
+    <FocusAwareStatusBar barStyle="light-content" 
+    backgroundColor={colors.primary}/>
+    <View style={styles.header}>
+    
+    { profile.image ?
+      <ProfilePicture
+      isPicture={true}
+      URLPicture={profile.image}
+      shape='circle'
+      pictureStyle={styles.avatar} 
       />
-        : <Avatar.Image size={120} style={styles.avatar} 
-        source={require('../../assets/user-profile9.png')} />
-   }
-
+      : <Avatar.Image size={120} style={styles.avatar} 
+      source={require('../../assets/user-profile9.png')} />
+    }
+    
     </View>
-               
-               
-
+    
+    
+    
     <View style={styles.body}>
-
-
+    
+    
     <View style={{justifyContent: 'center', alignSelf: 'center'}}>
     <Text style={styles.name}>{name}</Text>
-    <Paragraph style={styles.info}>{profile.phone_number}</Paragraph>
+    <Text style={styles.name}>{`${profile.country_code}${profile.phone_number}`}</Text>
     </View>
-   
+    
     <Divider style={ design.divider1 }/>
-
+    
     <View style={styles.formData}>
     <Text style={styles.text}>FIRST NAME</Text>
     <Text style={styles.userinfo}>{profile.first_name}</Text>
@@ -98,25 +102,28 @@ const Profile = props => {
     </View>
     
     <Divider style={ design.divider1 }/>
-
+    
     <View style={styles.formData}>
     <Text style={styles.text}>PHONE NUMBER</Text>
-    <Text style={styles.userinfo}>{profile.phone_number}</Text>
+    <Text style={styles.userinfo}>{`${profile.country_code}${profile.phone_number}`}</Text>
     </View>
-
-
+    
+    
     <Divider style={ design.divider1 }/>
     
     <View style={styles.formData}>
     <Text style={styles.text}>EMAIL</Text>
     <Text style={styles.userinfo}>{profile.email}</Text>
-        </View>
-        <Divider style={design.divider1} />
-
     </View>
-
+    <Divider style={design.divider1} />
+    
+    </View>
+    
     <View style={styles.footer}>
-    <TouchableOpacity style={design.btnPrimary}
+    <TouchableOpacity 
+   style={[design.btnPrimary, { color: '#fff',
+   backgroundColor: colors.primary,
+   borderColor: colors.primary}]}
     onPress={() => props.navigation.navigate("EditProfile")}>
     <Text style={{color:'#fff', textAlign: 'center', fontSize:15}}>Edit Profile</Text>
     </TouchableOpacity>
@@ -130,7 +137,7 @@ const Profile = props => {
   
   export default Profile
   
-  const styles = StyleSheet.create({
+  const makeStyles = (colors) => StyleSheet.create({
     container: {
       flex:1,
     },
@@ -141,7 +148,7 @@ const Profile = props => {
       paddingHorizontal:10
     },
     header:{
-      backgroundColor: design.colors.white,
+      backgroundColor: colors.white,
       height:130,
       flex: 1,
     },
@@ -150,7 +157,7 @@ const Profile = props => {
       padding:35,
     },
     text:{
-      color: design.colors.primary, 
+      color: colors.primary, 
       opacity:0.8,
       textTransform:'capitalize',
       fontWeight:'bold',
@@ -171,7 +178,7 @@ const Profile = props => {
       position: 'absolute',
       alignSelf:'center',
     },
-
+    
     avatar1: {
       borderRadius: 70,
       alignSelf:'center',
@@ -179,7 +186,7 @@ const Profile = props => {
       marginTop:30, 
       alignSelf:'center',
     },
-
+    
     name:{
       fontSize:20,
       color: "#696969",
@@ -190,20 +197,20 @@ const Profile = props => {
       color: "#00BFFF",
       textAlign:'center'
     },
-   
+    
     buttonContainer: {
       color: '#fff',
       borderRadius:5,
       padding:15,
-      backgroundColor: design.colors.primary,
-      borderColor: design.colors.primary,
+      backgroundColor: colors.primary,
+      borderColor: colors.primary,
       position: 'absolute',
       bottom: 0,
       width: '90%',
       justifyContent: 'center',
       alignItems: 'center',
     },
-
+    
     footer:{
       marginBottom: 30,
       flexDirection: 'row',

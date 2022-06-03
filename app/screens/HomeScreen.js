@@ -36,6 +36,7 @@ import BottomSheet, {
 } from '@gorhom/bottom-sheet';
 import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
 import crashlytics from "@react-native-firebase/crashlytics";
+import { useTheme } from '@react-navigation/native';
 
 
 const dbVehicleHelper = require("../database/vehicles");
@@ -48,32 +49,13 @@ const initialVehicleState= {
   type: '',
 }
 
-const initialFavouriteParking = {
-  uniquePId: '',
-  client_id: '',
-  name: '',
-  phone_number: '',
-  address: '',
-  description: '',
-  opens_at: '',
-  closes_at: '',
-  latitude: '',
-  longitude: '',
-  rating: '', 
-  total_space: '',
-  current_free_space: '',
-  photo: '',
-}
 
-const HomeScreen = props => {
-  
+const HomeScreen = (props) => {
   
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingAirtime, setIsLoadingAirtime] = useState(false);
-  const [isParkingsLoading, setIsParkingsLoading] = useState(true);
   const [vehicles, setVehicleState] = useState({});
   const [vehicle, setVehicleData] = React.useState(initialVehicleState);
-  const [nearByParkings, setNearByParkings] = useState([]);
   const [vehicleTypes, setVehicleTypes] = useState([]);
   const [airtimeAmount, setAirtimeAmount] =useState(0);
   const [userCounts, setUserCounts] = useState(null);
@@ -82,17 +64,16 @@ const HomeScreen = props => {
   const [isSheetVisible, setIsSheetVisible] = useState(false);
   const [isEditSheetVisible, setIsEditSheetVisible] = useState(false);
   const {profile, setProfile} = useContext(ProfileContext);
-  const { getParkingAreas, getVehicleCategories, loadAirtimeCredit, syncProfileData } = React.useContext(AuthContext);
+  const {getVehicleCategories, loadAirtimeCredit, syncProfileData } = React.useContext(AuthContext);
   
-  // ref
   const vehicleBottomSheetRef = useRef(0);
   const buyAirtimeBottomSheetRef = useRef(0);
   const favouritesBottomSheetRef = useRef(0);
   
-  
-  // variables
   const snapPoints = useMemo(() => ['25%', '70%'], []);
   const airtimeSnapPoints = useMemo(() => ['25%', '50%'], []);
+  const { colors } = useTheme();
+  const styles = makeStyles(colors);
   
   
   const handleSheetChanges = useCallback((index) => {
@@ -546,7 +527,7 @@ const HomeScreen = props => {
                     }
                     
                     const VehicleComponent = (item) => (
-                      <View style={[design.vehicle.container,{padding:3}]}>
+                      <View style={{flexDirection: 'row', padding:20}}>
                       <Image
                       source={require('../../assets/images/UberX.jpeg')}
                       style={design.vehicle.image}
@@ -597,7 +578,8 @@ const HomeScreen = props => {
                           return (
                             <SafeAreaView style={{flex: 1}}>
                             
-                            <FocusAwareStatusBar barStyle="light-content" backgroundColor={design.colors.primary} />
+                            <FocusAwareStatusBar barStyle="light-content"
+                             backgroundColor={colors.primary} />
                             
                             
                             <BrSheet
@@ -605,10 +587,10 @@ const HomeScreen = props => {
                             onBackButtonPress={toggleBottomNavigationView}
                             onBackdropPress={toggleBottomNavigationView}
                             >
-                            <ScrollView style={styles.panel}>
+                            {/* <ScrollView style={styles.panel}> */}
                             
                             <View style={{ flex: 3, alignItems: 'center',padding:20, justifyContent: 'center', backgroundColor: design.colors.gray,}}>
-                            <Avatar.Icon icon={icons.uber} style={{backgroundColor:design.colors.white}} /> 
+                            <Avatar.Icon icon={icons.uber} style={{backgroundColor: colors.text}} /> 
                             </View>
                             
                             
@@ -692,7 +674,7 @@ const HomeScreen = props => {
                               
                               </View>
                               
-                              </ScrollView>
+                              {/* </ScrollView> */}
                               </BrSheet>
                               
                               
@@ -701,7 +683,7 @@ const HomeScreen = props => {
                               onBackButtonPress={toggleEditBottomNavigationView}
                               onBackdropPress={toggleEditBottomNavigationView}
                               >
-                              <ScrollView style={styles.panel}>
+                              {/* <ScrollView style={styles.panel}> */}
                               
                               <View style={{ flex: 3, alignItems: 'center',padding:20, justifyContent: 'center', backgroundColor: design.colors.gray,}}>
                               <Avatar.Icon icon={icons.uber} style={{backgroundColor:design.colors.white}} /> 
@@ -786,7 +768,7 @@ const HomeScreen = props => {
                                 
                                 </View>
                                 
-                                </ScrollView>
+                                {/* </ScrollView> */}
                                 </BrSheet>
                                 
                                 
@@ -833,7 +815,7 @@ const HomeScreen = props => {
                                   icon={icons.parking}
                                   bgColor={['#fff', '#fff']}
                                   label="Parkings"
-                                  tintColor={design.colors.orange}
+                                  tintColor={colors.icon}
                                   borderRadius={5}
                                   onPress={() => props.navigation.navigate("ParkingAreas") }
                                   />
@@ -843,7 +825,7 @@ const HomeScreen = props => {
                                   bgColor={['#fff', '#fff']}
                                   label="Favourites"
                                   borderRadius={5}
-                                  tintColor={design.colors.orange}
+                                  tintColor={colors.icon}
                                   onPress={() => openFavouritesSheet(1)}
                                   />
                                   
@@ -853,7 +835,7 @@ const HomeScreen = props => {
                                   bgColor={['#fff', '#fff']}
                                   label="My Vehicles"
                                   borderRadius={5}
-                                  tintColor={design.colors.orange}
+                                  tintColor={colors.icon}
                                   onPress={() => openVehiclesSheet(1)}
                                   />
                                   
@@ -868,7 +850,7 @@ const HomeScreen = props => {
                                   bgColor={['#fff', '#fff']}
                                   label="Close parkings"
                                   borderRadius={5}
-                                  tintColor={design.colors.orange}
+                                  tintColor={colors.icon}
                                   onPress={() => props.navigation.navigate("Map")}
                                   />
                                   
@@ -879,7 +861,7 @@ const HomeScreen = props => {
                                   bgColor={['#fff', '#fff']}
                                   label="Deposit"
                                   borderRadius={5}
-                                  tintColor={design.colors.orange}
+                                  tintColor={colors.icon}
                                   onPress={() => props.navigation.navigate("TopUp")}
                                   />
                                   
@@ -888,7 +870,7 @@ const HomeScreen = props => {
                                   bgColor={['#fff', '#fff']}
                                   label="Transactions"
                                   borderRadius={5}
-                                  tintColor={design.colors.orange}
+                                  tintColor={colors.icon}
                                   onPress={() => props.navigation.navigate("PaymentHistory") }
                                   />
                                   
@@ -928,14 +910,8 @@ const HomeScreen = props => {
                                 backdropComponent={renderVehiclesBackdrop}
                                 onChange={handleVehicleSheetChanges}
                                 handleComponent={() => renderHeader("My Vehicles") }
+                              
                                 >
-                                <BottomSheetScrollView contentContainerStyle={styles.contentContainer}>
-                                
-                                <View style={{flexDirection: 'row'}}>
-                                <View style={{flexDirection: 'row', alignItems: 'flex-end'}}>
-                                </View>
-                                </View>
-                                
                                 <Divider style={styles.divider}/>
                                 <FlatList
                                 scrollEnabled={true}
@@ -944,17 +920,23 @@ const HomeScreen = props => {
                                 renderItem={({item}) => VehicleComponent(item) }
                                 ItemSeparatorComponent = { FlatListItemSeparator }
                                 keyExtractor={(item, index) => { return item.number.toString()}}
-                                ListEmptyComponent={<View style={{flex:1, justifyContent: 'center', alignItems: 'center'}}>
+                                ListEmptyComponent={<View style={{flex:1, justifyContent: 'center', 
+                                alignItems: 'center'}}>
                                 <Text style={styles.text}>You haven't added any vehicles yet.</Text>
                                 </View>}
                                 />
-                                <Pressable style={styles.bottomSheetButton} onPress={() => {setIsSheetVisible(true)}}>
+
+                                <View style={{justifyContent: 'center', alignContent: 'center'}}>
+                                <TouchableOpacity style={styles.bottomSheetButton} onPress={() => {setIsSheetVisible(true)}}>
                                 <Text style={{fontSize:14, textAlign: 'center', textTransform:'uppercase'}}>
                                 add vehicle
                                 </Text>
                                 <FontAwesome name={"arrow-right"} size={18} style={design.vehicle.icon} color={"#808080"}/>
-                                </Pressable>
-                                </BottomSheetScrollView>
+                                </TouchableOpacity>
+                                </View>
+
+                               
+
                                 </BottomSheet>
                                 
                                 
@@ -969,7 +951,7 @@ const HomeScreen = props => {
                                 onChange={handleSheetChanges}
                                 handleComponent={() => renderHeader("Buy Airtime") }
                                 >
-                                <BottomSheetScrollView contentContainerStyle={styles.contentContainer}>
+                                {/* <BottomSheetScrollView contentContainerStyle={styles.contentContainer}> */}
                                 
                                 <View style={{flexDirection: 'row', padding:35}}>
                                 <TextInput 
@@ -995,7 +977,7 @@ const HomeScreen = props => {
                                   </>
                                 }
                                 </TouchableOpacity>
-                                </BottomSheetScrollView>
+                                {/* </BottomSheetScrollView> */}
                                 </BottomSheet>
                                 
                                 
@@ -1010,7 +992,7 @@ const HomeScreen = props => {
                                 onChange={handleSheetFavouriteParkingChanges}
                                 handleComponent={() => renderHeader("favourite parking areas") }
                                 >
-                                <BottomSheetScrollView contentContainerStyle={styles.contentContainer}>
+                                {/* <BottomSheetScrollView contentContainerStyle={styles.contentContainer}> */}
                                 
                                 <View style={styles.SheetContentContainer}>
                                 <Divider style={styles.divider}/>
@@ -1026,6 +1008,7 @@ const HomeScreen = props => {
                                 </View>}
                                 />
                                 
+                                
                                 <Pressable style={styles.bottomSheetButton} onPress={showModal}>
                                 <Text style={design.vehicle.textAdd}>
                                 add favourite parking 
@@ -1034,7 +1017,7 @@ const HomeScreen = props => {
                                 </Pressable>
                                 
                                 </View>
-                                </BottomSheetScrollView>
+                                {/* </BottomSheetScrollView> */}
                                 </BottomSheet>
                                 
                                 </View>
@@ -1044,11 +1027,11 @@ const HomeScreen = props => {
                               
                               export default HomeScreen;
                               
-                              const styles = StyleSheet.create({
+                              const makeStyles =  (colors) => StyleSheet.create({
                                 
                                 container: {
                                   flex: 1,
-                                  backgroundColor: design.colors.primary,
+                                  backgroundColor: colors.primary,
                                 },
                                 
                                 uploadOptions:{
@@ -1141,16 +1124,16 @@ const HomeScreen = props => {
                                 
                                 bottomSheetButton:{
                                   flexDirection: 'row',
-                                  borderWidth:1, 
-                                  marginTop:15,
-                                  marginBottom:60,
-                                  height:60,
-                                  width:'70%',
-                                  padding:15,
-                                  borderRadius:30,
-                                  borderColor:design.colors.primary,
                                   justifyContent: 'center',
                                   alignItems: 'center',
+                                  borderWidth:1,
+                                  marginLeft:10, 
+                                  marginTop:15,
+                                  marginBottom:60,
+                                  height:50,
+                                  width:'75%',
+                                  borderRadius:30,
+                                  borderColor:design.colors.primary,
                                 },
                                 
                                 inputContainer:{

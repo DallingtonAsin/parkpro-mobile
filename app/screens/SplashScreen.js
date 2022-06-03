@@ -18,10 +18,12 @@ import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
 
 const SplashScreen = ({navigation}) => {
     const { colors } = useTheme();
+  const styles = makeStyles(colors);
+
     
     return (
         <View style={styles.container}>
-         <FocusAwareStatusBar barStyle="light-content" backgroundColor={design.colors.primary} />
+         <FocusAwareStatusBar barStyle="light-content" backgroundColor={colors.primary} />
         <View style={styles.header}>
         <Animatable.Image 
         animation="bounceIn"
@@ -33,24 +35,24 @@ const SplashScreen = ({navigation}) => {
         </View>
         <Animatable.View 
         style={[styles.footer, {
-            backgroundColor: colors.background
+            backgroundColor: colors.body
         }]}
         animation="fadeInUpBig"
         >
         <Text style={[styles.title, {
-            color: colors.text
+            color: colors.bodyText
         }]}>Find parking using {APP_NAME}</Text>
         <Text style={styles.text}>Park your vehicle instantly without breaking a sweat!</Text>
         <View style={styles.button}>
         <TouchableOpacity onPress={()=>navigation.navigate('Signin')}>
         <LinearGradient
-        colors={['#273746', '#01ab9d']}
+        colors={[colors.primary, '#01ab9d']}
         style={styles.signIn}
         >
         <Text style={styles.textSign}>Get Started</Text>
         <MaterialIcons 
         name="navigate-next"
-        color="#fff"
+        color={colors.text}
         size={20}
         />
         </LinearGradient>
@@ -66,10 +68,10 @@ const SplashScreen = ({navigation}) => {
     const {height} = Dimensions.get("screen");
     const height_logo = height * 0.26;
     
-    const styles = StyleSheet.create({
+    const makeStyles = (colors) => StyleSheet.create({
         container: {
             flex: 1, 
-            backgroundColor:  '#273746'
+            backgroundColor: colors.primary
         },
         header: {
             flex: 2,
@@ -78,7 +80,7 @@ const SplashScreen = ({navigation}) => {
         },
         footer: {
             flex: 1,
-            backgroundColor: '#fff',
+            backgroundColor: colors.secondary,
             borderTopLeftRadius: 30,
             borderTopRightRadius: 30,
             paddingVertical: 50,

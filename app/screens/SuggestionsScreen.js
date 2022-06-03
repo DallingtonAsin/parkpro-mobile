@@ -15,6 +15,8 @@ import { Text,Image,
   import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
   import { TextInput } from 'react-native-paper';
   import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
+  import { useTheme  } from 'react-native-paper';
+
 
   const emojis = [
     {id:1, name: 'grin-beam', value: 'Happy', color: '#F9FEE', active: false},
@@ -24,16 +26,19 @@ import { Text,Image,
   
   const SuggestionsScreen = () => {
     const {profile, setProfile} = useContext(ProfileContext);
+
     const initialState = {
       email: profile.email,
       subject: '',
       description: '',
     }
+
     const [state, setState] = React.useState(initialState);
     const {postSuggestion} = React.useContext(AuthContext);
     const [isLoading, setIsLoading] = React.useState(false);
     const [selectedIndex, setSelectedIndex] = React.useState(1);
     const [selectedEmojiValue, setSelectedEmojiValue] = React.useState('Happy');
+    const { colors } = useTheme();
 
     
     const sendSuggestion = async() => {
@@ -84,7 +89,7 @@ import { Text,Image,
       
       <SafeAreaView style={css.container}>
       
-        <FocusAwareStatusBar barStyle="light-content" backgroundColor={styles.colors.primary} />
+        <FocusAwareStatusBar barStyle="light-content" backgroundColor={colors.primary} />
       <View style={css.top}>
       <Text style={{color: '#fff', fontSize:22, fontWeight:'bold',  marginTop:15}}>How do you feel?</Text>
       <FlatList

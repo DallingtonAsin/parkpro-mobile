@@ -8,6 +8,7 @@ import {Text, SafeAreaView, Image,
 import { icons } from '../../constants';
   import {APP_NAME, currency} from '@env';
   import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
+  import { useTheme } from '@react-navigation/native';
 
 
   const wait = (timeout) => {
@@ -19,6 +20,8 @@ import { icons } from '../../constants';
     const [orderInfo, setOrderInfo] = useState([]);
     const [refreshing, setRefreshing] = React.useState(false);
     const [isLoading, setIsLoading] = React.useState(true);
+    const { colors } = useTheme();
+
  
     const { orderNo, customerId } = route.params;
 
@@ -57,7 +60,7 @@ import { icons } from '../../constants';
 
 
         <SafeAreaView>
-           <FocusAwareStatusBar barStyle="light-content" backgroundColor={styles.colors.primary} />
+           <FocusAwareStatusBar barStyle="light-content" backgroundColor={colors.primary} />
         <ScrollView 
         style={{flexDirection: 'column'}}
         >

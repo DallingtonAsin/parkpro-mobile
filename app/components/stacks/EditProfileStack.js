@@ -1,7 +1,7 @@
 import React from 'react';
-import { createStackNavigator, HeaderBackButton} from '@react-navigation/stack';
+import { createStackNavigator } from '@react-navigation/stack';
 import EditProfileScreen from '../../screens/EditProfileScreen';
-import styles from '../../../assets/css/styles';
+import StackOption from '../common/StackOption';
 
 const Stack = createStackNavigator();
 
@@ -11,19 +11,7 @@ const Stack = createStackNavigator();
     return(
       <Stack.Navigator>
       <Stack.Screen name="EditProfileScreen" component={EditProfileScreen}
-      options = {() => ({
-        headerTitle: 'Edit Profile',
-        headerLeft: () => <HeaderBackButton tintColor={'#fff'}
-        onPress={() => navigation.goBack()}/>,
-        headerStyle:{
-          backgroundColor:styles.colors.parksmart,
-        },
-        headerTitleStyle:{
-          fontSize:18,
-          fontWeight:'bold',
-        },
-        headerTintColor: '#fff',
-      })
+     options = {() => (StackOption(navigation, 'Edit Profile'))
     }>
     </Stack.Screen>
     </Stack.Navigator>

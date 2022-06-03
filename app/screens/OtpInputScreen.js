@@ -6,14 +6,20 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome5';
 import { AuthContext } from '../context/context';
 import { UIActivityIndicator } from 'react-native-indicators';
 import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
+import { useTheme } from '@react-navigation/native';
+import AppLoader from '../components/loaders/AppLoader';
+
 
 const OtpInputScreen = ({ route, navigation }) => {
- const { otp, phoneNumber } = route.params;
+ const { otp, countryCode, phoneNumber } = route.params;
  const [invalidCode, setInvalidCode] = useState(false);
  const [message, setMessage] = useState("");
  const { verifyOTP, goToHomeScreen } = React.useContext(AuthContext);
  const [otpCode, setOTP] = useState("");
- const [isSending, setIsSending] = useState(false);
+ const [isLoading, setIsLoading] = useState(false);
+ const { colors } = useTheme();
+ const styles = makeStyles(colors);
+
 
  const verifyOTPCode = async(code) => {
       verifyCustomerOtp(code);
@@ -28,36 +34,43 @@ const OtpInputScreen = ({ route, navigation }) => {
     Alert.alert("Info", "Please enter the sent OTP");
    }else{
    const data = {
+      country_code: countryCode,
       phone_number: phoneNumber,
       otp: code
    }
-   setIsSending(true);
+   setIsLoading(true);
   await verifyOTP(data).then(async(response) => {
     const statusCode = response.statusCode;
     const message = response.message;
     const data = response.data;
-    console.log("Got this response", response);
+   
     if(statusCode == 1){
       if(data.is_registered){
         await goToHomeScreen(data);
       }else{
-        navigation.navigate("Signup", {userId: data.id, phoneNumber: phoneNumber });
+        console.log("OTP user id", data.id);
+           navigation.navigate("Signup",
+            {userId: data.id,
+             countryCode: data.country_code,
+             phoneNumber: data.phone_number, 
+          });
       }
     }else{
       setInvalidCode(true);
       setMessage(message);
     }
-    setIsSending(false);
+    setIsLoading(false);
    });
   }
  }
 
  return (
+   <>
    <SafeAreaView style={styles.wrapper}>
-      <FocusAwareStatusBar barStyle="light-content" backgroundColor={design.colors.primary} />
+      <FocusAwareStatusBar barStyle="light-content" backgroundColor={colors.primary} />
      <Text style={styles.prompt}>Enter the code we sent you</Text>
      <Text style={styles.message}>
-       {`Your phone (${phoneNumber}) will be used to protect your account each time you log in.`}
+       {`Your phone (${countryCode}${phoneNumber}) will be used to protect your account each time you log in.`}
      </Text>
     
      <OTPInputView
@@ -80,7 +93,7 @@ const OtpInputScreen = ({ route, navigation }) => {
          >
           
            <Text style={[styles.continueText, {color: design.colors.dark}]}> 
-           {isSending ? <UIActivityIndicator color='black' size={27} /> : 
+           {isLoading ? 'Loading...' : 
             <> <FontAwesome name="arrow-right" size={15} color={design.colors.dark}/> <Text>Continue</Text></>
            } 
            </Text>
@@ -95,17 +108,20 @@ const OtpInputScreen = ({ route, navigation }) => {
          >
            <FontAwesome name="arrow-left" size={15} color={design.colors.white}/>
            <Text style={styles.backText} >Go Back</Text>
-       
          </TouchableOpacity>
    </SafeAreaView>
+   {  isLoading ?  <AppLoader /> : null }
+
+ </>
  );
 };
 
-const styles = StyleSheet.create({
+const makeStyles = (colors) => StyleSheet.create({
  wrapper: {
    flex: 1,
    justifyContent: "center",
    alignItems: "center",
+   backgroundColor: colors.body,
  },
 
  borderStyleBase: {
@@ -152,7 +168,7 @@ const styles = StyleSheet.create({
   width: 330,
   justifyContent: "center",
   alignItems: "center",
-  backgroundColor: design.colors.primary, 
+  backgroundColor: colors.primary, 
   shadowColor: "rgba(0,0,0,0.4)",
   shadowOffset: {
     width: 1,
@@ -171,7 +187,7 @@ btnContinue: {
   width: 330,
   justifyContent: "center",
   alignItems: "center",
-  backgroundColor: design.colors.white, 
+  backgroundColor: colors.secondary, 
   shadowColor: "rgba(0,0,0,0.4)",
   shadowOffset: {
     width: 1,
@@ -182,7 +198,7 @@ btnContinue: {
   elevation: 20,
   borderRadius:5,
   flexDirection: 'row',
-  borderColor: design.colors.primary,
+  borderColor: colors.primary,
   borderWidth:1,
 },
 
@@ -201,11 +217,11 @@ backText: {
 },
 
 btnPrimary: {
-  color: '#fff',
+  color: colors.text,
   borderRadius:25,
   height:60,
-  backgroundColor: '#273746',
-  borderColor: '#273746',
+  backgroundColor: colors.primary,
+  borderColor: colors.primary,
   position: 'absolute',
   bottom: 0,
   width: '100%',

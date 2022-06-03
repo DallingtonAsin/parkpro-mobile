@@ -115,6 +115,7 @@ module.exports = {
             throw error;
         }
     },
+
     postSuggestion : async(data) => {
         try{
             const endpoint = "customer/suggestion";

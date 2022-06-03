@@ -2,6 +2,8 @@ import { Linking } from 'react-native';
 import Communications from 'react-native-communications';
 import Rate, { AndroidMarket } from 'react-native-rate';
 import {MAJOR_VERSION, MINOR_VERSION, PATCH_VERSION,PRE_RELEASE } from '@env';
+import { getUniqueId, getIpAddress } from 'react-native-device-info';
+import { NetworkInfo } from "react-native-network-info";
 
 const cache = {};
 
@@ -20,7 +22,15 @@ export const SendSms = (telephone_number) => {
 }
 
 export const inboxFromWhatsapp = (whatsappNumber) => {
-   Linking.openURL(`whatsapp://send?text=&phone=${whatsappNumber}`);
+  Linking.openURL(`whatsapp://send?text=&phone=${whatsappNumber}`);
+}
+
+export const getDeviceId = () => {
+   return getUniqueId();
+}
+
+export const getDeviceIpAddress = async(x) => {
+    return await NetworkInfo.getIPAddress();
 }
 
 export const Monetize = (num) => {
@@ -38,12 +48,12 @@ export const numberWithCommas = (x) => {
 export const getAppVersionName = () => {
   let version = `${MAJOR_VERSION}.${MINOR_VERSION}.${PATCH_VERSION}`;
   if (PRE_RELEASE) {
-      version = version.concat(`-${PRE_RELEASE}`);
+    version = version.concat(`-${PRE_RELEASE}`);
   }
   return version;
 };
 
- export const RateUs = () => {
+export const RateUs = () => {
   const options = {
     AppleAppID:"2193813192",
     GooglePackageName:"com.mywebsite.myapp",

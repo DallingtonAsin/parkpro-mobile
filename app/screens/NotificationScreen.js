@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {Text, SafeAreaView, Image, ScrollView,RefreshControl,
         TouchableOpacity,View, FlatList, StyleSheet} from 'react-native';
 import design from '../../assets/css/styles';
@@ -8,6 +8,9 @@ import styles from '../../assets/css/styles';
 import CustomLoader from '../components/CustomActivityIndicator';
 import Toast from 'react-native-simple-toast';
 import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
+import ProfileContext from '../context/index';
+import { useTheme } from '@react-navigation/native';
+
 
 const wait = (timeout) => {
   return new Promise(resolve => setTimeout(resolve, timeout));
@@ -18,6 +21,8 @@ const  Notification = () => {
  const [notifications, setNotifications] = useState([]);
  const [refreshing, setRefreshing] = React.useState(false);
  const [isLoading, setIsLoading] = React.useState(true);
+ const {profile, setProfile} = useContext(ProfileContext);
+ const { colors } = useTheme();
 
  const { getCustomerNotifications } = React.useContext(AuthContext);
 
@@ -35,14 +40,14 @@ const onRefresh = React.useCallback(() => {
 
 const fetchNotifications = async() => {
   try{
-    const userProfile = await AsyncStorage.getItem("userProfile");
-    const profile = JSON.parse(userProfile);
+    
     const id = profile.id;
+    console.log("User id", id);
     let resp = await getCustomerNotifications(id);
+    console.log("API response", resp);
     setIsLoading(false);
     if(resp.statusCode == 1){
       const notificationsData = resp.data;
-      console.log("Notifications", notificationsData);
       if(notificationsData.length > 0){
          setNotifications(notificationsData);
       }
@@ -89,9 +94,9 @@ const fetchNotifications = async() => {
 
   return ( 
   <>
-   <FocusAwareStatusBar barStyle="light-content" backgroundColor={design.colors.primary} />
+   <FocusAwareStatusBar barStyle="light-content" backgroundColor={colors.primary} />
   {  !isLoading ?
- <FlatList style= {{ backgroundColor:'#ffffff', height:'100%' }}
+ <FlatList style= {{ backgroundColor: colors.body, height:'100%' }}
  data={notifications}
  renderItem={({ item }) => renderComponent(item)}
  keyExtractor={(item, index) => String(index)}
@@ -99,7 +104,7 @@ const fetchNotifications = async() => {
  ItemSeparatorComponent={FlatListItemSeparator}
  refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>}
 /> 
-: <CustomLoader color={styles.colors.orange}/>
+: <CustomLoader color={colors.white}/>
   }
 </>
   );

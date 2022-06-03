@@ -1,10 +1,17 @@
 import React, {useEffect, useState, useMemo} from 'react';
 import { View, ActivityIndicator, Image, RefreshControl,  Text, 
   StyleSheet, SafeAreaView, ScrollView} from 'react-native';
-  import { NavigationContainer } from '@react-navigation/native';
+  import { NavigationContainer,
+    DefaultTheme as NavigationDefaultTheme,
+    DarkTheme as NavigationDarkTheme,
+  } from '@react-navigation/native';
+  import { 
+    Provider as PaperProvider, 
+    DefaultTheme as PaperDefaultTheme, 
+    DarkTheme as PaperDarkTheme 
+  } from 'react-native-paper';
+  
   import AsyncStorage from '@react-native-async-storage/async-storage';
-  import { Provider as PaperProvider, DefaultTheme as PaperDefaultTheme, DarkTheme as PaperDarkTheme } 
-  from 'react-native-paper';
   import { AuthContext } from './app/context/context';
   import AppRootStack from  './app/components/stacks/AppRootStack';
   import DrawerScreenStack from './app/components/stacks/DrawerScreenStack';
@@ -14,19 +21,51 @@ import { View, ActivityIndicator, Image, RefreshControl,  Text,
   import { ProfileProvider } from './app/context/index';
   import SplashScreen from 'react-native-splash-screen'
   import {  icons} from './constants';
-  import GlobalFont from 'react-native-global-font'
+  import GlobalFont from 'react-native-global-font';
+  import customStyles from './assets/css/styles';
   const Services = require("./app/services");
   import crashlytics from "@react-native-firebase/crashlytics";
   
   // import OfflineScreen from  './app/screens/OfflineScreen';
   
-  const theme = {
+  const customDefaultTheme = {
+    ...NavigationDefaultTheme,
     ...PaperDefaultTheme,
-    roundness: 2,
     colors: {
+      ...NavigationDefaultTheme.colors,
       ...PaperDefaultTheme.colors,
-      primary: '#3498db',
-      accent: '#f1c40f',
+      primary: customStyles.colors.primary,
+      secondary: customStyles.colors.white,
+      dark: customStyles.colors.dark,
+      background: customStyles.colors.primary,
+      text: customStyles.colors.white,
+      drawerBackground: customStyles.colors.white, 
+      drawerText: customStyles.colors.dark, 
+      body: customStyles.colors.white,
+      bodyText: customStyles.colors.dark,
+      icon: customStyles.colors.orange,
+
+
+    },
+  };
+
+  const customDarkTheme = {
+    ...NavigationDarkTheme,
+    ...PaperDarkTheme,
+    colors: {
+      ...NavigationDarkTheme.colors,
+      ...PaperDarkTheme.colors,
+      primary: customStyles.colors.orange,
+      secondary: customStyles.colors.white,
+      dark: customStyles.colors.dark,
+      background: customStyles.colors.orange,
+      text: customStyles.colors.white,
+      drawerBackground: customStyles.colors.orange, 
+      drawerText: customStyles.colors.white, 
+      body: customStyles.colors.white,
+      bodyText: customStyles.colors.white,
+      icon: customStyles.colors.orange,
+
     },
   };
   
@@ -78,11 +117,13 @@ import { View, ActivityIndicator, Image, RefreshControl,  Text,
   function App() {
     
     
-    
     const [profile, setProfile] = useState(null);
     const providerValue = useMemo(() => ({profile, setProfile}), [profile, setProfile]); 
     const [loginState, dispatch] = React.useReducer(loginReducer, initialLoginState);
     const [isConnected, setIsConnected] = React.useState(false);
+    const [isDarkTheme, setIsDarkTheme] = React.useState(false);
+
+    const theme = isDarkTheme ? customDarkTheme : customDefaultTheme;
     
     
     const OfflineScreen = () => {
@@ -266,20 +307,10 @@ import { View, ActivityIndicator, Image, RefreshControl,  Text,
         },
         
         getCustomerNotifications: async(id) => {
-          
           try{
-            return await Services.CustomerService.getNotifications(id).then(async(res) => {
-              const statusCode = res.statusCode;
-              let data;
-              if(statusCode == 1){
-                data = res.data;
-              }else{
-                data = [];
-              }
-              return data;
-            });
+            return await Services.CustomerService.getNotifications(id);
           }catch(e){
-            return {"message": e.message, "statusCode": 0};
+            throw e;
           }
         },
         
@@ -378,7 +409,7 @@ import { View, ActivityIndicator, Image, RefreshControl,  Text,
             return {"message": e.message, "statusCode": 0};
           }
         },
-
+        
         getNearByParkingAreas: async(lat, long) => {
           try{
             const result = await Services.ParkingService.fetchNearByParkingAreas(lat, long);
@@ -387,7 +418,7 @@ import { View, ActivityIndicator, Image, RefreshControl,  Text,
             return {"message": e.message, "statusCode": 0};
           }
         },
-
+        
         getTopRatedParkingAreas: async() => {
           try{
             const result = await Services.ParkingService.fetchTopRatedParkingAreas();
@@ -458,6 +489,10 @@ import { View, ActivityIndicator, Image, RefreshControl,  Text,
           }
         },
         
+        toggleTheme: () => {
+          setIsDarkTheme(isDarkTheme => !isDarkTheme);
+        }
+        
         
       }), []);
       
@@ -517,7 +552,7 @@ import { View, ActivityIndicator, Image, RefreshControl,  Text,
           isConnected ? 
           <AuthContext.Provider value={authContext }>
           <PaperProvider theme={theme}>
-          <NavigationContainer>
+          <NavigationContainer theme={theme}>
           {
             loginState.userToken
             ?  <ProfileProvider value={providerValue}>
