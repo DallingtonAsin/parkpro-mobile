@@ -19,7 +19,7 @@ import { color } from 'react-native-reanimated';
       {id: 2, iconName: "whatsapp", name:'Whatsap', text: COMPANY_WHATSAP_LINE, 'method': () => {inboxFromWhatsapp(COMPANY_WHATSAP_LINE)}},
       {id: 3, iconName: "sms", name:'SMS', text: 'Report a problem via sms', 'method': () => {SendSms(COMPANY_LINE)}},
       {id: 4, iconName: "envelope", name:'Email', text: COMPANY_EMAIL, 'method': () => {SendEmail(COMPANY_EMAIL)}},
-      {id: 5, iconName: "comments", name:'Feedback', text: 'Suggest something to us', 'method': () => navigation.navigate('Suggestions')},
+      {id: 5, iconName: "comments", name:'Feedback', text: 'Suggest something to us', 'method': () => navigation.navigate('Feedback')},
       
     ];
 

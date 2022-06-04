@@ -109,17 +109,21 @@ import {
       
       <ScrollView contentContainerStyle={css.body}>
       
-      <Text style={{fontWeight: 'bold', fontSize:20, }}>Give us feedback</Text>
+      <Text style={{fontWeight: 'bold', fontSize:20, }}>Share with us feedback</Text>
       
       <View style={{top:20}}>
       <TextInput mode="outlined" label="Email" placeholder="Email (required)" value={state.email}
       onChangeText={(text) => {setState({...state, email: text}) }}
+      outlineColor={styles.colors.gray}
+      theme={{ colors: { text: styles.colors.dark } }}
       style={css.input}
       />
       
       <TextInput mode="outlined" label="Subject" placeholder="Enter your subject"
       value={state.subject} style={css.input}
       onChangeText={(text) => {setState({...state, subject: text}) }}
+      outlineColor={styles.colors.gray}
+      theme={{ colors: { text: styles.colors.dark } }}
       />
       
       <Text style={css.title}>Description</Text>
@@ -133,6 +137,8 @@ import {
       value={state.description}
       mode="outlined"
       onChangeText={(text) => {setState({...state, description: text}) }}
+      outlineColor={styles.colors.gray}
+      theme={{ colors: { text: styles.colors.dark } }}
       />
       
       </View>
@@ -232,10 +238,9 @@ import {
       },
       
       input:{
-        backgroundColor: '#fff',
-        // borderWidth:1,
-        // borderColor: '#333333',
+        backgroundColor: styles.colors.white,
         borderRadius:20,
+        color: '#000',
       },
       
       
