@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View , ActivityIndicator, ScrollView, SafeAreaView, RefreshControl, LogBox, FlatList, Image   } from "react-native";
 import Geolocation from 'react-native-geolocation-service';
@@ -9,6 +8,7 @@ import WeatherDetails from '../components/weather/WeatherDetails'
 import {WEATHER_API_KEY} from '@env';
 import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
 import { useTheme  } from 'react-native-paper';
+import AppLoader from '../components/loaders/AppLoader';
 
 
 const BASE_WEATHER_URL = "https://api.openweathermap.org/data/2.5/weather?";
@@ -21,7 +21,6 @@ const WeatherScreen = () => {
   const [forecast, setForecast] = useState(null);
   const [currentWeatherDetails, setCurrentWeatherDetails] = useState(null);
   const [unitsSystem , setUnitsSystem] = useState('metric');
-  const [refreshing, setRefreshing] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const { colors } = useTheme();
 
@@ -32,14 +31,14 @@ const WeatherScreen = () => {
 
 
   const refreshWeather = async() => {
-    setRefreshing(true);
     await load();
-    setRefreshing(false);
-
   }
  
  
  const load = async() => {
+
+    setIsLoading(true);
+
     setCurrentWeatherDetails(null)
     setCurrentWeather(null)
     setErrorMessage(null)
@@ -112,6 +111,8 @@ const WeatherScreen = () => {
 
     // const  {main : temp} = currentWeather
     return (
+
+      <>
       <SafeAreaView style={styles.container}>
          <FocusAwareStatusBar barStyle="light-content" backgroundColor={colors.primary} />
                             
@@ -119,7 +120,7 @@ const WeatherScreen = () => {
         refreshControl={
           <RefreshControl 
             onRefresh={() => {  refreshWeather() }} 
-            refreshing={refreshing}
+            refreshing={isLoading}
           />}
       >
     
@@ -159,13 +160,16 @@ const WeatherScreen = () => {
         
       </ScrollView>
       </SafeAreaView>
+
+      {  isLoading ?  <AppLoader /> : null }
+
+      </>
     );
   }
   else if(errorMessage){
     return (
       <View style={styles.container}>
         <Text>{errorMessage}</Text>
-        
       </View>
     );
   } 

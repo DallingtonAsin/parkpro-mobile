@@ -24,7 +24,6 @@ import { View, ActivityIndicator, Image, RefreshControl,  Text,
   import GlobalFont from 'react-native-global-font';
   import customStyles from './assets/css/styles';
   const Services = require("./app/services");
-  import crashlytics from "@react-native-firebase/crashlytics";
   
   // import OfflineScreen from  './app/screens/OfflineScreen';
   
@@ -44,7 +43,9 @@ import { View, ActivityIndicator, Image, RefreshControl,  Text,
       body: customStyles.colors.white,
       bodyText: customStyles.colors.dark,
       icon: customStyles.colors.orange,
-
+      btnLinearGradient1: customStyles.colors.defaultBtnLinearGradient1,
+      btnLinearGradient2: customStyles.colors.defaultBtnLinearGradient2,
+      activeTabColor: customStyles.colors.orange,
 
     },
   };
@@ -55,16 +56,19 @@ import { View, ActivityIndicator, Image, RefreshControl,  Text,
     colors: {
       ...NavigationDarkTheme.colors,
       ...PaperDarkTheme.colors,
-      primary: customStyles.colors.orange,
+      primary: customStyles.colors.darkPink,
       secondary: customStyles.colors.white,
       dark: customStyles.colors.dark,
-      background: customStyles.colors.orange,
+      background: customStyles.colors.darkPink,
       text: customStyles.colors.white,
-      drawerBackground: customStyles.colors.orange, 
+      drawerBackground: customStyles.colors.darkPink, 
       drawerText: customStyles.colors.white, 
       body: customStyles.colors.white,
       bodyText: customStyles.colors.white,
-      icon: customStyles.colors.orange,
+      icon: customStyles.colors.darkPink,
+      btnLinearGradient1: customStyles.colors.darkPink1,
+      btnLinearGradient2: customStyles.colors.darkPink2,
+      activeTabColor: customStyles.colors.darkPink,
 
     },
   };

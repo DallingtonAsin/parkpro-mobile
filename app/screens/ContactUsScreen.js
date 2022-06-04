@@ -6,6 +6,7 @@ import {callHelpLine, SendEmail, SendSms, inboxFromWhatsapp} from '../components
 import {COMPANY_LINE, COMPANY_WHATSAP_LINE, COMPANY_EMAIL} from '@env';
 import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
 import { useTheme } from '@react-navigation/native';
+import { color } from 'react-native-reanimated';
 
 
   const ContactUs = ({navigation}) => {
@@ -25,7 +26,7 @@ import { useTheme } from '@react-navigation/native';
     const CardComponent = ({info}) => (
       <TouchableOpacity  style={{ backgroundColor:'#ffffff', borderWidth:1, borderColor:'#e2e2e2',margin:5, borderRadius:6 }} onPress={info.method}>
       <View style = { design.helpContainer} >
-      <Icon name={info.iconName} style={design.helpIcon} size={20}/>
+      <Icon name={info.iconName} style={[design.helpIcon, {color: colors.icon, borderColor: colors.icon}]} size={20}/>
       <View style={{flexDirection: 'column', marginLeft:15}}>
       <Text style={styles.channel}>{info.name}</Text>
       <Text style={{fontSize:16}}>{info.text}</Text>

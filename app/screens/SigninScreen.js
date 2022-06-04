@@ -5,8 +5,7 @@ import {
     TouchableOpacity, 
     SafeAreaView,
     Platform,
-    StyleSheet ,
-    StatusBar,
+    StyleSheet,
     Alert
 } from 'react-native';
 
@@ -14,7 +13,6 @@ import * as Animatable from 'react-native-animatable';
 import { useTheme  } from 'react-native-paper';
 import { AuthContext } from '../context/context';
 import PhoneInput from "react-native-phone-number-input";
-import { UIActivityIndicator } from 'react-native-indicators';
 import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
 import { getDeviceId, getDeviceIpAddress, getAppVersionName } from '../components/SharedCommons';
 import AppLoader from '../components/loaders/AppLoader';
@@ -88,12 +86,7 @@ const SigninScreen = ({ navigation }) => {
         <SafeAreaView style={styles.wrapper}>
         <FocusAwareStatusBar barStyle="light-content" backgroundColor={colors.primary} />
         <View style={styles.header}>
-        <View style={styles.header1}>
-        <Text style={styles.text_header1}>Welcome</Text>
-        </View>
-        <View style={styles.header2}>
-        <Text style={styles.text_header2}>Register/Login</Text>
-        </View>
+        <Text style={styles.text_header1}>Welcome!</Text>
         </View>
         
         <Animatable.View 
@@ -133,7 +126,6 @@ const SigninScreen = ({ navigation }) => {
         >
         <Text style={styles.buttonText}>
         {isLoading ?  'Loading...' : 'Continue' } 
-        {/* <UIActivityIndicator color='white' size={27} />  */}
         </Text>
         </TouchableOpacity>
         
@@ -202,7 +194,7 @@ const SigninScreen = ({ navigation }) => {
             color: colors.text,
             fontWeight: 'bold',
             fontSize: 30,
-            textAlign: 'center',
+            textAlign: 'left',
         },
         
         text_header2: {

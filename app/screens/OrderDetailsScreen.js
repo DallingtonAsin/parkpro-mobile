@@ -1,14 +1,14 @@
-import React, {useState, useContext, useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import {Text, SafeAreaView, Image, 
   RefreshControl, View, FlatList,ScrollView,
    TouchableWithoutFeedback, StyleSheet} from 'react-native';
   import { AuthContext } from '../context/context';
   import styles from '../../assets/css/styles';
-  import CustomLoader from '../components/CustomActivityIndicator';
-import { icons } from '../../constants';
+  import { icons } from '../../constants';
   import {APP_NAME, currency} from '@env';
   import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
   import { useTheme } from '@react-navigation/native';
+  import AppLoader from '../components/loaders/AppLoader';
 
 
   const wait = (timeout) => {
@@ -18,28 +18,24 @@ import { icons } from '../../constants';
   const  OrderDetailsScreen = ({route, navigation}) => {
     
     const [orderInfo, setOrderInfo] = useState([]);
-    const [refreshing, setRefreshing] = React.useState(false);
     const [isLoading, setIsLoading] = React.useState(true);
     const { colors } = useTheme();
 
- 
     const { orderNo, customerId } = route.params;
-
     const { fetchOrderInfo } = React.useContext(AuthContext);
 
-    
     const onRefresh = React.useCallback(() => {
-      setRefreshing(true);
+      setIsLoading(true);
       wait(2000).then(() =>{
         fetchOrderDetails(orderNo, customerId);
-        setRefreshing(false);
+        setIsLoading(false);
       });
     });
     
     const fetchOrderDetails = async(order_no, customer_id) => {
       try{
+
         const order_details = await fetchOrderInfo(order_no, customer_id);
-        console.log("Order information", order_details);
         if(order_details.length > 0){
           setOrderInfo(order_details);
         }
@@ -57,7 +53,7 @@ import { icons } from '../../constants';
     
     const renderComponent = (item) => {
       return ( 
-
+        <>
 
         <SafeAreaView>
            <FocusAwareStatusBar barStyle="light-content" backgroundColor={colors.primary} />
@@ -165,6 +161,10 @@ import { icons } from '../../constants';
         </ScrollView>
         
         </SafeAreaView>
+
+        {  isLoading ?  <AppLoader /> : null }
+
+        </>
         
         );
       }
@@ -183,7 +183,7 @@ import { icons } from '../../constants';
           }
 
           if(isLoading){
-            return <CustomLoader color={styles.colors.orange}/>
+            return <AppLoader />
           }
           
           if(!isLoading){
@@ -194,7 +194,7 @@ import { icons } from '../../constants';
             keyExtractor={(item, index) => String(index)}
             ListEmptyComponent={<NoOrders/>} 
             ItemSeparatorComponent={FlatListItemSeparator}
-            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>}
+            refreshControl={<RefreshControl refreshing={isLoading} onRefresh={onRefresh}/>}
             /> 
           </SafeAreaView>
           );
@@ -276,7 +276,6 @@ import { icons } from '../../constants';
                justifyContent: 'center',
                bottom: 0,
                marginTop: 25,
-              //  position: 'absolute',
             },
 
             helpCenterText:{

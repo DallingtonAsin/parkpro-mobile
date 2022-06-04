@@ -5,7 +5,6 @@ import {SafeAreaView,Dimensions,
     FlatList} from 'react-native';
     import design from '../../assets/css/styles';
     import { Title, Paragraph, Searchbar  } from 'react-native-paper';
-    import CustomLoader from '../components/CustomActivityIndicator';
     import { TabView,TabBar, SceneMap } from 'react-native-tab-view';
     import { AuthContext } from '../context/context';
     import FastImage from 'react-native-fast-image';
@@ -21,7 +20,6 @@ import {SafeAreaView,Dimensions,
     const ParkingAreasScreen = (props) => {
         
         const { getParkingAreas, getNearByParkingAreas, getTopRatedParkingAreas } = React.useContext(AuthContext);
-        const [refreshing, setRefreshing] = useState(false);
         const [isLoading, setIsLoading] = useState(false);
         
         const [parkingAreas, setParkingAreas] = useState([]);
@@ -69,6 +67,7 @@ import {SafeAreaView,Dimensions,
             const resp = await getParkingAreas();
             if(resp.statusCode == 1){
                 const parkings = resp.data;
+                console.log("Parkings loaded");
                 if(parkings.length > 0) {
                     setFilteredParkingAreas(parkings);
                     setParkingAreas(parkings);
@@ -110,7 +109,6 @@ import {SafeAreaView,Dimensions,
                 if(resp.statusCode == 1){
                     const topRatedParkings = resp.data;
                     if(topRatedParkings.length > 0) {
-                        // setFilteredParkingAreas(parkings);
                         setTopRatedParkingAreas(topRatedParkings);
                     }
                 }else{
@@ -137,7 +135,7 @@ import {SafeAreaView,Dimensions,
                         keyExtractor={(item, index) => index.toString()}
                         refreshControl={
                             <RefreshControl
-                            refreshing={refreshing}
+                            refreshing={isLoading}
                             onRefresh={onRefresh}
                             />
                         }
@@ -161,7 +159,7 @@ import {SafeAreaView,Dimensions,
                             keyExtractor={(item, index) => index.toString()}
                             refreshControl={
                                 <RefreshControl
-                                refreshing={refreshing}
+                                refreshing={isLoading}
                                 onRefresh={onRefresh}
                                 />
                             }
@@ -185,7 +183,7 @@ import {SafeAreaView,Dimensions,
                                 keyExtractor={(item, index) => index.toString()}
                                 refreshControl={
                                     <RefreshControl
-                                    refreshing={refreshing}
+                                    refreshing={isLoading}
                                     onRefresh={onRefresh}
                                     />
                                 }
@@ -274,18 +272,18 @@ import {SafeAreaView,Dimensions,
                                 }
                                 
                                 const onRefresh = useCallback(async () => {
-                                    setRefreshing(true);
+                                    setIsLoading(true);
                                     setSearch('');
                                     const timer = setTimeout(async() => {
                                         await fetchParkings();
-                                        setRefreshing(false);
+                                        setIsLoading(false);
                                     }, 1000);
                                     return () => clearTimeout(timer);
-                                }, [refreshing]);
+                                }, [isLoading]);
                                 
                                 const updateState = () => {
                                     let isMounted = true;
-                                    if(isMounted || refreshing){
+                                    if(isMounted || isLoading){
                                         fetchParkings();
                                     }
                                     if(searchQuery.length <= 0){

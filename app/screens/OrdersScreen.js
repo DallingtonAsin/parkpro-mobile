@@ -1,11 +1,8 @@
-import React, {useState, useContext, useEffect} from 'react';
-import {Text, SafeAreaView, Image, ScrollView,RefreshControl, TouchableWithoutFeedback,
+import React, {useState, useContext } from 'react';
+import {Text, SafeAreaView, Image,RefreshControl, TouchableWithoutFeedback,
   TouchableOpacity,View, FlatList, StyleSheet} from 'react-native';
-  import Icon from 'react-native-vector-icons/FontAwesome5';
   import { AuthContext } from '../context/context';
-  import AsyncStorage from '@react-native-async-storage/async-storage';
   import styles from '../../assets/css/styles';
-  import CustomLoader from '../components/CustomActivityIndicator';
   import FontAwesome from 'react-native-vector-icons/FontAwesome';
   import Toast from 'react-native-simple-toast';
   import ProfileContext from '../context/index';
@@ -13,6 +10,7 @@ import {Text, SafeAreaView, Image, ScrollView,RefreshControl, TouchableWithoutFe
   import {APP_NAME, currency} from '@env';
   import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
   import { useTheme } from '@react-navigation/native';
+import AppLoader from '../components/loaders/AppLoader';
   
 
   const wait = (timeout) => {
@@ -22,7 +20,6 @@ import {Text, SafeAreaView, Image, ScrollView,RefreshControl, TouchableWithoutFe
   const  OrdersScreen = ({ navigation }) => {
     
     const [parkingRequests, setParkingRequests] = useState([]);
-    const [refreshing, setRefreshing] = React.useState(false);
     const [isLoading, setIsLoading] = React.useState(true);
     const {profile, setProfile} = useContext(ProfileContext);
     const { colors } = useTheme();
@@ -35,27 +32,27 @@ import {Text, SafeAreaView, Image, ScrollView,RefreshControl, TouchableWithoutFe
     }, []);
     
     const onRefresh = React.useCallback(() => {
-      setRefreshing(true);
+      setIsLoading(true);
       wait(2000).then(() =>{
         fetchOrders();
-        setRefreshing(false);
+        setIsLoading(false);
       });
     });
     
     const fetchOrders = async() => {
       try{
+
         const id = profile.id;
         let resp = await fetchMyParkingRequests(id);
-        setIsLoading(false);
+       
         if(resp.statusCode == 1){
-          const orders = resp.data;
-          console.log("Parking requests", orders);
-          if(orders.length > 0){
-            setParkingRequests(orders);
+          if(resp.data.length > 0){
+            setParkingRequests(resp.data);
           }
         }else{
           Toast.show(resp.message);
         }
+        setIsLoading(false);
         
       }catch(e){
         Toast.show(e.message);
@@ -132,6 +129,9 @@ import {Text, SafeAreaView, Image, ScrollView,RefreshControl, TouchableWithoutFe
           }
           
           return ( 
+            <>
+            {  isLoading ?  <AppLoader /> : null }
+
             <SafeAreaView style={{flex: 1, backgroundColor:'#fff'}}>
               <FocusAwareStatusBar barStyle="light-content" backgroundColor={colors.primary} />
             <Text style={{fontSize:19, color:'#808080', padding:5, marginLeft:5}}>Last Orders</Text>
@@ -142,11 +142,13 @@ import {Text, SafeAreaView, Image, ScrollView,RefreshControl, TouchableWithoutFe
               keyExtractor={(item, index) => String(index)}
               ListEmptyComponent={<NoOrders/>} 
               ItemSeparatorComponent={FlatListItemSeparator}
-              refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>}
+              refreshControl={<RefreshControl refreshing={isLoading} onRefresh={onRefresh}/>}
               /> 
-              : <CustomLoader color={styles.colors.orange}/>
+              : null
             }
             </SafeAreaView>
+            
+            </>
             );
           }
           

@@ -7,12 +7,16 @@ import HelpStack from './ContactUsStack';
 import WeatherStack from './WeatherStack';
 import NotificationStack from './NotificationStack';
 import OrdersStack from './OrdersStack';
+import { useTheme  } from 'react-native-paper';
 import styles from '../../../assets/css/styles';
 
 const BottomTab = createBottomTabNavigator();
 const tabIconFontSize = 24;
 
 const AppTabStack = () => {
+
+    const { colors } = useTheme();
+
     return (
         
         <MultiBarProvider
@@ -69,7 +73,7 @@ const AppTabStack = () => {
                             </BottomTabBarWrapper>
                             )}
                             tabBarOptions ={{
-                                activeTintColor:styles.colors.orange,
+                                activeTintColor: colors.activeTabColor,
                                 inactiveTintColor: styles.colors.black,
                                 style: {
                                     backgroundColor: styles.colors.white,

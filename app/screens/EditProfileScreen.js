@@ -1,10 +1,8 @@
 import React, {useState, useEffect, useContext} from 'react';
-import { Text,TextInput, TouchableOpacity, View, StyleSheet, SafeAreaView,  Platform, Image,
-  PermissionsAndroid, Alert, ImageBackground, Pressable} from 'react-native';
+import { Text,TextInput, TouchableOpacity, View, StyleSheet, SafeAreaView,  Platform} from 'react-native';
   import design from '../../assets/css/styles';
   import Icon from 'react-native-vector-icons/FontAwesome5';
-  import { Avatar, Paragraph, Divider } from 'react-native-paper';
-  import Animated from 'react-native-reanimated';
+  import { Avatar } from 'react-native-paper';
   import { AuthContext } from '../context/context';
   import { UIActivityIndicator } from 'react-native-indicators';
   import FontAwesome from 'react-native-vector-icons/FontAwesome';

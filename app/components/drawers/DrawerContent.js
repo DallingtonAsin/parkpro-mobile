@@ -206,10 +206,9 @@ const CustomDrawer = (props) => {
       
       <Drawer.Section title="Preferences" >
       <View style={{flexDirection: 'row'}}>
-      <FontAwesome name="cog" style={styles.drawerIcon} color={colors.drawerText}/>
       <TouchableRipple onPress={() => {toggleTheme()}}>
       <View style={styles.preference}>
-      <Text style={[styles.drawerText, {color: colors.drawerText}]}> Dark Theme </Text>
+      <Text style={[styles.drawerText, {color: colors.drawerText}]}> Change Theme </Text>
       <View pointerEvents="none">
       <Switch value={paperTheme.dark}/>
       </View>

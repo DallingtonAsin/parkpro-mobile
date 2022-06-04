@@ -17,13 +17,13 @@ import {APP_NAME} from '@env';
 import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
 
 const SplashScreen = ({navigation}) => {
-    const { colors } = useTheme();
-  const styles = makeStyles(colors);
 
+    const { colors } = useTheme();
+    const styles = makeStyles(colors);
     
     return (
         <View style={styles.container}>
-         <FocusAwareStatusBar barStyle="light-content" backgroundColor={colors.primary} />
+        <FocusAwareStatusBar barStyle="light-content" backgroundColor={colors.primary} />
         <View style={styles.header}>
         <Animatable.Image 
         animation="bounceIn"
@@ -40,13 +40,13 @@ const SplashScreen = ({navigation}) => {
         animation="fadeInUpBig"
         >
         <Text style={[styles.title, {
-            color: colors.bodyText
+            color: colors.dark
         }]}>Find parking using {APP_NAME}</Text>
         <Text style={styles.text}>Park your vehicle instantly without breaking a sweat!</Text>
         <View style={styles.button}>
         <TouchableOpacity onPress={()=>navigation.navigate('Signin')}>
         <LinearGradient
-        colors={[colors.primary, '#01ab9d']}
+        colors={[colors.btnLinearGradient1, colors.btnLinearGradient2]}
         style={styles.signIn}
         >
         <Text style={styles.textSign}>Get Started</Text>
@@ -64,7 +64,7 @@ const SplashScreen = ({navigation}) => {
     };
     
     export default SplashScreen;
-    //#009387
+    
     const {height} = Dimensions.get("screen");
     const height_logo = height * 0.26;
     
@@ -96,7 +96,7 @@ const SplashScreen = ({navigation}) => {
             fontWeight: 'bold'
         },
         text: {
-            color: 'grey',
+            color: colors.dark,
             marginTop:5
         },
         button: {
