@@ -12,7 +12,7 @@ export default {
     dark:'#000',
     black:'#000',
     yew:'#FFFF20',
-    orange: '#FFA500', //'#CC7722',  //'#E97451', // '#d59723ff', //
+    orange:  '#FFA500', //'#CC7722',  //'#E97451', // '#d59723ff', //
     darktheme:'#2F4F4F',
     prime1: '#009387',
     red:'#FF0000',
@@ -21,6 +21,13 @@ export default {
     silver: "#FAF9F6",
     coffee: '#A54300',
     gray: '#778899',
+
+    defaultBtnLinearGradient1: '#273746',
+    defaultBtnLinearGradient2: '#01ab9d',
+
+    darkPink: '#FF6347',
+    darkPink1: '#FFA07A',
+    darkPink2: '#FF6347'
   },
   
   bottom: {
@@ -229,13 +236,13 @@ export default {
   },
   
   helpIcon:{
-    color:'#FFA500',
+    // color:'#FFA500',
     // fontSize:20,
     borderRadius:30,
     padding: 13,
     borderWidth:0.5,
     backgroundColor:'#fff',
-    borderColor:'#FFA500',
+    // borderColor:'#FFA500',
   },
   
   helpText:{

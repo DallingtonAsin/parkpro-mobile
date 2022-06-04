@@ -7,9 +7,9 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Feather from 'react-native-vector-icons/Feather';
 import { AuthContext } from '../context/context';
-import { UIActivityIndicator } from 'react-native-indicators';
 import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
 import { useTheme  } from 'react-native-paper';
+import AppLoader from '../components/loaders/AppLoader';
 
 
 const initialState = {
@@ -123,6 +123,7 @@ const SignupScreen = ({route, navigation}) => {
         }
         
         if(first_name && last_name) {
+            
             const reqParams = {
                 id: userId,
                 first_name: first_name,
@@ -131,25 +132,27 @@ const SignupScreen = ({route, navigation}) => {
                 phone_number: phoneNumber,
                 email: email,
             }
-            console.log("Customer data xx", reqParams);
+            
             setIsLoading(true);
             let response = await createProfile(reqParams);
-            console.log("On creating customer profile", response);
             let message = response.message
             let statusCode = response.statusCode;
             if(statusCode == 1){
                 let user = response.data;
-                console.log("User profile is xx", user);
-                await goToHomeScreen(user);
+                
                 setIsLoading(false);
+                await goToHomeScreen(user);
             }else{
                 setIsLoading(false);
                 Alert.alert("Message", "Registration failed: "+message+"");
             }
+            
         }
     }
     
     return (
+
+        <>
         <View style={styles.container}>
         <FocusAwareStatusBar barStyle="light-content" backgroundColor={colors.primary} />
         <View style={styles.header}>
@@ -165,7 +168,7 @@ const SignupScreen = ({route, navigation}) => {
         <View style={styles.action}>
         <FontAwesome 
         name="phone"
-        color={colors.primary}
+        color={styles.icon}
         size={20}
         />
         <TextInput 
@@ -193,7 +196,7 @@ const SignupScreen = ({route, navigation}) => {
             <View style={styles.action}>
             <FontAwesome 
             name="user"
-            color={colors.primary}
+            color={styles.icon}
             size={20}
             />
             <TextInput 
@@ -221,7 +224,7 @@ const SignupScreen = ({route, navigation}) => {
                 <View style={styles.action}>
                 <FontAwesome 
                 name="user"
-                color={colors.primary}
+                color={styles.icon}
                 size={20}
                 />
                 <TextInput 
@@ -251,7 +254,7 @@ const SignupScreen = ({route, navigation}) => {
                     <View style={styles.action}>
                     <FontAwesome5 
                     name="envelope"
-                    color={colors.primary}
+                    color={styles.icon}
                     size={20}
                     />
                     <TextInput 
@@ -302,14 +305,13 @@ const SignupScreen = ({route, navigation}) => {
                         onPress={handleCustomerRegistration}
                         >
                         <LinearGradient
-                        colors={[colors.primary, '#01ab9d']}
+                        colors={[colors.btnLinearGradient1, colors.btnLinearGradient2]}
                         style={styles.signIn}
                         >
                         <Text style={[styles.textSign, {
                             color:'#fff',
-                            textTransform: 'uppercase',
                         }]}>
-                        {isLoading ? <UIActivityIndicator color='white' /> : 'Submit' } 
+                        {isLoading ? 'Registering...' : 'Submit' } 
                         </Text>
                         </LinearGradient>
                         </TouchableOpacity>
@@ -319,6 +321,10 @@ const SignupScreen = ({route, navigation}) => {
                         </ScrollView>
                         </Animatable.View>
                         </View>
+
+                        {  isLoading ?  <AppLoader /> : null }
+
+                        </>
                         );
                         
                     };
@@ -398,4 +404,7 @@ const SignupScreen = ({route, navigation}) => {
                             color: '#FF0000',
                             fontSize: 16,
                         },
+                        icon: {
+                            color: '#05375a'
+                        }
                     });

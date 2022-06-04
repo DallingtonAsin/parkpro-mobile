@@ -1,10 +1,8 @@
 import React, {useState, useEffect, useContext} from 'react';
-import { Text,TextInput, TouchableOpacity, View, StyleSheet, SafeAreaView,  Platform, Image,
-  PermissionsAndroid, Alert, ImageBackground, Pressable} from 'react-native';
+import { Text,TextInput, TouchableOpacity, View, StyleSheet, SafeAreaView,  Platform} from 'react-native';
   import design from '../../assets/css/styles';
   import Icon from 'react-native-vector-icons/FontAwesome5';
-  import { Avatar, Paragraph, Divider } from 'react-native-paper';
-  import Animated from 'react-native-reanimated';
+  import { Avatar } from 'react-native-paper';
   import { AuthContext } from '../context/context';
   import { UIActivityIndicator } from 'react-native-indicators';
   import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -45,7 +43,10 @@ import { Text,TextInput, TouchableOpacity, View, StyleSheet, SafeAreaView,  Plat
     const [isUpdatingImage, setIsUpdatingImage] = useState(false);
     const [visible, setVisible] = useState(false);
     const {profile, setProfile} = useContext(ProfileContext);
+    const [progress, setProgress] = useState(0);
+
     const { updateProfile, UpdateProfileImage, syncProfileData, deleteProfilePicture } = React.useContext(AuthContext);
+   
     const { colors } = useTheme();
     const styles = makeStyles(colors);
   
@@ -80,9 +81,11 @@ import { Text,TextInput, TouchableOpacity, View, StyleSheet, SafeAreaView,  Plat
     
     
     const SubmitProfileUpdateDetails = async(image) => {
+
       const imagePath = image.path;
       const mimeType = image.mime;
       const fileExtension = mime.extension(mimeType);
+
       setImage(imagePath);
       const ImageData = {
         uri: imagePath,
@@ -98,31 +101,36 @@ import { Text,TextInput, TouchableOpacity, View, StyleSheet, SafeAreaView,  Plat
       const country_code = state.country_code;
 
       if(user_id && phone_number){
+        
         formData.append('id', user_id);
         formData.append('country_code', country_code);
         formData.append('phone_number', phone_number);
         formData.append('extension', fileExtension);
         formData.append('image', ImageData);
-        console.log("Form data", formData);
         
         setIsUpdatingImage(true);
+
         let result = await UpdateProfileImage(formData);
         const statusCode = result.statusCode;
         const message = result.message;
+
         if(statusCode == 1){
+
           const customer = result.data;
-          console.log("On uploading picture here is the data", customer);
           setProfile(customer);
           await syncProfileData(customer);
           await updateUserProfile(customer);
           Toast.show(message);
+
         }else{
           Alert.alert("Message", message);
         }
+
         setIsUpdatingImage(false);
         setVisible(false);
+
       }else{
-        alert("Unable to get your id and phone number");
+        alert("Unable to get your profile details");
       }
     }
     
@@ -179,12 +187,13 @@ import { Text,TextInput, TouchableOpacity, View, StyleSheet, SafeAreaView,  Plat
           phone_number: phone_number,
           email: email,
         }
-        console.log("Update profile data", reqParams);
+        
         setIsLoading(true);
         let response = await updateProfile(reqParams);
         const message = response.message
         const statusCode = response.statusCode;
         setIsLoading(false);
+
         if(statusCode == 0){
           Alert.alert("Message", message);
         }
@@ -241,9 +250,11 @@ import { Text,TextInput, TouchableOpacity, View, StyleSheet, SafeAreaView,  Plat
           phone_number: profile.phone_number
         }
         setIsUpdatingImage(true);
+
         const response = await deleteProfilePicture(data);
         const statusCode = response.statusCode;
         const message = response.message;
+
         if(statusCode == 1){
           const customer = response.data;
           console.log("Data on removing profile image", customer);

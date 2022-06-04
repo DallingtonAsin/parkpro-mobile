@@ -1,8 +1,8 @@
-import React, {useState, useEffect, useContext} from 'react';
-import {View,ScrollView, TouchableOpacity, Linking} from 'react-native';
+import React, {useState, useContext} from 'react';
+import {View, TouchableOpacity, Linking} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import styles from '../../../assets/css/styles';
-import { Icon as MatIcon }  from 'react-native-vector-icons/MaterialCommunityIcons';
 import { AuthContext } from '../../context/context';
 import {APP_NAME} from '@env';
 import ProfileContext from '../../context/index';
@@ -13,9 +13,6 @@ import Share from "react-native-share";
 import {
   useTheme,
   Avatar,
-  Title,
-  Caption,
-  Paragraph,
   Drawer,
   Text,
   TouchableRipple,
@@ -200,31 +197,25 @@ const CustomDrawer = (props) => {
     
     <TouchableOpacity style={styles.drawerItem} onPress={ () => {
       LoadPage('Settings'); }}>
-      <Icon name="cog" style={styles.drawerIcon} color={colors.drawerText}/>
+      <FontAwesome name="cog" style={styles.drawerIcon} color={colors.drawerText}/>
       <Text style={[styles.drawerText, {color: colors.drawerText}]}>Settings</Text>
       </TouchableOpacity>
 
  
       <View style={styles.divider}></View>
       
-      <Drawer.Section title="Preferences" style={{ color: '#000' }}>
+      <Drawer.Section title="Preferences" >
       <View style={{flexDirection: 'row'}}>
-      <Icon name="cog" style={styles.drawerIcon} color={colors.drawerText}/>
       <TouchableRipple onPress={() => {toggleTheme()}}>
       <View style={styles.preference}>
-      <Text style={[styles.drawerText, {color: colors.drawerText}]}> Dark Theme </Text>
+      <Text style={[styles.drawerText, {color: colors.drawerText}]}> Change Theme </Text>
       <View pointerEvents="none">
       <Switch value={paperTheme.dark}/>
       </View>
       </View>
       </TouchableRipple>
       </View>
-   
       </Drawer.Section>
-      
-      
-      
-      
       </View>
       </View>
       
@@ -263,11 +254,22 @@ const CustomDrawer = (props) => {
       </View>
       </DrawerContentScrollView>
       
-      <TouchableOpacity style={styles.drawerItem}
-      onPress={logout}>
-      <Icon name="power-off" style={styles.drawerIcon} color={colors.drawerText}/>
-      <Text style={[styles.drawerText, {color: colors.drawerText}]} 
-      >Log out</Text>
+    
+
+      <TouchableOpacity
+        style={[
+          styles.drawerItem, 
+          {
+          position: 'absolute',
+          right: 0,
+          left: 0,
+          bottom: 50,
+          // padding: 20,
+        }]}
+        onPress={() => logout() }
+      >
+         <Icon name="power-off" style={styles.drawerIcon} color={colors.drawerText}/>
+        <Text style={[styles.drawerText, {color: colors.drawerText}]}>Log out</Text>
       </TouchableOpacity>
       
       

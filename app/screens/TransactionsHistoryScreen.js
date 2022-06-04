@@ -9,7 +9,7 @@ import { icons } from '../../constants';
 import Toast from 'react-native-simple-toast';
 import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
 import { useTheme  } from 'react-native-paper';
-
+import AppLoader from '../components/loaders/AppLoader';
 
 const wait = (timeout) => {
   return new Promise(resolve => setTimeout(resolve, timeout));
@@ -122,6 +122,7 @@ const TransactionsHistoryScreen = () => {
           });
           
           return(
+            <>
             <View style={{flex:1, width: '100%', backgroundColor: colors.body}}>
             
             <FocusAwareStatusBar barStyle="light-content" backgroundColor={colors.primary} />
@@ -161,9 +162,13 @@ const TransactionsHistoryScreen = () => {
                   onRefresh={onRefresh}
                   />}
                   />
-                  : <CustomLoader color={design.colors.orange}/>
+                  :  <AppLoader />  // <CustomLoader color={design.colors.orange}/>
                 }
                 </View>
+
+         
+
+                </>
                 ); 
               }
               

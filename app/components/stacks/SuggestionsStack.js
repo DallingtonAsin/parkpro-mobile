@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import SuggestionsScreen from '../../screens/SuggestionsScreen';
+import SuggestionsScreen from '../../screens/FeedbackScreen';
 import StackOption from '../common/StackOption';
 
 const Stack = createStackNavigator();
