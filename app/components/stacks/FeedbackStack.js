@@ -1,17 +1,17 @@
 
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import SuggestionsScreen from '../../screens/FeedbackScreen';
+import FeedbackScreen from '../../screens/FeedbackScreen';
 import StackOption from '../common/StackOption';
 
 const Stack = createStackNavigator();
 
 
- const SuggestionsStack = ({ navigation }) => {
+ const FeedbackStack = ({ navigation }) => {
                             
     return(
-      <Stack.Navigator initialRouteName="Suggestions">
-      <Stack.Screen name="Suggestions" component={SuggestionsScreen}
+      <Stack.Navigator initialRouteName="Feedback">
+      <Stack.Screen name="Feedback" component={FeedbackScreen}
        options = {() => (StackOption(navigation, 'Feedback'))
       }>
     </Stack.Screen>
@@ -19,4 +19,4 @@ const Stack = createStackNavigator();
     
     )
 }
-export default SuggestionsStack
+export default FeedbackStack

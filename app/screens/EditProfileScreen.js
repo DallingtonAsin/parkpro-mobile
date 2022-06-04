@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useContext} from 'react';
-import { Text,TextInput, TouchableOpacity, View, StyleSheet, SafeAreaView,  Platform} from 'react-native';
+import { Text,TextInput, TouchableOpacity, View, StyleSheet, SafeAreaView, Alert, Platform} from 'react-native';
   import design from '../../assets/css/styles';
   import Icon from 'react-native-vector-icons/FontAwesome5';
   import { Avatar } from 'react-native-paper';
@@ -117,6 +117,8 @@ import { Text,TextInput, TouchableOpacity, View, StyleSheet, SafeAreaView,  Plat
         if(statusCode == 1){
 
           const customer = result.data;
+          console.log("Profile data after updating profile", customer);
+
           setProfile(customer);
           await syncProfileData(customer);
           await updateUserProfile(customer);
@@ -474,9 +476,9 @@ import { Text,TextInput, TouchableOpacity, View, StyleSheet, SafeAreaView,  Plat
         },
         
         text:{
-          color: colors.primary, 
+          color: colors.dark, 
           fontWeight: 'bold',
-          opacity:0.8,
+          opacity:0.7,
           textTransform:'capitalize',
           fontSize:16,
         },
