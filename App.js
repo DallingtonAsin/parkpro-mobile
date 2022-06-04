@@ -1,15 +1,8 @@
 import React, {useEffect, useState, useMemo} from 'react';
-import { View, ActivityIndicator, Image, RefreshControl,  Text, 
+import { Image, RefreshControl,  Text, 
   StyleSheet, SafeAreaView, ScrollView} from 'react-native';
-  import { NavigationContainer,
-    DefaultTheme as NavigationDefaultTheme,
-    DarkTheme as NavigationDarkTheme,
-  } from '@react-navigation/native';
-  import { 
-    Provider as PaperProvider, 
-    DefaultTheme as PaperDefaultTheme, 
-    DarkTheme as PaperDarkTheme 
-  } from 'react-native-paper';
+  import { NavigationContainer } from '@react-navigation/native';
+  import { Provider as PaperProvider } from 'react-native-paper';
   
   import AsyncStorage from '@react-native-async-storage/async-storage';
   import { AuthContext } from './app/context/context';
@@ -22,57 +15,11 @@ import { View, ActivityIndicator, Image, RefreshControl,  Text,
   import SplashScreen from 'react-native-splash-screen'
   import {  icons} from './constants';
   import GlobalFont from 'react-native-global-font';
-  import customStyles from './assets/css/styles';
   const Services = require("./app/services");
-  
-  // import OfflineScreen from  './app/screens/OfflineScreen';
-  
-  const customDefaultTheme = {
-    ...NavigationDefaultTheme,
-    ...PaperDefaultTheme,
-    colors: {
-      ...NavigationDefaultTheme.colors,
-      ...PaperDefaultTheme.colors,
-      primary: customStyles.colors.primary,
-      secondary: customStyles.colors.white,
-      dark: customStyles.colors.dark,
-      background: customStyles.colors.primary,
-      text: customStyles.colors.white,
-      drawerBackground: customStyles.colors.white, 
-      drawerText: customStyles.colors.dark, 
-      body: customStyles.colors.white,
-      bodyText: customStyles.colors.dark,
-      icon: customStyles.colors.orange,
-      btnLinearGradient1: customStyles.colors.defaultBtnLinearGradient1,
-      btnLinearGradient2: customStyles.colors.defaultBtnLinearGradient2,
-      activeTabColor: customStyles.colors.orange,
+  import AppLoaderAnimation from './app/components/loaders/AppLoaderAnimation';
+  import { customDefaultTheme,  customDarkTheme} from './assets/themes'
 
-    },
-  };
 
-  const customDarkTheme = {
-    ...NavigationDarkTheme,
-    ...PaperDarkTheme,
-    colors: {
-      ...NavigationDarkTheme.colors,
-      ...PaperDarkTheme.colors,
-      primary: customStyles.colors.darkPink,
-      secondary: customStyles.colors.white,
-      dark: customStyles.colors.dark,
-      background: customStyles.colors.darkPink,
-      text: customStyles.colors.white,
-      drawerBackground: customStyles.colors.darkPink, 
-      drawerText: customStyles.colors.white, 
-      body: customStyles.colors.white,
-      bodyText: customStyles.colors.white,
-      icon: customStyles.colors.darkPink,
-      btnLinearGradient1: customStyles.colors.darkPink1,
-      btnLinearGradient2: customStyles.colors.darkPink2,
-      activeTabColor: customStyles.colors.darkPink,
-
-    },
-  };
-  
   const initialLoginState = {
     isLoading: true,
     userName: null,
@@ -80,45 +27,12 @@ import { View, ActivityIndicator, Image, RefreshControl,  Text,
     data: null,
   }
   
-  
-  
-  
-  
   const wait = (timeout) => {
     return new Promise(resolve => setTimeout(resolve, timeout));
   }
   
-  
-  const user = async () =>{
-    let userData = null;
-    try {
-      const payload = await AsyncStorage.getItem('userProfile')
-      userData = JSON.parse(payload); 
-      return userData;
-    } catch (e) {
-      console.log(e);
-    }
-  }
-  
-  
-  
-  const AppStack = ({token}) => {
-    
-  }
-  
-  
-  const getUser = async() => {
-    try{
-      const user = await AsyncStorage.getItem("userProfile");
-      const userProfile = JSON.parse(user)
-      return userProfile;
-    }catch(e){
-      throw e;
-    }
-  }
-  
-  
-  function App() {
+
+  const App = ()  => {
     
     
     const [profile, setProfile] = useState(null);
@@ -537,7 +451,7 @@ import { View, ActivityIndicator, Image, RefreshControl,  Text,
             console.log("Error on async storage", e);
           }
           dispatch({ type: 'REGISTER', userToken: userToken});
-        }, 1000);
+        }, 2500);
         
         SplashScreen.hide();
         return () => { isMounted = false };
@@ -546,10 +460,8 @@ import { View, ActivityIndicator, Image, RefreshControl,  Text,
       
       if(loginState.isLoading) {
         return (
-          <View style={{flex:1, justifyContent: 'center', alignItems:'center'}}>
-          <ActivityIndicator size="large"/>
-          </View>
-          )
+               <AppLoaderAnimation/>
+              )
         }
         
         return (
