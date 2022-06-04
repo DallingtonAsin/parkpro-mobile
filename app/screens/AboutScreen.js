@@ -26,8 +26,8 @@ const AboutScreen = (props) => {
     
     <Card style={styles.card}>
     <Card.Content>
-    <Title>Services</Title>
-    <Text style={{  opacity:0.6, fontSize:18, color: colors.text }}>
+    <Title style={{ color: colors.dark }}>Services</Title>
+    <Text style={{  opacity:0.6, fontSize:18, color: colors.dark }}>
     {APP_NAME} provides easy access to better and affordable parking areas without a hustle. Just recharge your account 
     and get affordable parking in less than a minute!
     
@@ -37,8 +37,8 @@ const AboutScreen = (props) => {
     
     <Card style={styles.card}>
     <Card.Content>
-    <Title>Usage</Title>
-    <Text style={{  opacity:0.6, fontSize:18, color: colors.text }}>
+    <Title style={{ color: colors.dark }}>Usage</Title>
+    <Text style={{  opacity:0.6, fontSize:18, color: colors.dark }}>
     To get started, search for a parking area and pick one that you prefer (depending on distance, price or spaciousness).
     Ensure your <Text style={{textTransform:'lowercase'}}>{APP_NAME}</Text> wallet has enough money to pay for parking. Else, you can recharge your account
     using the "Top Up" option in the app.</Text>  
@@ -49,7 +49,7 @@ const AboutScreen = (props) => {
     <Card style={styles.card}>
     <Card.Content>
     <View style={{ flex: 1, justifyContent: 'center' }}>
-    <Title>Online Community</Title>
+    <Title style={{ color: colors.dark }}>Online Community</Title>
     
     <View style={{ flexDirection: 'row', marginTop: SIZES.padding,  }}>
     
@@ -64,7 +64,7 @@ const AboutScreen = (props) => {
     YHeight={70}
     isSocialMedia={true}
     color={'#43609C'}
-    labelColor={colors.text}
+    labelColor={colors.dark}
     onPress={() => Linking.openURL("http://www.parkproug.com")}
     />
 
@@ -78,7 +78,7 @@ const AboutScreen = (props) => {
     YHeight={70}
     isSocialMedia={true}
     color={'#43609C'}
-    labelColor={colors.text}
+    labelColor={colors.dark}
     onPress={() =>  Linking.openURL("http://www.facebook.com") }
     />
 
@@ -105,7 +105,7 @@ const AboutScreen = (props) => {
     YHeight={70}
     isSocialMedia={true}
     color={'#1DA1F2'}
-    labelColor={colors.text}
+    labelColor={colors.dark}
     onPress={() =>  Linking.openURL("https://www.twitter.com") }
     />
   
@@ -122,7 +122,7 @@ const AboutScreen = (props) => {
     YHeight={70}
     isSocialMedia={true}
     color={'#0e76a8'}
-    labelColor={colors.text}
+    labelColor={colors.dark}
     onPress={() =>  Linking.openURL("http://www.linkedin.com") }
     />
     
@@ -148,7 +148,7 @@ const makeStyles = (colors) => StyleSheet.create({
         margin:4,
         padding:8,
         borderRadius: 5,
-        backgroundColor: colors.primary,
+        backgroundColor: design.colors.white,
     },
     mediaGroup:{
         flex:1,
