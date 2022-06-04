@@ -2,14 +2,10 @@ import React, {useState, useEffect, useMemo, useRef, useContext, useCallback} fr
 import {
   StyleSheet,
   View,
-  ScrollView,
   Image,
   Text,
   TouchableOpacity,
-  FlatList,
-  ImageBackground,StatusBar,
-  TouchableHighlight,TextInput,
-  Dimensions,Button,
+  FlatList,TextInput,
   SafeAreaView,Keyboard,
   Alert, Pressable,
 } from 'react-native';

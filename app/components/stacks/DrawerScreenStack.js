@@ -18,7 +18,7 @@ import OrderDetailsStack from  './OrderDetailsStack';
 
 import SettingsStack from  './SettingsStack';
 import ChangePasswordStack from  './ChangePasswordStack';
-import SuggestionsStack from  './SuggestionsStack';
+import FeedbackStack from  './FeedbackStack';
 import AppTabStack from  './AppTabStack';
 import WeatherStack from  './WeatherStack';
 import MapScreen from '../../screens/MapScreen';
@@ -49,7 +49,7 @@ const DrawerScreenStack = () => {
         <Drawer.Screen name="Orders" component={OrdersStack}/>
         <Drawer.Screen name="OrderDetails" component={OrderDetailsStack}/>
 
-        <Drawer.Screen name="Suggestions" component={SuggestionsStack}/>
+        <Drawer.Screen name="Feedback" component={FeedbackStack}/>
 
 
         <Drawer.Screen name="TopUp" component={TopupStack}/>

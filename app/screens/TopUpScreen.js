@@ -234,9 +234,7 @@ import { Text,
       
       <FocusAwareStatusBar barStyle="light-content" backgroundColor={colors.primary} />
       
-      <ScrollView  style={styles.contentContainer}
-      
-      >
+      <ScrollView  style={styles.contentContainer}>
       
       <Card style={{ margin: 15, padding:30, borderWidth:1, borderRadius: 10, borderColor:'#e2e2e2',
       JustifyContent: 'center', backgroundColor: colors.primary, alignItems:'center' }}>
@@ -258,31 +256,27 @@ import { Text,
           
           <View style={{ margin: 20 }}>
           <Text style={{ fontSize: 15, opacity: 0.7, fontWeight:'bold'  }}>Enter amount </Text>
-          <TextInput
+          <RNTextInput
           mode={'outlined'}
           placeholder="Eg. 10,000"
           value={state.rechargeAmount}
           keyboardType='numeric'
-          // selectionColor={colors.primary}
-          // underlineColor={colors.primary}
-          // outlineColor={colors.primary}
-          // activeUnderlineColor={colors.primary}
-          // activeOutlineColor={colors.primary}
+          label="Topup amount"
+          selectionColor={colors.primary}
+          underlineColor={colors.primary}
+          outlineColor={colors.primary}
+          activeUnderlineColor={colors.primary}
+          activeOutlineColor={colors.primary}
           onChangeText={(text) => { onChangeAmount(text) }}
           style={{backgroundColor: colors.body, color: colors.primary }}
-          //  label="Topup amount"
+          theme={{ colors: { text: design.colors.dark } }}
           />
           <Text style={{ opacity: 0.5, color: state.warningColor, fontSize:15 }}>Min: {min_recharge_amount} and Max: {max_recharge_amount}</Text>
           </View>
           
-          
-          
           <Title style={{ fontSize: 15, opacity: 0.7, color: '#000', margin:15 }}>Mobile Money Number </Title>
-          
-          
-          
+        
           <View style={{ flexDirection: 'row', justifyContent: 'space-between', margin: 15 }} >
-          
           
           <TouchableOpacity>
           <Icon name="phone" style={design.helpIcon} />
@@ -301,9 +295,6 @@ import { Text,
           }
           </TouchableOpacity>  
           
-          
-          
-          
           {
             !state.editMode ?  <TouchableOpacity onPress={editPhone}>
             <Text style={{ color: '#5bc0de' }}><Icon name="pencil" size={30} /></Text>
@@ -315,13 +306,13 @@ import { Text,
           
           </View>
           
-          
-          
           </ScrollView >
           
           <View style={styles.bottom}>
           <TouchableOpacity
-          style={design.btnSecondary}
+           style={[design.btnPrimary, { color: '#fff',
+           backgroundColor: colors.primary,
+           borderColor: colors.primary}]}
           onPress={RechargeUserAccount}
           disabled={false}>
           <Text style={styles.paymentButtonText}> 
@@ -330,11 +321,8 @@ import { Text,
           </TouchableOpacity>
           
           </View>
-          
           </KeyboardAvoidingView>
-          
-          
-          
+
           </>
           
           );
@@ -356,7 +344,10 @@ import { Text,
           },
           contentContainer:{
             flex:1,
-            
+            borderWidth:1,
+            borderColor: colors.primary,
+            borderRadius:5,
+            margin:8,
           },
           TopupBtn: {
             alignSelf:'center' , 
@@ -380,8 +371,9 @@ import { Text,
             
           },
           paymentButtonText: {
-            color: '#000',
+            color: design.colors.white,
             textTransform: 'uppercase',
+            fontWeight: '900'
           },
           
           
