@@ -1,11 +1,10 @@
 import React, {useState, useEffect, useCallback} from 'react';
 import {SafeAreaView,Dimensions,
-    StyleSheet, ScrollView, RefreshControl, StatusBar,
+    StyleSheet, RefreshControl, StatusBar,
     Text, View, Pressable, TouchableOpacity,
-     FlatList} from 'react-native';
+    FlatList} from 'react-native';
     import design from '../../assets/css/styles';
     import { Title, Paragraph, Searchbar  } from 'react-native-paper';
-    import CustomLoader from '../components/CustomActivityIndicator';
     import { TabView,TabBar, SceneMap } from 'react-native-tab-view';
     import { AuthContext } from '../context/context';
     import FastImage from 'react-native-fast-image';
@@ -14,14 +13,14 @@ import {SafeAreaView,Dimensions,
     import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
     import Geolocation from 'react-native-geolocation-service';
     import { useTheme } from '@react-navigation/native';
-
+    import AppLoader from '../components/loaders/AppLoader';
+    
     
     const initialLayout = { width: Dimensions.get('window').width };
     const ParkingAreasScreen = (props) => {
         
         const { getParkingAreas, getNearByParkingAreas, getTopRatedParkingAreas } = React.useContext(AuthContext);
-        const [refreshing, setRefreshing] = useState(false);
-        const [isLoading, setIsLoading] = useState(true);
+        const [isLoading, setIsLoading] = useState(false);
         
         const [parkingAreas, setParkingAreas] = useState([]);
         const [nearByParkingAreas, setNearByParkingAreas] = useState([]);
@@ -68,6 +67,7 @@ import {SafeAreaView,Dimensions,
             const resp = await getParkingAreas();
             if(resp.statusCode == 1){
                 const parkings = resp.data;
+                console.log("Parkings loaded");
                 if(parkings.length > 0) {
                     setFilteredParkingAreas(parkings);
                     setParkingAreas(parkings);
@@ -75,8 +75,6 @@ import {SafeAreaView,Dimensions,
             }else{
                 Toast.show(resp.message, Toast.LONG);
             }
-            
-            setIsLoading(false);
         }
         
         const fetchNearByParkings = async() => {
@@ -87,6 +85,7 @@ import {SafeAreaView,Dimensions,
                     JSON.stringify(position.coords.latitude);
                     const currentLongitude =
                     JSON.stringify(position.coords.longitude);
+                    setIsLoading(true);
                     const resp = await getNearByParkingAreas(currentLatitude, currentLongitude);
                     if(resp.statusCode == 1){
                         const nearByParkings = resp.data;
@@ -110,14 +109,11 @@ import {SafeAreaView,Dimensions,
                 if(resp.statusCode == 1){
                     const topRatedParkings = resp.data;
                     if(topRatedParkings.length > 0) {
-                        // setFilteredParkingAreas(parkings);
                         setTopRatedParkingAreas(topRatedParkings);
                     }
                 }else{
                     Toast.show(resp.message, Toast.LONG);
                 }
-                
-                setIsLoading(false);
             }
             
             useEffect(() => {
@@ -127,65 +123,79 @@ import {SafeAreaView,Dimensions,
             }, []);
             
             
-            const affordableParkings = () => (
-                !isLoading ? 
-                <View style={[styles.scene, { backgroundColor: '#fff' }]}>
-                <FlatList
-                showsVerticalScrollIndicator={false}
-                showsHorizontalScrollIndicator={false}
-                data={filteredParkingAreas}
-                renderItem={({item}) => CardComponent(item)}
-                keyExtractor={(item, index) => index.toString()}
-                refreshControl={
-                    <RefreshControl
-                    refreshing={refreshing}
-                    onRefresh={onRefresh}
-                    />
-                    
-                }
-                />
-                </View>
-                :  <CustomLoader color={design.colors.orange}/>
-                );
-                
-                const mostRatedParkings = () => (
-                    !isLoading ? 
-                    <View style={[styles.scene, { backgroundColor: '#fff' }]}>
-                    <FlatList
-                    showsVerticalScrollIndicator={false}
-                    showsHorizontalScrollIndicator={false}
-                    data={topRatedParkingAreas}
-                    renderItem={({item}) => CardComponent(item)}
-                    keyExtractor={(item, index) => index.toString()}
-                    refreshControl={
-                        <RefreshControl
-                        refreshing={refreshing}
-                        onRefresh={onRefresh}
-                        />
-                    }
-                    />
-                    </View>
-                    :  <CustomLoader color={design.colors.orange}/>
-                    );
-                    const nearByParkings = () => (
-                        !isLoading ? 
+            const affordableParkings = () => {
+                if(!isLoading){
+                    return (
                         <View style={[styles.scene, { backgroundColor: '#fff' }]}>
                         <FlatList
                         showsVerticalScrollIndicator={false}
                         showsHorizontalScrollIndicator={false}
-                        data={nearByParkingAreas}
+                        data={filteredParkingAreas}
                         renderItem={({item}) => CardComponent(item)}
                         keyExtractor={(item, index) => index.toString()}
                         refreshControl={
                             <RefreshControl
-                            refreshing={refreshing}
+                            refreshing={isLoading}
                             onRefresh={onRefresh}
                             />
                         }
                         />
                         </View>
-                        :  <CustomLoader color={design.colors.orange}/>
-                        );
+                        )
+                    }else{
+                        return null;
+                    }
+                };
+                
+                const mostRatedParkings = () => {
+                    if(!isLoading){
+                        return (
+                            <View style={[styles.scene, { backgroundColor: '#fff' }]}>
+                            <FlatList
+                            showsVerticalScrollIndicator={false}
+                            showsHorizontalScrollIndicator={false}
+                            data={topRatedParkingAreas}
+                            renderItem={({item}) => CardComponent(item)}
+                            keyExtractor={(item, index) => index.toString()}
+                            refreshControl={
+                                <RefreshControl
+                                refreshing={isLoading}
+                                onRefresh={onRefresh}
+                                />
+                            }
+                            />
+                            </View>
+                            )
+                        }else{
+                            return null;
+                        }
+                    };
+                    
+                    const nearByParkings = () => {
+                        if(!isLoading){
+                            return (
+                                <View style={[styles.scene, { backgroundColor: '#fff' }]}>
+                                <FlatList
+                                showsVerticalScrollIndicator={false}
+                                showsHorizontalScrollIndicator={false}
+                                data={nearByParkingAreas}
+                                renderItem={({item}) => CardComponent(item)}
+                                keyExtractor={(item, index) => index.toString()}
+                                refreshControl={
+                                    <RefreshControl
+                                    refreshing={isLoading}
+                                    onRefresh={onRefresh}
+                                    />
+                                }
+                                />
+                                </View>
+                                )
+                            }  else{
+                                return null
+                            }
+                            
+                            
+                        }
                         
                         const renderScene = SceneMap({
                             parkings: affordableParkings,
@@ -262,18 +272,18 @@ import {SafeAreaView,Dimensions,
                                 }
                                 
                                 const onRefresh = useCallback(async () => {
-                                    setRefreshing(true);
+                                    setIsLoading(true);
                                     setSearch('');
                                     const timer = setTimeout(async() => {
                                         await fetchParkings();
-                                        setRefreshing(false);
+                                        setIsLoading(false);
                                     }, 1000);
                                     return () => clearTimeout(timer);
-                                }, [refreshing]);
+                                }, [isLoading]);
                                 
                                 const updateState = () => {
                                     let isMounted = true;
-                                    if(isMounted || refreshing){
+                                    if(isMounted || isLoading){
                                         fetchParkings();
                                     }
                                     if(searchQuery.length <= 0){
@@ -300,6 +310,8 @@ import {SafeAreaView,Dimensions,
                                             
                                             return (
                                                 
+                                                <>
+                                                
                                                 <SafeAreaView
                                                 style={styles.scrollView}
                                                 >
@@ -323,87 +335,91 @@ import {SafeAreaView,Dimensions,
                                                 backgroundColor: design.colors.white,
                                                 color: design.colors.dark
                                             }}
-                                                />
-                                                <TouchableOpacity onPress={()=>onRefresh()} style={{paddingLeft:10}}>
-                                                <FontAwesome name="refresh" size={25} color={colors.primary}/>
-                                                </TouchableOpacity>
-                                                </View>
-                                                
-                                                
-                                                <TabView
-                                                renderTabBar={renderTabBar}
-                                                navigationState={{ index, routes }}
-                                                renderScene={renderScene}
-                                                onIndexChange={setIndex}
-                                                initialLayout={initialLayout}
-                                                style={styles.container}
-                                                />
-                                                
-                                                </SafeAreaView>
-                                                );
-                                            };
+                                            />
+                                            <TouchableOpacity onPress={()=>onRefresh()} style={{paddingLeft:10}}>
+                                            <FontAwesome name="refresh" size={25} color={colors.primary}/>
+                                            </TouchableOpacity>
+                                            </View>
                                             
-                                            export default ParkingAreasScreen;
                                             
-                                            const styles = StyleSheet.create({
-                                                container: {
-                                                    flex: 1,
-                                                },
-                                                scrollView: {
-                                                    flex: 1,
-                                                    backgroundColor: '#fff',
-                                                    padding: 10,
-                                                },
-                                                semicontainer:{
-                                                    flex:1,
-                                                    borderWidth:1,
-                                                    borderColor:'#C0c0c0',
-                                                    borderRadius:20,
-                                                    shadowColor: "#000",
-                                                    height: '100%',
-                                                    shadowOpacity: 0.6,
-                                                    padding:15,
-                                                    shadowRadius: 10.32,
-                                                    shadowOffset: {
-                                                        width: 0,
-                                                        height: 8,
-                                                    }
-                                                },
-                                                titleText: {
-                                                    padding: 8,
-                                                    fontSize: 14,
-                                                    textAlign: 'left',
-                                                    fontWeight: 'bold',
-                                                },
-                                                headingText: {
-                                                    padding: 8,
-                                                    textTransform:'uppercase'
-                                                },
-                                                signIn: {
-                                                    width: '100%',
-                                                    height: 50,
-                                                    justifyContent: 'center',
-                                                    alignItems: 'center',
-                                                    borderRadius: 50,
-                                                    backgroundColor: design.colors.primary
-                                                    
-                                                },
-                                                textSign: {
-                                                    fontSize: 15,
-                                                    fontWeight: 'bold'
-                                                },
-                                                input: {
-                                                    padding: 10,
-                                                    borderWidth: 1,
-                                                    borderColor: '#ccc',
-                                                    backgroundColor: '#FAF7F6',
-                                                    borderRadius:5,
-                                                },
-                                                container: {
-                                                    marginTop: StatusBar.currentHeight,
-                                                  },
-                                                  scene: {
-                                                    flex: 1,
-                                                  },
+                                            <TabView
+                                            renderTabBar={renderTabBar}
+                                            navigationState={{ index, routes }}
+                                            renderScene={renderScene}
+                                            onIndexChange={setIndex}
+                                            initialLayout={initialLayout}
+                                            style={styles.container}
+                                            />
+                                            
+                                            </SafeAreaView>
+                                            
+                                            {  isLoading ?  <AppLoader /> : null }
+                                            
+                                            </>
+                                            );
+                                        };
+                                        
+                                        export default ParkingAreasScreen;
+                                        
+                                        const styles = StyleSheet.create({
+                                            container: {
+                                                flex: 1,
+                                            },
+                                            scrollView: {
+                                                flex: 1,
+                                                backgroundColor: '#fff',
+                                                padding: 10,
+                                            },
+                                            semicontainer:{
+                                                flex:1,
+                                                borderWidth:1,
+                                                borderColor:'#C0c0c0',
+                                                borderRadius:20,
+                                                shadowColor: "#000",
+                                                height: '100%',
+                                                shadowOpacity: 0.6,
+                                                padding:15,
+                                                shadowRadius: 10.32,
+                                                shadowOffset: {
+                                                    width: 0,
+                                                    height: 8,
+                                                }
+                                            },
+                                            titleText: {
+                                                padding: 8,
+                                                fontSize: 14,
+                                                textAlign: 'left',
+                                                fontWeight: 'bold',
+                                            },
+                                            headingText: {
+                                                padding: 8,
+                                                textTransform:'uppercase'
+                                            },
+                                            signIn: {
+                                                width: '100%',
+                                                height: 50,
+                                                justifyContent: 'center',
+                                                alignItems: 'center',
+                                                borderRadius: 50,
+                                                backgroundColor: design.colors.primary
                                                 
-                                            });
+                                            },
+                                            textSign: {
+                                                fontSize: 15,
+                                                fontWeight: 'bold'
+                                            },
+                                            input: {
+                                                padding: 10,
+                                                borderWidth: 1,
+                                                borderColor: '#ccc',
+                                                backgroundColor: '#FAF7F6',
+                                                borderRadius:5,
+                                            },
+                                            container: {
+                                                marginTop: StatusBar.currentHeight,
+                                            },
+                                            scene: {
+                                                flex: 1,
+                                            },
+                                            
+                                        });

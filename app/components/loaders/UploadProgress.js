@@ -1,14 +1,12 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 
-import LottieView from 'lottie-react-native';
+import * as Progress from 'react-native-progress';
 
-const AppLoader = () => {
+const UploadProgress = ({process}) => {
     return (
         <View style={[ StyleSheet.absoluteFillObject,  styles.container]}>
-          <LottieView source={require('../../../assets/json/loading.json')}
-            style={styles.loader}
-            autoPlay loop />
+          <Progress.Bar progress={process} width={200}/>
         </View>
     )
 }
@@ -27,4 +25,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default AppLoader;
+export default UploadProgress;
