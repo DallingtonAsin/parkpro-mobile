@@ -157,8 +157,8 @@ const Profile = (props) => {
       padding:35,
     },
     text:{
-      color: colors.primary, 
-      opacity:0.8,
+      color: colors.dark, 
+      opacity:0.7,
       textTransform:'capitalize',
       fontWeight:'bold',
       fontSize:16,
