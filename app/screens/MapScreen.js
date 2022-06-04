@@ -98,6 +98,7 @@ import { StyleSheet, Text, View,Button,Pressable,
     const [end_time, setEndHourTime] = useState(null);
     const [amount, setAmount] = useState("0");
     const { colors } = useTheme();
+    const styles = makeStyles(colors);
 
     const [locationServiceEnabled, setLocationServiceEnabled] = useState(false);
     const [displayCurrentAddress, setDisplayCurrentAddress] = useState('fetching your location...');
@@ -853,7 +854,7 @@ import { StyleSheet, Text, View,Button,Pressable,
                       <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
                       <View style={styles.modalVehiclesDropdown}>
                       <View  style={{width:110}}>
-                      <Button title="select" onPress={showStartTimePicker} color={design.colors.primary}/>
+                      <Button title="select" onPress={showStartTimePicker} color={design.colors.gray}/>
                       </View>
                       <DateTimePickerModal
                       isVisible={isStartTimePickerVisible}
@@ -873,7 +874,7 @@ import { StyleSheet, Text, View,Button,Pressable,
                       <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
                       <View style={[styles.modalVehiclesDropdown, {marginLeft:10 }]}>
                       <View  style={{width:110}}>
-                      <Button title="select" onPress={showEndTimePicker} color={design.colors.primary} />
+                      <Button title="select" onPress={showEndTimePicker} color={design.colors.gray} />
                       </View>
                       <DateTimePickerModal
                       isVisible={isEndTimePickerVisible}
@@ -901,7 +902,7 @@ import { StyleSheet, Text, View,Button,Pressable,
                       
                       
                       <TouchableOpacity style={[styles.payBtn,
-                        activeModal.is_open ? {backgroundColor: theme.COLORS.primary}: {backgroundColor: theme.COLORS.gray}]} 
+                        activeModal.is_open ? {backgroundColor: colors.primary}: {backgroundColor: theme.COLORS.gray}]} 
                         disabled={activeModal.is_open ? false : true}
                         onPress={() => submitRequest()}
                         >  
@@ -1001,7 +1002,7 @@ import { StyleSheet, Text, View,Button,Pressable,
                         export default MapScreen;
                         
                         
-                        const styles = StyleSheet.create({
+                        const makeStyles = (colors) => StyleSheet.create({
                           container: {
                             flex: 1,
                             backgroundColor: theme.COLORS.white,
@@ -1045,7 +1046,7 @@ import { StyleSheet, Text, View,Button,Pressable,
                             flexDirection: 'row',
                             paddingHorizontal: theme.SIZES.base * 1.5,
                             paddingVertical: theme.SIZES.base,
-                            backgroundColor: theme.COLORS.primary,
+                            backgroundColor: colors.primary,
                             borderRadius: 6,
                           },
                           buyTotal: {
@@ -1274,8 +1275,8 @@ import { StyleSheet, Text, View,Button,Pressable,
                             height:45,
                             borderWidth:1,
                             borderRadius:30,
-                            borderColor: design.colors.success,
-                            backgroundColor: design.colors.success,
+                            borderColor: colors.primary,
+                            backgroundColor: colors.primary,
                             justifyContent: 'center',
                             alignItems: 'center',
                             width:'70%',
