@@ -11,8 +11,10 @@ import {  AirbnbRating } from 'react-native-elements';
 import {getAppVersionName} from '../components/SharedCommons';
 import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
 import { AuthContext } from '../context/context';
+import Icon from 'react-native-vector-icons/FontAwesome';
+
 import {useTheme, TouchableRipple, Avatar, 
-        Title, Caption, Paragraph, Drawer,
+        Title, Caption, Paragraph, Drawer,DrawerItem,
         Switch,Text } from 'react-native-paper';
 
 const version  = getAppVersionName();
@@ -268,11 +270,12 @@ const Settings = ({ navigation }) => {
     </TouchableOpacity>}/>
     
 
-
-                 <Drawer.Section title="Preferences" style={{color: colors.dark}}>
+                 <Drawer.Section title={
+                <Text style={styles.title}>Preferences</Text>
+                 }>
                         <TouchableRipple onPress={() => {toggleTheme()}}>
                             <View style={styles.preference}>
-                                <Text style={{ fontSize:17, color: colors.dark }}>Dark Theme</Text>
+                                <Text style={{ fontSize:17, color: colors.dark }}>Change Theme</Text>
                                 <View pointerEvents="none">
                                     <Switch value={paperTheme.dark}/>
                                 </View>

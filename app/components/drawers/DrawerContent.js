@@ -38,7 +38,7 @@ const options = {
 const CustomDrawer = (props) => {
   
   const { signOut } = React.useContext(AuthContext);
-  const {profile, setProfile} = useContext(ProfileContext);
+  const { profile } = useContext(ProfileContext);
   const [isVisible, setIsVisible] = useState(false);
   
   const {  toggleTheme } = React.useContext(AuthContext);
@@ -80,11 +80,6 @@ const CustomDrawer = (props) => {
     await signOut();
   }
   
-  
-  const LoadPage = (page) => {
-    props.navigation.navigate(page);
-  };
-  
   const share = async (customOptions = options) => {
     try {
       await Share.open(customOptions);
@@ -112,7 +107,7 @@ const CustomDrawer = (props) => {
       if (success) {
       }
       if (errorMessage) {
-        console.error(`Example page Rate.rate() error: ${errorMessage}`)
+        console.error(`Unable to rate because of error: ${errorMessage}`)
       }
     });
   }
@@ -132,9 +127,10 @@ const CustomDrawer = (props) => {
       : <Avatar.Image size={120} style={{backgroundColor: styles.colors.white}} 
       source={require('../../../assets/default-user.png')} />
     }
-    <Text style={{ marginTop:5, fontSize:16,
+    <Text style={{ marginTop:5, fontSize:18,
+                   fontWeight: 'bold',
                    color: colors.drawerText,
-                   opacity:0.7 }}>
+                   opacity:0.8 }}>
                      { profile.first_name } { profile.last_name }
                 </Text>
     <Text style={{ marginBottom:15, fontSize:16, color: colors.drawerText, opacity:0.7 }}>{ `${profile.country_code}${profile.phone_number}`}</Text>
@@ -182,21 +178,14 @@ const CustomDrawer = (props) => {
       </TouchableOpacity>
       
       <TouchableOpacity style={styles.drawerItem} 
-      onPress={() => LoadPage("About")}>
+      onPress={() => props.navigation.navigate("About")}>
       <Icon name="info-circle" style={styles.drawerIcon} color={colors.drawerText}/>
       <Text style={[styles.drawerText, {color: colors.drawerText}]}>About us</Text>
       </TouchableOpacity>
       
-      
-      {/* <TouchableOpacity style={styles.drawerItem}
-      onPress={() => navigateToTerms()}>
-      <Icon name="file-contract" style={styles.drawerIcon}/>
-      <Text style={[styles.drawerText, {color: colors.text}]} 
-      >Terms & Conditions</Text>
-    </TouchableOpacity> */}
-    
+
     <TouchableOpacity style={styles.drawerItem} onPress={ () => {
-      LoadPage('Settings'); }}>
+      props.navigation.navigate('Settings'); }}>
       <FontAwesome name="cog" style={styles.drawerIcon} color={colors.drawerText}/>
       <Text style={[styles.drawerText, {color: colors.drawerText}]}>Settings</Text>
       </TouchableOpacity>
@@ -204,7 +193,13 @@ const CustomDrawer = (props) => {
  
       <View style={styles.divider}></View>
       
-      <Drawer.Section title="Preferences" >
+      <Drawer.Section title={
+                <Text style={[styles.drawerText, 
+                             {color: colors.drawerText,
+                              fontSize:12,
+                              opacity:0.6
+                              }]}>Preferences</Text>
+                 } >
       <View style={{flexDirection: 'row'}}>
       <TouchableRipple onPress={() => {toggleTheme()}}>
       <View style={styles.preference}>
