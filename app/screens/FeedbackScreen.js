@@ -8,7 +8,9 @@ import {Text, TouchableOpacity, View, FlatList, SafeAreaView, StyleSheet, Scroll
   import { TextInput } from 'react-native-paper';
   import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
   import { useTheme  } from 'react-native-paper';
+  import { isValidateEmail } from '../components/SharedCommons';
   import AppLoader from '../components/loaders/AppLoader';
+
   
   const emojis = [
     {id:1, name: 'grin-beam', value: 'Happy', color: '#F9FEE', active: false},
@@ -37,23 +39,46 @@ import {Text, TouchableOpacity, View, FlatList, SafeAreaView, StyleSheet, Scroll
     
     
     const sendSuggestion = async() => {
-      console.log("Emoji reaction "+selectedEmojiValue);
+
       const id = profile.id;
       const email = state.email;
       const subject = state.subject;
       const description = state.description;
-      if(id && email && subject && description){
+
+      if(!id){
+        alert("Unable to capture your profile");
+        return;
+      }
+
+      if(!description){
+        alert("Please write your feedback");
+        return;
+      }
+
+
+      if(email){
+        if(!isValidateEmail(email)){
+          alert("Please enter valid email");
+          return;
+        }
+      }
+
+
+      if(id && description){
+
         const data = {
           id: id,
-          reaction:selectedEmojiValue,
-          email: email,
+          reaction: selectedEmojiValue,
+          email: email ? email : profile.email,
           subject: subject,
           description: description,
         }
+
         setIsLoading(true);
         let result = await postSuggestion(data);
         const statusCode = result.statusCode;
         const message = result.message;
+
         if(statusCode == 1){
           setState({...initialState});
           Toast.show(message);
