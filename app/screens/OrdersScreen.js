@@ -21,7 +21,7 @@ import AppLoader from '../components/loaders/AppLoader';
     
     const [parkingRequests, setParkingRequests] = useState([]);
     const [isLoading, setIsLoading] = React.useState(true);
-    const {profile, setProfile} = useContext(ProfileContext);
+    const { profile } = useContext(ProfileContext);
     const { colors } = useTheme();
 
     

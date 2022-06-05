@@ -1,13 +1,5 @@
 import React, { useContext } from 'react';
-import {
-  Text,
-  TouchableOpacity,
-  View, 
-  FlatList,
-  SafeAreaView,
-  StyleSheet,
-  ScrollView,
-  Alert } from 'react-native';
+import {Text, TouchableOpacity, View, FlatList, SafeAreaView, StyleSheet, ScrollView, Alert } from 'react-native';
   import styles from '../../assets/css/styles';
   import ProfileContext from '../context/index';
   import { AuthContext } from '../context/context';
