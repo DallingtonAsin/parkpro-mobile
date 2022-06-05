@@ -21,7 +21,7 @@ const Password = () => {
   const [state, setState] = useState(initialState);
   const [isLoading, setIsLoading] = useState(false);
   const { updatePassword } = React.useContext(AuthContext);
-  const {profile, setProfile} = useContext(ProfileContext);
+  const { profile } = useContext(ProfileContext);
   const { colors } = useTheme();
 
   

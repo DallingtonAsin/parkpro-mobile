@@ -15,7 +15,7 @@
     
     const [notifications, setNotifications] = useState([]);
     const [isLoading, setIsLoading] = React.useState(true);
-    const {profile, setProfile} = useContext(ProfileContext);
+    const { profile } = useContext(ProfileContext);
     
     const { colors } = useTheme();
     const styles = makeStyles(colors);

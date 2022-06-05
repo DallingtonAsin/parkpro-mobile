@@ -82,7 +82,7 @@ import { StyleSheet, Text, View,Button,Pressable,
     
     const [state, setState] = useState(initialState);
     const [region, setRegion] = useState(mapInitialState);
-    const {profile, setProfile} = useContext(ProfileContext);
+    const { profile } = useContext(ProfileContext);
     const [vehicles, setVehicleState] = useState([]);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [isLoadingParkings, setIsLoadingParkings] = useState(true);
