@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { View, Text, Alert, TouchableOpacity, TextInput, Platform, StyleSheet, ScrollView} from 'react-native';
-import design from '../../assets/css/styles';
 import * as Animatable from 'react-native-animatable';
 import LinearGradient from 'react-native-linear-gradient';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -10,6 +9,7 @@ import { AuthContext } from '../context/context';
 import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
 import { useTheme  } from 'react-native-paper';
 import AppLoader from '../components/loaders/AppLoader';
+import { isValidateEmail } from '../components/SharedCommons';
 
 
 const initialState = {
@@ -63,15 +63,7 @@ const SignupScreen = ({route, navigation}) => {
         }
     }
     
-    const isValidateEmail = (email) => {
-        var validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-        let isValid = false;
-        if (email.match(validRegex)) {
-            isValid = true;
-        } 
-        return isValid;
-    }
-    
+
     const handleEmailInputChange = (val) => {
         if( val.length >= 3 ) {
             setData({

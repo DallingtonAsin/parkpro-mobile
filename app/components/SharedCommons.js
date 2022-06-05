@@ -53,6 +53,23 @@ export const getAppVersionName = () => {
   return version;
 };
 
+export const validateEmail = (email) => {
+  return String(email)
+    .toLowerCase()
+    .match(
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    );
+};
+
+export const isValidateEmail = (email) => {
+  var validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+  let isValid = false;
+  if (email.match(validRegex)) {
+    isValid = true;
+  } 
+  return isValid;
+}
+
 export const RateUs = () => {
   const options = {
     AppleAppID:"2193813192",

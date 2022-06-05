@@ -15,6 +15,8 @@ import { Text,TextInput, TouchableOpacity, View, StyleSheet, SafeAreaView, Alert
   import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
   import { useTheme } from '@react-navigation/native';
   import AppLoader from '../components/loaders/AppLoader';
+  import { isValidateEmail } from '../components/SharedCommons';
+  var mime = require('mime-types');
 
 
   const initialState = {
@@ -32,10 +34,7 @@ import { Text,TextInput, TouchableOpacity, View, StyleSheet, SafeAreaView, Alert
     
   }
   
-  
-  
-  var mime = require('mime-types');
-  
+
   const EditProfile = () => {
     
     const [state, setData] = useState(initialState);
@@ -136,15 +135,7 @@ import { Text,TextInput, TouchableOpacity, View, StyleSheet, SafeAreaView, Alert
       }
     }
     
-    const isValidateEmail = (email) => {
-      var validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-      let isValid = false;
-      if (email.match(validRegex)) {
-        isValid = true;
-      } 
-      return isValid;
-    }
-    
+   
     const handleProfileUpdate = async() =>{
       const user_id = state.user_id;
       const first_name = state.first_name;
