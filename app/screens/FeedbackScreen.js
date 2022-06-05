@@ -115,13 +115,13 @@ const FeedbackScreen = () => {
     
     <View style={css.top}>
     <Text style={{color: '#fff', fontSize:22, fontWeight:'bold',  marginTop:15}}>How do you feel?</Text>
-        <FlatList
-        horizontal={true}
-        data={emojis}
-        renderItem={({item}) => emojiComponent(item) }
-        keyExtractor={(item, index) => index }
-        contentContainerStyle={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center', padding:10}}
-        />
+    <FlatList
+    horizontal={true}
+    data={emojis}
+    renderItem={({item}) => emojiComponent(item) }
+    keyExtractor={(item, index) => index }
+    contentContainerStyle={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center', padding:10}}
+    />
     </View>
     
     <View style={css.body}>
@@ -165,11 +165,8 @@ const FeedbackScreen = () => {
     onChangeText={(text) => {setState({...state, description: text}) }}
     />
     
-    </View>
-
-    <View style={css.footer}>
     <TouchableOpacity
-    style={[styles.btnPrimary, { 
+      style={[styles.btnPrimary, css.footer, { 
       backgroundColor: colors.primary,
       borderColor: colors.primary
     }]}
@@ -178,7 +175,10 @@ const FeedbackScreen = () => {
     {isLoading ? 'Sending...': 'Send' }
     </Text>
     </TouchableOpacity>
+    
     </View>
+    
+    
     
     </View>
     
