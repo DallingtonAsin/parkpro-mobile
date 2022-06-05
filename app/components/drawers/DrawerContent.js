@@ -183,14 +183,7 @@ const CustomDrawer = (props) => {
       <Text style={[styles.drawerText, {color: colors.drawerText}]}>About us</Text>
       </TouchableOpacity>
       
-      
-      {/* <TouchableOpacity style={styles.drawerItem}
-      onPress={() => navigateToTerms()}>
-      <Icon name="file-contract" style={styles.drawerIcon}/>
-      <Text style={[styles.drawerText, {color: colors.text}]} 
-      >Terms & Conditions</Text>
-    </TouchableOpacity> */}
-    
+
     <TouchableOpacity style={styles.drawerItem} onPress={ () => {
       props.navigation.navigate('Settings'); }}>
       <FontAwesome name="cog" style={styles.drawerIcon} color={colors.drawerText}/>
@@ -200,7 +193,13 @@ const CustomDrawer = (props) => {
  
       <View style={styles.divider}></View>
       
-      <Drawer.Section title="Preferences"  >
+      <Drawer.Section title={
+                <Text style={[styles.drawerText, 
+                             {color: colors.drawerText,
+                              fontSize:12,
+                              opacity:0.6
+                              }]}>Preferences</Text>
+                 } >
       <View style={{flexDirection: 'row'}}>
       <TouchableRipple onPress={() => {toggleTheme()}}>
       <View style={styles.preference}>
