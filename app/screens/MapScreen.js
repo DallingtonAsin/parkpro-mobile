@@ -826,8 +826,8 @@ import { StyleSheet, Text, View,Button,Pressable,
                       
                       <View>
                       <TouchableOpacity style={styles.callBtn} onPress={() =>  callHelpLine(activeModal.phone_number)}>
-                      <FontAwesome5 name="phone-alt" size={18} color={design.colors.white}/>
-                      <Text style={{fontSize:16, paddingLeft:10, color:design.colors.white}}>Call Now</Text>
+                      <FontAwesome5 name="phone-alt" size={18} color={design.colors.gray}/>
+                      <Text style={{fontSize:16, paddingLeft:10, color:design.colors.gray}}>Call Now</Text>
                       </TouchableOpacity>
                       </View>
                       </View>
@@ -1275,8 +1275,8 @@ import { StyleSheet, Text, View,Button,Pressable,
                             height:45,
                             borderWidth:1,
                             borderRadius:30,
-                            borderColor: colors.primary,
-                            backgroundColor: colors.primary,
+                            borderColor: design.colors.gray,
+                            backgroundColor: design.colors.white,
                             justifyContent: 'center',
                             alignItems: 'center',
                             width:'70%',

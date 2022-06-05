@@ -136,7 +136,7 @@ const CustomDrawer = (props) => {
     {items.map((item, key) => {
       return(
         <TouchableOpacity key={key} style={[{
-          // backgroundColor: global.currentScreenIndex === key ? '#F7F5F5' : '#fff'
+          // backgroundColor: global.currentScreenIndex === key ? '#F7F5F5' : null
         }, styles.drawerItem]} onPress={ () => {
           global.currentScreenIndex = key;
           props.navigation.navigate(item.screenToNavigate);
@@ -249,8 +249,7 @@ const CustomDrawer = (props) => {
           position: 'absolute',
           right: 0,
           left: 0,
-          bottom: 15,
-          // padding: 20,
+          bottom: 15
         }]}
         onPress={() => logout() }
       >

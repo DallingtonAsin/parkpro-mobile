@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
-import { Text,View, RefreshControl,SectionList,StatusBar,Image, StyleSheet} from 'react-native';
-import design from '../../assets/css/styles';
+import { Text,View, RefreshControl,SectionList,Image, StyleSheet} from 'react-native';
 import { DataTable, Divider } from 'react-native-paper';
-import CustomLoader from '../components/CustomActivityIndicator';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AuthContext } from '../context/context';
 import { icons } from '../../constants';
@@ -162,11 +160,11 @@ const TransactionsHistoryScreen = () => {
                   onRefresh={onRefresh}
                   />}
                   />
-                  :  <AppLoader />  // <CustomLoader color={design.colors.orange}/>
+                  :  null
                 }
                 </View>
 
-         
+                {  isLoading ?  <AppLoader /> : null }
 
                 </>
                 ); 
