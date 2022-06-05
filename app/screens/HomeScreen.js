@@ -12,11 +12,9 @@ import {
 import { icons, SIZES } from '../../constants';
 import OptionItem from '../components/OptionItem';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import Animated from 'react-native-reanimated';
 // import BottomSheet   from 'reanimated-bottom-sheet';
 import { BottomSheet as BrSheet } from 'react-native-btr';
-import { Avatar, Divider, Portal  } from 'react-native-paper';
+import { Avatar, Divider  } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import design from '../../assets/css/styles';
 import ProfileContext from '../context/index';

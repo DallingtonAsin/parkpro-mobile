@@ -132,9 +132,10 @@ const CustomDrawer = (props) => {
       : <Avatar.Image size={120} style={{backgroundColor: styles.colors.white}} 
       source={require('../../../assets/default-user.png')} />
     }
-    <Text style={{ marginTop:5, fontSize:16,
+    <Text style={{ marginTop:5, fontSize:18,
+                   fontWeight: 'bold',
                    color: colors.drawerText,
-                   opacity:0.7 }}>
+                   opacity:0.8 }}>
                      { profile.first_name } { profile.last_name }
                 </Text>
     <Text style={{ marginBottom:15, fontSize:16, color: colors.drawerText, opacity:0.7 }}>{ `${profile.country_code}${profile.phone_number}`}</Text>
