@@ -272,7 +272,7 @@ const Settings = ({ navigation }) => {
                  <Drawer.Section title="Preferences" style={{color: colors.dark}}>
                         <TouchableRipple onPress={() => {toggleTheme()}}>
                             <View style={styles.preference}>
-                                <Text style={{ fontSize:17, color: colors.dark }}>Dark Theme</Text>
+                                <Text style={{ fontSize:17, color: colors.dark }}>Change Theme</Text>
                                 <View pointerEvents="none">
                                     <Switch value={paperTheme.dark}/>
                                 </View>

@@ -112,33 +112,46 @@ import {
       <Text style={{fontWeight: 'bold', fontSize:20, }}>Share with us feedback</Text>
       
       <View style={{top:20}}>
-      <TextInput mode="outlined" label="Email" placeholder="Email (required)" value={state.email}
-      onChangeText={(text) => {setState({...state, email: text}) }}
+      <TextInput
+      mode="outlined"
       outlineColor={styles.colors.gray}
+      placeholderTextColor={"grey"}
       theme={{ colors: { text: styles.colors.dark } }}
       style={css.input}
+      placeholder="Email" 
+      underlineColorAndroid="transparent"
+      value={state.email}
+      onChangeText={(text) => {setState({...state, email: text}) }}
       />
       
-      <TextInput mode="outlined" label="Subject" placeholder="Enter your subject"
-      value={state.subject} style={css.input}
-      onChangeText={(text) => {setState({...state, subject: text}) }}
+      
+      <TextInput 
+      mode="outlined"
+      placeholder="Subject"
+      value={state.subject} 
+      style={css.input}
       outlineColor={styles.colors.gray}
+      placeholderTextColor={"grey"}
+      underlineColorAndroid="transparent"
       theme={{ colors: { text: styles.colors.dark } }}
+      onChangeText={(text) => {setState({...state, subject: text}) }}
       />
+
       
       <Text style={css.title}>Description</Text>
+
       <TextInput
+      mode="outlined"
       style={css.textArea}
       underlineColorAndroid="transparent"
       placeholder="Write your feedback here"
-      placeholderTextColor="grey"
+      placeholderTextColor={"grey"}
+      outlineColor={styles.colors.gray}
+      theme={{ colors: { text: styles.colors.dark } }}
       numberOfLines={3}
       multiline={true}
       value={state.description}
-      mode="outlined"
       onChangeText={(text) => {setState({...state, description: text}) }}
-      outlineColor={styles.colors.gray}
-      theme={{ colors: { text: styles.colors.dark } }}
       />
       
       </View>
@@ -147,11 +160,9 @@ import {
       
       <View style={css.footer}>
       <TouchableOpacity
-      style={[styles.btnPrimary, { color: '#fff',
-      backgroundColor: colors.primary,
-      borderColor: colors.primary}]}
+      style={[styles.btnPrimary, { backgroundColor: colors.primary, borderColor: colors.primary}]}
       onPress={sendSuggestion} >
-      <Text style = {{ color: colors.text }}>
+      <Text style = {{ color: colors.text, fontWeight: 'bold', fontSize:18 }}>
       {isLoading ? 'Sending...': 'Send' }
       </Text>
       </TouchableOpacity>
@@ -226,9 +237,14 @@ import {
       },
       
       textArea: {
-        backgroundColor: '#fff',
-        borderRadius: 20,
-        
+        backgroundColor: styles.colors.white,
+        borderRadius: 20
+      },
+
+      input:{
+        backgroundColor: styles.colors.white,
+        borderRadius:20,
+        color: '#000',
       },
       
       title: {
@@ -237,11 +253,7 @@ import {
         opacity:0.7,
       },
       
-      input:{
-        backgroundColor: styles.colors.white,
-        borderRadius:20,
-        color: '#000',
-      },
+     
       
       
       

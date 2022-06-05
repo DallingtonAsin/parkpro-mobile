@@ -38,7 +38,7 @@ const options = {
 const CustomDrawer = (props) => {
   
   const { signOut } = React.useContext(AuthContext);
-  const {profile, setProfile} = useContext(ProfileContext);
+  const { profile } = useContext(ProfileContext);
   const [isVisible, setIsVisible] = useState(false);
   
   const {  toggleTheme } = React.useContext(AuthContext);
@@ -80,11 +80,6 @@ const CustomDrawer = (props) => {
     await signOut();
   }
   
-  
-  const LoadPage = (page) => {
-    props.navigation.navigate(page);
-  };
-  
   const share = async (customOptions = options) => {
     try {
       await Share.open(customOptions);
@@ -112,7 +107,7 @@ const CustomDrawer = (props) => {
       if (success) {
       }
       if (errorMessage) {
-        console.error(`Example page Rate.rate() error: ${errorMessage}`)
+        console.error(`Unable to rate because of error: ${errorMessage}`)
       }
     });
   }
@@ -183,7 +178,7 @@ const CustomDrawer = (props) => {
       </TouchableOpacity>
       
       <TouchableOpacity style={styles.drawerItem} 
-      onPress={() => LoadPage("About")}>
+      onPress={() => props.navigation.navigate("About")}>
       <Icon name="info-circle" style={styles.drawerIcon} color={colors.drawerText}/>
       <Text style={[styles.drawerText, {color: colors.drawerText}]}>About us</Text>
       </TouchableOpacity>
@@ -197,7 +192,7 @@ const CustomDrawer = (props) => {
     </TouchableOpacity> */}
     
     <TouchableOpacity style={styles.drawerItem} onPress={ () => {
-      LoadPage('Settings'); }}>
+      props.navigation.navigate('Settings'); }}>
       <FontAwesome name="cog" style={styles.drawerIcon} color={colors.drawerText}/>
       <Text style={[styles.drawerText, {color: colors.drawerText}]}>Settings</Text>
       </TouchableOpacity>
@@ -205,7 +200,7 @@ const CustomDrawer = (props) => {
  
       <View style={styles.divider}></View>
       
-      <Drawer.Section title="Preferences" >
+      <Drawer.Section title="Preferences"  >
       <View style={{flexDirection: 'row'}}>
       <TouchableRipple onPress={() => {toggleTheme()}}>
       <View style={styles.preference}>
