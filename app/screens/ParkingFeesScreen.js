@@ -1,18 +1,19 @@
-import React, {useState, useEffect, useRef} from 'react';
-import {StyleSheet, RefreshControl,StatusBar,Text, View,TouchableOpacity, FlatList } from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {StyleSheet, RefreshControl,Text, View,TouchableOpacity, FlatList } from 'react-native';
 import design from '../../assets/css/styles';
 import { DataTable, Divider } from 'react-native-paper';
 import {  Button, Card, Title } from 'react-native-paper';
 import {Monetize} from '../components/SharedCommons';
-import CustomLoader from '../components/CustomActivityIndicator';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {callHelpLine} from '../components/SharedCommons';
 import { AuthContext } from '../context/context';
 import { UIActivityIndicator } from 'react-native-indicators';
 import Toast from 'react-native-simple-toast';
 import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
 import { useTheme } from '@react-navigation/native';
+import AppLoader from '../components/loaders/AppLoader';
+import { colors } from 'react-native-elements';
+
 
 const dbParkingHelper = require("../database/favouriteParkings");
 
@@ -20,12 +21,11 @@ const ParkingFeesScreen = ({route, navigation}) => {
     
     const { parking_area_id, address, parking_area, photo, phone_number } = route.params;
     const [fees, setFees] = useState([]);
-    const [done, setDone] = useState(false);
-    const [refreshing, setRefreshing] = useState(false);
+    const [isAdding, setIsAdding] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [doesParkingExistInFavourites, setParkingExistsInFavourites] = useState(false);
     const { colors } = useTheme();
-
+    
     
     dbParkingHelper.doesParkingExistinFavourites(parking_area_id, exists => {
         if(exists){
@@ -40,25 +40,27 @@ const ParkingFeesScreen = ({route, navigation}) => {
     const { fetchParkingFees, searchParkingArea } = React.useContext(AuthContext);
     
     const onRefresh = React.useCallback(async () => {
-        setRefreshing(true);
+        setIsLoading(true);
         const timer = setTimeout(() => {
-            setRefreshing(false);
+            setIsLoading(false);
         }, 1000);
         return () => clearTimeout(timer);
-    }, [refreshing]);
+    }, [isLoading]);
+
     
     const getParkingFees = async() => {
         if(parking_area_id){
+            setIsLoading(true);
             await fetchParkingFees(parking_area_id).then(res => {
                 if(res.statusCode == 1){
                     setFees(res.data);
                 }
                 const timer = setTimeout(() => {
-                    setDone(true);
+                setIsLoading(false);
                 }, 2000);
                 return () => clearTimeout(timer);
+
             }).catch(error => { 
-                setDone(true);
                 Toast.show("Error","Unable to fetch parking fees: " + error);
             });
         }else{
@@ -77,8 +79,8 @@ const ParkingFeesScreen = ({route, navigation}) => {
         
         const CustomDataTable = (props) => (
             <DataTable.Row style={{opacity:0.7}}>
-            <DataTable.Cell>{props.item.vehicle_type}</DataTable.Cell>
-            <DataTable.Cell>{Monetize(props.item.fee_per_hour)}</DataTable.Cell>
+            <DataTable.Cell><Text style={{color: colors.dark }}>{props.item.vehicle_type}</Text></DataTable.Cell>
+            <DataTable.Cell><Text style={{color: colors.dark }}>{Monetize(props.item.fee_per_hour)}</Text></DataTable.Cell>
             </DataTable.Row>
             );
             
@@ -97,11 +99,10 @@ const ParkingFeesScreen = ({route, navigation}) => {
                             const parking = resp.data[0];
                             console.log("Parking area object retrieved", parking);
                             if(parking){
-                                setIsLoading(true);
+                                setIsAdding(true);
                                 dbParkingHelper.doesParkingExistinFavourites(parking.id, exists => {
                                     console.log("Exists parking area in favourites response", exists);
                                     if(exists){
-                                        setIsLoading(false);
                                         Toast.show('Sorry, parking area '+parking.name+' has already been added to favourites.', Toast.LONG);
                                     }else{
                                         dbParkingHelper.addParkingIntoFavourites(parking, isInserted => {
@@ -111,9 +112,10 @@ const ParkingFeesScreen = ({route, navigation}) => {
                                             }else{
                                                 alert('Unable to add parking to favourites');
                                             }
-                                            setIsLoading(false);
                                         });
                                     }
+
+                                    setIsAdding(false);
                                 });
                             }else{
                                 Toast.show("Unable to fetch parking at this time.");    
@@ -140,7 +142,7 @@ const ParkingFeesScreen = ({route, navigation}) => {
                                 borderRadius:5, alignContent:'center', 
                                 alignItems:'center', padding:15, borderRadius:35 }}>
                                 
-                                {isLoading ?
+                                {isAdding ?
                                     <UIActivityIndicator color='white' size={30} /> :
                                     <Text style={{color:'#fff', fontSize:14, textTransform:'capitalize'}}>
                                     Add to Favourites
@@ -152,28 +154,22 @@ const ParkingFeesScreen = ({route, navigation}) => {
                             
                             
                             <DataTable.Header>
-                            <DataTable.Title>Vehicle Type</DataTable.Title>
-                            <DataTable.Title>Fee/hour</DataTable.Title>
+                            <DataTable.Title><Text style={{color: colors.dark }}>Vehicle Type</Text></DataTable.Title>
+                            <DataTable.Title><Text style={{color: colors.dark }}>Fee/hour</Text></DataTable.Title>
                             </DataTable.Header>
                             <Divider />
                             </>
                             );
                         };
                         
-                        const updateFees = () => {
-                            getParkingFees();
-                            if(refreshing){
-                                getParkingFees();
-                            }
-                        }
-                        
-                        
-                        
+
                         useEffect(() => {
                             getParkingFees();
                         }, [parking_area_id]);
                         
                         return (
+                            <>
+
                             <View style={styles.container}>
                             
                             <FocusAwareStatusBar barStyle="light-content" 
@@ -181,13 +177,18 @@ const ParkingFeesScreen = ({route, navigation}) => {
                             
                             <View style={styles.semicontainer}>
                             
-                            { done ?
+                            { !isLoading ?
                                 <>
-                                <Card>
-                                <Card.Cover source={{ uri: photo }} style={{width:'90%', height:'40%', margin:5, borderRadius:5}}/>
+                                <Card style={{backgroundColor: colors.body }}>
+                                <Card.Cover source={{ uri: photo }} 
+                                style={{ width:'95%', 
+                                height:'40%', 
+                                margin:5,
+                                borderRadius:5
+                                }}/>
                                 <Card.Content>
-                                <Title>{parking_area}</Title>
-                                <Title>{address}</Title>
+                                <Title style={{color: colors.dark }}>{parking_area}</Title>
+                                <Title style={{color: colors.dark }}>{address}</Title>
                                 <FlatList
                                 data={fees}
                                 renderItem={({item}) => <CustomDataTable item={item}/>}
@@ -197,7 +198,7 @@ const ParkingFeesScreen = ({route, navigation}) => {
                                 keyExtractor={(item, index) => index.toString()}
                                 refreshControl={
                                     <RefreshControl
-                                    refreshing={refreshing}
+                                    refreshing={isLoading}
                                     onRefresh={onRefresh}
                                     />}
                                     />
@@ -206,7 +207,7 @@ const ParkingFeesScreen = ({route, navigation}) => {
                                     
                                     <View style={{flexDirection: 'row'}}>
                                     <View>
-                                    <Button onPress={() => navigation.navigate("Map")} style={{ backgroundColor: design.colors.primary, 
+                                    <Button onPress={() => navigation.navigate("Map")} style={{ backgroundColor: colors.primary, 
                                         borderRadius:5, alignContent:'center', alignItems:'center', padding:5, borderRadius:35 }}>
                                         <Text style={{color:'#fff', fontSize:14, textTransform:'capitalize'}}>
                                         Request parking
@@ -215,20 +216,22 @@ const ParkingFeesScreen = ({route, navigation}) => {
                                         </View>
                                         <View>
                                         <TouchableOpacity style={styles.callBtn} onPress={() =>  callHelpLine(phone_number)}>
-                                        <FontAwesome5 name="phone-alt" size={18} color={design.colors.white}/>
-                                        <Text style={{fontSize:16, paddingLeft:10, color:design.colors.white}}>Call Now</Text>
+                                        <FontAwesome5 name="phone-alt" size={18} color={design.colors.gray}/>
+                                        <Text style={{fontSize:16, paddingLeft:10, color:design.colors.gray}}>Call Now</Text>
                                         </TouchableOpacity>
                                         </View>
                                         </View>
                                         </Card.Actions>
                                         </Card>
                                         </>
-                                        : <CustomLoader color={design.colors.orange}/>
+                                        : null
                                     }
                                     
                                     
                                     </View>
                                     </View>
+                                    {  isLoading ?  <AppLoader /> : null }
+                                    </>
                                     );
                                 };
                                 
@@ -296,8 +299,8 @@ const ParkingFeesScreen = ({route, navigation}) => {
                                         height:45,
                                         borderWidth:1,
                                         borderRadius:30,
-                                        borderColor: design.colors.success,
-                                        backgroundColor: design.colors.success,
+                                        borderColor: design.colors.gray,
+                                        backgroundColor: colors.white,
                                         justifyContent: 'center',
                                         alignItems: 'center',
                                         width:'70%',

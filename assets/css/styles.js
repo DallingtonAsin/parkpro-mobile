@@ -1,5 +1,4 @@
 import {  Platform, StatusBar } from 'react-native';
-import { useTheme } from '@react-navigation/native';
 
 export default {
   
@@ -69,7 +68,7 @@ export default {
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingVertical: 0,
-    paddingHorizontal: 16,
+    paddingHorizontal: 0,
   },
   
   

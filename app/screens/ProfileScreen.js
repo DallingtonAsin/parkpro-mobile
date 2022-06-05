@@ -23,7 +23,7 @@ const initialState = {
 const Profile = (props) => {
   
   const [state, setData] = useState(initialState);
-  const {profile, setProfile} = useContext(ProfileContext);
+  const { profile } = useContext(ProfileContext);
   const name = profile.first_name + " " + profile.last_name;
   const [image, setImage] = useState('https://dallingtonasingwire.com/img/user-profile9.png');
   const { colors } = useTheme();

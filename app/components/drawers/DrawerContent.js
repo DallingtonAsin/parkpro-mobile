@@ -1,27 +1,17 @@
-import React, {useState, useContext} from 'react';
+import React, { useState, useContext} from 'react';
 import {View, TouchableOpacity, Linking} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import Dialog, { DialogFooter, DialogButton, DialogContent } from 'react-native-popup-dialog';
+import { useTheme, Avatar, Drawer, Text, TouchableRipple, Switch } from 'react-native-paper';
+import { DrawerContentScrollView } from '@react-navigation/drawer';
+import {  AirbnbRating } from 'react-native-elements';
+import Rate, { AndroidMarket } from 'react-native-rate';
+import Share from "react-native-share";
 import styles from '../../../assets/css/styles';
 import { AuthContext } from '../../context/context';
 import {APP_NAME} from '@env';
 import ProfileContext from '../../context/index';
-import Rate, { AndroidMarket } from 'react-native-rate';
-import {  AirbnbRating } from 'react-native-elements';
-import Dialog, { DialogFooter, DialogButton, DialogContent } from 'react-native-popup-dialog';
-import Share from "react-native-share";
-import {
-  useTheme,
-  Avatar,
-  Drawer,
-  Text,
-  TouchableRipple,
-  Switch
-} from 'react-native-paper';
-import {
-  DrawerContentScrollView,
-  DrawerItem
-} from '@react-navigation/drawer';
 import { color } from 'react-native-reanimated';
 
 const url = "https://parkproug.com/";
@@ -146,7 +136,7 @@ const CustomDrawer = (props) => {
     {items.map((item, key) => {
       return(
         <TouchableOpacity key={key} style={[{
-          // backgroundColor: global.currentScreenIndex === key ? '#F7F5F5' : '#fff'
+          // backgroundColor: global.currentScreenIndex === key ? '#F7F5F5' : null
         }, styles.drawerItem]} onPress={ () => {
           global.currentScreenIndex = key;
           props.navigation.navigate(item.screenToNavigate);
@@ -203,6 +193,7 @@ const CustomDrawer = (props) => {
       <View style={{flexDirection: 'row'}}>
       <TouchableRipple onPress={() => {toggleTheme()}}>
       <View style={styles.preference}>
+      <FontAwesome name="refresh" style={styles.drawerIcon} color={colors.drawerText}/>
       <Text style={[styles.drawerText, {color: colors.drawerText}]}> Change Theme </Text>
       <View pointerEvents="none">
       <Switch value={paperTheme.dark}/>
@@ -258,13 +249,12 @@ const CustomDrawer = (props) => {
           position: 'absolute',
           right: 0,
           left: 0,
-          bottom: 50,
-          // padding: 20,
+          bottom: 15
         }]}
         onPress={() => logout() }
       >
          <Icon name="power-off" style={styles.drawerIcon} color={colors.drawerText}/>
-        <Text style={[styles.drawerText, {color: colors.drawerText}]}>Log out</Text>
+        <Text style={[styles.drawerText, {color: colors.drawerText}]}>Sign Out</Text>
       </TouchableOpacity>
       
       

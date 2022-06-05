@@ -11,11 +11,7 @@ import {  AirbnbRating } from 'react-native-elements';
 import {getAppVersionName} from '../components/SharedCommons';
 import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
 import { AuthContext } from '../context/context';
-import Icon from 'react-native-vector-icons/FontAwesome';
-
-import {useTheme, TouchableRipple, Avatar, 
-        Title, Caption, Paragraph, Drawer,DrawerItem,
-        Switch,Text } from 'react-native-paper';
+import {useTheme, TouchableRipple, Drawer, Switch, Text } from 'react-native-paper';
 
 const version  = getAppVersionName();
 
