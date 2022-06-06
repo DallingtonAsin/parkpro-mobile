@@ -20,7 +20,8 @@ import { ApiKeys } from './app/network/ApiKeys';
 import messaging from '@react-native-firebase/messaging';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
-
+import PushNotification, {Importance} from "react-native-push-notification";
+import Toast from 'react-native-simple-toast';
 
 const initialLoginState = {
   isLoading: true,
@@ -31,6 +32,16 @@ const initialLoginState = {
 
 const wait = (timeout) => {
   return new Promise(resolve => setTimeout(resolve, timeout));
+}
+
+const listenForPushNotification = () => {
+  const subscribe = messaging().onMessage(async remoteMessage => {
+    let message_body = remoteMessage.notification.body;
+    let message_title = remoteMessage.notification.title;
+    Toast.show(`${message_title} : ${message_body}`);
+    // let avatar = remoteMessage.notification.android.imageUrl;
+  });
+  return subscribe;
 }
 
 const requestUserPermission = async() => {
@@ -510,11 +521,14 @@ const App = ()  => {
       GlobalFont.applyGlobal(fontName);
       requestUserPermission();
       deviceInformation();
+      listenForPushNotification();
       
       setTimeout(async() => {
+
         let user, userToken;
         userToken = null;
         user = null;
+
         try{
           userToken = await AsyncStorage.getItem("userToken");
           if(userToken){
