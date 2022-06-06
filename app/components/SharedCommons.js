@@ -2,7 +2,7 @@ import { Linking } from 'react-native';
 import Communications from 'react-native-communications';
 import Rate, { AndroidMarket } from 'react-native-rate';
 import {MAJOR_VERSION, MINOR_VERSION, PATCH_VERSION,PRE_RELEASE } from '@env';
-import { getUniqueId, getIpAddress } from 'react-native-device-info';
+import { getUniqueId } from 'react-native-device-info';
 import { NetworkInfo } from "react-native-network-info";
 
 const cache = {};

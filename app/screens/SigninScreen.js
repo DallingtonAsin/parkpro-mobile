@@ -14,8 +14,11 @@ import { useTheme  } from 'react-native-paper';
 import { AuthContext } from '../context/context';
 import PhoneInput from "react-native-phone-number-input";
 import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getDeviceId, getDeviceIpAddress, getAppVersionName } from '../components/SharedCommons';
 import AppLoader from '../components/loaders/AppLoader';
+import { ApiKeys } from '../network/ApiKeys';
+
 
 const SigninScreen = ({ navigation }) => {
     
@@ -42,21 +45,28 @@ const SigninScreen = ({ navigation }) => {
                 
                 const countryIsoCode = phoneInput.current?.getCountryCode();
                 const countryCode = phoneInput.current?.getCallingCode();
-                
                 const formattedNumber = phoneObj.formattedNumber;
+               
                 const deviceId = getDeviceId();
+                let deviceInfo = await AsyncStorage.getItem(ApiKeys.DEVICE_INFO);
+                deviceInfo = JSON.parse(deviceInfo);
+                const deviceToken =  deviceInfo[`${ApiKeys.DEVICE_TOKEN}`];
+                const deviceLanguage =  deviceInfo[`${ApiKeys.DEVICE_LANGUAGE}`];
                 const ipAddress = await getDeviceIpAddress();
                 const currentVersion = getAppVersionName();
-              
+
                 const requestParams = {
                     countryIsoCode: countryIsoCode,
                     countryCode: `+${countryCode}`,
                     number: number,
                     formattedNumber: formattedNumber,
                     uniqueDeviceId: deviceId,
+                    deviceToken: deviceToken,
                     ipAddress: ipAddress,
-                    currentVersion: currentVersion
+                    currentVersion: currentVersion,
+                    deviceLanguage: deviceLanguage,
                 }
+                
                 setIsLoading(true);
                 
                 let response = await sendSmsVerification(requestParams);
