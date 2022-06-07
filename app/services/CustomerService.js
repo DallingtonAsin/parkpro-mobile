@@ -115,10 +115,19 @@ module.exports = {
             throw error;
         }
     },
-
+    
     postSuggestion : async(data) => {
         try{
             const endpoint = "customer/feedback";
+            return await http.ApiService.PostData(endpoint, data);
+        }catch(error){
+            throw error;
+        }
+    },
+    
+    postAppDetails : async(data) => {
+        try{
+            const endpoint = "customer/app/details";
             return await http.ApiService.PostData(endpoint, data);
         }catch(error){
             throw error;

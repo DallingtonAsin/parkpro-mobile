@@ -12,6 +12,7 @@ import {
 import { icons, SIZES } from '../../constants';
 import OptionItem from '../components/OptionItem';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 // import BottomSheet   from 'reanimated-bottom-sheet';
 import { BottomSheet as BrSheet } from 'react-native-btr';
 import { Avatar, Divider  } from 'react-native-paper';
@@ -30,6 +31,8 @@ import BottomSheet, {
 } from '@gorhom/bottom-sheet';
 import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
 import crashlytics from "@react-native-firebase/crashlytics";
+import { getDeviceId, getDeviceIpAddress, getAppVersionName } from '../components/SharedCommons';
+import { ApiKeys } from '../network/ApiKeys';
 import { useTheme } from '@react-navigation/native';
 
 
@@ -58,7 +61,7 @@ const HomeScreen = (props) => {
   const [isSheetVisible, setIsSheetVisible] = useState(false);
   const [isEditSheetVisible, setIsEditSheetVisible] = useState(false);
   const {profile, setProfile} = useContext(ProfileContext);
-  const {getVehicleCategories, loadAirtimeCredit, syncProfileData } = React.useContext(AuthContext);
+  const {getVehicleCategories, loadAirtimeCredit, syncProfileData, updateAppDetails } = React.useContext(AuthContext);
   
   const vehicleBottomSheetRef = useRef(0);
   const buyAirtimeBottomSheetRef = useRef(0);
@@ -107,9 +110,36 @@ const HomeScreen = (props) => {
   
   
   useEffect(() => {
+    updateUserAppDetails();
     populateVehicles();
     populateFavouriteParkings();
   }, []);
+
+  const updateUserAppDetails = async() => {
+    try{
+
+      let deviceInfo = await AsyncStorage.getItem(ApiKeys.DEVICE_INFO);
+      deviceInfo = JSON.parse(deviceInfo);
+      const deviceToken =  deviceInfo[`${ApiKeys.DEVICE_TOKEN}`];
+
+      const deviceId = getDeviceId();
+      const ipAddress = await getDeviceIpAddress();
+      const currentVersion = getAppVersionName();
+
+      const reqParams = {
+         id: profile.id,
+         uniqueDeviceId: deviceId,
+         ipAddress: ipAddress,
+         currentVersion: currentVersion,
+         deviceToken: deviceToken
+      }
+      const result = await updateAppDetails(reqParams);
+      console.log("Update app details result", result);
+
+    }catch(e){
+      Toast.show(e.message);
+    }
+  }
   
   
   const populateFavouriteParkings = () =>{

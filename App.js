@@ -20,7 +20,7 @@ import { ApiKeys } from './app/network/ApiKeys';
 import messaging from '@react-native-firebase/messaging';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
-import PushNotification, {Importance} from "react-native-push-notification";
+import PushNotification, { Importance } from "react-native-push-notification";
 import Toast from 'react-native-simple-toast';
 
 const initialLoginState = {
@@ -30,11 +30,37 @@ const initialLoginState = {
   data: null,
 }
 
+const channel_id= "app-notifications";
+
+PushNotification.configure({
+  onNotification: function (notification) {
+    console.log('LOCAL NOTIFICATION ==>', notification);
+  },
+  requestPermissions: Platform.OS === 'ios',
+});
+
+PushNotification.createChannel({
+  channelId: channel_id, 
+  channelName: "app-notifications", 
+  importance: Importance.HIGH,
+},
+(created) => {}
+);
+
 const wait = (timeout) => {
   return new Promise(resolve => setTimeout(resolve, timeout));
 }
 
 const listenForPushNotification = () => {
+
+  PushNotification.channelBlocked(channel_id, function (blocked) {
+    console.log(blocked); // true/false
+  });
+
+  PushNotification.checkPermissions((permissions) => {
+    console.log("Permissions", permissions);
+  });
+
   const subscribe = messaging().onMessage(async remoteMessage => {
     let message_body = remoteMessage.notification.body;
     let message_title = remoteMessage.notification.title;
@@ -194,19 +220,17 @@ const App = ()  => {
       
       sendSmsVerification: async(data) => {
         try{
-          const result = await Services.CustomerService.sendOTP(data);
-          return result;
+          return await Services.CustomerService.sendOTP(data);
         }catch(e){
-          return {"message": e.message, "statusCode": 0};
+          throw e;
         }
       },
       
       verifyOTP: async(data) => {
         try{
-          const result = await Services.CustomerService.verifyOneTimePassword(data);
-          return result;
+          return await Services.CustomerService.verifyOneTimePassword(data);
         }catch(e){
-          return {"message": e.message, "statusCode": 0};
+          throw e;
         }
       },
       
@@ -222,7 +246,7 @@ const App = ()  => {
           return {"message": message, "statusCode": statusCode, "userName": user.phone_number, "userToken": userToken};
         }catch(e){
           console.log("Got exception on async storage", e);
-          return {"message": e.message, "statusCode": 0};
+          throw e;
         } 
       },
       
@@ -232,7 +256,7 @@ const App = ()  => {
           await AsyncStorage.removeItem("userProfile");
           dispatch({ type: 'LOGOUT' });
         }catch(e){
-          return {"message": e.message, "statusCode": 0};
+          throw e;
         }
         
       },
@@ -242,7 +266,7 @@ const App = ()  => {
         try{
           return await Services.CustomerService.createProfile(data);
         }catch(e){
-          return {"message": e.message, "statusCode": 0};
+          throw e;
         }
       },
       
@@ -250,37 +274,17 @@ const App = ()  => {
       
       updateProfile: async(data) => {
         try{
-          return await Services.CustomerService.updateProfile(data).then(async(res) => {
-            const statusCode = res.statusCode;
-            const message = res.message;
-            if(statusCode == 1){
-              const respData = res.data;
-              await AsyncStorage.setItem("userProfile", JSON.stringify(respData));
-              return {"message": message, "statusCode": statusCode, "data": respData};
-            }else{
-              return {"message": message, "statusCode": statusCode};
-            }
-          });
+          return await Services.CustomerService.updateProfile(data);
         }catch(e){
-          return {"message": e.message, "statusCode": 0};
+          throw e;
         }
       },
       
       UpdateProfileImage: async(data) => {
         try{
-          return await Services.CustomerService.uploadProfilePicture(data)
-          .then( async(res) => {
-            const statusCode = res.statusCode;
-            const message = res.message;
-            if(statusCode == 1){
-              const respData = res.data;
-              return {"message": message, "statusCode": statusCode, "data": respData};
-            }else{
-              return {"message": message, "statusCode": statusCode};
-            }
-          });
+          return await Services.CustomerService.uploadProfilePicture(data);
         }catch(e){
-          return {"message": e.message, "statusCode": 0};
+          throw e;
         }
       },
       
@@ -288,7 +292,7 @@ const App = ()  => {
         try{
           return await Services.CustomerService.removeProfilePicture(data);
         }catch(e){
-          return {"message": e.message, "statusCode": 0};
+          throw e;
         }
       },
       
@@ -309,7 +313,7 @@ const App = ()  => {
             }
           });
         }catch(e){
-          return {"message": e.message, "statusCode": 0};
+          throw e;
         }
       },
       
@@ -325,7 +329,7 @@ const App = ()  => {
         try{
           return await Services.TransactionService.getTransactionHistory(id);
         }catch(e){
-          return {"message": e.message, "statusCode": 0};
+          throw e;
         }
       },
       
@@ -333,24 +337,15 @@ const App = ()  => {
         try{
           return await Services.ParkingService.fetchParkingAreas();
         }catch(e){
-          return {"message": e.message, "statusCode": 0};
+          throw e;
         }
       },
       
       getVehicleCategories: async() => {
         try{
-          return await Services.ParkingService.getCarTypes().then(async(res) => {
-            const statusCode = res.statusCode;
-            let data;
-            if(statusCode == 1){
-              data = res.data;
-            }else{
-              data = [];
-            }
-            return data;
-          });
+          return await Services.ParkingService.getCarTypes();
         }catch(e){
-          return {"message": e.message, "statusCode": 0};
+          throw e;
         }
       },
       
@@ -358,62 +353,51 @@ const App = ()  => {
       
       updatePassword: async(data) => {
         try{
-          let userToken;
-          userToken = null;
-          return await Services.CustomerService.changePassword(data).then(async(res) => {
-            const statusCode = res.statusCode;
-            const message = res.message;
-            return {"message": message, "statusCode": statusCode};
-          });
+          return await Services.CustomerService.changePassword(data)
         }catch(e){
-          return {"message": e.message, "statusCode": 0};
+          throw e;
         }
       },
       
       
       postSuggestion: async(data) => {
         try{
-          const result = await Services.CustomerService.postSuggestion(data);
-          return result;
+          return await Services.CustomerService.postSuggestion(data);
         }catch(e){
-          return {"message": e.message, "statusCode": 0};
+          throw e;
         }
       },
       
       loadAirtimeCredit: async(data) => {
         try{
-          const result = await Services.TransactionService.loadAirtime(data);
-          return result;
+          return await Services.TransactionService.loadAirtime(data);
         }catch(e){
-          return {"message": e.message, "statusCode": 0};
+          throw e;
         }
       },
       
       
       depositMoney: async(data) => {
         try{
-          const result = await Services.CustomerService.topUp(data);
-          return result;
+          return await Services.CustomerService.topUp(data);
         }catch(e){
-          return {"message": e.message, "statusCode": 0};
+          throw e;
         }
       },
       
       filterParkingAreas: async(data) => {
         try{
-          const result = await Services.ParkingService.filterParkingAreas(data);
-          return result;
+          return await Services.ParkingService.filterParkingAreas(data);
         }catch(e){
-          return {"message": e.message, "statusCode": 0};
+          throw e;
         }
       },
       
       searchParkingArea: async(id) => {
         try{
-          const result = await Services.ParkingService.fetchParkingDetailsById(id);
-          return result;
+          return await Services.ParkingService.fetchParkingDetailsById(id);
         }catch(e){
-          return {"message": e.message, "statusCode": 0};
+          throw e;
         }
       },
       
@@ -422,7 +406,7 @@ const App = ()  => {
           const result = await Services.ParkingService.fetchNearByParkingAreas(lat, long);
           return result;
         }catch(e){
-          return {"message": e.message, "statusCode": 0};
+          throw e;
         }
       },
       
@@ -431,23 +415,17 @@ const App = ()  => {
           const result = await Services.ParkingService.fetchTopRatedParkingAreas();
           return result;
         }catch(e){
-          return {"message": e.message, "statusCode": 0};
+          throw e;
         }
       },
       
       submitParkingRequest: async(data) => {
         try{
-          return await Services.ParkingService.postParkingRequest(data).then(async(res) => {
-            const statusCode = res.statusCode;
-            const message = res.message;
-            return {"message": message, "statusCode": statusCode};
-            
-          });
+          return await Services.ParkingService.postParkingRequest(data);
         }
         catch(e){
-          return {"message": e.message, "statusCode": 0};
+          throw e;
         }
-        
         
       },
       
@@ -456,7 +434,7 @@ const App = ()  => {
           await AsyncStorage.setItem("userProfile", JSON.stringify(data));
           return {"message": 'done', "statusCode": 1};
         }catch(e){
-          return {"message": e.message, "statusCode": 0};
+          throw e;
         }
       },
       
@@ -464,7 +442,7 @@ const App = ()  => {
         try{
           return await Services.ParkingService.getMyParkingRequests(id);
         }catch(e){
-          return {"message": e.message, "statusCode": 0};
+          throw e;
         }
       },
       
@@ -472,24 +450,23 @@ const App = ()  => {
         try{
           return await Services.ParkingService.fetchParkingFees(id);
         }catch(e){
-          return {"message": e.message, "statusCode": 0};
+          throw e;
         }
       },
       
       fetchOrderInfo: async(order_no, customer_id) => {
         try{
-          return await Services.TransactionService.getOrderDetails(order_no, customer_id).then(async(res) => {
-            const statusCode = res.statusCode;
-            let data;
-            if(statusCode == 1){
-              data = res.data;
-            }else{
-              data = [];
-            }
-            return data;
-          });
+          return await Services.TransactionService.getOrderDetails(order_no, customer_id);
         }catch(e){
-          return {"message": e.message, "statusCode": 0};
+          throw e;
+        }
+      },
+
+      updateAppDetails: async(data) => {
+        try{
+          return await Services.CustomerService.postAppDetails(data);
+        }catch(e){
+          throw e;
         }
       },
       
@@ -503,6 +480,7 @@ const App = ()  => {
     
     
     useEffect(() => {
+
       let isMounted = true;
       NetInfo.fetch().then(state => {
         if(isMounted){
@@ -515,6 +493,7 @@ const App = ()  => {
           setIsConnected(state.isConnected);
         }
       });
+      
       unsubscribe();
       
       let fontName = 'RobotoCondensed-Light'

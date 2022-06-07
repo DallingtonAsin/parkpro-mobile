@@ -8,7 +8,7 @@ import { Text,
   StyleSheet} from 'react-native';
   import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
   import design from '../../assets/css/styles';
-  import { TextInput as RNTextInput, Avatar, Card, Title, Paragraph } from 'react-native-paper';
+  import { TextInput as RNTextInput, Card, Title, Paragraph } from 'react-native-paper';
   import PushNotification, {Importance} from "react-native-push-notification";
   import { AuthContext } from '../context/context';
   import ProfileContext from '../context/index';
@@ -24,14 +24,12 @@ import { Text,
     onNotification: function (notification) {
       console.log('LOCAL NOTIFICATION ==>', notification);
     },
-    
-    // This line solves the problem that I was facing.
     requestPermissions: Platform.OS === 'ios',
   });
   
   PushNotification.createChannel({
-    channelId: "ParkPro256", 
-    channelName: "ParkPro", 
+    channelId: "topup-notifications", 
+    channelName: "topup-notifications", 
     importance: Importance.HIGH,
   },
   (created) => {}
