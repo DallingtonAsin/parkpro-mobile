@@ -37,6 +37,7 @@ import { color } from 'react-native-reanimated';
       
     
     return(
+      
       <View style={styles.container}>
       <FocusAwareStatusBar barStyle="light-content"
       backgroundColor={colors.primary}
@@ -46,15 +47,15 @@ import { color } from 'react-native-reanimated';
       </View>
       <View style={styles.body}>
       <Text style={{fontSize: 16, color: '#000', textAlign: 'center', paddingTop:5, paddingBottom:15,
-    }}>Kindly contact us for any kind of assistance.</Text>
-    <FlatList
-    showsVerticalScrollIndicator={false}
-    showsHorizontalScrollIndicator={false}
-    data={communicationChannels}
-    renderItem={({item}) => <CardComponent info={item} />}
-    />
-    </View>
-    </View>
+        }}>Kindly contact us for any kind of assistance.</Text>
+      <FlatList
+      showsVerticalScrollIndicator={false}
+      showsHorizontalScrollIndicator={false}
+      data={communicationChannels}
+      renderItem={({item}) => <CardComponent info={item} />}
+      />
+      </View>
+      </View>
     
     );
     
@@ -69,10 +70,8 @@ import { color } from 'react-native-reanimated';
       backgroundColor: colors.primary,
     },
     
-    
     top:{
       flex:1,
-      // backgroundColor: colors.primary,
       justifyContent: 'center', 
       alignItems: 'center',
       padding:20,
@@ -86,11 +85,13 @@ import { color } from 'react-native-reanimated';
       padding:30,
       backgroundColor: design.colors.white,
     },
+
     card: {
       margin:15,
       color:'#fff'
       
     },
+    
     mediaGroup:{
       padding:10,
       borderRadius:10,
