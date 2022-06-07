@@ -739,7 +739,7 @@ const HomeScreen = (props) => {
                               <View style={styles.inputContainer}>
                               <Text style={styles.label}>Vehicle Type</Text>
                               <Dropdown
-                              defaultIndex={vehicle.id}
+                              defaultIndex={0}
                               options={vehicleTypes}
                               style={styles.vehiclesDropdown}
                               defaultValue={vehicle.type}
@@ -920,7 +920,7 @@ const HomeScreen = (props) => {
                                   </BottomSheetScrollView>
 
                                 <TouchableOpacity style={styles.bottomSheetButton} onPress={() => {setIsSheetVisible(true)}}>
-                                <Text style={design.vehicle.textAdd}>add vehicle_types</Text>
+                                <Text style={design.vehicle.textAdd}>add vehicle</Text>
                                 </TouchableOpacity>
 
                                 </BottomSheet>
