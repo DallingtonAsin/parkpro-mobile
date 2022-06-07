@@ -920,9 +920,7 @@ const HomeScreen = (props) => {
                                   </BottomSheetScrollView>
 
                                 <TouchableOpacity style={styles.bottomSheetButton} onPress={() => {setIsSheetVisible(true)}}>
-                                <Text style={design.vehicle.textAdd}>
-                                add vehicle
-                                </Text>
+                                <Text style={design.vehicle.textAdd}>add vehicle_types</Text>
                                 </TouchableOpacity>
 
                                 </BottomSheet>
@@ -945,16 +943,15 @@ const HomeScreen = (props) => {
                                 favouriteParkings.length > 0 
                                 ? favouriteParkings.map(renderFavouriteParkings)
                                 : <View style={{flex:1, justifyContent: 'center', alignItems: 'center'}}>
-                                <Text style={styles.text}>No any favourite parkings added yet.</Text>
-                                </View>
+                                   <Text style={styles.text}>No any favourite parkings added yet.</Text>
+                                  </View>
                                 }
                                 </BottomSheetScrollView>
                                
                                
-                                <TouchableOpacity style={styles.bottomSheetButton} onPress={showModal}>
-                                <Text style={design.vehicle.textAdd}>
-                                add favourite parking 
-                                </Text>
+                                <TouchableOpacity style={styles.bottomSheetButton} 
+                                onPress={() => props.navigation.navigate("ParkingAreas") }>
+                                <Text style={design.vehicle.textAdd}>add favourite parking</Text>
                                 </TouchableOpacity>
                                 
                                 </BottomSheet>
