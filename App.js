@@ -81,21 +81,6 @@ const requestUserPermission = async() => {
   }
 }
 
-async function saveTokenToDatabase(token) {
-  // Assume user is already signed in
-  const userId = auth().currentUser.uid;
-  // await AsyncStorage.setItem("userProfile");
-  
-  if(userId){
-    // Add the token to the users datastore
-    await firestore()
-    .collection('users')
-    .doc(userId)
-    .update({
-      tokens: firestore.FieldValue.arrayUnion(token),
-    });
-  }
-}
 
 const App = ()  => {
   
