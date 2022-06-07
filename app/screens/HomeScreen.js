@@ -5,13 +5,14 @@ import {
   Image,
   Text,
   TouchableOpacity,
-  FlatList,TextInput,
+  TextInput,
   SafeAreaView,Keyboard,
   Alert, Pressable,
 } from 'react-native';
 import { icons, SIZES } from '../../constants';
 import OptionItem from '../components/OptionItem';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 // import BottomSheet   from 'reanimated-bottom-sheet';
 import { BottomSheet as BrSheet } from 'react-native-btr';
 import { Avatar, Divider  } from 'react-native-paper';
@@ -30,6 +31,8 @@ import BottomSheet, {
 } from '@gorhom/bottom-sheet';
 import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
 import crashlytics from "@react-native-firebase/crashlytics";
+import { getDeviceId, getDeviceIpAddress, getAppVersionName } from '../components/SharedCommons';
+import { ApiKeys } from '../network/ApiKeys';
 import { useTheme } from '@react-navigation/native';
 
 
@@ -58,20 +61,15 @@ const HomeScreen = (props) => {
   const [isSheetVisible, setIsSheetVisible] = useState(false);
   const [isEditSheetVisible, setIsEditSheetVisible] = useState(false);
   const {profile, setProfile} = useContext(ProfileContext);
-  const {getVehicleCategories, loadAirtimeCredit, syncProfileData } = React.useContext(AuthContext);
+  const {getVehicleCategories, loadAirtimeCredit, syncProfileData, updateAppDetails } = React.useContext(AuthContext);
   
   const vehicleBottomSheetRef = useRef(0);
   const buyAirtimeBottomSheetRef = useRef(0);
   const favouritesBottomSheetRef = useRef(0);
   
   const snapPoints = useMemo(() => ['25%', '70%'], []);
-  const airtimeSnapPoints = useMemo(() => ['25%', '50%'], []);
   const { colors } = useTheme();
   const styles = makeStyles(colors);
-  
-  
-  const handleSheetChanges = useCallback((index) => {
-  }, []);
   
   const handleVehicleSheetChanges = useCallback((index) => {
     populateVehicles();
@@ -81,14 +79,15 @@ const HomeScreen = (props) => {
     populateFavouriteParkings();
   }, []);
   
-  
   const openVehiclesSheet = useCallback((index) => {
+    favouritesBottomSheetRef.current?.close();
     vehicleBottomSheetRef.current?.snapToIndex(index);
   }, []);
   
   const handleCloseAirtimeSheet = () => buyAirtimeBottomSheetRef.current?.close()
   
   const openFavouritesSheet = useCallback((index) => {
+    vehicleBottomSheetRef.current?.close();
     favouritesBottomSheetRef.current?.snapToIndex(index);
   }, []);
   
@@ -107,9 +106,36 @@ const HomeScreen = (props) => {
   
   
   useEffect(() => {
+    updateUserAppDetails();
     populateVehicles();
     populateFavouriteParkings();
   }, []);
+
+  const updateUserAppDetails = async() => {
+    try{
+
+      let deviceInfo = await AsyncStorage.getItem(ApiKeys.DEVICE_INFO);
+      deviceInfo = JSON.parse(deviceInfo);
+      const deviceToken =  deviceInfo[`${ApiKeys.DEVICE_TOKEN}`];
+
+      const deviceId = getDeviceId();
+      const ipAddress = await getDeviceIpAddress();
+      const currentVersion = getAppVersionName();
+
+      const reqParams = {
+         id: profile.id,
+         uniqueDeviceId: deviceId,
+         ipAddress: ipAddress,
+         currentVersion: currentVersion,
+         deviceToken: deviceToken
+      }
+      const result = await updateAppDetails(reqParams);
+      console.log("Update app details result", result);
+
+    }catch(e){
+      Toast.show(e.message);
+    }
+  }
   
   
   const populateFavouriteParkings = () =>{
@@ -519,8 +545,10 @@ const HomeScreen = (props) => {
                     function capitalizeFirstLetter(string) {
                       return string.charAt(0).toUpperCase() + string.slice(1);
                     }
-                    
-                    const VehicleComponent = (item) => (
+
+
+                    const renderVehicles =  useCallback(
+                      (item) => (
                       <View style={{flexDirection: 'row', padding:20}}>
                       <Image
                       source={require('../../assets/images/UberX.jpeg')}
@@ -540,9 +568,11 @@ const HomeScreen = (props) => {
                       </View>
                       
                       </View>
-                      )
+                      ),[]);
                       
-                      const parkingsComponent = (item) => (
+                      const renderFavouriteParkings = useCallback(
+                      
+                      (item) => (
                         <View style={[design.vehicle.container,{padding:10}]}>
                         <Icon name="map-marker" size={30} color="#4F8EF7" />
                         <View style={design.vehicle.middleContainer}>
@@ -555,7 +585,7 @@ const HomeScreen = (props) => {
                         </Pressable>
                         </View>
                         </View>
-                        )
+                         ),[]);
                         
                         
                         const renderHeader = (title) => {
@@ -581,14 +611,14 @@ const HomeScreen = (props) => {
                             onBackButtonPress={toggleBottomNavigationView}
                             onBackdropPress={toggleBottomNavigationView}
                             >
-                            {/* <ScrollView style={styles.panel}> */}
                             
                             <View style={{ flex: 3, alignItems: 'center',padding:20, justifyContent: 'center', backgroundColor: design.colors.gray,}}>
                             <Avatar.Icon icon={icons.uber} style={{backgroundColor: colors.text}} /> 
                             </View>
                             
                             
-                            <View style={{ flex: 3, backgroundColor: design.colors.white, padding:20 }}>
+                            <View style={{ flex: 3, backgroundColor: design.colors.white,
+                               padding:20 }}>
                             <View style={{alignItems:'center'}}>
                             <Text style={styles.popupTitle}>Add new vehicle</Text>
                             </View>
@@ -667,8 +697,6 @@ const HomeScreen = (props) => {
                               </View>
                               
                               </View>
-                              
-                              {/* </ScrollView> */}
                               </BrSheet>
                               
                               
@@ -677,7 +705,6 @@ const HomeScreen = (props) => {
                               onBackButtonPress={toggleEditBottomNavigationView}
                               onBackdropPress={toggleEditBottomNavigationView}
                               >
-                              {/* <ScrollView style={styles.panel}> */}
                               
                               <View style={{ flex: 3, alignItems: 'center',padding:20, justifyContent: 'center', backgroundColor: design.colors.gray,}}>
                               <Avatar.Icon icon={icons.uber} style={{backgroundColor:design.colors.white}} /> 
@@ -712,7 +739,7 @@ const HomeScreen = (props) => {
                               <View style={styles.inputContainer}>
                               <Text style={styles.label}>Vehicle Type</Text>
                               <Dropdown
-                              defaultIndex={vehicle.id}
+                              defaultIndex={0}
                               options={vehicleTypes}
                               style={styles.vehiclesDropdown}
                               defaultValue={vehicle.type}
@@ -761,8 +788,6 @@ const HomeScreen = (props) => {
                                 </View>
                                 
                                 </View>
-                                
-                                {/* </ScrollView> */}
                                 </BrSheet>
                                 
                                 
@@ -867,35 +892,12 @@ const HomeScreen = (props) => {
                                   tintColor={colors.icon}
                                   onPress={() => props.navigation.navigate("PaymentHistory") }
                                   />
-                                  
                                   </View>
-                                  
-                                  {/* <View style={styles.morePanel}>
-                                  
-                                  
-                                  <TouchableOpacity  onPress={() => openCloseBuyAirtimeSheet(1)} style={{alignContent:'center', alignItems: 'center'}}>
-                                  <FontAwesome name={"mobile"} size={35} color={design.colors.orange} />
-                                  <Text style={styles.moreText}>Airtime</Text>
-                                  </TouchableOpacity>
-                                  
-                                  <TouchableOpacity style={{alignContent:'center', alignItems: 'center'}}>
-                                  <FontAwesome name={"wifi"} size={35} color={design.colors.orange} />
-                                  <Text style={styles.moreText}>Data</Text>
-                                  </TouchableOpacity>
-                                  
-                                  <TouchableOpacity style={{alignContent:'center', alignItems: 'center'}}>
-                                  <FontAwesome5 name={"wallet"} size={35}  color={design.colors.orange}/>
-                                  <Text style={styles.moreText}>Bills</Text>
-                                  </TouchableOpacity>
-                                  
-                                  
-                                </View> */}
-                                
+                                 
                                 </View>
                                 </View>
                                 
                                 
-                                {/* Vehicles List  */}
                                 <BottomSheet
                                 ref={vehicleBottomSheetRef}
                                 index={-1}
@@ -903,80 +905,27 @@ const HomeScreen = (props) => {
                                 enablePanDownToClose={true}
                                 backdropComponent={renderVehiclesBackdrop}
                                 onChange={handleVehicleSheetChanges}
-                                handleComponent={() => renderHeader("My Vehicles") }
-                              
-                                >
+                                handleComponent={() => renderHeader("My Vehicles") }>
+
                                 <Divider style={styles.divider}/>
-                                <FlatList
-                                scrollEnabled={true}
-                                vertical={true}
-                                data={vehicles}
-                                renderItem={({item}) => VehicleComponent(item) }
-                                ItemSeparatorComponent = { FlatListItemSeparator }
-                                keyExtractor={(item, index) => { return item.number.toString()}}
-                                ListEmptyComponent={<View style={{flex:1, justifyContent: 'center', 
-                                alignItems: 'center'}}>
-                                <Text style={styles.text}>You haven't added any vehicles yet.</Text>
-                                </View>}
-                                />
-
-                                <View style={{justifyContent: 'center', alignContent: 'center'}}>
-                                <TouchableOpacity style={styles.bottomSheetButton} onPress={() => {setIsSheetVisible(true)}}>
-                                <Text style={{fontSize:14, textAlign: 'center', textTransform:'uppercase'}}>
-                                add vehicle
-                                </Text>
-                                <FontAwesome name={"arrow-right"} size={18} style={design.vehicle.icon} color={"#808080"}/>
-                                </TouchableOpacity>
-                                </View>
-
-                               
-
-                                </BottomSheet>
                                 
-                                
-                                
-                                {/* Buy Airtime     */}
-                                <BottomSheet
-                                ref={buyAirtimeBottomSheetRef}
-                                index={-1}
-                                snapPoints={airtimeSnapPoints}
-                                enablePanDownToClose={true}
-                                backdropComponent={renderVehiclesBackdrop}
-                                onChange={handleSheetChanges}
-                                handleComponent={() => renderHeader("Buy Airtime") }
-                                >
-                                {/* <BottomSheetScrollView contentContainerStyle={styles.contentContainer}> */}
-                                
-                                <View style={{flexDirection: 'row', padding:35}}>
-                                <TextInput 
-                                name="vehicleNumber" 
-                                value={airtimeAmount}
-                                onSubmitEditing={Keyboard.dismiss}
-                                onChangeText={(val) => setAirtimeAmount(val)}   
-                                style={styles.input}
-                                keyboardType='numeric'
-                                placeholder={"Enter amount to load e.g 50"}/>
-                                </View>
-                                
-                                <TouchableOpacity style={styles.bottomSheetButton} onPress={() => loadAirtime() }>
-                                
+                                <BottomSheetScrollView contentContainerStyle={styles.contentContainer}>
                                 {
-                                  isLoadingAirtime ? 
-                                  <UIActivityIndicator color='black' size={27}/> : 
-                                  <>
-                                  <Text style={{fontSize:14, textAlign: 'center',
-                                  textTransform:'uppercase'}}> Continue</Text>
-                                  <FontAwesome name={"arrow-right"} size={18}
-                                  style={design.vehicle.icon} color={"#808080"}/>
-                                  </>
+                                vehicles.length > 0 
+                                ? vehicles.map(renderVehicles)
+                                : <View style={{flex:1, justifyContent: 'center', alignItems: 'center'}}>
+                                <Text style={styles.text}>No vehicles added yet.</Text>
+                                </View>
                                 }
+                                  </BottomSheetScrollView>
+
+                                <TouchableOpacity style={styles.bottomSheetButton} onPress={() => {setIsSheetVisible(true)}}>
+                                <Text style={design.vehicle.textAdd}>add vehicle</Text>
                                 </TouchableOpacity>
-                                {/* </BottomSheetScrollView> */}
+
                                 </BottomSheet>
                                 
-                                
-                                
-                                
+                              
                                 <BottomSheet
                                 ref={favouritesBottomSheetRef}
                                 index={-1}
@@ -986,32 +935,25 @@ const HomeScreen = (props) => {
                                 onChange={handleSheetFavouriteParkingChanges}
                                 handleComponent={() => renderHeader("favourite parking areas") }
                                 >
-                                {/* <BottomSheetScrollView contentContainerStyle={styles.contentContainer}> */}
-                                
-                                <View style={styles.SheetContentContainer}>
+                               
                                 <Divider style={styles.divider}/>
                                 
+                                <BottomSheetScrollView contentContainerStyle={styles.contentContainer}>
+                                {
+                                favouriteParkings.length > 0 
+                                ? favouriteParkings.map(renderFavouriteParkings)
+                                : <View style={{flex:1, justifyContent: 'center', alignItems: 'center'}}>
+                                   <Text style={styles.text}>No any favourite parkings added yet.</Text>
+                                  </View>
+                                }
+                                </BottomSheetScrollView>
                                
-                                <FlatList
-                                data={favouriteParkings}
-                                renderItem={({item}) => parkingsComponent(item) }
-                                keyExtractor={(item, index) => { return item.id.toString()}}
-                                ItemSeparatorComponent = { FlatListItemSeparator }
-                                ListEmptyComponent={<View style={{flex:1, justifyContent: 'center', alignItems: 'center'}}>
-                                <Text style={styles.text}>You haven't added any parkings in favourite section</Text>
-                                </View>}
-                                />
+                               
+                                <TouchableOpacity style={styles.bottomSheetButton} 
+                                onPress={() => props.navigation.navigate("ParkingAreas") }>
+                                <Text style={design.vehicle.textAdd}>add favourite parking</Text>
+                                </TouchableOpacity>
                                 
-                                
-                                <Pressable style={styles.bottomSheetButton} onPress={showModal}>
-                                <Text style={design.vehicle.textAdd}>
-                                add favourite parking 
-                                <FontAwesome name={"arrow-right"} size={10} style={design.vehicle.icon}/>
-                                </Text>
-                                </Pressable>
-                                
-                                </View>
-                                {/* </BottomSheetScrollView> */}
                                 </BottomSheet>
                                 
                                 </View>
@@ -1059,8 +1001,6 @@ const HomeScreen = (props) => {
                                 contentContainer: {
                                   flex: 1,
                                   alignItems: 'center',
-                                  
-                                  
                                 },
                                 
                                 card:{
@@ -1120,10 +1060,11 @@ const HomeScreen = (props) => {
                                   flexDirection: 'row',
                                   justifyContent: 'center',
                                   alignItems: 'center',
+                                  alignSelf: 'center',
                                   borderWidth:1,
                                   marginLeft:10, 
                                   marginTop:15,
-                                  marginBottom:60,
+                                  marginBottom:80,
                                   height:50,
                                   width:'75%',
                                   borderRadius:30,
