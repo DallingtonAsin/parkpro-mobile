@@ -34,6 +34,7 @@ import crashlytics from "@react-native-firebase/crashlytics";
 import { getDeviceId, getDeviceIpAddress, getAppVersionName } from '../components/SharedCommons';
 import { ApiKeys } from '../network/ApiKeys';
 import { useTheme } from '@react-navigation/native';
+import { useIsMounted } from '../components/common/isMounted';
 
 
 const dbVehicleHelper = require("../database/vehicles");
@@ -50,22 +51,21 @@ const initialVehicleState= {
 const HomeScreen = (props) => {
   
   const [isLoading, setIsLoading] = useState(false);
-  const [isLoadingAirtime, setIsLoadingAirtime] = useState(false);
   const [vehicles, setVehicleState] = useState({});
   const [vehicle, setVehicleData] = React.useState(initialVehicleState);
   const [vehicleTypes, setVehicleTypes] = useState([]);
-  const [airtimeAmount, setAirtimeAmount] =useState(0);
   const [userCounts, setUserCounts] = useState(null);
   const [favouriteParkings, setFavouriteParkings] = useState([]);
   
   const [isSheetVisible, setIsSheetVisible] = useState(false);
   const [isEditSheetVisible, setIsEditSheetVisible] = useState(false);
-  const {profile, setProfile} = useContext(ProfileContext);
-  const {getVehicleCategories, loadAirtimeCredit, syncProfileData, updateAppDetails } = React.useContext(AuthContext);
+  const { profile } = useContext(ProfileContext);
+  const {getVehicleCategories, updateAppDetails } = React.useContext(AuthContext);
+  const isMounted = useIsMounted();
   
   const vehicleBottomSheetRef = useRef(0);
-  const buyAirtimeBottomSheetRef = useRef(0);
   const favouritesBottomSheetRef = useRef(0);
+  
   
   const snapPoints = useMemo(() => ['25%', '70%'], []);
   const { colors } = useTheme();
@@ -84,7 +84,6 @@ const HomeScreen = (props) => {
     vehicleBottomSheetRef.current?.snapToIndex(index);
   }, []);
   
-  const handleCloseAirtimeSheet = () => buyAirtimeBottomSheetRef.current?.close()
   
   const openFavouritesSheet = useCallback((index) => {
     vehicleBottomSheetRef.current?.close();
@@ -93,23 +92,17 @@ const HomeScreen = (props) => {
   
   
   useEffect(() => {
-    let isMounted = true; 
-    crashlytics().log("App mounted.");
-    if (isMounted){
+
       dbVehicleHelper.createVehiclesTable();
       dbParkingHelper.createTableFavouriteParkings();
+      updateUserAppDetails();
+      
       populateVehicleTypes();
-    }
-    return () => { isMounted = false };
+      populateVehicles();
+      populateFavouriteParkings();
     
   }, []);
   
-  
-  useEffect(() => {
-    updateUserAppDetails();
-    populateVehicles();
-    populateFavouriteParkings();
-  }, []);
   
   const updateUserAppDetails = async() => {
     try{
@@ -132,8 +125,8 @@ const HomeScreen = (props) => {
       const result = await updateAppDetails(reqParams);
       // console.log("Update app details result", result);
       
-    }catch(e){
-      Toast.show(e.message);
+    }catch(err){
+      console.log("Error on updating user app details", err);
     }
   }
   
@@ -142,11 +135,13 @@ const HomeScreen = (props) => {
     try{
       dbParkingHelper.getFavouriteParkings(parkings => {
         if(parkings){
-          setFavouriteParkings(parkings);
+          if(isMounted.current) { 
+            setFavouriteParkings(parkings);
+          }
         }
       });
-    }catch(error){
-      Toast.show(error.message);
+    }catch(err){
+      console.log("Error on loading favourite parkings", err);
     }
     
   }
@@ -200,8 +195,8 @@ const HomeScreen = (props) => {
           alert('Unable to remove parking area from favourites');
         }
       });
-    }catch(error){
-      Toast.show(error.message);
+    }catch(err){
+      console.log("Error on removing favourite parking", err);
     }
   }
   
@@ -244,45 +239,6 @@ const HomeScreen = (props) => {
       }
       
       
-      const loadAirtime = async() => {
-        
-        const airtime = parseFloat(airtimeAmount);
-        minAirtimeAmount = parseFloat(MIN_AIRTIME_AMOUNT);
-        maxAirtimeAmount = parseFloat(MAX_AIRTIME_AMOUNT);
-        
-        if(!airtime){
-          Alert.alert("Message", "Please enter airtime amount to load.")
-        }
-        if(airtime){
-          if(airtime < minAirtimeAmount || airtime > maxAirtimeAmount){
-            Alert.alert("Message", "Please enter airtime amount not less than "+minAirtimeAmount+" and not greater than "+maxAirtimeAmount+".")
-          }
-          if(airtime >= minAirtimeAmount && airtime <= maxAirtimeAmount){
-            const data = {
-              id: profile.id,
-              phone_number: profile.phone_number,
-              amount: airtime
-            }
-            setIsLoadingAirtime(true);
-            const response = await loadAirtimeCredit(data);
-            const statusCode = response.statusCode;
-            const message = response.message;
-            if(statusCode == 1){
-              const customer = response.data;
-              setProfile(customer);
-              await syncProfileData(customer);
-              setAirtimeAmount(0);
-              handleCloseAirtimeSheet();
-              Toast.show(message, Toast.LONG);
-            }else{
-              Alert.alert("Message", message);
-            }
-            setIsLoadingAirtime(false);
-          }
-        }
-        
-      }
-      
       const renderVehiclesBackdrop = useCallback(
         props => (
           <BottomSheetBackdrop
@@ -319,9 +275,12 @@ const HomeScreen = (props) => {
                   for(let i=0; i<data.length; i++) {
                     vehicle_types.push(data[i]['name']);
                   }
-                  setVehicleTypes(vehicle_types);
+                  if(isMounted.current) { 
+                    setVehicleTypes(vehicle_types);
+                  }
+                  
                 }
-              
+                
               }
               
               
@@ -330,11 +289,14 @@ const HomeScreen = (props) => {
                   // select * from vehicles
                   dbVehicleHelper.getVehicles(vehicles => {
                     if(vehicles){
-                      setVehicleState(vehicles);
+                      if(isMounted.current) { 
+                        setVehicleState(vehicles);
+                      }
+                      
                     }
                   });
-                }catch(error){
-                  Toast.show(error.message);
+                }catch(err){
+                  console.log("Error on loading vehicles", err);
                 }
                 
               }
@@ -379,8 +341,8 @@ const HomeScreen = (props) => {
                     
                     
                   }
-                }catch(error){
-                  Toast.show(error.message);
+                }catch(err){
+                  console.log("Error on adding vehicle", err);
                 }
               };
               
@@ -422,8 +384,8 @@ const HomeScreen = (props) => {
                     setIsLoading(false);
                   });
                   
-                }catch(error){
-                  Toast.show(error.message);
+                }catch(err){
+                  console.log("Error on updating vehicle details", err);
                 }
                 
               };
@@ -443,8 +405,8 @@ const HomeScreen = (props) => {
                       alert('Unable to remove vehicle');
                     }
                   });
-                }catch(error){
-                  Toast.show(error.message);
+                }catch(err){
+                  console.log("Error on deleting vehicle", err);
                 }
               }
               
