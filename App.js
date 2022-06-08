@@ -22,6 +22,7 @@ import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import PushNotification, { Importance } from "react-native-push-notification";
 import Toast from 'react-native-simple-toast';
+import { useIsMounted } from './app/components/common/isMounted';
 
 const initialLoginState = {
   isLoading: true,
@@ -52,15 +53,15 @@ const wait = (timeout) => {
 }
 
 const listenForPushNotification = () => {
-
+  
   PushNotification.channelBlocked(channel_id, function (blocked) {
     console.log(blocked); // true/false
   });
-
+  
   PushNotification.checkPermissions((permissions) => {
     console.log("Permissions", permissions);
   });
-
+  
   const subscribe = messaging().onMessage(async remoteMessage => {
     let message_body = remoteMessage.notification.body;
     let message_title = remoteMessage.notification.title;
@@ -92,6 +93,8 @@ const App = ()  => {
   const [isDarkTheme, setIsDarkTheme] = React.useState(false);
   
   const theme = isDarkTheme ? customDarkTheme : customDefaultTheme;
+  const isMounted = useIsMounted();
+
   
   
   const OfflineScreen = () => {
@@ -160,7 +163,7 @@ const App = ()  => {
     
     const deviceInformation = () => {
       var language = getLocale();
-
+      
       messaging()
       .getToken()
       .then(token => {
@@ -170,7 +173,7 @@ const App = ()  => {
           console.log("User does not have device token");
         } 
       });
-
+      
       messaging().onTokenRefresh(token => {
         if (token) {
           onChangeToken(token, language)
@@ -188,7 +191,7 @@ const App = ()  => {
       data[`${ApiKeys.DEVICE_TYPE}`] = Platform.OS;
       data[`${ApiKeys.DEVICE_LANGUAGE}`] = language;
       loadDeviceInfo(data).done();
-
+      
     }
     
     const loadDeviceInfo = async (deviceData) => {
@@ -223,12 +226,14 @@ const App = ()  => {
       goToHomeScreen: async(user) => {
         let userToken = null;
         try{
+
           userToken = user.access_token;
           setProfile(user);
+
           await AsyncStorage.setItem("userToken", userToken);
           await AsyncStorage.setItem("userProfile", JSON.stringify(user));
           dispatch({ type: 'LOGIN', id: user.phone_number, userToken: userToken})
-          return {"message": message, "statusCode": statusCode, "userName": user.phone_number, "userToken": userToken};
+       
         }catch(e){
           console.log("Got exception on async storage", e);
           throw e;
@@ -446,7 +451,7 @@ const App = ()  => {
           throw e;
         }
       },
-
+      
       updateAppDetails: async(data) => {
         try{
           return await Services.CustomerService.postAppDetails(data);
@@ -466,39 +471,40 @@ const App = ()  => {
     
     useEffect(() => {
 
-      let isMounted = true;
+      let fontName = 'RobotoCondensed-Light'
+      GlobalFont.applyGlobal(fontName);
+      
       NetInfo.fetch().then(state => {
-        if(isMounted){
-          setIsConnected(state.isConnected);
-        }
+        isMounted.current && setIsConnected(state.isConnected);
+        
       });
       
       const unsubscribe = NetInfo.addEventListener(state => {
-        if(isMounted){
-          setIsConnected(state.isConnected);
-        }
+        isMounted.current && setIsConnected(state.isConnected);
+        
       });
       
       unsubscribe();
       
-      let fontName = 'RobotoCondensed-Light'
-      GlobalFont.applyGlobal(fontName);
+    
       requestUserPermission();
       deviceInformation();
       listenForPushNotification();
       
       setTimeout(async() => {
-
+        
         let user, userToken;
         userToken = null;
         user = null;
-
+        
         try{
           userToken = await AsyncStorage.getItem("userToken");
           if(userToken){
+            
             user = await AsyncStorage.getItem("userProfile");
             user = JSON.parse(user);
-            setProfile(user);
+            isMounted.current &&  setProfile(user);
+
           }
         }catch(e){
           console.log("Error on async storage", e);
@@ -507,7 +513,6 @@ const App = ()  => {
       }, 2500);
       
       SplashScreen.hide();
-      return () => { isMounted = false };
       
     }, []);
     
