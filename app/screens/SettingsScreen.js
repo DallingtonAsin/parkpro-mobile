@@ -3,8 +3,8 @@ import { TouchableOpacity, View, FlatList, Linking, StyleSheet} from 'react-nati
 import Toast from 'react-native-simple-toast';
 import AwesomeAlert from 'react-native-awesome-alerts';
 import { Cache } from 'react-native-cache';
-import Dialog, { DialogFooter, DialogButton,
-   DialogContent } from 'react-native-popup-dialog';
+import Dialog, { DialogFooter, DialogButton, DialogContent } from 'react-native-popup-dialog';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Rate, { AndroidMarket } from 'react-native-rate';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {  AirbnbRating } from 'react-native-elements';
@@ -30,8 +30,8 @@ const set2 = [
     key: 5,
     item: "Version",
     link: "Version",
-    data: version,
-    icon: "",
+    data: "",
+    icon: "info-circle",
   },
   
   {
@@ -39,7 +39,7 @@ const set2 = [
     item: "Copyrights",
     link: "Copyrights",
     data: "",
-    icon: "",
+    icon: "copyright",
     
   },
   {
@@ -47,7 +47,7 @@ const set2 = [
     item: "Legal Policies",
     link: "LegalPolicies",
     data: "",
-    icon: "",
+    icon: "gavel",
     
   },
   
@@ -58,10 +58,10 @@ const set2 = [
 const set3 = [
   {
     key: 10,
-    item: "Rate the App",
+    item: "Rate App on Store",
     link: "RateUs",
     data: "",
-    icon: "",
+    icon: "star",
     
   },
   {
@@ -69,7 +69,7 @@ const set3 = [
     item: "Clear app cache",
     link: "ClearCache",
     data: "",
-    icon: "",
+    icon: "trash",
     
   },
   
@@ -89,15 +89,15 @@ const Settings = ({ navigation }) => {
   const [state, setState] = useState(initialState); 
   const [isVisible, setIsVisible] = useState(false);   
   const [isEnabled, setIsEnabled] = useState(false);
-
+  
   const {  toggleTheme } = React.useContext(AuthContext);
   const paperTheme = useTheme(); 
-
+  
   const { colors } = useTheme();
   const styles = makeStyles(colors);
-
-
-
+  
+  
+  
   const handlerClearAppCache = () => {
     (async () => {
       cache.clearAll();
@@ -240,7 +240,10 @@ const Settings = ({ navigation }) => {
     renderItem={({ item }) =>
     <TouchableOpacity key={item.key} onPress={() =>{Navigate(item.link)}}
     style={{ padding:15, flexDirection:'row', justifyContent:'space-between'}}>
-    <Text style={{ fontSize:17, color: colors.dark }}>{item.item}</Text>
+     
+    <Text style={{ fontSize:17, color: colors.dark }}>
+    <FontAwesome name={item.icon} size={18} /> {item.item}
+      </Text>
     {
       (item.data)
       ? <Text style={{ opacity:0.4, bottom:10, color: colors.dark }}>{item.data}</Text> 
@@ -257,27 +260,39 @@ const Settings = ({ navigation }) => {
     renderItem={({ item }) =>
     <TouchableOpacity key={item.key} onPress={() =>{Navigate(item.link)}}
     style={{ padding:15, flexDirection:'row', justifyContent:'space-between'}}>
-    <Text style={{ fontSize:17, color: colors.dark }}>{item.item}</Text>
+    <Text style={{ fontSize:17, color: colors.dark }}>
+    <FontAwesome name={item.icon} size={18} />  {item.item}</Text>
     {
       (item.data)
       ? <Text style={{ opacity:0.4, bottom:10, color: colors.dark  }}>{item.data}</Text> 
-      : <Text></Text>
+      : null
     }
     </TouchableOpacity>}/>
     
-
-                 <Drawer.Section title={
-                <Text style={styles.title}>Preferences</Text>
-                 }>
-                        <TouchableRipple onPress={() => {toggleTheme()}}>
-                            <View style={styles.preference}>
-                                <Text style={{ fontSize:17, color: colors.dark }}>Change Theme</Text>
-                                <View pointerEvents="none">
-                                    <Switch value={paperTheme.dark}/>
-                                </View>
-                            </View>
-                        </TouchableRipple>
-                    </Drawer.Section>
+    
+    <Drawer.Section title={
+      <Text style={styles.title}>Preferences</Text>
+    }>
+    
+    <TouchableOpacity onPress={() =>{Navigate("ChangeWalletPin")}} style={{ padding:15, flexDirection:'row', justifyContent:'space-between'}}>
+    <Text style={{ fontSize:17, color: colors.dark }}>
+    <FontAwesome name={'key'} size={18} />  Change Wallet PIN</Text>
+    </TouchableOpacity>
+    
+    
+    <TouchableRipple onPress={() => {toggleTheme()}}>
+    <View style={styles.preference}>
+    <Text style={{ fontSize:17, color: colors.dark }}>
+    <FontAwesome name={'refresh'} size={18} />  Change Theme</Text>
+    <View pointerEvents="none">
+    <Switch value={paperTheme.dark}/>
+    </View>
+    </View>
+    </TouchableRipple>
+    </Drawer.Section>
+    
+    
+    
     
     </View>
     
@@ -302,7 +317,7 @@ const Settings = ({ navigation }) => {
       fontSize:16,
       color: colors.primary
     },
-
+    
     preference: {
       flexDirection: 'row',
       justifyContent: 'space-between',
