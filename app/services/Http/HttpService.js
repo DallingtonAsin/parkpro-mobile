@@ -58,7 +58,6 @@ exports.PostData = async(endPoint, data, token=null) => {
     const url = APP_URL+""+ endPoint;
     const bearToken = token ? token :  await getToken();
  
-    console.log("Got token on post Data", bearToken);
     let response = await fetch(url, {
       method: 'POST', 
       headers: {

@@ -78,6 +78,7 @@
     "react-native-image-picker": "^4.0.6",
     "react-native-indicators": "^0.17.0",
     "react-native-linear-gradient": "^2.5.6",
+    "react-native-location-enabler": "^4.1.1",
     "react-native-maps": "^0.28.0",
     "react-native-maps-directions": "^1.8.0",
     "react-native-material-ripple": "^0.9.1",
