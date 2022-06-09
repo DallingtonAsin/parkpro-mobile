@@ -10,27 +10,24 @@ import AppLoader from '../components/loaders/AppLoader';
 import Toast from 'react-native-simple-toast';
 import CountDown from 'react-native-countdown-component';
 
+
 const OtpInputScreen = ({ route, navigation }) => {
 
-
-  let { otp, countryCode, phoneNumber } = route.params;
+  const { otp, countryCode, phoneNumber } = route.params;
   const [invalidCode, setInvalidCode] = useState(false);
   const [message, setMessage] = useState("");
   const { verifyOTP, goToHomeScreen, resendSignupOTP } = React.useContext(AuthContext);
-  const [otpCode, setOTP] = useState("");
+  const [otpCode, setOTP] = useState(otp);
   const [isLoading, setIsLoading] = useState(false);
   const [isTimerOn, setIsTimerOn] = useState(true);
-  
-  
   
   const { colors } = useTheme();
   const styles = makeStyles(colors);
   
-  
   const submitOTP = async() => {
     try{
-      if(otp){
-        await verifyCustomerOtp(otp);
+      if(otpCode){
+        await verifyCustomerOtp(otpCode);
       }else{
         Toast.show('Please enter otp', Toast.LONG);
       }
@@ -45,15 +42,14 @@ const OtpInputScreen = ({ route, navigation }) => {
       if(countryCode && phoneNumber){
         
         const reqParams = {
-          country_code: countryCode,
-          phone_number: phoneNumber
+          countryCode: countryCode,
+          phoneNumber: phoneNumber
         }
         setIsTimerOn(true);
         const result = await resendSignupOTP(reqParams);
         console.log("Resend otp response", result);
         if(result.statusCode == "1"){
           const newOTP = result.data.otp;
-          otp= newOTP;
           setOTP(newOTP);
         }else{
           Toast.show(result.message, Toast.LONG);
@@ -123,7 +119,7 @@ const OtpInputScreen = ({ route, navigation }) => {
     autoFocusOnLoad
     codeInputFieldStyle={styles.underlineStyleBase}
     codeInputHighlightStyle={styles.underlineStyleHighLighted}
-    code={otp}
+    code={otpCode}
     // onCodeFilled={(code) => { setOTP(code) }}
     />
     

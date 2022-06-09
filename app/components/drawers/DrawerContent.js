@@ -59,7 +59,7 @@ const CustomDrawer = (props) => {
     
     {
       icon: 'cloud-rain',
-      text: 'Weather info',
+      text: 'Weather',
       screenToNavigate:'Weather',
     },
     
@@ -112,9 +112,9 @@ const CustomDrawer = (props) => {
     <View style={styles.userInfoSection}>
     {
       profile.image ?
-      <Avatar.Image size={120} style={{backgroundColor: styles.colors.white}} 
+      <Avatar.Image size={115} style={{backgroundColor: styles.colors.white}} 
       source={{uri: profile.image }} />
-      : <Avatar.Image size={120} style={{backgroundColor: styles.colors.white}} 
+      : <Avatar.Image size={115} style={{backgroundColor: styles.colors.white}} 
       source={require('../../../assets/default-user.png')} />
     }
     <Text style={{ marginTop:5, fontSize:18,
@@ -249,7 +249,7 @@ const CustomDrawer = (props) => {
           position: 'absolute',
           right: 0,
           left: 0,
-          bottom: 25
+          bottom: 15
         }]}
         onPress={() => logout() }
       >

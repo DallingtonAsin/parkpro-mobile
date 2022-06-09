@@ -17,7 +17,7 @@ import Toast from 'react-native-simple-toast';
 import PhoneInput from "react-native-phone-number-input";
 import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { getDeviceId, getDeviceIpAddress, getAppVersionName } from '../components/SharedCommons';
+import { getDeviceId, getDeviceIpAddress, getAppVersionName, storeAccessToken } from '../components/SharedCommons';
 import AppLoader from '../components/loaders/AppLoader';
 import { ApiKeys } from '../network/ApiKeys';
 
@@ -110,6 +110,9 @@ const SigninScreen = ({ navigation }) => {
             let response = await sendSmsVerification(requestParams);
             console.log("API response", response);
             if(response.statusCode == 1){
+
+                await storeAccessToken(response.data.access_token);
+                
                 navigation.navigate("Otp",{
                     countryCode: response.data.country_code,
                     phoneNumber: response.data.phone_number,

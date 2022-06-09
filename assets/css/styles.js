@@ -61,13 +61,13 @@ export default {
   userInfoSection: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop:15
+    // marginTop:10
   },
 
   preference: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingVertical: 10,
+    paddingVertical: 15,
     paddingHorizontal: 0,
   },
   
