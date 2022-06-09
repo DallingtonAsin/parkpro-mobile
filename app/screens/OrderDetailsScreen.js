@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {Text, SafeAreaView, Image, 
   RefreshControl, View, FlatList,ScrollView,
-   TouchableWithoutFeedback, StyleSheet} from 'react-native';
+  TouchableWithoutFeedback, StyleSheet} from 'react-native';
   import { AuthContext } from '../context/context';
   import styles from '../../assets/css/styles';
   import { icons } from '../../constants';
@@ -9,21 +9,21 @@ import {Text, SafeAreaView, Image,
   import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
   import { useTheme } from '@react-navigation/native';
   import AppLoader from '../components/loaders/AppLoader';
-
-
+  
+  
   const wait = (timeout) => {
     return new Promise(resolve => setTimeout(resolve, timeout));
   }
   
-  const  OrderDetailsScreen = ({route, navigation}) => {
+  const OrderDetailsScreen = ({route, navigation}) => {
     
     const [orderInfo, setOrderInfo] = useState([]);
     const [isLoading, setIsLoading] = React.useState(true);
     const { colors } = useTheme();
-
+    
     const { orderNo, customerId } = route.params;
     const { fetchOrderInfo } = React.useContext(AuthContext);
-
+    
     const onRefresh = React.useCallback(() => {
       setIsLoading(true);
       wait(2000).then(() =>{
@@ -34,137 +34,130 @@ import {Text, SafeAreaView, Image,
     
     const fetchOrderDetails = async(order_no, customer_id) => {
       try{
-
-        const order_details = await fetchOrderInfo(order_no, customer_id);
-        if(order_details.length > 0){
-          setOrderInfo(order_details);
+        
+        const result = await fetchOrderInfo(order_no, customer_id);
+        if(result.statusCode == "1"){
+          const order_details = result.data; 
+          if(order_details.length > 0){
+            setOrderInfo(order_details);
+          }
         }
         setIsLoading(false);
       }catch(e){
         console.log("Error on async storage", e);
       }
     }
-
+    
     useEffect(() => {
       setIsLoading(true);
       fetchOrderDetails(orderNo, customerId);
     }, [orderNo, customerId])
-
+    
     
     const renderComponent = (item) => {
       return ( 
-        <>
-
-        <SafeAreaView>
-           <FocusAwareStatusBar barStyle="light-content" backgroundColor={colors.primary} />
-        <ScrollView 
-        style={{flexDirection: 'column'}}
-        >
-
-        <View  style={{flex:1, flexDirection: 'row', padding:10, justifyContent:'space-between', right:10}}>
+        
+        <View style={{backgroundColor: '#fff' }}>
+        <View  style={{flex:1, flexDirection: 'row',
+        padding:10,
+        justifyContent:'space-between', right:10}}>
         <Image
         source={icons.parking6}
         resizeMode="contain"
         style={{
-            width: 85,
-            height: 85,
+          width: 85,
+          height: 85,
         }}
         />
         <View>
-
+        
         <Text style={innerStyles.headerTitle}>Order</Text>
         <Text style={innerStyles.headerText}>{item.request_date}</Text>
         <Text style={innerStyles.headerText}>{APP_NAME} Wallet</Text>
         </View>
-
+        
         <View>
         <Text style={innerStyles.headerTitle}>{item.amount}</Text>
         <Text style={innerStyles.headerText}>{currency}</Text> 
         </View>
-
+        
         </View>
-
-
+        
+        
         <View style={innerStyles.orderInfoContainer}>
-     
+        
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding:10}}>
         <Text style={innerStyles.subtitle}>Names</Text>
         <Text style={innerStyles.info}>{item.name}</Text>
         </View>
-
+        
         <View style={innerStyles.divider}></View>
-
+        
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding:10}}>
         <Text style={innerStyles.subtitle}>Telephone</Text>
         <Text style={innerStyles.info}>{item.telephone_no}</Text>
         </View>
-
+        
         <View style={innerStyles.divider}></View>
-
+        
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding:10}}>
         <Text style={innerStyles.subtitle}>Order No</Text>
         <Text style={innerStyles.info}>{item.order_no}</Text>
         </View>
-
+        
         <View style={innerStyles.divider}></View>
-
+        
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding:10}}>
         <Text style={innerStyles.subtitle}>Parking Area</Text>
         <Text style={innerStyles.info}>{item.parking_area}</Text>
         </View>
-
-
+        
+        
         <View style={innerStyles.divider}></View>
-
+        
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding:10}}>
         <Text style={innerStyles.subtitle}>Booking Period</Text>
         <Text style={innerStyles.info}>{item.booking_period}</Text>
         </View>
-
+        
         <View style={innerStyles.divider}></View>
-
+        
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding:10}}>
         <Text style={innerStyles.subtitle}>Total Time</Text>
         <Text style={innerStyles.info}>{item.parking_hours}</Text>
         </View>
-
+        
         <View style={innerStyles.divider}></View>
         
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding:10}}>
         <Text style={innerStyles.subtitle}>Vehicle Type</Text>
         <Text style={innerStyles.info}>{item.car_type}</Text>
         </View>
-
+        
         <View style={innerStyles.divider}></View>
-
+        
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding:10}}>
         <Text style={innerStyles.subtitle}>Fee per hour</Text>
         <Text style={innerStyles.info}>{currency} {item.fee_per_hour}</Text>
         </View>
-
+        
         <View style={innerStyles.divider}></View>
-
+        
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding:10}}>
         <Text style={innerStyles.subtitle}>Total amount paid</Text>
         <Text style={innerStyles.info}>{currency} {item.amount}</Text>
         </View>
         </View>
-
-
+        
+        
         <View style={innerStyles.footer}>
         <TouchableWithoutFeedback onPress={() => navigation.navigate('Help')}>
-            <Text style={innerStyles.helpCenterText}>Help Center</Text>
-          </TouchableWithoutFeedback>
+        <Text style={innerStyles.helpCenterText}>Help Center</Text>
+        </TouchableWithoutFeedback>
         </View>
-  
         
-        </ScrollView>
+        </View>
         
-        </SafeAreaView>
-
-        {  isLoading ?  <AppLoader /> : null }
-
-        </>
         
         );
       }
@@ -181,26 +174,33 @@ import {Text, SafeAreaView, Image,
             <View style={innerStyles.divider}/>
             );
           }
-
-          if(isLoading){
-            return <AppLoader />
-          }
           
-          if(!isLoading){
-            return (<SafeAreaView style={{flex: 1, backgroundColor:'#fff'}}>
-            <FlatList style= {{ backgroundColor:'#ffffff', height:'100%' }}
-            data={orderInfo}
-            renderItem={({ item }) => renderComponent(item)}
-            keyExtractor={(item, index) => String(index)}
-            ListEmptyComponent={<NoOrders/>} 
-            ItemSeparatorComponent={FlatListItemSeparator}
-            refreshControl={<RefreshControl refreshing={isLoading} onRefresh={onRefresh}/>}
-            /> 
-          </SafeAreaView>
-          );
-          }
-      
-         
+          
+          
+          return (
+            <>
+            
+            
+            <SafeAreaView style={{flex: 1, backgroundColor:'#fff'}}>
+            <FocusAwareStatusBar barStyle="light-content" backgroundColor={colors.primary} />
+            { !isLoading ?
+              <FlatList style= {{ backgroundColor:'#ffffff', height:'100%' }}
+              data={orderInfo}
+              renderItem={({ item }) => renderComponent(item)}
+              keyExtractor={(item, index) => String(index)}
+              ListEmptyComponent={<NoOrders/>} 
+              ItemSeparatorComponent={FlatListItemSeparator}
+              refreshControl={<RefreshControl refreshing={isLoading} onRefresh={onRefresh}/>}
+              /> 
+              : null
+            }
+            </SafeAreaView>
+            
+            {  isLoading ?  <AppLoader /> : null }
+            
+            </>
+            );
+            
           }
           
           
@@ -217,6 +217,7 @@ import {Text, SafeAreaView, Image,
               alignItems: 'center',
               justifyContent: 'center',
               padding:10,
+              backgroundColor: '#fff'
               
             },
             text:{
@@ -234,7 +235,7 @@ import {Text, SafeAreaView, Image,
               marginTop:5,
               backgroundColor:'#e2e2e2',
             },
-
+            
             orderInfoContainer:{
               flex: 1,
               borderWidth:1, 
@@ -244,8 +245,8 @@ import {Text, SafeAreaView, Image,
               borderRadius:5,
               marginTop:20,
             },
-
-        
+            
+            
             subtitle: {
               fontWeight:'bold',
               opacity:0.9, 
@@ -253,37 +254,36 @@ import {Text, SafeAreaView, Image,
               color:styles.colors.parksmart,
               opacity:0.8,
             },
-
+            
             info:{
               color:'#808080',
-               fontSize:17
+              fontSize:17
             },
-
+            
             headerTitle:{
               fontSize:18,
-               fontWeight: 'bold',
-                color:styles.colors.primary
+              fontWeight: 'bold',
+              color:styles.colors.primary
             },
-
+            
             headerText:{
               fontSize:16,
               color: '#808080',
             },
-
+            
             footer:{
-               flex:1,
-               alignItems: 'center',
-               justifyContent: 'center',
-               bottom: 0,
-               marginTop: 25,
+              flex:1,
+              alignItems: 'center',
+              justifyContent: 'center',
+              bottom: 0,
+              marginTop: 25,
             },
-
+            
             helpCenterText:{
               fontSize:22,
               fontWeight:'bold',
-              color:styles.colors.orange,
-
+              color:styles.colors.orange
             }
-
-
+            
+            
           });

@@ -524,6 +524,7 @@ import { Text,TextInput, TouchableOpacity, View, StyleSheet, SafeAreaView, Alert
           borderBottomColor: 'lightblue',
           borderBottomWidth:1,
           fontSize:17,
+          color: design.colors.dark
         },
         green:{
           color:'green'

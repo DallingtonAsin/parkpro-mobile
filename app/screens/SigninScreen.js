@@ -17,7 +17,7 @@ import Toast from 'react-native-simple-toast';
 import PhoneInput from "react-native-phone-number-input";
 import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { getDeviceId, getDeviceIpAddress, getAppVersionName } from '../components/SharedCommons';
+import { getDeviceId, getDeviceIpAddress, getAppVersionName, storeAccessToken } from '../components/SharedCommons';
 import AppLoader from '../components/loaders/AppLoader';
 import { ApiKeys } from '../network/ApiKeys';
 
@@ -33,28 +33,41 @@ const SigninScreen = ({ navigation }) => {
     const { sendSmsVerification } = React.useContext(AuthContext);
     
     
+    const removeLeadingZeros = (number) => {
+        while(number.charAt(0) === '0') {
+            number = number.substring(1);
+        }
+        return number;
+    }
+    
     const confirmPhoneNumber = () => {
         
+        const phoneObj = phoneInput.current?.getNumberAfterPossiblyEliminatingZero();
+        let number = phoneObj.number;
+        
+        const startsWithZero = number.startsWith("0");
+        if(startsWithZero){
+            number = removeLeadingZeros(number);
+        }
+        
         if(phoneNumber.length < 13){
-          Toast.show('Please enter a valid phone number', Toast.LONG);
+            Toast.show('Please enter a valid phone number', Toast.LONG);
         }else{
-            
-            const phoneObj = phoneInput.current?.getNumberAfterPossiblyEliminatingZero();
-            const number = phoneObj.number;
+
             const isNumberValid = phoneInput.current?.isValidNumber(number);
-            
             if(isNumberValid){
+
+                const formattedNumber = `+${phoneInput.current?.getCallingCode()}${number}`// phoneObj.formattedNumber;
                 
-                const formattedNumber = phoneObj.formattedNumber;
                 const phoneDetails = {
-                    number: phoneObj.number,
+                    number: number,
                     countryIsoCode: phoneInput.current?.getCountryCode(),
                     countryCode: phoneInput.current?.getCallingCode(),
-                    formattedNumber: phoneObj.formattedNumber
+                    formattedNumber: formattedNumber
                 }
                 
                 Alert.alert(
-                    null, // `Verification`,
+                    null, 
                     `We will be verifying the phone number ${formattedNumber}. is this OK, or would like to edit the number?`,
                     [
                         {text: 'Edit', onPress: () => console.log('Edit Pressed')},
@@ -97,6 +110,9 @@ const SigninScreen = ({ navigation }) => {
             let response = await sendSmsVerification(requestParams);
             console.log("API response", response);
             if(response.statusCode == 1){
+
+                await storeAccessToken(response.data.access_token);
+                
                 navigation.navigate("Otp",{
                     countryCode: response.data.country_code,
                     phoneNumber: response.data.phone_number,

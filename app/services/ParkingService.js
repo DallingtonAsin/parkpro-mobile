@@ -3,7 +3,7 @@ const http = require("./Http");
 module.exports = {
     postParkingRequest : async(data) => {
         try{
-            const endpoint = 'device/parking-request ';
+            const endpoint = 'device/parking-request';
             return await http.ApiService.PostData(endpoint, data);
         }catch(error){
             throw error;
