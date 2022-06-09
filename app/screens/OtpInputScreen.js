@@ -11,10 +11,12 @@ import Toast from 'react-native-simple-toast';
 import CountDown from 'react-native-countdown-component';
 
 const OtpInputScreen = ({ route, navigation }) => {
-  const { otp, countryCode, phoneNumber } = route.params;
+
+
+  let { otp, countryCode, phoneNumber } = route.params;
   const [invalidCode, setInvalidCode] = useState(false);
   const [message, setMessage] = useState("");
-  const { verifyOTP, goToHomeScreen } = React.useContext(AuthContext);
+  const { verifyOTP, goToHomeScreen, resendSignupOTP } = React.useContext(AuthContext);
   const [otpCode, setOTP] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isTimerOn, setIsTimerOn] = useState(true);
@@ -27,8 +29,8 @@ const OtpInputScreen = ({ route, navigation }) => {
   
   const submitOTP = async() => {
     try{
-      if(otpCode){
-        await verifyCustomerOtp(otpCode);
+      if(otp){
+        await verifyCustomerOtp(otp);
       }else{
         Toast.show('Please enter otp', Toast.LONG);
       }
@@ -36,44 +38,68 @@ const OtpInputScreen = ({ route, navigation }) => {
       throw err;
     }
   }
-
-  const resendOTP = () => {
-    Toast.show('Resending otp soon...', Toast.LONG);
+  
+  const resendOTP = async() => {
+    try{
+      
+      if(countryCode && phoneNumber){
+        
+        const reqParams = {
+          country_code: countryCode,
+          phone_number: phoneNumber
+        }
+        setIsTimerOn(true);
+        const result = await resendSignupOTP(reqParams);
+        console.log("Resend otp response", result);
+        if(result.statusCode == "1"){
+          const newOTP = result.data.otp;
+          otp= newOTP;
+          setOTP(newOTP);
+        }else{
+          Toast.show(result.message, Toast.LONG);
+        }
+        
+      }else{
+        Toast.show('Unable to capture your phone number', Toast.LONG);
+      }
+    }catch(err){
+      Toast.show(err, Toast.LONG);
+    }
+    
   }
-
+  
   const verifyCustomerOtp = async(code) => {
     if(!code){
       Toast.show('Please enter the sent OTP', Toast.LONG);
     }else{
-
-      const data = {
+      
+      const reqParams = {
         country_code: countryCode,
         phone_number: phoneNumber,
         otp: code
       }
       setIsLoading(true);
-      verifyOTP(data).then(async(response) => {
-        const statusCode = response.statusCode;
-        const message = response.message;
-        const data = response.data;
-        
-        if(statusCode == 1){
-          if(data.is_registered){
-            await goToHomeScreen(data);
-          }else{
-            
-            navigation.navigate("Signup",
-            {userId: data.id,
-              countryCode: data.country_code,
-              phoneNumber: data.phone_number, 
-            });
-          }
+      let response = await verifyOTP(reqParams); 
+      const statusCode = response.statusCode;
+      const message = response.message;
+      const data = response.data;
+      
+      if(statusCode == 1){
+        if(data.is_registered){
+          await goToHomeScreen(data);
         }else{
-          setInvalidCode(true);
-          setMessage(message);
+          
+          navigation.navigate("Signup",
+          {userId: data.id,
+            countryCode: data.country_code,
+            phoneNumber: data.phone_number, 
+          });
         }
-        setIsLoading(false);
-      });
+      }else{
+        setInvalidCode(true);
+        setMessage(message);
+      }
+      setIsLoading(false);
     }
   }
   
@@ -98,7 +124,7 @@ const OtpInputScreen = ({ route, navigation }) => {
     codeInputFieldStyle={styles.underlineStyleBase}
     codeInputHighlightStyle={styles.underlineStyleHighLighted}
     code={otp}
-    onCodeFilled={(code) => { setOTP(code) }}
+    // onCodeFilled={(code) => { setOTP(code) }}
     />
     
     <View style={{paddingRight:30, top: -60 , alignSelf: 'flex-end'}}>

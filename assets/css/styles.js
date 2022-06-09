@@ -67,7 +67,7 @@ export default {
   preference: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingVertical: 0,
+    paddingVertical: 10,
     paddingHorizontal: 0,
   },
   

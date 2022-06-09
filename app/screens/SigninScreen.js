@@ -33,28 +33,41 @@ const SigninScreen = ({ navigation }) => {
     const { sendSmsVerification } = React.useContext(AuthContext);
     
     
+    const removeLeadingZeros = (number) => {
+        while(number.charAt(0) === '0') {
+            number = number.substring(1);
+        }
+        return number;
+    }
+    
     const confirmPhoneNumber = () => {
         
+        const phoneObj = phoneInput.current?.getNumberAfterPossiblyEliminatingZero();
+        let number = phoneObj.number;
+        
+        const startsWithZero = number.startsWith("0");
+        if(startsWithZero){
+            number = removeLeadingZeros(number);
+        }
+        
         if(phoneNumber.length < 13){
-          Toast.show('Please enter a valid phone number', Toast.LONG);
+            Toast.show('Please enter a valid phone number', Toast.LONG);
         }else{
-            
-            const phoneObj = phoneInput.current?.getNumberAfterPossiblyEliminatingZero();
-            const number = phoneObj.number;
+
             const isNumberValid = phoneInput.current?.isValidNumber(number);
-            
             if(isNumberValid){
+
+                const formattedNumber = `+${phoneInput.current?.getCallingCode()}${number}`// phoneObj.formattedNumber;
                 
-                const formattedNumber = phoneObj.formattedNumber;
                 const phoneDetails = {
-                    number: phoneObj.number,
+                    number: number,
                     countryIsoCode: phoneInput.current?.getCountryCode(),
                     countryCode: phoneInput.current?.getCallingCode(),
-                    formattedNumber: phoneObj.formattedNumber
+                    formattedNumber: formattedNumber
                 }
                 
                 Alert.alert(
-                    null, // `Verification`,
+                    null, 
                     `We will be verifying the phone number ${formattedNumber}. is this OK, or would like to edit the number?`,
                     [
                         {text: 'Edit', onPress: () => console.log('Edit Pressed')},

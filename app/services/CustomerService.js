@@ -133,4 +133,13 @@ module.exports = {
             throw error;
         }
     },
+
+    resendSignupOTP : async(data) => {
+        try{
+            const endpoint = "customer/resend-otp";
+            return await http.ApiService.PostData(endpoint, data);
+        }catch(error){
+            throw error;
+        }
+    },
 }

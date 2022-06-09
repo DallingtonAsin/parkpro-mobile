@@ -249,7 +249,7 @@ const CustomDrawer = (props) => {
           position: 'absolute',
           right: 0,
           left: 0,
-          bottom: 15
+          bottom: 25
         }]}
         onPress={() => logout() }
       >
