@@ -74,7 +74,6 @@ export const isValidateEmail = (email) => {
 export const storeAccessToken = async(accessToken) => {
   var value = JSON.stringify(accessToken);
   try {
-    console.log("Storing access token as key", value);
     await AsyncStorage.setItem("accessToken", value);
   } catch (error) {
     console.log(error);
