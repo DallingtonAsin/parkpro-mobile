@@ -1,7 +1,6 @@
 import {JSHash, CONSTANTS} from 'react-native-hash';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {APP_URL} from '@env';
-import Toast from 'react-native-simple-toast';
 
 const axios = require('axios');
 
@@ -53,11 +52,13 @@ exports.fetchData = async(endpoint) => {
 }
 
 // Post data using fetch api
-exports.PostData = async(endPoint, data) => {
+exports.PostData = async(endPoint, data, token=null) => {
   
   try{
     const url = APP_URL+""+ endPoint;
-    const bearToken = await getToken();
+    const bearToken = token ? token :  await getToken();
+ 
+    console.log("Got token on post Data", bearToken);
     let response = await fetch(url, {
       method: 'POST', 
       headers: {

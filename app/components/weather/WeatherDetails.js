@@ -1,13 +1,18 @@
 import React from 'react'
 import { View, Text, StyleSheet } from 'react-native'
-import { colors } from '../utils/index'
+import { colors as utilColors } from '../utils/index'
 import {  MaterialCommunityIcons, Ionicons } from '@expo/vector-icons'
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import FocusAwareStatusBar  from '../../components/common/FocusAwareStatusBar';
+import { useTheme  } from 'react-native-paper';
 
-const { PRIMARY_COLOR, SECONDARY_COLOR, BORDER_COLOR } = colors
+const { PRIMARY_COLOR, SECONDARY_COLOR, BORDER_COLOR } = utilColors
 
 export default function WeatherDetails({ currentWeather, currentWeatherDetails, unitsSystem }) {
+   
+    const { colors } = useTheme();
+   
     const {
         main: { temp, humidity, pressure },
         wind: { speed },
@@ -17,6 +22,7 @@ export default function WeatherDetails({ currentWeather, currentWeatherDetails, 
     const units = unitsSystem === 'metric' ? 'C' : 'F';
     return (
         <View style={styles.weatherDetails}>
+        <FocusAwareStatusBar barStyle="light-content" backgroundColor={colors.primary} />
             <View style={styles.weatherDetailsRow}>
                 <View style={{ ...styles.weatherDetailsBox, borderRightWidth: 1, borderRightColor: BORDER_COLOR }}>
                     <View style={styles.weatherDetailsRow}>

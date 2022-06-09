@@ -459,6 +459,14 @@ const App = ()  => {
           throw e;
         }
       },
+
+      resendSignupOTP: async(data) => {
+        try{
+          return await Services.CustomerService.resendSignupOTP(data);
+        }catch(e){
+          throw e;
+        }
+      },
       
       toggleTheme: () => {
         setIsDarkTheme(isDarkTheme => !isDarkTheme);

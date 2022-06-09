@@ -377,18 +377,19 @@ import { StyleSheet, Text, View,Button,Pressable,
       
       const submitRequest = async() => {
         
-        const {activeModal} = state;
+        const { activeModal } = state;
         console.log("Here is your active modal data", activeModal);
         console.log("Here is your active modal fees", activeModal.fees);
         
         const parking_area_id = activeModal.id;
         const customer_id = profile.id;
-        const telephone_no = profile.phone_number;
+        const telephone_no = `${profile.country_code}${profile.phone_number}`;
         const vehicle_details = state.selectedVehicle;
-        let account_balance = profile.account_balance.replace(/,/g, '');
-        let balance =  parseFloat(account_balance);
+     //   let account_balance = profile.account_balance.replace(/,/g, '');
+
+        let balance = 9000000; // parseFloat(account_balance);
         const total_amount =parseFloat(state.total_amount);
-        console.log("Balance: " + account_balance);
+        console.log("Balance: " + balance);
         console.log("Total amount: " + total_amount);
         console.log("Selected vehicle", vehicle_details);
         
@@ -469,10 +470,13 @@ import { StyleSheet, Text, View,Button,Pressable,
                   start_time: startTime,
                   end_time: endTime
                 }
+
                 console.log("Request data", reqParams);
                 setIsReqProcessing(true);
+
                 const resp = await submitParkingRequest(reqParams);
                 console.log("Resp", resp);
+
                 if(resp.statusCode == 1){
                   setStartTime('');
                   setEndTime('');
@@ -516,9 +520,13 @@ import { StyleSheet, Text, View,Button,Pressable,
         }
         
         const fetchVehicleCategories = async() => {
-          const vehicle_categories = await getVehicleCategories();
+
+          const result = await getVehicleCategories();
+          const vehicle_categories = result.data; 
           console.log("Response", vehicle_categories);
+
           let types = [];
+
           for(let i = 0; i < vehicle_categories.length; i++) {
             let name = vehicle_categories[i]['name'];
             types.push(name);
@@ -723,19 +731,18 @@ import { StyleSheet, Text, View,Button,Pressable,
                 
                 const renderVehicles = () => {
                   return (
-                    null
-                    // <ModalDropdown 
-                    // defaultIndex={1}
-                    // options={vehicles}
-                    // style={styles.vehiclesDropdown}
-                    // defaultValue={vehicles[0]}
-                    // defaultTextStyle={{fontSize:16}}
-                    // textStyle={{fontSize:16}}
-                    // onSelect={(index, value) => handleVehicle(value)}
-                    // renderRow={(option) => (
-                    //   <Text style={styles.hoursDropdownOption}>{option}</Text>
-                    //   )}
-                    //   />
+                    <ModalDropdown 
+                    defaultIndex={1}
+                    options={vehicles}
+                    style={styles.vehiclesDropdown}
+                    defaultValue={vehicles.length > 0 ? vehicles[0] : "select vehicle"}
+                    defaultTextStyle={{fontSize:16}}
+                    textStyle={{fontSize:16}}
+                    onSelect={(index, value) => handleVehicle(value)}
+                    renderRow={(option) => (
+                      <Text style={styles.hoursDropdownOption}>{option}</Text>
+                      )}
+                      />
                       )
                     }
                     

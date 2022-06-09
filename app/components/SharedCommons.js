@@ -4,6 +4,7 @@ import Rate, { AndroidMarket } from 'react-native-rate';
 import {MAJOR_VERSION, MINOR_VERSION, PATCH_VERSION,PRE_RELEASE } from '@env';
 import { getUniqueId } from 'react-native-device-info';
 import { NetworkInfo } from "react-native-network-info";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const cache = {};
 
@@ -68,6 +69,16 @@ export const isValidateEmail = (email) => {
     isValid = true;
   } 
   return isValid;
+}
+
+export const storeAccessToken = async(accessToken) => {
+  var value = JSON.stringify(accessToken);
+  try {
+    console.log("Storing access token as key", value);
+    await AsyncStorage.setItem("accessToken", value);
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 export const RateUs = () => {

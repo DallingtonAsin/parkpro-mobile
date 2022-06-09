@@ -1,4 +1,5 @@
 const http = require("./Http");
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 module.exports = {
     
@@ -129,6 +130,16 @@ module.exports = {
         try{
             const endpoint = "customer/app/details";
             return await http.ApiService.PostData(endpoint, data);
+        }catch(error){
+            throw error;
+        }
+    },
+
+    resendSignupOTP : async(data) => {
+        try{
+            const endpoint = "customer/resend-otp";
+            const token = await AsyncStorage.getItem("accessToken");
+            return await http.ApiService.PostData(endpoint, data, token);
         }catch(error){
             throw error;
         }

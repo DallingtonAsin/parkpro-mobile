@@ -27,6 +27,8 @@ import {SafeAreaView,Dimensions,
         const [topRatedParkingAreas, setTopRatedParkingAreas] = useState([]);
         
         const [filteredParkingAreas, setFilteredParkingAreas] = useState([]);
+        
+        const paperTheme = useTheme();
         const { colors } = useTheme();
         
         const [query, setSearch] = useState('');
@@ -331,9 +333,10 @@ import {SafeAreaView,Dimensions,
                                                 onChangeText={(text) => handleSearch(text)}
                                                 value={query}
                                                 onIconPress={onClickSearchBtn}
+                                                placeholderTextColor={"#fff"}
+                                                inputStyle={{color: '#fff'}}
                                                 style={{ width: '85%', 
-                                                backgroundColor: design.colors.white,
-                                                color: design.colors.dark
+                                                backgroundColor:  paperTheme.dark ? design.colors.gray : design.colors.gray,
                                             }}
                                             />
                                             <TouchableOpacity onPress={()=>onRefresh()} style={{paddingLeft:10}}>

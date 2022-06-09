@@ -161,7 +161,7 @@ const WeatherScreen = () => {
       </ScrollView>
       </SafeAreaView>
 
-      {  isLoading ?  <AppLoader /> : null }
+      {/* {  isLoading ?  <AppLoader /> : null } */}
 
       </>
     );
