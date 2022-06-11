@@ -4,7 +4,7 @@ import { DataTable, Divider } from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AuthContext } from '../context/context';
 import { icons } from '../../constants';
-import Toast from 'react-native-simple-toast';
+import Toast from 'react-native-simple-toast';8
 import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
 import { useTheme  } from 'react-native-paper';
 import AppLoader from '../components/loaders/AppLoader';
@@ -102,8 +102,8 @@ const TransactionsHistoryScreen = () => {
                  Toast.show(resp.message);
               }
               setIsLoading(false);
-            }catch(e){
-              Toast.show(e.message);
+            }catch(err){
+              Toast.show(err.message, Toast.LONG);
             }
           }
           

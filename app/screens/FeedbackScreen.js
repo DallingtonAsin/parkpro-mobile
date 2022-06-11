@@ -40,53 +40,59 @@ const FeedbackScreen = () => {
   
   const sendSuggestion = async() => {
     
-    const id = profile.id;
-    const email = state.email;
-    const subject = state.subject;
-    const description = state.description;
-    
-    if(!id){
-      alert("Unable to capture your profile");
-      return;
-    }
-    
-    if(!description){
-      alert("Please write your feedback");
-      return;
-    }
-    
-    
-    if(email){
-      if(!isValidateEmail(email)){
-        alert("Please enter valid email");
+    try{
+      
+      const id = profile.id;
+      const email = state.email;
+      const subject = state.subject;
+      const description = state.description;
+      
+      if(!id){
+        alert("Unable to capture your profile");
         return;
       }
-    }
-    
-    
-    if(id && description){
       
-      const data = {
-        id: id,
-        reaction: selectedEmojiValue,
-        email: email ? email : profile.email,
-        subject: subject,
-        description: description,
+      if(!description){
+        alert("Please write your feedback");
+        return;
       }
       
-      setIsLoading(true);
-      let result = await postSuggestion(data);
-      const statusCode = result.statusCode;
-      const message = result.message;
       
-      if(statusCode == 1){
-        setState({...initialState});
-        Toast.show(message);
+      if(email){
+        if(!isValidateEmail(email)){
+          alert("Please enter valid email");
+          return;
+        }
+      }
+      
+      
+      if(id && description){
+        
+        const data = {
+          id: id,
+          reaction: selectedEmojiValue,
+          email: email ? email : profile.email,
+          subject: subject,
+          description: description,
+        }
+        
+        setIsLoading(true);
+        let result = await postSuggestion(data);
+        const statusCode = result.statusCode;
+        const message = result.message;
+        
+        if(statusCode == 1){
+          setState({...initialState});
+          Toast.show(message);
+        }else{
+          Alert.alert("Message", message);
+        }
       }else{
-        Alert.alert("Message", message);
+        Alert.alert("Message", "Please enter all information");
       }
-    }else{
-      Alert.alert("Message", "Please enter all information");
+      
+    }catch(err){
+      Toast.show(err.message, Toast.LONG);
     }
     setIsLoading(false);
     
@@ -166,7 +172,7 @@ const FeedbackScreen = () => {
     />
     
     <TouchableOpacity
-      style={[styles.btnPrimary, css.footer, { 
+    style={[styles.btnPrimary, css.footer, { 
       backgroundColor: colors.primary,
       borderColor: colors.primary
     }]}

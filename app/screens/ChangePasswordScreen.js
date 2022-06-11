@@ -8,6 +8,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import ProfileContext from '../context/index';
 import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
 import { useTheme } from '@react-navigation/native';
+import Toast from 'react-native-simple-toast';8
 
 
 const initialState = {
@@ -52,6 +53,8 @@ const Password = () => {
   
   
   const confirmPasswordChange = async() => {
+
+    try {
     const oldPassword = state.old_password;
     const newPassword = state.new_password;
     const confirmPassword = state.confirm_password;
@@ -76,21 +79,24 @@ const Password = () => {
               new_password: '',
               confirm_password: '',
             });
-            Alert.alert("Message", message);
+            Toast.show(message, Toast.LONG);
           }else{
-            Alert.alert("Message", message);
+            Toast.show(message, Toast.LONG);
           }
-          setIsLoading(false);
         }else{
-          Alert.alert("Message", "Unable to fetch user details");
+          Toast.show("Unable to fetch user details", Toast.LONG);
         }
       }else{
-        Alert.alert("Message", "Enter new matching passwords");
+        Toast.show("Enter new matching passwords", Toast.LONG);
       }
       
     }else{
-      Alert.alert("Message", "Fill in all passwords");
+      Toast.show("Fill in all passwords", Toast.LONG);
     }
+  }catch(err){
+    Toast.show(err.message, Toast.LONG);
+  }
+  setIsLoading(false);
   }
   
   

@@ -1,147 +1,135 @@
-const http = require("./Http");
-import AsyncStorage from '@react-native-async-storage/async-storage';
+const api = require('../network');
 
-module.exports = {
-    
-    login: async (phone_number, otp) => {
-        try{
-            const endpoint = "customer/verify-otp";
-            const data = {
-                phone_number: phone_number,
-                otp: otp
-            };
-            return await http.ApiService.PostData(endpoint, data);
-        }catch(error){
-            throw error;
-        }
-    },
-    
-    register: async(data) => {
-        try{
-            const endpoint = "customer/register";
-            return await http.ApiService.PostData(endpoint, data);
-        }catch(error){
-            throw error;
-        }
-    },
-    
-    createProfile: async(data) => {
-        try{
-            const endpoint = "customer/profile/create";
-            return await http.ApiService.PostData(endpoint, data);
-        }catch(error){
-            throw error;
-        }
-    },
-    
-    updateProfile: async(data) => {
-        try{
-            const endpoint = "customer/profile/update";
-            return await http.ApiService.PutData(endpoint, data);
-        }catch(error){
-            throw error;
-        }
-    },
-    
-    changePassword: async(data) => {
-        try{
-            const endpoint = 'customer/password/change';
-            return await http.ApiService.PostData(endpoint, data);
-        }catch(error){
-            throw error;
-        }
-    },
-    
-    uploadProfilePicture: async(data) => {
-        try{
-            const endpoint = "customer/change/profile-picture";
-            return await http.ApiService.postDataWithFile(endpoint, data);
-        }catch(error){
-            throw error;
-        }
-    },
-    
-    removeProfilePicture: async(data) => {
-        try{
-            const endpoint = "customer/profile/picture/remove";
-            return await http.ApiService.PostData(endpoint, data);
-        }catch(error){
-            throw error;
-        }
-    },
-    
-    getNotifications: async(id) => {
-        try{
-            const endpoint = 'customer/notifications?id='+id+'';
-            return await http.ApiService.fetchData(endpoint);
-        }catch(error){
-            throw error;
-        }
-    },
-    
-    
-    getCustomerData: async(id) => {
-        try{
-            const endpoint = 'customer/details?id='+id+'';
-            return await http.ApiService.fetchData(endpoint);
-        }catch(error){
-            throw error;
-        }
-    },
-    
-    sendOTP: async(data) => {
-        try{
-            const endpoint = 'customer/send-otp';
-            return await http.ApiService.PostData(endpoint, data);
-        }catch(error){
-            throw error;
-        }
-    },
-    
-    verifyOneTimePassword: async(data) => {
-        try{
-            const endpoint = 'customer/verify-otp';
-            return await http.ApiService.PostData(endpoint, data);
-        }catch(error){
-            throw error;
-        }
-    },
-    
-    topUp: async(data) => {
-        try{
-            const endpoint = 'customer/account/topup';
-            console.log("Sending topup data to api", data);
-            return await http.ApiService.PostData(endpoint, data);
-        }catch(error){
-            throw error;
-        }
-    },
-    
-    postSuggestion : async(data) => {
-        try{
-            const endpoint = "customer/feedback";
-            return await http.ApiService.PostData(endpoint, data);
-        }catch(error){
-            throw error;
-        }
-    },
-    
-    postAppDetails : async(data) => {
-        try{
-            const endpoint = "customer/app/details";
-            return await http.ApiService.PostData(endpoint, data);
-        }catch(error){
-            throw error;
-        }
-    },
 
-    resendSignupOTP : async(data) => {
+let CustomerService = class {
+
+    register = async(data) => {
         try{
-            const endpoint = "customer/resend-otp";
-            const token = await AsyncStorage.getItem("accessToken");
-            return await http.ApiService.PostData(endpoint, data, token);
+            const endpoint = api.endpoint.customer.register;
+            return await api.axios.post(endpoint, data);
         }catch(error){
             throw error;
         }
-    },
+    }
+    
+    createProfile = async(data) => {
+        try{
+            const endpoint = api.endpoint.customer.create_profile;
+            return await api.axios.post(endpoint, data);
+        }catch(error){
+            throw error;
+        }
+    }
+    
+    updateProfile = async(data) => {
+        try{
+            const endpoint = api.endpoint.customer.update_profile;
+            return await api.axios.put(endpoint, data);
+        }catch(error){
+            throw error;
+        }
+    }
+    
+    changePassword = async(data) => {
+        try{
+            const endpoint = api.endpoint.customer.change_password;
+            return await api.axios.post(endpoint, data);
+        }catch(error){
+            throw error;
+        }
+    }
+    
+    uploadProfilePicture = async(data) => {
+        try{
+            const endpoint = api.endpoint.customer.update_profile_mage;
+            return await api.axios.postWithFile(endpoint, data);
+        }catch(error){
+            throw error;
+        }
+    }
+    
+    removeProfilePicture = async(data) => {
+        try{
+            const endpoint = api.endpoint.customer.remove_profile_picture;
+            return await api.axios.post(endpoint, data);
+        }catch(error){
+            throw error;
+        }
+    }
+    
+    getNotifications = async(id) => {
+        try{
+            const endpoint = `${api.endpoint.customer.get_notifications}?id=${id}`;
+            return await api.axios.fetch(endpoint);
+
+        }catch(error){
+            throw error;
+        }
+    }
+    
+    
+    getCustomerData = async(id) => {
+        try{
+            const endpoint = `${api.endpoint.customer.get_data}?id=${id}`;
+            return await api.axios.fetch(endpoint);
+        }catch(error){
+            throw error;
+        }
+    }
+    
+    sendOTP = async(data) => {
+        try{
+            const endpoint = api.endpoint.customer.send_otp;
+            return await api.axios.post(endpoint, data);
+        }catch(error){
+            throw error;
+        }
+    }
+    
+    verifyOtp = async(data) => {
+        try{
+            const endpoint = api.endpoint.customer.verify_otp;
+            return await api.axios.post(endpoint, data);
+        }catch(error){
+            throw error;
+        }
+    }
+    
+    topUp = async(data) => {
+        try{
+            const endpoint = api.endpoint.customer.topup;
+            return await api.axios.post(endpoint, data);
+        }catch(error){
+            throw error;
+        }
+    }
+    
+    postSuggestion  = async(data) => {
+        try{
+            const endpoint = api.endpoint.customer.post_feedback;
+            return await api.axios.post(endpoint, data);
+        }catch(error){
+            throw error;
+        }
+    }
+    
+    postAppDetails  = async(data) => {
+        try{
+            const endpoint = api.endpoint.customer.post_app_details;
+            return await api.axios.post(endpoint, data);
+        }catch(error){
+            throw error;
+        }
+    }
+
+    resendSignupOTP  = async(data) => {
+        try{
+            const endpoint = api.endpoint.customer.resend_otp;
+            return await api.axios.post(endpoint, data);
+        }catch(error){
+            throw error;
+        }
+    }
 }
+
+module.exports = CustomerService;

@@ -54,7 +54,7 @@ export const getAppVersionName = () => {
   return version;
 };
 
-export const validateEmail = (email) => {
+export const isValidateEmail = (email) => {
   return String(email)
     .toLowerCase()
     .match(
@@ -62,14 +62,6 @@ export const validateEmail = (email) => {
     );
 };
 
-export const isValidateEmail = (email) => {
-  var validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-  let isValid = false;
-  if (email.match(validRegex)) {
-    isValid = true;
-  } 
-  return isValid;
-}
 
 export const storeAccessToken = async(accessToken) => {
   var value = JSON.stringify(accessToken);

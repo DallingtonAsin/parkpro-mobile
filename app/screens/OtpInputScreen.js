@@ -32,7 +32,7 @@ const OtpInputScreen = ({ route, navigation }) => {
         Toast.show('Please enter otp', Toast.LONG);
       }
     }catch(err){
-      throw err;
+      Toast.show(err.message, Toast.LONG);
     }
   }
   
@@ -65,6 +65,9 @@ const OtpInputScreen = ({ route, navigation }) => {
   }
   
   const verifyCustomerOtp = async(code) => {
+
+    try{
+
     if(!code){
       Toast.show('Please enter the sent OTP', Toast.LONG);
     }else{
@@ -97,6 +100,9 @@ const OtpInputScreen = ({ route, navigation }) => {
       }
       setIsLoading(false);
     }
+  }catch(err){
+    Toast.show(err.message);
+  }
   }
   
   return (

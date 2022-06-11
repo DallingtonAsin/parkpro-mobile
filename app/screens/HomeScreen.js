@@ -32,9 +32,10 @@ import BottomSheet, {
 import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
 import crashlytics from "@react-native-firebase/crashlytics";
 import { getDeviceId, getDeviceIpAddress, getAppVersionName } from '../components/SharedCommons';
-import { ApiKeys } from '../network/ApiKeys';
 import { useTheme } from '@react-navigation/native';
 import { useIsMounted } from '../components/common/isMounted';
+const api = require('../network');
+
 
 
 const dbVehicleHelper = require("../database/vehicles");
@@ -92,14 +93,14 @@ const HomeScreen = (props) => {
   
   
   useEffect(() => {
-
-      dbVehicleHelper.createVehiclesTable();
-      dbParkingHelper.createTableFavouriteParkings();
-      updateUserAppDetails();
-      
-      populateVehicleTypes();
-      populateVehicles();
-      populateFavouriteParkings();
+    
+    dbVehicleHelper.createVehiclesTable();
+    dbParkingHelper.createTableFavouriteParkings();
+    updateUserAppDetails();
+    
+    populateVehicleTypes();
+    populateVehicles();
+    populateFavouriteParkings();
     
   }, []);
   
@@ -107,9 +108,9 @@ const HomeScreen = (props) => {
   const updateUserAppDetails = async() => {
     try{
       
-      let deviceInfo = await AsyncStorage.getItem(ApiKeys.DEVICE_INFO);
+      let deviceInfo = await AsyncStorage.getItem(api.constants.DEVICE_INFO);
       deviceInfo = JSON.parse(deviceInfo);
-      const deviceToken =  deviceInfo[`${ApiKeys.DEVICE_TOKEN}`];
+      const deviceToken =  deviceInfo[`${api.constants.DEVICE_TOKEN}`];
       
       const deviceId = getDeviceId();
       const ipAddress = await getDeviceIpAddress();
@@ -126,7 +127,7 @@ const HomeScreen = (props) => {
       // console.log("Update app details result", result);
       
     }catch(err){
-      console.log("Error on updating user app details", err);
+      Toast.show(err.message, Toast.LONG);
     }
   }
   
@@ -268,17 +269,21 @@ const HomeScreen = (props) => {
               
               
               const populateVehicleTypes = async() => {
-                const result = await getVehicleCategories();
-                if(result.statusCode == '1'){
-                  const data = result.data;
-                  const vehicle_types = [];
-                  for(let i=0; i<data.length; i++) {
-                    vehicle_types.push(data[i]['name']);
+                
+                try{
+                  const result = await getVehicleCategories();
+                  if(result.statusCode == '1'){
+                    const data = result.data;
+                    const vehicle_types = [];
+                    for(let i=0; i<data.length; i++) {
+                      vehicle_types.push(data[i]['name']);
+                    }
+                    if(isMounted.current) { 
+                      setVehicleTypes(vehicle_types);
+                    }
                   }
-                  if(isMounted.current) { 
-                    setVehicleTypes(vehicle_types);
-                  }
-                  
+                }catch(err){
+                  Toast.show(err.message, Toast.LONG);
                 }
                 
               }
