@@ -9,6 +9,8 @@ import {Text, SafeAreaView, Image,
   import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
   import { useTheme } from '@react-navigation/native';
   import AppLoader from '../components/loaders/AppLoader';
+  import Toast from 'react-native-simple-toast';
+
   
   
   const wait = (timeout) => {
@@ -42,10 +44,11 @@ import {Text, SafeAreaView, Image,
             setOrderInfo(order_details);
           }
         }
-        setIsLoading(false);
-      }catch(e){
-        console.log("Error on async storage", e);
+      }catch(err){
+        Toast.show(err.message, Toast.LONG);
       }
+      setIsLoading(false);
+
     }
     
     useEffect(() => {

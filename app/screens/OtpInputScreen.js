@@ -32,7 +32,7 @@ const OtpInputScreen = ({ route, navigation }) => {
         Toast.show('Please enter otp', Toast.LONG);
       }
     }catch(err){
-      throw err;
+      Toast.show(err.message, Toast.LONG);
     }
   }
   
@@ -65,6 +65,9 @@ const OtpInputScreen = ({ route, navigation }) => {
   }
   
   const verifyCustomerOtp = async(code) => {
+
+    try{
+
     if(!code){
       Toast.show('Please enter the sent OTP', Toast.LONG);
     }else{
@@ -97,6 +100,9 @@ const OtpInputScreen = ({ route, navigation }) => {
       }
       setIsLoading(false);
     }
+  }catch(err){
+    Toast.show(err.message);
+  }
   }
   
   return (
@@ -117,12 +123,14 @@ const OtpInputScreen = ({ route, navigation }) => {
     style={{ width: "80%", height: 200 }}
     pinCount={4}
     autoFocusOnLoad
+    code={otpCode ? otpCode :  otp }
     codeInputFieldStyle={styles.underlineStyleBase}
     codeInputHighlightStyle={styles.underlineStyleHighLighted}
-    code={otpCode}
-    // onCodeFilled={(code) => { setOTP(code) }}
+    onCodeFilled= {(code => {
+     setOTP(code)
+    })}
     />
-    
+
     <View style={{paddingRight:30, top: -60 , alignSelf: 'flex-end'}}>
     {
       isTimerOn ?
@@ -153,7 +161,9 @@ const OtpInputScreen = ({ route, navigation }) => {
     backgroundColor: colors.primary,
     borderColor: colors.primary}]} onPress={() => submitOTP()}>
     <Text style={styles.continueText}> 
-    { isLoading ? 'Loading...' : <Text>Continue</Text> } 
+    { isLoading 
+    ? <Text>Loading...</Text> 
+    : <Text style={{ textTransform: 'uppercase', fontWeight: 'bold'}}>Verify</Text> } 
     </Text>
     </TouchableOpacity>
     </SafeAreaView>
@@ -176,17 +186,13 @@ const OtpInputScreen = ({ route, navigation }) => {
       height: 45,
     },
     
-    borderStyleHighLighted: {
-      borderColor: "#03DAC6",
-    },
-    
+  
     underlineStyleBase: {
-      width: 30,
-      height: 45,
-      borderWidth: 0,
-      borderBottomWidth: 1,
-      color: "black",
-      fontSize: 20,
+      width: 70,
+      height: 70,
+      borderWidth: 1,
+      color: design.colors.dark,
+      fontSize: 20
     },
     
     underlineStyleHighLighted: {

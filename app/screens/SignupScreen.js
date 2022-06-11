@@ -10,6 +10,7 @@ import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
 import { useTheme  } from 'react-native-paper';
 import AppLoader from '../components/loaders/AppLoader';
 import { isValidateEmail } from '../components/SharedCommons';
+import Toast from 'react-native-simple-toast';
 
 
 const initialState = {
@@ -80,7 +81,10 @@ const SignupScreen = ({route, navigation}) => {
         }
     }
     
-    const handleCustomerRegistration = async() =>{
+    const handleCustomerRegistration = async() => {
+
+        try {
+
         const first_name = state.first_name;
         const last_name = state.last_name;
         const email = state.email;
@@ -131,15 +135,18 @@ const SignupScreen = ({route, navigation}) => {
             let statusCode = response.statusCode;
             if(statusCode == 1){
                 let user = response.data;
-                
-                setIsLoading(false);
                 await goToHomeScreen(user);
             }else{
-                setIsLoading(false);
-                Alert.alert("Message", "Registration failed: "+message+"");
+                Toast.show(`Registration failed: ${message}`, Toast.LONG);
             }
             
         }
+
+    }catch(err){
+        Toast.show(err.message, Toast.LONG);
+    }
+    setIsLoading(false);
+
     }
     
     return (

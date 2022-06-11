@@ -4,7 +4,7 @@ import { Text,
   View, 
   ScrollView,
   TouchableOpacity,
-  Alert,StatusBar,KeyboardAvoidingView ,
+  KeyboardAvoidingView ,
   StyleSheet} from 'react-native';
   import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
   import design from '../../assets/css/styles';
@@ -16,6 +16,7 @@ import { Text,
   import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
   import { useTheme  } from 'react-native-paper';
   import AppLoader from '../components/loaders/AppLoader';
+  import Toast from 'react-native-simple-toast';
   
   // import ReactDOM from "react-dom";
   
@@ -94,55 +95,51 @@ import { Text,
                 country_code: state.country_code,
                 phone_number: state.phone_number,
               }
-
-              await depositMoney(data).then(async res => {
-                console.log("Response for top up is", res);
-                const statusCode = res.statusCode;
-                const message = res.message;
+              
+              const res = await depositMoney(data);
+              console.log("Response for top up is", res);
+              const statusCode = res.statusCode;
+              const message = res.message;
+              
+              if(statusCode == 1){
+                const customer = res.data;
+                let result = await asyncCustomerProfile(state.id);
+                console.log("Async response on top up", result);
+                console.log("User data after topping up", customer);
                 
-                if(statusCode == 1){
-                  const customer = res.data;
-                  let result = await asyncCustomerProfile(state.id);
-                  console.log("Async response on top up", result);
-                  console.log("User data after topping up", customer);
-                  
-                  setProfile(customer);
-                  await syncProfileData(customer);
-                  await getProfile(customer);
-                  
-                  Alert.alert("Message", message);
-                  testPushNotification();
-                  setData({
-                    ...state,
-                    rechargeAmount: '',
-                  });
-                }else{
-                  Alert.alert("Message", res.message);
-                }
+                setProfile(customer);
+                await syncProfileData(customer);
+                await getProfile(customer);
                 
-              }).catch(error => { 
-                setIsLoading(false);
-                Alert.alert("Error","Unable to topup account: " + error);
-              });
+                Toast.show(message);
+                testPushNotification();
+                setData({
+                  ...state,
+                  rechargeAmount: '',
+                });
+              }else{
+                Toast.show(res.message, Toast.LONG);
+              }
               
               setIsLoading(false);
               
             }else{
-              Alert.alert("Message", "Enter amount greater than "+min_recharge_amount+" and less than "+max_recharge_amount+"  to top up your account.")
+              Toast.show("Enter amount greater than "+min_recharge_amount+" and less than "+max_recharge_amount+"  to top up your account.")
             }
             
           } else {
-            Alert.alert("Information", "Enter amount to top up your account.")
+            Toast.show("Enter amount to top up your account", Toast.LONG)
           }
           
         } else {
-          Alert.alert("Information", "Unable to get logged in user.")
+          Toast.show("Unable to get logged in user", Toast.LONG)
         }
         
       }
-      catch(error){
-        console.log('mobile money error', error);
+      catch(err){
+        Toast.show(err.message, Toast.LONG);
       }
+      setIsLoading(false);
     }
     
     
@@ -273,7 +270,7 @@ import { Text,
           </View>
           
           <Title style={{ fontSize: 15, opacity: 0.7, color: '#000', margin:15 }}>Mobile Money Number </Title>
-        
+          
           <View style={{ flexDirection: 'row', justifyContent: 'space-between', margin: 15 }} >
           
           <TouchableOpacity>
@@ -308,9 +305,9 @@ import { Text,
           
           <View style={styles.bottom}>
           <TouchableOpacity
-           style={[design.btnPrimary, { color: '#fff',
-           backgroundColor: colors.primary,
-           borderColor: colors.primary}]}
+          style={[design.btnPrimary, { color: '#fff',
+          backgroundColor: colors.primary,
+          borderColor: colors.primary}]}
           onPress={RechargeUserAccount}
           disabled={false}>
           <Text style={styles.paymentButtonText}> 
@@ -320,7 +317,7 @@ import { Text,
           
           </View>
           </KeyboardAvoidingView>
-
+          
           </>
           
           );
