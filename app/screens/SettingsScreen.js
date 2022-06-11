@@ -158,6 +158,9 @@ const Settings = ({ navigation }) => {
       case "Suggestions":
       navigation.navigate(link);
       break;
+      case "ChangePin":
+      navigation.navigate(link);
+      break;
       case "RateUs":
       setIsVisible(true);
       break;
@@ -166,7 +169,7 @@ const Settings = ({ navigation }) => {
       break;
       case "LegalPolicies":
       Linking.openURL(`https://parkproug.com`);
-      break;
+      break;Suggestions
       default:
       Toast.show("coming up soon");
     }
@@ -274,7 +277,7 @@ const Settings = ({ navigation }) => {
       <Text style={styles.title}>Preferences</Text>
     }>
     
-    <TouchableOpacity onPress={() =>{Navigate("ChangeWalletPin")}} style={{ padding:15, flexDirection:'row', justifyContent:'space-between'}}>
+    <TouchableOpacity onPress={() =>{ Navigate("ChangePin") }} style={{ padding:15, flexDirection:'row', justifyContent:'space-between'}}>
     <Text style={{ fontSize:17, color: colors.dark }}>
     <FontAwesome name={'key'} size={18} />  Change Wallet PIN</Text>
     </TouchableOpacity>
