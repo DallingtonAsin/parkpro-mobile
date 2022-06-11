@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, RefreshControl,Text, View,TouchableOpacity, FlatList } from 'react-native';
+import {StyleSheet, RefreshControl,Text, Image, View,TouchableOpacity, FlatList } from 'react-native';
 import design from '../../assets/css/styles';
 import { DataTable, Divider } from 'react-native-paper';
 import {  Button, Card, Title } from 'react-native-paper';
@@ -13,7 +13,8 @@ import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
 import { useTheme } from '@react-navigation/native';
 import AppLoader from '../components/loaders/AppLoader';
 import { colors } from 'react-native-elements';
-
+import { COLORS, SIZES, SHADOWS, FONTS, apiKeys, assets } from '../constants';
+import { CircleButton, RectButton } from '../components';
 
 const dbParkingHelper = require("../database/favouriteParkings");
 
@@ -23,15 +24,15 @@ const ParkingFeesScreen = ({route, navigation}) => {
     const [fees, setFees] = useState([]);
     const [isAdding, setIsAdding] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    const [doesParkingExistInFavourites, setParkingExistsInFavourites] = useState(false);
+    const [isFavourite, setIsFavourite] = useState(false);
     const { colors } = useTheme();
     
     
     dbParkingHelper.doesParkingExistinFavourites(parking_area_id, exists => {
         if(exists){
-            setParkingExistsInFavourites(true);
+            setIsFavourite(true);
         }else{
-            setParkingExistsInFavourites(false);
+            setIsFavourite(false);
         }
     });
     
@@ -83,9 +84,9 @@ const ParkingFeesScreen = ({route, navigation}) => {
         };
         
         const CustomDataTable = (props) => (
-            <DataTable.Row style={{opacity:0.7}}>
-            <DataTable.Cell><Text style={{color: colors.dark }}>{props.item.vehicle_type}</Text></DataTable.Cell>
-            <DataTable.Cell><Text style={{color: colors.dark }}>{Monetize(props.item.fee_per_hour)}</Text></DataTable.Cell>
+            <DataTable.Row>
+            <DataTable.Cell><Text style={styles.tableCell}>{props.item.vehicle_type}</Text></DataTable.Cell>
+            <DataTable.Cell><Text style={styles.tableCell}>{Monetize(props.item.fee_per_hour)}</Text></DataTable.Cell>
             </DataTable.Row>
             );
             
@@ -108,7 +109,7 @@ const ParkingFeesScreen = ({route, navigation}) => {
                                     dbParkingHelper.doesParkingExistinFavourites(parking.id, exists => {
                                         console.log("Exists parking area in favourites response", exists);
                                         if(exists){
-                                            Toast.show('Sorry, parking area '+parking.name+' has already been added to favourites.', Toast.LONG);
+                                            Toast.show(''+parking.name+' has already been added to favourites.', Toast.LONG);
                                         }else{
                                             dbParkingHelper.addParkingIntoFavourites(parking, isInserted => {
                                                 console.log("Insert parking into favourite response", isInserted);
@@ -142,28 +143,17 @@ const ParkingFeesScreen = ({route, navigation}) => {
                         <>
                         
                         {
-                            doesParkingExistInFavourites ? 
+                            isFavourite ? 
                             <Text style={{color: design.colors.orange, fontSize:15, fontWeight: 'bold', fontStyle: 'italic'}}>
-                            <FontAwesome5 name={"heart"} size={16} color={design.colors.orange} /> Marked Favourite</Text>
-                            :   <TouchableOpacity onPress={() => addParkingToFavourites()} 
-                            style={{ backgroundColor: design.colors.primary, 
-                                borderRadius:5, alignContent:'center', 
-                                alignItems:'center', padding:15, borderRadius:35 }}>
-                                
-                                {isAdding ?
-                                    <UIActivityIndicator color='white' size={30} /> :
-                                    <Text style={{color:'#fff', fontSize:14, textTransform:'capitalize'}}>
-                                    Add to Favourites
-                                    </Text> 
-                                }
-                                </TouchableOpacity>
+                            <FontAwesome5 name={"star"} 
+                            size={16} 
+                            color={design.colors.orange} /> Marked Favourite</Text>
+                            :  null
                             }
                             
-                            
-                            
                             <DataTable.Header>
-                            <DataTable.Title><Text style={{color: colors.dark }}>Vehicle Type</Text></DataTable.Title>
-                            <DataTable.Title><Text style={{color: colors.dark }}>Fee/hour</Text></DataTable.Title>
+                            <DataTable.Title><Text style={[styles.tableCell, {fontWeight: 'bold'}]}>Vehicle Type</Text></DataTable.Title>
+                            <DataTable.Title><Text style={[styles.tableCell, {fontWeight: 'bold'}]}>Fee per hour</Text></DataTable.Title>
                             </DataTable.Header>
                             <Divider />
                             </>
@@ -183,20 +173,32 @@ const ParkingFeesScreen = ({route, navigation}) => {
                             <FocusAwareStatusBar barStyle="light-content" 
                             backgroundColor={colors.primary} />
                             
-                            <View style={styles.semicontainer}>
+                            {/* <View style={styles.semicontainer}> */}
                             
                             { !isLoading ?
                                 <>
-                                <Card style={{backgroundColor: colors.body }}>
-                                <Card.Cover source={{ uri: photo }} 
-                                style={{ width:'95%', 
-                                height:'40%', 
-                                margin:5,
-                                borderRadius:5
+                                <Card style={{backgroundColor: colors.body, height:'100%' }}>
+                                <Image source={{ uri: photo }} 
+                                resizeMode="cover"
+                                style={{ 
+                                width:'100%', 
+                                height:'45%',
+                                borderTopLeftRadius: SIZES.font,
+                                borderTopRightRadius: SIZES.font
                             }}/>
+                             <CircleButton 
+                             imgUrl={assets.heart}
+                             imgTintColor={isFavourite ? design.colors.orange : design.colors.gray }
+                             right={10} 
+                             top={10}
+                             handlePress={() => addParkingToFavourites()}
+                             />
+
+                            <View style={{ flex:1 }}>
+
                             <Card.Content>
                             <Title style={{color: colors.dark }}>{parking_area}</Title>
-                            <Title style={{color: colors.dark }}>{address}</Title>
+                            <Text style={{color: colors.dark, fontSize:14 }}>{address}</Text>
                             <FlatList
                             data={fees}
                             renderItem={({item}) => <CustomDataTable item={item}/>}
@@ -211,24 +213,39 @@ const ParkingFeesScreen = ({route, navigation}) => {
                                 />}
                                 />
                                 </Card.Content>
+                                </View>
+
                                 <Card.Actions>
                                 
-                                <View style={{flexDirection: 'row'}}>
-                                <View>
-                                <Button onPress={() => navigation.navigate("Map")} style={{ backgroundColor: colors.primary, 
-                                    borderRadius:5, alignContent:'center', alignItems:'center', padding:5, borderRadius:35 }}>
-                                    <Text style={{color:'#fff', fontSize:14, textTransform:'capitalize'}}>
-                                    Request parking
+                                <View style={{
+                                    flex:1,
+                                    flexDirection: 'row',
+                                    justifyContent: 'space-between',
+                                    position: 'absolute',
+                                    bottom: 0,
+                                    marginBottom:20,
+                                    }}>
+                                
+                                    <TouchableOpacity
+                                     onPress={() => navigation.navigate("Map")} 
+                                     style={[styles.actionButton, {backgroundColor: colors.primary, borderColor: colors.primary}]}>
+                                    <Text style={{ 
+                                     color: colors.text,
+                                     fontSize:14,
+                                     textTransform:'none',
+                                     fontWeight: 'bold'}}>
+                                     Place request
                                     </Text> 
-                                    </Button>
-                                    </View>
-                                    <View>
-                                    <TouchableOpacity style={styles.callBtn} onPress={() =>  callHelpLine(phone_number)}>
-                                    <FontAwesome5 name="phone-alt" size={18} color={design.colors.gray}/>
-                                    <Text style={{fontSize:16, paddingLeft:10, color:design.colors.gray}}>Call Now</Text>
                                     </TouchableOpacity>
+                                    
+                                    <TouchableOpacity style={[styles.actionButton, { left:20 }]} onPress={() =>  callHelpLine(phone_number)}>
+                                    {/* <FontAwesome5 name="phone-alt" size={18} color={design.colors.gray}/> */}
+                                    <Text style={{fontSize:14, paddingLeft:10, color:design.colors.gray}}>Call now</Text>
+                                    </TouchableOpacity>
+                                    
+                                    
                                     </View>
-                                    </View>
+                                    
                                     </Card.Actions>
                                     </Card>
                                     </>
@@ -236,7 +253,7 @@ const ParkingFeesScreen = ({route, navigation}) => {
                                 }
                                 
                                 
-                                </View>
+                                {/* </View> */}
                                 </View>
                                 {  isLoading ?  <AppLoader /> : null }
                                 </>
@@ -250,7 +267,7 @@ const ParkingFeesScreen = ({route, navigation}) => {
                                     flex: 1,
                                     backgroundColor: '#fff',
                                     padding: 10,
-                                    
+                                    height: '100%'
                                 },
                                 semicontainer:{
                                     flex:1,
@@ -302,17 +319,19 @@ const ParkingFeesScreen = ({route, navigation}) => {
                                     alignItems: 'center',
                                     alignSelf: 'center',
                                 },
-                                callBtn:{
+                                actionButton:{
                                     flexDirection: 'row',
-                                    height:45,
+                                    height:50,
                                     borderWidth:1,
                                     borderRadius:30,
-                                    borderColor: design.colors.gray,
-                                    backgroundColor: colors.white,
                                     justifyContent: 'center',
                                     alignItems: 'center',
-                                    width:'70%',
-                                    marginLeft:30,
+                                    width: 180
                                 },
+                                
+                                tableCell:{
+                                    color: design.colors.dark,
+                                    fontSize:16 
+                                }
                                 
                             });
