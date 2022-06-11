@@ -1,9 +1,7 @@
-let Constants = class {
-    
-    DEVICE_INFO = 'deviceInfo'
-    DEVICE_TOKEN = 'device_token'
-    DEVICE_TYPE = 'device_type'
-    DEVICE_LANGUAGE = 'device_language'
-}
+import assets from "./assets";
+import { COLORS, SHADOWS, SIZES, FONTS } from "./theme";
+import { apiKeys } from './apiKeys';
 
-module.exports = Constants;
+export { assets, COLORS, SHADOWS, SIZES, FONTS, apiKeys };
+
+

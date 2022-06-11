@@ -34,8 +34,7 @@ import crashlytics from "@react-native-firebase/crashlytics";
 import { getDeviceId, getDeviceIpAddress, getAppVersionName } from '../components/SharedCommons';
 import { useTheme } from '@react-navigation/native';
 import { useIsMounted } from '../components/common/isMounted';
-const api = require('../network');
-
+import { COLORS, SHADOWS, FONTS, apiKeys } from '../constants';
 
 
 const dbVehicleHelper = require("../database/vehicles");
@@ -108,9 +107,9 @@ const HomeScreen = (props) => {
   const updateUserAppDetails = async() => {
     try{
       
-      let deviceInfo = await AsyncStorage.getItem(api.constants.DEVICE_INFO);
+      let deviceInfo = await AsyncStorage.getItem(apiKeys.DEVICE_INFO);
       deviceInfo = JSON.parse(deviceInfo);
-      const deviceToken =  deviceInfo[`${api.constants.DEVICE_TOKEN}`];
+      const deviceToken =  deviceInfo[`${apiKeys.DEVICE_TOKEN}`];
       
       const deviceId = getDeviceId();
       const ipAddress = await getDeviceIpAddress();
@@ -271,6 +270,7 @@ const HomeScreen = (props) => {
               const populateVehicleTypes = async() => {
                 
                 try{
+
                   const result = await getVehicleCategories();
                   if(result.statusCode == '1'){
                     const data = result.data;
@@ -297,11 +297,10 @@ const HomeScreen = (props) => {
                       if(isMounted.current) { 
                         setVehicleState(vehicles);
                       }
-                      
                     }
                   });
                 }catch(err){
-                  console.log("Error on loading vehicles", err);
+                  Toast.show(err.message, Toast.LONG);
                 }
                 
               }
@@ -354,6 +353,7 @@ const HomeScreen = (props) => {
               const updateVehicle = () => {
                 
                 try{
+
                   const id = vehicle.id;
                   const number = vehicle.number;
                   const name = vehicle.name;

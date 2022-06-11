@@ -26,7 +26,7 @@ import { Image, RefreshControl,  Text, View, StatusBar, StyleSheet,
   import LocationEnabler from 'react-native-location-enabler';
   import { navigationRef } from './app/components/navigators/RootNavigation';
   import design from './assets/css/styles';
-  const api = require('./app/network');
+  import { COLORS, SHADOWS, SIZES, FONTS, apiKeys } from './app/constants';
   
   
   const {
@@ -237,9 +237,9 @@ import { Image, RefreshControl,  Text, View, StatusBar, StyleSheet,
             const onChangeToken = (token, language) => {
               
               var data = {};
-              data[`${api.constants.DEVICE_TOKEN}`] = token;
-              data[`${api.constants.DEVICE_TYPE}`] = Platform.OS;
-              data[`${api.constants.DEVICE_LANGUAGE}`] = language;
+              data[`${apiKeys.DEVICE_TOKEN}`] = token;
+              data[`${apiKeys.DEVICE_TYPE}`] = Platform.OS;
+              data[`${apiKeys.DEVICE_LANGUAGE}`] = language;
               loadDeviceInfo(data).done();
               
             }
@@ -247,7 +247,7 @@ import { Image, RefreshControl,  Text, View, StatusBar, StyleSheet,
             const loadDeviceInfo = async (deviceData) => {
               var value = JSON.stringify(deviceData);
               try {
-                await AsyncStorage.setItem(api.constants.DEVICE_INFO, value);
+                await AsyncStorage.setItem(apiKeys.DEVICE_INFO, value);
               } catch (error) {
                 console.log(error);
               }
@@ -527,7 +527,7 @@ import { Image, RefreshControl,  Text, View, StatusBar, StyleSheet,
             
             useEffect(() => {
               
-              let fontName = 'RobotoCondensed-Light'
+              let fontName = 'Inter-Light'
               GlobalFont.applyGlobal(fontName);
               
               NetInfo.fetch().then(state => {

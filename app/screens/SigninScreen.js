@@ -19,7 +19,7 @@ import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getDeviceId, getDeviceIpAddress, getAppVersionName, storeAccessToken } from '../components/SharedCommons';
 import AppLoader from '../components/loaders/AppLoader';
-const api = require('../network');
+import { COLORS, SHADOWS, SIZES, FONTS, apiKeys } from '../constants';
 
 
 
@@ -88,10 +88,10 @@ const SigninScreen = ({ navigation }) => {
             try {
                 
                 const deviceId = getDeviceId();
-                let deviceInfo = await AsyncStorage.getItem(api.constants.DEVICE_INFO);
+                let deviceInfo = await AsyncStorage.getItem(apiKeys.DEVICE_INFO);
                 deviceInfo = JSON.parse(deviceInfo);
-                const deviceToken =  deviceInfo[`${api.constants.DEVICE_TOKEN}`];
-                const deviceLanguage =  deviceInfo[`${api.constants.DEVICE_LANGUAGE}`];
+                const deviceToken =  deviceInfo[`${apiKeys.DEVICE_TOKEN}`];
+                const deviceLanguage =  deviceInfo[`${apiKeys.DEVICE_LANGUAGE}`];
                 const ipAddress = await getDeviceIpAddress();
                 const currentVersion = getAppVersionName();
                 
