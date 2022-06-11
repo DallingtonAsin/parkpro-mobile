@@ -4,15 +4,12 @@ import {
     Text, 
     TouchableOpacity, 
     Dimensions,
-    StyleSheet,
-    StatusBar,
-    Image
+    StyleSheet
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import LinearGradient from 'react-native-linear-gradient';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useTheme } from 'react-native-paper';
-import design from '../../assets/css/styles';
 import {APP_NAME} from '@env';
 import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
 

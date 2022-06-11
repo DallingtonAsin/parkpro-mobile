@@ -1,6 +1,9 @@
+const CustomerService = require('./CustomerService');
+const ParkingService = require('./ParkingService');
+const TransactionService = require('./TransactionService');
 
 module.exports = {
-    CustomerService: require('./CustomerService'),
-    ParkingService: require('./ParkingService'),
-    TransactionService: require('./TransactionService'),
+    customer: new CustomerService(),
+    parking: new ParkingService(),
+    transaction: new TransactionService(),
 }

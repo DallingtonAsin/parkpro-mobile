@@ -51,8 +51,8 @@
           Toast.show(resp.message);
         }
         
-      }catch(e){
-        Toast.show(e.message);
+      }catch(err){
+        Toast.show(err.message);
       }
     }
     

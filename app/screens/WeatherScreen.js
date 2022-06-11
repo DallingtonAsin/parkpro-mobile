@@ -8,7 +8,6 @@ import WeatherDetails from '../components/weather/WeatherDetails'
 import {WEATHER_API_KEY} from '@env';
 import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
 import { useTheme  } from 'react-native-paper';
-import AppLoader from '../components/loaders/AppLoader';
 
 
 const BASE_WEATHER_URL = "https://api.openweathermap.org/data/2.5/weather?";
@@ -16,6 +15,8 @@ const url =  `https://api.openweathermap.org/data/2.5/onecall?&units=metric&excl
 LogBox.ignoreAllLogs(true);
 
 const WeatherScreen = () => {
+
+
   const [errorMessage, setErrorMessage] = useState(null);
   const [currentWeather, setCurrentWeather] = useState(null);
   const [forecast, setForecast] = useState(null);

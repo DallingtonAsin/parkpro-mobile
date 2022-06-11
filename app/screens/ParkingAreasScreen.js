@@ -66,61 +66,77 @@ import {SafeAreaView,Dimensions,
         }
         
         const fetchParkings = async() => {
-            const resp = await getParkingAreas();
-            if(resp.statusCode == 1){
-                const parkings = resp.data;
-                console.log("Parkings loaded");
-                if(parkings.length > 0) {
-                    setFilteredParkingAreas(parkings);
-                    setParkingAreas(parkings);
+            
+            try{
+                const resp = await getParkingAreas();
+                if(resp.statusCode == 1){
+                    const parkings = resp.data;
+                    console.log("Parkings loaded");
+                    if(parkings.length > 0) {
+                        setFilteredParkingAreas(parkings);
+                        setParkingAreas(parkings);
+                    }
+                }else{
+                    Toast.show(resp.message, Toast.LONG);
                 }
-            }else{
-                Toast.show(resp.message, Toast.LONG);
+            }catch(err){
+                Toast.show(err.message, Toast.LONG);
+                
             }
         }
         
         const fetchNearByParkings = async() => {
-
-            // enable location please
             
-            Geolocation.getCurrentPosition(
-                async(position) => {
-                    const currentLatitude =
-                    JSON.stringify(position.coords.latitude);
-                    const currentLongitude =
-                    JSON.stringify(position.coords.longitude);
-                    setIsLoading(true);
-                    const resp = await getNearByParkingAreas(currentLatitude, currentLongitude);
-                    if(resp.statusCode == 1){
-                        const nearByParkings = resp.data;
-                        if(nearByParkings.length > 0) {
-                            setNearByParkingAreas(nearByParkings);
+            // enable location please
+            try{
+                
+                Geolocation.getCurrentPosition(
+                    async(position) => {
+                        const currentLatitude =
+                        JSON.stringify(position.coords.latitude);
+                        const currentLongitude =
+                        JSON.stringify(position.coords.longitude);
+                        setIsLoading(true);
+                        const resp = await getNearByParkingAreas(currentLatitude, currentLongitude);
+                        if(resp.statusCode == 1){
+                            const nearByParkings = resp.data;
+                            if(nearByParkings.length > 0) {
+                                setNearByParkingAreas(nearByParkings);
+                            }
+                        }else{
+                            Toast.show(resp.message, Toast.LONG);
                         }
-                    }else{
-                        Toast.show(resp.message, Toast.LONG);
+                        setIsLoading(false);
+                    }, (error) =>
+                    
+                    console.log(error.message), 
+                    
+                    { 
+                        enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 
                     }
-                    setIsLoading(false);
-                }, (error) =>
-                
-                console.log(error.message), 
-                
-                { 
-                    enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 
+                    );
+                    
+                }catch(err){
+                    Toast.show(err.message, Toast.LONG);
                 }
-                );
                 
                 
             }
             
             const fetchTopRatedParkings = async() => {
-                const resp = await getTopRatedParkingAreas();
-                if(resp.statusCode == 1){
-                    const topRatedParkings = resp.data;
-                    if(topRatedParkings.length > 0) {
-                        setTopRatedParkingAreas(topRatedParkings);
+                
+                try{
+                    const resp = await getTopRatedParkingAreas();
+                    if(resp.statusCode == 1){
+                        const topRatedParkings = resp.data;
+                        if(topRatedParkings.length > 0) {
+                            setTopRatedParkingAreas(topRatedParkings);
+                        }
+                    }else{
+                        Toast.show(resp.message, Toast.LONG);
                     }
-                }else{
-                    Toast.show(resp.message, Toast.LONG);
+                }catch(err){
+                    Toast.show(err.message, Toast.LONG);
                 }
             }
             

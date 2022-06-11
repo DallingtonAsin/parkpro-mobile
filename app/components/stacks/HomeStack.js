@@ -20,7 +20,7 @@ const HomeStack = ({ navigation }) => {
         backgroundColor: colors.primary,
       },
       headerTintColor: colors.text,
-      headerRight: () => (
+      headerLeft: () => (
         <TouchableOpacity style={{ paddingVertical: 12, paddingHorizontal:16 }}  onPress={() => navigation.dispatch(DrawerActions.openDrawer())}>
         <Icon name="bars" size={28} color={colors.text} />
         </TouchableOpacity>

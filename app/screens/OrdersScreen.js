@@ -52,11 +52,11 @@ import AppLoader from '../components/loaders/AppLoader';
         }else{
           Toast.show(resp.message);
         }
-        setIsLoading(false);
         
-      }catch(e){
-        Toast.show(e.message);
+      }catch(err){
+        Toast.show(err.message);
       }
+      setIsLoading(false);
     }
     
     const showOrderInfo =(item) => {

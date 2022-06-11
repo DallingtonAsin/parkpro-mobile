@@ -14,10 +14,9 @@ import { Image, RefreshControl,  Text, View, StatusBar, StyleSheet,
   import SplashScreen from 'react-native-splash-screen'
   import {  icons} from './constants';
   import GlobalFont from 'react-native-global-font';
-  const Services = require("./app/services");
+  const services = require("./app/services");
   import AppLoaderAnimation from './app/components/loaders/AppLoaderAnimation';
   import { customDefaultTheme,  customDarkTheme} from './assets/themes';
-  import { ApiKeys } from './app/network/ApiKeys';
   import messaging from '@react-native-firebase/messaging';
   import auth from '@react-native-firebase/auth';
   import firestore from '@react-native-firebase/firestore';
@@ -27,6 +26,7 @@ import { Image, RefreshControl,  Text, View, StatusBar, StyleSheet,
   import LocationEnabler from 'react-native-location-enabler';
   import { navigationRef } from './app/components/navigators/RootNavigation';
   import design from './assets/css/styles';
+  const api = require('./app/network');
   
   
   const {
@@ -237,9 +237,9 @@ import { Image, RefreshControl,  Text, View, StatusBar, StyleSheet,
             const onChangeToken = (token, language) => {
               
               var data = {};
-              data[`${ApiKeys.DEVICE_TOKEN}`] = token;
-              data[`${ApiKeys.DEVICE_TYPE}`] = Platform.OS;
-              data[`${ApiKeys.DEVICE_LANGUAGE}`] = language;
+              data[`${api.constants.DEVICE_TOKEN}`] = token;
+              data[`${api.constants.DEVICE_TYPE}`] = Platform.OS;
+              data[`${api.constants.DEVICE_LANGUAGE}`] = language;
               loadDeviceInfo(data).done();
               
             }
@@ -247,7 +247,7 @@ import { Image, RefreshControl,  Text, View, StatusBar, StyleSheet,
             const loadDeviceInfo = async (deviceData) => {
               var value = JSON.stringify(deviceData);
               try {
-                await AsyncStorage.setItem(ApiKeys.DEVICE_INFO, value);
+                await AsyncStorage.setItem(api.constants.DEVICE_INFO, value);
               } catch (error) {
                 console.log(error);
               }
@@ -258,7 +258,7 @@ import { Image, RefreshControl,  Text, View, StatusBar, StyleSheet,
               
               sendSmsVerification: async(data) => {
                 try{
-                  return await Services.CustomerService.sendOTP(data);
+                  return await services.customer.sendOTP(data);
                 }catch(e){
                   throw e;
                 }
@@ -266,7 +266,7 @@ import { Image, RefreshControl,  Text, View, StatusBar, StyleSheet,
               
               verifyOTP: async(data) => {
                 try{
-                  return await Services.CustomerService.verifyOneTimePassword(data);
+                  return await services.customer.verifyOtp(data);
                 }catch(e){
                   throw e;
                 }
@@ -304,17 +304,16 @@ import { Image, RefreshControl,  Text, View, StatusBar, StyleSheet,
               
               createProfile: async(data) => {
                 try{
-                  return await Services.CustomerService.createProfile(data);
+                  return await services.customer.createProfile(data);
                 }catch(e){
                   throw e;
                 }
               },
               
               
-              
               updateProfile: async(data) => {
                 try{
-                  return await Services.CustomerService.updateProfile(data);
+                  return await services.customer.updateProfile(data);
                 }catch(e){
                   throw e;
                 }
@@ -322,7 +321,7 @@ import { Image, RefreshControl,  Text, View, StatusBar, StyleSheet,
               
               UpdateProfileImage: async(data) => {
                 try{
-                  return await Services.CustomerService.uploadProfilePicture(data);
+                  return await services.customer.uploadProfilePicture(data);
                 }catch(e){
                   throw e;
                 }
@@ -330,17 +329,24 @@ import { Image, RefreshControl,  Text, View, StatusBar, StyleSheet,
               
               deleteProfilePicture: async(data) => {
                 try{
-                  return await Services.CustomerService.removeProfilePicture(data);
+                  return await services.customer.removeProfilePicture(data);
                 }catch(e){
                   throw e;
                 }
               },
               
+              changePin: async(data) => {
+                try{
+                  return await services.customer.changePin(data);
+                }catch(e){
+                  throw e;
+                }
+              },
               
               asyncCustomerProfile: async(id) => {
                 
                 try{
-                  return await Services.CustomerService.getCustomerData(id).then(async(res) => {
+                  return await services.customer.getCustomerData(id).then(async(res) => {
                     const statusCode = res.statusCode;
                     const message = res.message;
                     if(statusCode == 1){
@@ -359,7 +365,7 @@ import { Image, RefreshControl,  Text, View, StatusBar, StyleSheet,
               
               getCustomerNotifications: async(id) => {
                 try{
-                  return await Services.CustomerService.getNotifications(id);
+                  return await services.customer.getNotifications(id);
                 }catch(e){
                   throw e;
                 }
@@ -367,7 +373,7 @@ import { Image, RefreshControl,  Text, View, StatusBar, StyleSheet,
               
               getCustomerTransactions: async(id) => {
                 try{
-                  return await Services.TransactionService.getTransactionHistory(id);
+                  return await services.transaction.getTransactionHistory(id);
                 }catch(e){
                   throw e;
                 }
@@ -375,7 +381,7 @@ import { Image, RefreshControl,  Text, View, StatusBar, StyleSheet,
               
               getParkingAreas: async() => {
                 try{
-                  return await Services.ParkingService.fetchParkingAreas();
+                  return await services.parking.fetchParkingAreas();
                 }catch(e){
                   throw e;
                 }
@@ -383,7 +389,7 @@ import { Image, RefreshControl,  Text, View, StatusBar, StyleSheet,
               
               getVehicleCategories: async() => {
                 try{
-                  return await Services.ParkingService.getCarTypes();
+                  return await services.parking.getCarTypes();
                 }catch(e){
                   throw e;
                 }
@@ -393,7 +399,7 @@ import { Image, RefreshControl,  Text, View, StatusBar, StyleSheet,
               
               updatePassword: async(data) => {
                 try{
-                  return await Services.CustomerService.changePassword(data)
+                  return await services.customer.changePassword(data)
                 }catch(e){
                   throw e;
                 }
@@ -402,15 +408,7 @@ import { Image, RefreshControl,  Text, View, StatusBar, StyleSheet,
               
               postSuggestion: async(data) => {
                 try{
-                  return await Services.CustomerService.postSuggestion(data);
-                }catch(e){
-                  throw e;
-                }
-              },
-              
-              loadAirtimeCredit: async(data) => {
-                try{
-                  return await Services.TransactionService.loadAirtime(data);
+                  return await services.customer.postSuggestion(data);
                 }catch(e){
                   throw e;
                 }
@@ -419,7 +417,7 @@ import { Image, RefreshControl,  Text, View, StatusBar, StyleSheet,
               
               depositMoney: async(data) => {
                 try{
-                  return await Services.CustomerService.topUp(data);
+                  return await services.customer.topUp(data);
                 }catch(e){
                   throw e;
                 }
@@ -427,7 +425,7 @@ import { Image, RefreshControl,  Text, View, StatusBar, StyleSheet,
               
               filterParkingAreas: async(data) => {
                 try{
-                  return await Services.ParkingService.filterParkingAreas(data);
+                  return await services.parking.filterParkingAreas(data);
                 }catch(e){
                   throw e;
                 }
@@ -435,7 +433,7 @@ import { Image, RefreshControl,  Text, View, StatusBar, StyleSheet,
               
               searchParkingArea: async(id) => {
                 try{
-                  return await Services.ParkingService.fetchParkingDetailsById(id);
+                  return await services.parking.fetchParkingDetailsById(id);
                 }catch(e){
                   throw e;
                 }
@@ -443,7 +441,7 @@ import { Image, RefreshControl,  Text, View, StatusBar, StyleSheet,
               
               getNearByParkingAreas: async(lat, long) => {
                 try{
-                  const result = await Services.ParkingService.fetchNearByParkingAreas(lat, long);
+                  const result = await services.parking.fetchNearByParkingAreas(lat, long);
                   return result;
                 }catch(e){
                   throw e;
@@ -452,7 +450,7 @@ import { Image, RefreshControl,  Text, View, StatusBar, StyleSheet,
               
               getTopRatedParkingAreas: async() => {
                 try{
-                  const result = await Services.ParkingService.fetchTopRatedParkingAreas();
+                  const result = await services.parking.fetchTopRatedParkingAreas();
                   return result;
                 }catch(e){
                   throw e;
@@ -461,7 +459,7 @@ import { Image, RefreshControl,  Text, View, StatusBar, StyleSheet,
               
               submitParkingRequest: async(data) => {
                 try{
-                  return await Services.ParkingService.postParkingRequest(data);
+                  return await services.parking.postParkingRequest(data);
                 }
                 catch(e){
                   throw e;
@@ -480,7 +478,7 @@ import { Image, RefreshControl,  Text, View, StatusBar, StyleSheet,
               
               fetchMyParkingRequests: async(id) => {
                 try{
-                  return await Services.ParkingService.getMyParkingRequests(id);
+                  return await services.parking.getMyParkingRequests(id);
                 }catch(e){
                   throw e;
                 }
@@ -488,7 +486,7 @@ import { Image, RefreshControl,  Text, View, StatusBar, StyleSheet,
               
               fetchParkingFees: async(id) => {
                 try{
-                  return await Services.ParkingService.fetchParkingFees(id);
+                  return await services.parking.fetchParkingFees(id);
                 }catch(e){
                   throw e;
                 }
@@ -496,7 +494,7 @@ import { Image, RefreshControl,  Text, View, StatusBar, StyleSheet,
               
               fetchOrderInfo: async(order_no, customer_id) => {
                 try{
-                  return await Services.TransactionService.getOrderDetails(order_no, customer_id);
+                  return await services.transaction.getOrderDetails(order_no, customer_id);
                 }catch(e){
                   throw e;
                 }
@@ -504,7 +502,7 @@ import { Image, RefreshControl,  Text, View, StatusBar, StyleSheet,
               
               updateAppDetails: async(data) => {
                 try{
-                  return await Services.CustomerService.postAppDetails(data);
+                  return await services.customer.postAppDetails(data);
                 }catch(e){
                   throw e;
                 }
@@ -512,7 +510,7 @@ import { Image, RefreshControl,  Text, View, StatusBar, StyleSheet,
               
               resendSignupOTP: async(data) => {
                 try{
-                  return await Services.CustomerService.resendSignupOTP(data);
+                  return await services.customer.resendSignupOTP(data);
                 }catch(e){
                   throw e;
                 }

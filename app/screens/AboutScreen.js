@@ -12,89 +12,75 @@ import { useTheme } from '@react-navigation/native';
 
 
 const AboutScreen = (props) => {
-
+    
     const { colors } = useTheme();
     const styles = makeStyles(colors);
-
     
     return(
         
         <View style={{padding: 10, flex: 1, backgroundColor:'#e2e2e3'}}>
-          <FocusAwareStatusBar barStyle="light-content" backgroundColor={colors.primary} />
+        <FocusAwareStatusBar barStyle="light-content" backgroundColor={colors.primary} />
         <ScrollView contentContainerStyle={{ height:'auto', paddingBottom: 60 }} style={{flex: 1}}>
-      
-    
-    <Card style={styles.card}>
-    <Card.Content>
-    <Title style={{ color: colors.dark }}>Services</Title>
-    <Text style={{  opacity:0.6, fontSize:18, color: colors.dark }}>
-    {APP_NAME} provides easy access to better and affordable parking areas without a hustle. Just recharge your account 
-    and get affordable parking in less than a minute!
-    
-    </Text>  
-    </Card.Content>
-    </Card>
-    
-    <Card style={styles.card}>
-    <Card.Content>
-    <Title style={{ color: colors.dark }}>Usage</Title>
-    <Text style={{  opacity:0.6, fontSize:18, color: colors.dark }}>
-    To get started, search for a parking area and pick one that you prefer (depending on distance, price or spaciousness).
-    Ensure your <Text style={{textTransform:'lowercase'}}>{APP_NAME}</Text> wallet has enough money to pay for parking. Else, you can recharge your account
-    using the "Top Up" option in the app.</Text>  
-    </Card.Content>
-    </Card>
-    
-    
-    <Card style={styles.card}>
-    <Card.Content>
-    <View style={{ flex: 1, justifyContent: 'center' }}>
-    <Title style={{ color: colors.dark }}>Online Community</Title>
-    
-    <View style={{ flexDirection: 'row', marginTop: SIZES.padding,  }}>
-    
-
-    <OptionItem
-    icon={"globe"}
-    bgColor={['#fff', '#fff']}
-    label="Website"
-    iconWidth={35} 
-    iconHeight={35}
-    XWidth={70}
-    YHeight={70}
-    isSocialMedia={true}
-    color={'#43609C'}
-    labelColor={colors.dark}
-    onPress={() => Linking.openURL("http://www.parkproug.com")}
-    />
-
-<OptionItem
-    icon={"facebook"}
-    bgColor={['#fff', '#fff']}
-    label="Facebook"
-    iconWidth={35} 
-    iconHeight={35}
-    XWidth={70}
-    YHeight={70}
-    isSocialMedia={true}
-    color={'#43609C'}
-    labelColor={colors.dark}
-    onPress={() =>  Linking.openURL("http://www.facebook.com") }
-    />
-
-{/* <OptionItem
-    icon={"instagram"}
-    bgColor={['#fff', '#fff']}
-    label="Instagram"
-    iconWidth={35} 
-    iconHeight={35}
-    XWidth={70}
-    YHeight={70}
-    isSocialMedia={true}
-    color={'#8a3ab9'}
-    onPress={() =>  Linking.openURL("http://www.instagram.com") }
-    /> */}
-
+        
+        
+        <Card style={styles.card}>
+        <Card.Content>
+        <Title style={{ color: colors.dark }}>Services</Title>
+        <Text style={{  opacity:0.6, fontSize:18, color: colors.dark }}>
+        {APP_NAME} provides easy access to better and affordable parking areas without a hustle. Just recharge your account 
+        and get affordable parking in less than a minute!
+        
+        </Text>  
+        </Card.Content>
+        </Card>
+        
+        <Card style={styles.card}>
+        <Card.Content>
+        <Title style={{ color: colors.dark }}>Usage</Title>
+        <Text style={{  opacity:0.6, fontSize:18, color: colors.dark }}>
+        To get started, search for a parking area and pick one that you prefer (depending on distance, price or spaciousness).
+        Ensure your <Text style={{textTransform:'lowercase'}}>{APP_NAME}</Text> wallet has enough money to pay for parking. Else, you can recharge your account
+        using the "Top Up" option in the app.</Text>  
+        </Card.Content>
+        </Card>
+        
+        
+        <Card style={styles.card}>
+        <Card.Content>
+        <View style={{ flex: 1, justifyContent: 'center' }}>
+        <Title style={{ color: colors.dark }}>Online Community</Title>
+        
+        <View style={{ flexDirection: 'row', marginTop: SIZES.padding,  }}>
+        
+        
+        <OptionItem
+        icon={"globe"}
+        bgColor={['#fff', '#fff']}
+        label="Website"
+        iconWidth={35} 
+        iconHeight={35}
+        XWidth={70}
+        YHeight={70}
+        isSocialMedia={true}
+        color={'#43609C'}
+        labelColor={colors.dark}
+        onPress={() => Linking.openURL("http://www.parkproug.com")}
+        />
+        
+        <OptionItem
+        icon={"facebook"}
+        bgColor={['#fff', '#fff']}
+        label="Facebook"
+        iconWidth={35} 
+        iconHeight={35}
+        XWidth={70}
+        YHeight={70}
+        isSocialMedia={true}
+        color={'#43609C'}
+        labelColor={colors.dark}
+        onPress={() =>  Linking.openURL("http://www.facebook.com") }
+        />
+        
     <OptionItem
     icon={"twitter"}
     bgColor={['#fff', '#fff']}
@@ -108,9 +94,9 @@ const AboutScreen = (props) => {
     labelColor={colors.dark}
     onPress={() =>  Linking.openURL("https://www.twitter.com") }
     />
-  
     
-   
+    
+    
     
     <OptionItem
     icon={"linkedin"}
@@ -127,11 +113,11 @@ const AboutScreen = (props) => {
     />
     
     </View>
-
+    
     </View>
     </Card.Content>
     </Card>
-
+    
     </ScrollView>
     </View>
     

@@ -19,7 +19,8 @@ import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getDeviceId, getDeviceIpAddress, getAppVersionName, storeAccessToken } from '../components/SharedCommons';
 import AppLoader from '../components/loaders/AppLoader';
-import { ApiKeys } from '../network/ApiKeys';
+const api = require('../network');
+
 
 
 const SigninScreen = ({ navigation }) => {
@@ -53,10 +54,10 @@ const SigninScreen = ({ navigation }) => {
         if(phoneNumber.length < 13){
             Toast.show('Please enter a valid phone number', Toast.LONG);
         }else{
-
+            
             const isNumberValid = phoneInput.current?.isValidNumber(number);
             if(isNumberValid){
-
+                
                 const formattedNumber = `+${phoneInput.current?.getCallingCode()}${number}`// phoneObj.formattedNumber;
                 
                 const phoneDetails = {
@@ -84,42 +85,47 @@ const SigninScreen = ({ navigation }) => {
         
         const sendOTP = async(phone) => {
             
-            const deviceId = getDeviceId();
-            let deviceInfo = await AsyncStorage.getItem(ApiKeys.DEVICE_INFO);
-            deviceInfo = JSON.parse(deviceInfo);
-            const deviceToken =  deviceInfo[`${ApiKeys.DEVICE_TOKEN}`];
-            const deviceLanguage =  deviceInfo[`${ApiKeys.DEVICE_LANGUAGE}`];
-            const ipAddress = await getDeviceIpAddress();
-            const currentVersion = getAppVersionName();
-            
-            const requestParams = {
-                countryIsoCode: phone.countryIsoCode,
-                countryCode: `+${phone.countryCode}`,
-                number: phone.number,
-                formattedNumber: phone.formattedNumber,
-                uniqueDeviceId: deviceId,
-                deviceToken: deviceToken,
-                ipAddress: ipAddress,
-                currentVersion: currentVersion,
-                deviceLanguage: deviceLanguage,
-            }
-            console.log("Request parameters", requestParams);
-            
-            setIsLoading(true);
-            
-            let response = await sendSmsVerification(requestParams);
-            console.log("API response", response);
-            if(response.statusCode == 1){
-
-                await storeAccessToken(response.data.access_token);
+            try {
                 
-                navigation.navigate("Otp",{
-                    countryCode: response.data.country_code,
-                    phoneNumber: response.data.phone_number,
-                    otp: response.data.otp
-                });
-            }else{
-                Alert.alert("Message", response.message);
+                const deviceId = getDeviceId();
+                let deviceInfo = await AsyncStorage.getItem(api.constants.DEVICE_INFO);
+                deviceInfo = JSON.parse(deviceInfo);
+                const deviceToken =  deviceInfo[`${api.constants.DEVICE_TOKEN}`];
+                const deviceLanguage =  deviceInfo[`${api.constants.DEVICE_LANGUAGE}`];
+                const ipAddress = await getDeviceIpAddress();
+                const currentVersion = getAppVersionName();
+                
+                const requestParams = {
+                    countryIsoCode: phone.countryIsoCode,
+                    countryCode: `+${phone.countryCode}`,
+                    number: phone.number,
+                    formattedNumber: phone.formattedNumber,
+                    uniqueDeviceId: deviceId,
+                    deviceToken: deviceToken,
+                    ipAddress: ipAddress,
+                    currentVersion: currentVersion,
+                    deviceLanguage: deviceLanguage,
+                }
+                console.log("Request parameters", requestParams);
+                
+                setIsLoading(true);
+                
+                let response = await sendSmsVerification(requestParams);
+                console.log("API response", response);
+                if(response.statusCode == 1){
+                    
+                    await storeAccessToken(response.data.access_token);
+                    
+                    navigation.navigate("Otp",{
+                        countryCode: response.data.country_code,
+                        phoneNumber: response.data.phone_number,
+                        otp: response.data.otp
+                    });
+                }else{
+                    Toast.show(response.message, Toast.LONG);
+                }
+            }catch(err){
+                Toast.show(err.message, Toast.LONG);
             }
             setIsLoading(false);
             
