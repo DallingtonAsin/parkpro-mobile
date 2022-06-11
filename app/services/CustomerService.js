@@ -130,6 +130,15 @@ let CustomerService = class {
             throw error;
         }
     }
+
+    changePin  = async(data) => {
+        try{
+            const endpoint = api.endpoint.customer.change_pin;
+            return await api.axios.post(endpoint, data);
+        }catch(error){
+            throw error;
+        }
+    }
 }
 
 module.exports = CustomerService;

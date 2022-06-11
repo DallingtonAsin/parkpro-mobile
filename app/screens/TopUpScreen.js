@@ -4,7 +4,7 @@ import { Text,
   View, 
   ScrollView,
   TouchableOpacity,
-  Alert,KeyboardAvoidingView ,
+  KeyboardAvoidingView ,
   StyleSheet} from 'react-native';
   import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
   import design from '../../assets/css/styles';

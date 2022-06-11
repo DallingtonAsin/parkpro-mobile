@@ -311,7 +311,6 @@ import { Image, RefreshControl,  Text, View, StatusBar, StyleSheet,
               },
               
               
-              
               updateProfile: async(data) => {
                 try{
                   return await services.customer.updateProfile(data);
@@ -336,6 +335,13 @@ import { Image, RefreshControl,  Text, View, StatusBar, StyleSheet,
                 }
               },
               
+              changePin: async(data) => {
+                try{
+                  return await services.customer.changePin(data);
+                }catch(e){
+                  throw e;
+                }
+              },
               
               asyncCustomerProfile: async(id) => {
                 
