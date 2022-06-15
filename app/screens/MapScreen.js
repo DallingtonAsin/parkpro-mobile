@@ -29,15 +29,16 @@ import { StyleSheet, Text, View,Button,Pressable,
   import { openDatabase } from 'react-native-sqlite-storage';
   import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
   import { useTheme } from '@react-navigation/native';
+  import {MAP_API_KEY} from '@env';
   
   
   const db = openDatabase({ name: 'Customers.db' });
   const dbVehicleHelper = require("../database/vehicles");
   
   const {height, width} = Dimensions.get('screen');
-  const LATITUDE_DELTA = 0.0922 
+  const LATITUDE_DELTA = 0.0922; 
   const LONGITUDE_DELTA =  LATITUDE_DELTA + (width / height);
-  Geocoder.init("AIzaSyCBrtM8sRgDkCkfe5eBq-P20qlVghWbYDc");
+  Geocoder.init(MAP_API_KEY);
   
   const deviceWidth = Dimensions.get("window").width;
   const deviceHeight = Dimensions.get("window").height;
@@ -560,7 +561,7 @@ import { StyleSheet, Text, View,Button,Pressable,
             }
             
             useEffect(() => {
-              // requestLocationPermission();
+              requestLocationPermission();
               CheckIfLocationEnabled();
               GetCurrentLocation();
               populateHours();
@@ -953,7 +954,7 @@ import { StyleSheet, Text, View,Button,Pressable,
                               <MapView 
                               initialRegion={region.currentPosition}
                               style={styles.map}
-                              customMapStyle={mapStyles.brownStyle}
+                              // customMapStyle={mapStyles.brownStyle}
                               minZoomLevel={15.5}
                               maxZoomLevel={19}
                               showsUserLocation={true}

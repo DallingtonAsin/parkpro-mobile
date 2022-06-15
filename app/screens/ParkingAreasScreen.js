@@ -287,10 +287,10 @@ import {SafeAreaView,Dimensions,
                                     props.navigation.navigate("ParkingFees", {
                                         screen: 'ParkingFees',
                                         params: { parking_area_id: item.id, 
-                                            parking_area: item.name,
-                                            address: item.address,
-                                            phone_number: item.phone_number,
-                                            photo: item.photo,
+                                                  parking_area: item.name,
+                                                  address: item.address,
+                                                  phone_number: item.phone_number,
+                                                  photo: item.photo,
                                         }
                                     });
                                 }

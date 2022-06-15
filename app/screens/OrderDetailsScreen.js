@@ -1,7 +1,5 @@
-import React, {useState, useEffect} from 'react';
-import {Text, SafeAreaView, Image, 
-  RefreshControl, View, FlatList,ScrollView,
-  TouchableWithoutFeedback, StyleSheet} from 'react-native';
+  import React, {useState, useEffect} from 'react';
+  import {Text, SafeAreaView, Image, RefreshControl, View, FlatList, TouchableWithoutFeedback, StyleSheet} from 'react-native';
   import { AuthContext } from '../context/context';
   import styles from '../../assets/css/styles';
   import { icons } from '../../constants';
@@ -10,7 +8,8 @@ import {Text, SafeAreaView, Image,
   import { useTheme } from '@react-navigation/native';
   import AppLoader from '../components/loaders/AppLoader';
   import Toast from 'react-native-simple-toast';
-
+  import { callHelpLine } from '../components/SharedCommons';
+  import { COMPANY_LINE } from '@env';
   
   
   const wait = (timeout) => {
@@ -89,74 +88,75 @@ import {Text, SafeAreaView, Image,
         
         <View style={innerStyles.orderInfoContainer}>
         
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding:10}}>
-        <Text style={innerStyles.subtitle}>Names</Text>
-        <Text style={innerStyles.info}>{item.name}</Text>
+        <View style={innerStyles.orderInfo}>
+          <Text style={innerStyles.subtitle}>Names</Text>
+          <Text style={innerStyles.info}>{item.name}</Text>
         </View>
         
         <View style={innerStyles.divider}></View>
         
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding:10}}>
-        <Text style={innerStyles.subtitle}>Telephone</Text>
-        <Text style={innerStyles.info}>{item.telephone_no}</Text>
+        <View style={innerStyles.orderInfo}>
+          <Text style={innerStyles.subtitle}>Telephone</Text>
+          <Text style={innerStyles.info}>{item.telephone_no}</Text>
         </View>
         
         <View style={innerStyles.divider}></View>
         
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding:10}}>
-        <Text style={innerStyles.subtitle}>Order No</Text>
-        <Text style={innerStyles.info}>{item.order_no}</Text>
+        <View style={innerStyles.orderInfo}>
+          <Text style={innerStyles.subtitle}>Order No</Text>
+          <Text style={innerStyles.info}>{item.order_no}</Text>
         </View>
         
         <View style={innerStyles.divider}></View>
         
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding:10}}>
-        <Text style={innerStyles.subtitle}>Parking Area</Text>
-        <Text style={innerStyles.info}>{item.parking_area}</Text>
+        <View style={innerStyles.orderInfo}>
+          <Text style={innerStyles.subtitle}>Parking Area</Text>
+          <Text style={innerStyles.info}>{item.parking_area}</Text>
         </View>
         
         
         <View style={innerStyles.divider}></View>
         
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding:10}}>
-        <Text style={innerStyles.subtitle}>Booking Period</Text>
-        <Text style={innerStyles.info}>{item.booking_period}</Text>
+        <View style={innerStyles.orderInfo}>
+          <Text style={innerStyles.subtitle}>Booking Period</Text>
+          <Text style={innerStyles.info}>{item.booking_period}</Text>
         </View>
         
         <View style={innerStyles.divider}></View>
         
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding:10}}>
-        <Text style={innerStyles.subtitle}>Total Time</Text>
-        <Text style={innerStyles.info}>{item.parking_hours}</Text>
+        <View style={innerStyles.orderInfo}>
+          <Text style={innerStyles.subtitle}>Total Time</Text>
+          <Text style={innerStyles.info}>{item.parking_hours}</Text>
         </View>
         
         <View style={innerStyles.divider}></View>
         
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding:10}}>
-        <Text style={innerStyles.subtitle}>Vehicle Type</Text>
-        <Text style={innerStyles.info}>{item.car_type}</Text>
+        <View style={innerStyles.orderInfo}>
+          <Text style={innerStyles.subtitle}>Vehicle Type</Text>
+          <Text style={innerStyles.info}>{item.car_type}</Text>
         </View>
         
         <View style={innerStyles.divider}></View>
         
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding:10}}>
-        <Text style={innerStyles.subtitle}>Fee per hour</Text>
-        <Text style={innerStyles.info}>{currency} {item.fee_per_hour}</Text>
+        <View style={innerStyles.orderInfo}>
+          <Text style={innerStyles.subtitle}>Fee per hour</Text>
+          <Text style={innerStyles.info}>{currency} {item.fee_per_hour}</Text>
         </View>
         
         <View style={innerStyles.divider}></View>
         
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding:10}}>
-        <Text style={innerStyles.subtitle}>Total amount paid</Text>
-        <Text style={innerStyles.info}>{currency} {item.amount}</Text>
+        <View style={innerStyles.orderInfo}>
+          <Text style={innerStyles.subtitle}>Total amount paid</Text>
+          <Text style={innerStyles.info}>{currency} {item.amount}</Text>
         </View>
+
         </View>
         
         
         <View style={innerStyles.footer}>
-        <TouchableWithoutFeedback onPress={() => navigation.navigate('Help')}>
-        <Text style={innerStyles.helpCenterText}>Help Center</Text>
-        </TouchableWithoutFeedback>
+          <TouchableWithoutFeedback onPress={() => {callHelpLine(COMPANY_LINE)}}>
+          <Text style={innerStyles.helpCenterText}>Contact support</Text>
+          </TouchableWithoutFeedback>
         </View>
         
         </View>
@@ -260,7 +260,7 @@ import {Text, SafeAreaView, Image,
             
             info:{
               color:'#808080',
-              fontSize:17
+              fontSize:16
             },
             
             headerTitle:{
@@ -286,7 +286,13 @@ import {Text, SafeAreaView, Image,
               fontSize:22,
               fontWeight:'bold',
               color:styles.colors.orange
-            }
+            },
+
+            orderInfo: {
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              padding:10
+            },
             
             
           });

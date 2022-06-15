@@ -34,7 +34,7 @@ import crashlytics from "@react-native-firebase/crashlytics";
 import { getDeviceId, getDeviceIpAddress, getAppVersionName } from '../components/SharedCommons';
 import { useTheme } from '@react-navigation/native';
 import { useIsMounted } from '../components/common/isMounted';
-import { COLORS, SHADOWS, FONTS, apiKeys } from '../constants';
+import { apiKeys } from '../constants';
 
 
 const dbVehicleHelper = require("../database/vehicles");
@@ -540,22 +540,38 @@ const HomeScreen = (props) => {
                         
                         </View>
                         ),[]);
+
+                        const GotoFeesPage = (item) => { 
+                          props.navigation.navigate("ParkingFees", {
+                              screen: 'ParkingFees',
+                              params: { parking_area_id: item.id, 
+                                        parking_area: item.name,
+                                        address: item.address,
+                                        phone_number: item.phone_number,
+                                        photo: item.photo,
+                              }
+                          });
+                      }
                         
                         const renderFavouriteParkings = useCallback(
                           
                           (item) => (
-                            <View key={item.id} style={[design.vehicle.container,{padding:10}]}>
-                            <Icon name="map-marker" size={30} color="#4F8EF7" />
-                            <View style={design.vehicle.middleContainer}>
-                            <Text style={design.vehicle.text}>{item.name}</Text>
-                            <Text style={design.vehicle.name}>{item.address}</Text>
-                            </View>
-                            <View style={design.vehicle.rightContainer}>
-                            <Pressable onPress={() => chooseActionOnFavouriteParking(item)}>
-                            <FontAwesome name={"ellipsis-h"} size={35} style={design.vehicle.ellipsis} />
-                            </Pressable>
-                            </View>
-                            </View>
+                          <TouchableOpacity 
+                          onPress={() => { GotoFeesPage(item) }}
+                          key={item.id} 
+                          style={[design.vehicle.container,{padding:10}]}
+                          >
+                              <Icon name="map-marker" size={30} color="#4F8EF7" />
+                              <View style={design.vehicle.middleContainer}>
+                                <Text style={design.vehicle.text}>{item.name}</Text>
+                                <Text style={design.vehicle.name}>{item.address}</Text>
+                              </View>
+                              <View style={design.vehicle.rightContainer}>
+                                <Pressable onPress={() => chooseActionOnFavouriteParking(item)}>
+                                <FontAwesome name={"ellipsis-h"} size={35} style={design.vehicle.ellipsis} />
+                                </Pressable>
+                             </View>
+                          </TouchableOpacity>
                             ),[]);
                             
                             

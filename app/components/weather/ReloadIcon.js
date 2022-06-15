@@ -8,7 +8,13 @@ export default function ReloadIcon({ load }) {
     const reloadIconName = Platform.OS === 'ios' ? 'refresh' : 'refresh'
     return (
         <View style={styles.reloadIcon}>
-            <FontAwesome onPress={load} name={reloadIconName} size={24} color={colors.PRIMARY_COLOR} />
+            <FontAwesome 
+            onPress={load} 
+            name={reloadIconName}
+            size={30}
+            color={colors.PRIMARY_COLOR}
+            style={{ top:35 }}
+            />
         </View>
     )
 }
