@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import {Text, TouchableOpacity, View, FlatList, SafeAreaView, StyleSheet, ScrollView, Alert } from 'react-native';
+import {Text, TouchableOpacity, View, FlatList, StyleSheet, Alert } from 'react-native';
 import styles from '../../assets/css/styles';
 import ProfileContext from '../context/index';
 import { AuthContext } from '../context/context';
@@ -38,7 +38,7 @@ const FeedbackScreen = () => {
   const css = makeStyles(colors);
   
   
-  const sendSuggestion = async() => {
+  const sendFeedback = async() => {
     
     try{
       
@@ -176,7 +176,7 @@ const FeedbackScreen = () => {
       backgroundColor: colors.primary,
       borderColor: colors.primary
     }]}
-    onPress={sendSuggestion} >
+    onPress={() => { sendFeedback() }} >
     <Text style = {{ color: colors.text, fontWeight: 'bold', fontSize:18 }}>
     {isLoading ? 'Sending...': 'Send' }
     </Text>
