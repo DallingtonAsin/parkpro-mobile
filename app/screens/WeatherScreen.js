@@ -8,6 +8,7 @@ import WeatherDetails from '../components/weather/WeatherDetails'
 import {WEATHER_API_KEY} from '@env';
 import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
 import { useTheme  } from 'react-native-paper';
+import AppLoader from '../components/loaders/AppLoader';
 
 
 const BASE_WEATHER_URL = "https://api.openweathermap.org/data/2.5/weather?";
@@ -103,8 +104,9 @@ const WeatherScreen = () => {
 
   if (!forecast || !currentWeatherDetails) {
     return <SafeAreaView style={styles.loading}>
-      <ActivityIndicator size="large"  color={colors.PRIMARY_COLOR} />
-      </SafeAreaView>;
+       <FocusAwareStatusBar barStyle="light-content" backgroundColor={colors.primary} />
+       <AppLoader />
+       </SafeAreaView>
   }
 
 
@@ -162,7 +164,7 @@ const WeatherScreen = () => {
       </ScrollView>
       </SafeAreaView>
 
-      {/* {  isLoading ?  <AppLoader /> : null } */}
+      {  isLoading ?  <AppLoader /> : null }
 
       </>
     );
@@ -170,6 +172,7 @@ const WeatherScreen = () => {
   else if(errorMessage){
     return (
       <View style={styles.container}>
+         <FocusAwareStatusBar barStyle="light-content" backgroundColor={colors.primary} />
         <Text>{errorMessage}</Text>
       </View>
     );
@@ -177,7 +180,7 @@ const WeatherScreen = () => {
   else {
     return (
       <View style={styles.container}>
-        <ActivityIndicator size="large" color={colors.PRIMARY_COLOR} />
+         <FocusAwareStatusBar barStyle="light-content" backgroundColor={colors.primary} />
       </View>
     );
   }

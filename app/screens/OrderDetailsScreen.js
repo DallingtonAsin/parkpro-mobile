@@ -39,7 +39,6 @@
         const result = await fetchOrderInfo(order_no, customer_id);
         if(result.statusCode == "1"){
           const order_details = result.data; 
-          console.log("Order details", order_details);
           if(order_details.length > 0){
             setOrderInfo(order_details);
           }
