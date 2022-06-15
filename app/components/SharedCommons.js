@@ -6,12 +6,11 @@ import { getUniqueId } from 'react-native-device-info';
 import { NetworkInfo } from "react-native-network-info";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const cache = {};
 
 export const isUndefined = (state) => typeof state === "undefined";
 
 export const callHelpLine = (phoneNumber) => {
-  Communications.phonecall(phoneNumber, false);
+  Communications.phonecall(phoneNumber, true);
 };
 
 export const SendEmail = (email) =>{

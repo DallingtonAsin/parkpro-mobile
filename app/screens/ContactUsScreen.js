@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import { Text,StyleSheet,FlatList, View, TouchableOpacity} from 'react-native';
 import design from '../../assets/css/styles';
 import Icon from 'react-native-vector-icons/FontAwesome5';
@@ -6,7 +6,6 @@ import {callHelpLine, SendEmail, SendSms, inboxFromWhatsapp} from '../components
 import {COMPANY_LINE, COMPANY_WHATSAP_LINE, COMPANY_EMAIL} from '@env';
 import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
 import { useTheme } from '@react-navigation/native';
-import { color } from 'react-native-reanimated';
 
 
   const ContactUs = ({navigation}) => {
