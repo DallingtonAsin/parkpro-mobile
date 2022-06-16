@@ -4,6 +4,7 @@ import * as theme from '../../../assets/theme';
 import design from '../../../assets/css/styles';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import {CURRENCY} from '@env';
+import Toast from 'react-native-simple-toast';
 import { StyleSheet, Text, View,Button, ScrollView, FlatList, Dimensions, TouchableOpacity, TouchableWithoutFeedback, 
          PermissionsAndroid, Alert, Image} from 'react-native';
 import { useTheme } from '@react-navigation/native';
@@ -12,7 +13,9 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { callHelpLine } from '../../components/SharedCommons';
 import ModalDropdown  from 'react-native-modal-dropdown';
 import { openDatabase } from 'react-native-sqlite-storage';
-
+import ProfileContext from '../../context';
+import { AuthContext } from '../../context/context';
+import { UIActivityIndicator } from 'react-native-indicators';
     
 
   const {height, width} = Dimensions.get('screen');
@@ -31,15 +34,16 @@ import { openDatabase } from 'react-native-sqlite-storage';
             end_time: '',
             diff_hours : 0,
             total_amount: 0,
-            active:null,
-            activeModal:null,
+            active:null
           }
+        const { profile } = useContext(ProfileContext);
+        const {getParkingAreas, getVehicleCategories, submitParkingRequest} = React.useContext(AuthContext);
 
         const [state, setState] = useState(initialState);
         const { colors } = useTheme();
         const styles = makeStyles(colors);
         console.log("Got this item on request screen", item);
-        const { id: id, address, name,
+        const { id: id, fees, name,
                 description, distance,
                 current_free_space ,
                 total_space, is_open,
@@ -98,6 +102,7 @@ import { openDatabase } from 'react-native-sqlite-storage';
                       selectedVehicle: myvehicles[0],
                     });
                   }
+                  console.log("My vehicles", myvehicles);
                   setVehicleState(myvehicles);
                 }
                 );
@@ -193,6 +198,18 @@ import { openDatabase } from 'react-native-sqlite-storage';
             hideStartTimePicker();
           };
 
+          const getTime = (selectedDate) => {
+            let currentDate = selectedDate || date;
+            let hours = currentDate.getHours();
+            let minutes = currentDate.getMinutes(); // + ":" + currentDate.getSeconds();
+            hours  = hours > 9 ? hours : '0'+hours; 
+            minutes  = minutes > 9 ? minutes : '0'+minutes; 
+            var ampm = hours >= 12 ? 'PM' : 'AM';
+            let time = hours + ":" + minutes;
+            let timex = hours + ":" + minutes + " " + ampm;
+            return time; 
+          }
+
           const handleConfirmEndTime = (selectedEndTime) => {
             let end_hour_time = getTime(selectedEndTime);
             if(startTime){
@@ -218,6 +235,9 @@ import { openDatabase } from 'react-native-sqlite-storage';
             hideEndTimePicker();
           };
           
+          function numberWithCommas(x) {
+            return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+          }
           
           const diff_hours = (dt2, dt1) => {
             var diff = Math.abs(new Date(dt2) - new Date(dt1));
@@ -226,6 +246,137 @@ import { openDatabase } from 'react-native-sqlite-storage';
             hours = Math.round(hours * 10) / 10
             return hours;
           }
+
+          const submitRequest = async() => {
+            
+
+            try{
+
+            const parking_area_id = item.id;
+            const customer_id = profile.id;
+            const telephone_no = `${profile.country_code}${profile.phone_number}`;
+            const vehicle_details = state.selectedVehicle;
+            //   let account_balance = profile.account_balance.replace(/,/g, '');
+            
+            let balance = 9000000; // parseFloat(account_balance);
+            const total_amount =parseFloat(state.total_amount);
+            console.log("Balance: " + balance);
+            console.log("Total amount: " + total_amount);
+            console.log("Selected vehicle", vehicle_details);
+            
+            
+            if (!parking_area_id) {
+              Toast.show('Please select parking', Toast.LONG);
+              return;
+            }
+            
+            if (!telephone_no) {
+              Toast.show('Unable to capture your phone number', Toast.LONG);
+              return;
+            }
+            
+            if (!vehicle_details) {
+              Toast.show('Please select your vehicle details', Toast.LONG);
+              return;
+            }
+            
+            if (!carType) {
+              Toast.show('Please select your vehicle type', Toast.LONG);
+              return;
+            }
+            
+            if (!startTime) {
+              Toast.show('Please select your booking period (start time)', Toast.LONG);
+              return;
+            }
+            
+            if (!endTime) {
+              Toast.show('Please select your booking period (end time)', Toast.LONG);
+              return;
+            }
+            
+            if (startTime > endTime) {
+              Toast.show('Start time cannot be greater than end time', Toast.LONG);
+              return;
+            }
+            
+            if (!customer_id) {
+              Toast.show('Unable to get your id', Toast.LONG);
+              return;
+            }
+            
+            if(balance < total_amount){
+              Toast.show('You have insufficient account balance to send this parking request.', Toast.LONG);
+              return;
+            }
+            
+            
+            if(customer_id && parking_area_id && telephone_no && vehicle_details
+              && carType && startTime && endTime) {
+                
+                
+                
+                const vehicleDetailsArr = vehicle_details.split("-");
+                const VName = vehicleDetailsArr[0].trim();
+                const VNumber = vehicleDetailsArr[1].trim();
+                
+                console.log("Vehicle name", VName);
+                console.log("Vehicle number", VNumber);
+                
+                if(VName && VNumber){
+                  dbVehicleHelper.searchVehicle(VNumber, VName, async result => {
+                    console.log("Here are vehicle details", result);
+                    console.log("Got this vehicle number", result.number);
+                    console.log("Got this vehicle name", result.name);
+                    console.log("Got this vehicle type", result.type);
+                    const vehicleType = result.type;
+                    
+                    const reqParams = {
+                      customer_id: customer_id,
+                      parking_area_id: parking_area_id,
+                      telephone_no: telephone_no,
+                      vehicle_details: vehicle_details,
+                      vehicle_category: vehicleType,
+                      start_time: startTime,
+                      end_time: endTime
+                    }
+                    
+                    console.log("Request data", reqParams);
+                    setIsReqProcessing(true);
+                    
+                    const resp = await submitParkingRequest(reqParams);
+                    console.log("Resp", resp);
+                    
+                    if(resp.statusCode == 1){
+                      setStartTime('');
+                      setEndTime('');
+                      setAmount("0");
+                      Toast.show(resp.message, Toast.LONG);
+                    }else{
+                      Toast.show(resp.message, Toast.LONG);
+                    }
+                    setIsReqProcessing(true);
+                    
+                  });
+                  
+                }else{
+                  Toast.show("Unable to capture your vehicle details", Toast.LONG);
+                }
+                
+                
+                
+              }else{
+                Toast.show("Please supply all the information", Toast.LONG);
+                
+              }
+              
+            }catch(err){
+              Toast.show(err.message, Toast.LONG);
+            }
+
+            setIsReqProcessing(false);
+
+            }
           
           
           const calculateAmount = (startTime, endTime, selectedCarType= "") => {
@@ -233,11 +384,11 @@ import { openDatabase } from 'react-native-sqlite-storage';
             if(selectedCarType){
               ResetAmount(selectedCarType);
             }else{
-              const { activeModal } = state;
+
               let res = diff_hours(endTime, startTime);
               console.log("Diff in hours", res);
-              console.log("Fees per hour", activeModal.fees[`${carType}`]);
-              let total = res*activeModal.fees[`${carType}`];
+              console.log("Fees per hour", fees[`${carType}`]);
+              let total = res*fees[`${carType}`];
               setState({
                 ...state,
                 diff_hours: res,
@@ -250,9 +401,9 @@ import { openDatabase } from 'react-native-sqlite-storage';
           }
           
           const ResetAmount = (selectedCarType) =>{
-            const {activeModal, diff_hours} = state;
-            console.log("Fees per hour", activeModal.fees[`${selectedCarType}`]);
-            let value = diff_hours*activeModal.fees[`${selectedCarType}`];
+            const { diff_hours } = state;
+            console.log("Fees per hour", fees[`${selectedCarType}`]);
+            let value = diff_hours*fees[`${selectedCarType}`];
             value = numberWithCommas(value);
             setAmount(value);
           }
@@ -412,7 +563,7 @@ import { openDatabase } from 'react-native-sqlite-storage';
             <Text style={{color:theme.COLORS.gray, fontSize:theme.SIZES.icon*1.15}}>
             {CURRENCY}. {amount} 
             </Text>
-            {/*  {activeModal.fees[`${carType}`]} */}
+            {/*  {fees[`${carType}`]} */}
             </View>
             
             
@@ -420,9 +571,9 @@ import { openDatabase } from 'react-native-sqlite-storage';
             
             
             <TouchableOpacity style={[styles.payBtn,
-                true ? {backgroundColor: colors.primary}: {backgroundColor: theme.COLORS.gray}]} 
-                // disabled={activeModal.is_open ? false : true}
-                //   onPress={() => submitRequest()}
+                is_open ? {backgroundColor: colors.primary}: {backgroundColor: theme.COLORS.gray}]} 
+                disabled={is_open ? false : true}
+                onPress={() => submitRequest()}
                 >  
                 <Text style={styles.payText}> 
                 {isReqProcessing ? 

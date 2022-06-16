@@ -152,7 +152,6 @@ import { StyleSheet, Text, View,Button,Pressable,
         try{
           
           const vehicle_categories = await getVehicleCategories();
-          console.log("Response", vehicle_categories);
           let types = [];
           for(let i = 0; i < vehicle_categories.length; i++) {
             let name = vehicle_categories[i]['name'];
@@ -162,7 +161,6 @@ import { StyleSheet, Text, View,Button,Pressable,
           if(types.length > 0){
             setCarType(types[0]);
           }
-          // console.log("Vehicle Types", JSON.stringify(types));
           if(types.length > 0) {
             setCarTypes(types);
           }
@@ -244,10 +242,8 @@ import { StyleSheet, Text, View,Button,Pressable,
                 start_time: startTime,
                 end_time: endTime
               }
-              console.log("Request data", reqParams);
               setIsReqProcessing(true);
               let resp = await submitParkingRequest(reqParams);
-              console.log("Resp", resp);
               if(resp.statusCode == 1){
                 setStartTime('');
                 setEndTime('');

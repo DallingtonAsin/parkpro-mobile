@@ -71,7 +71,6 @@ import {SafeAreaView,Dimensions,
                 const resp = await getParkingAreas();
                 if(resp.statusCode == 1){
                     const parkings = resp.data;
-                    console.log("Parkings loaded");
                     if(parkings.length > 0) {
                         setFilteredParkingAreas(parkings);
                         setParkingAreas(parkings);
@@ -230,7 +229,9 @@ import {SafeAreaView,Dimensions,
                         
                         
                         const CardComponent = (item) => (
-                            <TouchableOpacity onPress={() => goToFeesScreen(item)}>
+                            <TouchableOpacity 
+                            style={{ top: 20 }}
+                            onPress={() => goToFeesScreen(item)}>
                             <View style={{flexDirection:'row'}}>
                             <FastImage
                             style={{

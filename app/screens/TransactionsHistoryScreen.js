@@ -94,7 +94,6 @@ const TransactionsHistoryScreen = () => {
               const resp = await getCustomerTransactions(id);
               if(resp.statusCode == 1){
                 const transactions = resp.data;
-                console.log("Transactions", transactions);
                 if(transactions.length > 0){
                   setTransaction(transactions);
                 }
