@@ -230,7 +230,7 @@ import {SafeAreaView,Dimensions,
                         
                         
                         const CardComponent = (item) => (
-                            <TouchableOpacity onPress={() => GotoFeesPage(item)}>
+                            <TouchableOpacity onPress={() => goToFeesScreen(item)}>
                             <View style={{flexDirection:'row'}}>
                             <FastImage
                             style={{
@@ -270,7 +270,7 @@ import {SafeAreaView,Dimensions,
                             
                             </View>
                             
-                            <Pressable onPress={() => GotoFeesPage(item)} style={{backgroundColor:design.colors.primary,
+                            <Pressable onPress={() => goToFeesScreen(item)} style={{backgroundColor:design.colors.primary,
                                 justifyContent:'center', alignItems:'center', padding:5, margin:5, width:80, borderRadius:5}}>
                                 <Text style={{color:design.colors.white}}>Fees</Text> 
                                 </Pressable>
@@ -283,15 +283,20 @@ import {SafeAreaView,Dimensions,
                                 );
                                 
                                 
-                                const GotoFeesPage = (item) => { 
+                                const goToFeesScreen = (item) => { 
                                     props.navigation.navigate("ParkingFees", {
                                         screen: 'ParkingFees',
-                                        params: { parking_area_id: item.id, 
-                                                  parking_area: item.name,
-                                                  address: item.address,
-                                                  phone_number: item.phone_number,
-                                                  photo: item.photo,
-                                        }
+                                        params: {
+
+                                                 item: item
+
+                                                //   parking_area_id: item.id, 
+                                                //   parking_area: item.name,
+                                                //   address: item.address,
+                                                //   phone_number: item.phone_number,
+                                                //   photo: item.photo,
+                                                  
+                                           }
                                     });
                                 }
                                 

@@ -2,29 +2,32 @@ import React, {useState, useEffect} from 'react';
 import {StyleSheet, RefreshControl,Text, Image, View,TouchableOpacity, FlatList } from 'react-native';
 import design from '../../assets/css/styles';
 import { DataTable, Divider } from 'react-native-paper';
-import {  Button, Card, Title } from 'react-native-paper';
+import { Card, Title } from 'react-native-paper';
 import {Monetize} from '../components/SharedCommons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {callHelpLine} from '../components/SharedCommons';
 import { AuthContext } from '../context/context';
-import { UIActivityIndicator } from 'react-native-indicators';
 import Toast from 'react-native-simple-toast';
 import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
 import { useTheme } from '@react-navigation/native';
 import AppLoader from '../components/loaders/AppLoader';
-import { colors } from 'react-native-elements';
-import { COLORS, SIZES, SHADOWS, FONTS, apiKeys, assets } from '../constants';
-import { CircleButton, RectButton } from '../components';
+import {  SIZES, assets } from '../constants';
+import { CircleButton } from '../components';
+import { RequestScreen } from '../components';
+
 
 const dbParkingHelper = require("../database/favouriteParkings");
 
 const ParkingFeesScreen = ({route, navigation}) => {
     
-    const { parking_area_id, address, parking_area, photo, phone_number } = route.params;
+    const { item } = route.params; 
+    const { id: parking_area_id, address, name, photo, phone_number } = item;
     const [fees, setFees] = useState([]);
     const [isAdding, setIsAdding] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [isFavourite, setIsFavourite] = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
+    
     const { colors } = useTheme();
     
     
@@ -64,10 +67,10 @@ const ParkingFeesScreen = ({route, navigation}) => {
                     return () => clearTimeout(timer);
                     
                 }).catch(error => { 
-                    Toast.show("Error","Unable to fetch parking fees: " + error);
+                    Toast.show(`Error`,`Unable to fetch parking fees: ` + error);
                 });
             }else{
-                Toast.show("Unable to get parking area id", Toast.LONG);
+                Toast.show(`Unable to get parking area id`, Toast.LONG);
             }
         }catch(err){
             Toast.show(err.message, Toast.LONG);
@@ -76,9 +79,8 @@ const ParkingFeesScreen = ({route, navigation}) => {
     
     const EmptyFlastListMessage = ({item}) => {
         return (
-            <Text
-            style={styles.emptyListStyle}>
-            No fees Found
+            <Text style={styles.emptyListStyle}>
+               No fees Found
             </Text>
             );
         };
@@ -99,24 +101,21 @@ const ParkingFeesScreen = ({route, navigation}) => {
                 const addParkingToFavourites = async() => {
                     try {
                         if(parking_area_id){
-                            console.log("Parking id to be added", parking_area_id);
+                    
                             const resp = await searchParkingArea(parking_area_id)
                             if(resp.statusCode == 1){
                                 const parking = resp.data[0];
-                                console.log("Parking area object retrieved", parking);
                                 if(parking){
                                     setIsAdding(true);
                                     dbParkingHelper.doesParkingExistinFavourites(parking.id, exists => {
-                                        console.log("Exists parking area in favourites response", exists);
                                         if(exists){
-                                            Toast.show(''+parking.name+' has already been added to favourites.', Toast.LONG);
+                                            Toast.show(`${parking.name} has already been added to favourites.`, Toast.LONG);
                                         }else{
                                             dbParkingHelper.addParkingIntoFavourites(parking, isInserted => {
-                                                console.log("Insert parking into favourite response", isInserted);
                                                 if(isInserted){
                                                     Toast.show(`Parking ${parking.name} has been successfully added to favourites.`, Toast.LONG);
                                                 }else{
-                                                    alert('Unable to add parking to favourites');
+                                                    Toast.show('Unable to add parking to favourites', Toast.LONG);
                                                 }
                                             });
                                         }
@@ -124,14 +123,14 @@ const ParkingFeesScreen = ({route, navigation}) => {
                                         setIsAdding(false);
                                     });
                                 }else{
-                                    Toast.show("Unable to fetch parking at this time.");    
+                                    Toast.show(`Unable to fetch parking at this time.`);    
                                 }
                                 
                             }else{
                                 Toast.show(resp.message);   
                             }
                         }else{
-                            Toast.show("Unable to capture selected parking.");  
+                            Toast.show(`Unable to capture selected parking.`);  
                         }
                     }catch(err){
                         Toast.show(err.message, Toast.LONG);
@@ -145,60 +144,61 @@ const ParkingFeesScreen = ({route, navigation}) => {
                         {
                             isFavourite ? 
                             <Text style={{color: design.colors.orange, fontSize:15, fontWeight: 'bold', fontStyle: 'italic'}}>
-                            <FontAwesome5 name={"star"} 
+                            <FontAwesome5 name={`star`} 
                             size={16} 
                             color={design.colors.orange} /> Marked Favourite</Text>
                             :  null
-                            }
-                            
-                            <DataTable.Header>
-                            <DataTable.Title><Text style={[styles.tableCell, {fontWeight: 'bold'}]}>Vehicle Type</Text></DataTable.Title>
-                            <DataTable.Title><Text style={[styles.tableCell, {fontWeight: 'bold'}]}>Fee per hour</Text></DataTable.Title>
-                            </DataTable.Header>
-                            <Divider />
-                            </>
-                            );
-                        };
+                        }
                         
+                        <DataTable.Header>
+                        <DataTable.Title><Text style={[styles.tableCell, {fontWeight: 'bold'}]}>Vehicle Type</Text></DataTable.Title>
+                        <DataTable.Title><Text style={[styles.tableCell, {fontWeight: 'bold'}]}>Fee per hour</Text></DataTable.Title>
+                        </DataTable.Header>
+                        <Divider />
+                        </>
+                        );
+                    };
+                    
+                    
+                    useEffect(() => {
+                        getParkingFees();
+                    }, [parking_area_id]);
+                    
+                    return (
+                        <>
+                        <RequestScreen  item={item} open={isOpen} onClose={()=> setIsOpen(false)}/>
                         
-                        useEffect(() => {
-                            getParkingFees();
-                        }, [parking_area_id]);
+                        <View style={styles.container}>
                         
-                        return (
+                        <FocusAwareStatusBar barStyle="light-content" 
+                        backgroundColor={colors.primary} />
+                        
+                        {/* <View style={styles.semicontainer}> */}
+                        
+                        { !isLoading ?
                             <>
-                            
-                            <View style={styles.container}>
-                            
-                            <FocusAwareStatusBar barStyle="light-content" 
-                            backgroundColor={colors.primary} />
-                            
-                            {/* <View style={styles.semicontainer}> */}
-                            
-                            { !isLoading ?
-                                <>
-                                <Card style={{backgroundColor: colors.body, height:'100%' }}>
-                                <Image source={{ uri: photo }} 
-                                resizeMode="cover"
-                                style={{ 
+                            <Card style={{backgroundColor: colors.body, height:'100%' }}>
+                            <Image source={{ uri: photo }} 
+                            resizeMode="cover"
+                            style={{ 
                                 width:'100%', 
                                 height:'45%',
-                                borderTopLeftRadius: SIZES.font,
-                                borderTopRightRadius: SIZES.font
+                                // borderTopLeftRadius: SIZES.font,
+                                // borderTopRightRadius: SIZES.font
                             }}/>
-                             <CircleButton 
-                             imgUrl={assets.heart}
-                             imgTintColor={isFavourite ? design.colors.orange : design.colors.gray }
-                             right={10} 
-                             top={10}
-                             handlePress={() => addParkingToFavourites()}
-                             />
-
+                            <CircleButton 
+                            imgUrl={assets.heart}
+                            imgTintColor={isFavourite ? design.colors.orange : design.colors.gray }
+                            right={10} 
+                            top={10}
+                            handlePress={() => addParkingToFavourites()}
+                            />
+                            
                             <View style={{ flex:1 }}>
-
+                            
                             <Card.Content>
-                            <Title style={{color: colors.dark }}>{parking_area}</Title>
-                            <Text style={{color: colors.dark, fontSize:14 }}>{address}</Text>
+                            <Title style={{color: colors.dark }}>{name}</Title>
+                            <Text style={{color: colors.dark, fontSize:14 }}>{address} </Text>
                             <FlatList
                             data={fees}
                             renderItem={({item}) => <CustomDataTable item={item}/>}
@@ -214,7 +214,7 @@ const ParkingFeesScreen = ({route, navigation}) => {
                                 />
                                 </Card.Content>
                                 </View>
-
+                                
                                 <Card.Actions>
                                 
                                 <View style={{
@@ -224,23 +224,28 @@ const ParkingFeesScreen = ({route, navigation}) => {
                                     position: 'absolute',
                                     bottom: 0,
                                     marginBottom:20,
-                                    }}>
+                                }}>
                                 
-                                    <TouchableOpacity
-                                     onPress={() => navigation.navigate("Map")} 
-                                     style={[styles.actionButton, {backgroundColor: colors.primary, borderColor: colors.primary}]}>
-                                    <Text style={{ 
-                                     color: colors.text,
-                                     fontSize:14,
-                                     textTransform:'none',
-                                     fontWeight: 'bold'}}>
-                                     Place request
+                                <TouchableOpacity
+                                onPress={() => setIsOpen(true) } 
+                                style={[styles.actionButton, {backgroundColor: colors.primary, borderColor: colors.primary}]}>
+                                <Text style={{ 
+                                    color: colors.text,
+                                    fontSize:14,
+                                    textTransform:'none',
+                                    fontWeight: 'bold'}}>
+                                    Place request
                                     </Text> 
                                     </TouchableOpacity>
                                     
                                     <TouchableOpacity style={[styles.actionButton, { left:20 }]} onPress={() =>  callHelpLine(phone_number)}>
-                                    {/* <FontAwesome5 name="phone-alt" size={18} color={design.colors.gray}/> */}
-                                    <Text style={{fontSize:14, paddingLeft:10, color:design.colors.gray}}>Call now</Text>
+                                    <FontAwesome5 name="phone-alt" size={18} color={design.colors.dark}/>
+                                    <Text style={{
+                                        fontSize:16, 
+                                        paddingLeft:10, 
+                                        fontWeight: 'bold',
+                                        color:design.colors.dark
+                                        }}>Call</Text>
                                     </TouchableOpacity>
                                     
                                     

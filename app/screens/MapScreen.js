@@ -1,6 +1,6 @@
 import React,{useEffect, useState, useContext, useRef} from 'react';
-import { StyleSheet, Text, View,Button,Pressable,
-  ScrollView, FlatList, Dimensions,Platform,
+import { StyleSheet, Text, View,Button,
+  ScrollView, FlatList, Dimensions,
   TouchableOpacity, TouchableWithoutFeedback, 
   PermissionsAndroid, Alert, Image} from 'react-native';
   import Toast from 'react-native-simple-toast';
