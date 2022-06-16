@@ -104,8 +104,6 @@ import { Text,
               if(statusCode == 1){
                 const customer = res.data;
                 let result = await asyncCustomerProfile(state.id);
-                console.log("Async response on top up", result);
-                console.log("User data after topping up", customer);
                 
                 setProfile(customer);
                 await syncProfileData(customer);

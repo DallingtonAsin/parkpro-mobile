@@ -47,7 +47,6 @@ const OtpInputScreen = ({ route, navigation }) => {
         }
         setIsTimerOn(true);
         const result = await resendSignupOTP(reqParams);
-        console.log("Resend otp response", result);
         if(result.statusCode == "1"){
           const newOTP = result.data.otp;
           setOTP(newOTP);

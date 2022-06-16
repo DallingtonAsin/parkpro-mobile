@@ -55,13 +55,11 @@ const WeatherScreen = () => {
         
       Geolocation.getCurrentPosition(
        async (position) => {
-        console.log("On getting Weather", position);
           const latitude =  parseFloat(position.coords.latitude);
           const longitude =  parseFloat(position.coords.longitude);
           const weatherUrl = `${BASE_WEATHER_URL}lat=${latitude}&lon=${longitude}&units=${unitsSystem}&appid=${WEATHER_API_KEY}`;
            await fetch(weatherUrl).then(async(response) => {
             const result = await response.json();
-            console.log("On getting Weather", result);
             
             if(response.ok){
              setCurrentWeather(result.main.temp)
