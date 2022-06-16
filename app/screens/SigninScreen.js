@@ -106,7 +106,6 @@ const SigninScreen = ({ navigation }) => {
                     currentVersion: currentVersion,
                     deviceLanguage: deviceLanguage,
                 }
-                console.log("Request parameters", requestParams);
                 
                 setIsLoading(true);
                 
