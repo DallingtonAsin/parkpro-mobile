@@ -1,3 +1,4 @@
+import { useRef, useEffect } from 'react';
 import { Linking } from 'react-native';
 import Communications from 'react-native-communications';
 import Rate, { AndroidMarket } from 'react-native-rate';
@@ -5,7 +6,6 @@ import {MAJOR_VERSION, MINOR_VERSION, PATCH_VERSION,PRE_RELEASE } from '@env';
 import { getUniqueId } from 'react-native-device-info';
 import { NetworkInfo } from "react-native-network-info";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
 
 export const isUndefined = (state) => typeof state === "undefined";
 
@@ -70,6 +70,14 @@ export const storeAccessToken = async(accessToken) => {
     console.log(error);
   }
 }
+
+export const usePrevious = value => {
+  const ref = useRef();
+  useEffect(() => {
+    ref.current = value;
+  });
+  return ref.current;
+};
 
 export const RateUs = () => {
   const options = {

@@ -67,7 +67,7 @@ const HomeScreen = (props) => {
   const favouritesBottomSheetRef = useRef(0);
   
   
-  const snapPoints = useMemo(() => ['25%', '70%'], []);
+  const snapPoints = useMemo(() => ['25%', '75%'], []);
   const { colors } = useTheme();
   const styles = makeStyles(colors);
   
@@ -520,7 +520,7 @@ const HomeScreen = (props) => {
                     
                     const renderVehicles =  useCallback(
                       (item) => (
-                        <View key={item.id} style={{flexDirection: 'row', padding:20}}>
+                        <View key={item.id} style={{flexDirection: 'row', padding:12}}>
                         <Image
                         source={require('../../assets/images/UberX.jpeg')}
                         style={design.vehicle.image}
@@ -618,6 +618,7 @@ const HomeScreen = (props) => {
                                 onSubmitEditing={Keyboard.dismiss}
                                 onChangeText={(val) => handleVehicleNoChange(val)}   
                                 style={styles.input}
+                                placeholderTextColor={design.colors.gray}
                                 placeholder={"Enter vehicle number e.g UAA 231Y"}/>
                                 </View>
                                 
@@ -629,6 +630,7 @@ const HomeScreen = (props) => {
                                 onSubmitEditing={Keyboard.dismiss}
                                 onChangeText={(val) => handleVehicleNameChange(val)}
                                 style={styles.input}
+                                placeholderTextColor={design.colors.gray}
                                 placeholder={"Enter vehicle name e.g Primo, Jeep, Benz etc"}/>
                                 </View>
                                 
@@ -818,7 +820,7 @@ const HomeScreen = (props) => {
                                       label="Close parkings"
                                       borderRadius={5}
                                       tintColor={colors.icon}
-                                      onPress={() => props.navigation.navigate("Map")}
+                                      onPress={() => props.navigation.navigate("NearByParkings")}
                                       />
                                       
                                       
@@ -943,8 +945,8 @@ const HomeScreen = (props) => {
                                       },
                                       
                                       contentContainer: {
-                                        flex: 1,
                                         alignItems: 'center',
+                                        backgroundColor: colors.text,
                                       },
                                       
                                       card:{
@@ -958,6 +960,7 @@ const HomeScreen = (props) => {
                                         borderWidth: 0.5,
                                         borderColor:design.colors.primary,
                                         fontSize:16,
+                                        color: design.colors.black
                                       },
                                       
                                       airtimeInput: {

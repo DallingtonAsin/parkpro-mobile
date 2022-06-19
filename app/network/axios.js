@@ -16,7 +16,6 @@ let AxiosApi = class {
     
     fetch = async(endpoint) => {
         try {
-            console.log("End point on fetch", endpoint);
             const headers = await this.getHeader();
             const response = this.client().get(endpoint, headers).then(res => {
                 if(res.status == 200){
@@ -33,7 +32,6 @@ let AxiosApi = class {
     
     post = async(endpoint, data) => {
         try {
-            console.log("End point on post", endpoint);
             const headers = await this.getHeader();
             const response = this.client().post(endpoint, data, headers).then(res => {
                 if(res.status == 200){
@@ -54,7 +52,6 @@ let AxiosApi = class {
     
     put = async(endpoint, data) => {
         try {
-            console.log("End point on put", endpoint);
             const headers = await this.getHeader();
             const response = this.client().put(endpoint, data, headers).then(res => {
                 if(res.status == 200){
@@ -75,7 +72,6 @@ let AxiosApi = class {
     
     postWithFile = async(endpoint, data) => {
         try {
-            console.log("End point on post with file", endpoint);
             const headers = await this.getHeader();
             const response = this.client().post(endpoint, data, headers).then(res => {
                  if(res.status == 200){

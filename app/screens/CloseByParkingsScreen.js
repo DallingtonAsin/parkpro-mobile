@@ -17,7 +17,8 @@ import {SafeAreaView,Dimensions,
     
     
     const initialLayout = { width: Dimensions.get('window').width };
-    const ParkingAreasScreen = (props) => {
+
+    const CloseByParkingsScreen = (props) => {
         
         const { getParkingAreas, getNearByParkingAreas, getTopRatedParkingAreas } = React.useContext(AuthContext);
         const [isLoading, setIsLoading] = useState(false);
@@ -86,7 +87,6 @@ import {SafeAreaView,Dimensions,
         
         const fetchNearByParkings = async() => {
             
-            // enable location please
             try{
                 
                 Geolocation.getCurrentPosition(
@@ -145,92 +145,8 @@ import {SafeAreaView,Dimensions,
                 fetchTopRatedParkings();
             }, []);
             
-            
-            const affordableParkings = () => {
-                if(!isLoading){
-                    return (
-                        <View style={[styles.scene, { backgroundColor: '#fff' }]}>
-                        <FlatList
-                        showsVerticalScrollIndicator={false}
-                        showsHorizontalScrollIndicator={false}
-                        data={filteredParkingAreas}
-                        renderItem={({item}) => CardComponent(item)}
-                        keyExtractor={(item, index) => index.toString()}
-                        ListFooterComponent={<View style={{height: 20}}/>}
-                        refreshControl={
-                            <RefreshControl
-                            refreshing={isLoading}
-                            onRefresh={onRefresh}
-                            />
-                        }
-                        />
-                        </View>
-                        )
-                    }else{
-                        return null;
-                    }
-                };
-                
-                const mostRatedParkings = () => {
-                    if(!isLoading){
-                        return (
-                            <View style={[styles.scene, { backgroundColor: '#fff' }]}>
-                            <FlatList
-                            showsVerticalScrollIndicator={false}
-                            showsHorizontalScrollIndicator={false}
-                            data={topRatedParkingAreas}
-                            renderItem={({item}) => CardComponent(item)}
-                            keyExtractor={(item, index) => index.toString()}
-                            ListFooterComponent={<View style={{height: 20}}/>}
-                            refreshControl={
-                                <RefreshControl
-                                refreshing={isLoading}
-                                onRefresh={onRefresh}
-                                />
-                            }
-                            />
-                            </View>
-                            )
-                        }else{
-                            return null;
-                        }
-                    };
+         
                     
-                    const nearByParkings = () => {
-                        if(!isLoading){
-                            return (
-                                <View style={[styles.scene, { backgroundColor: '#fff' }]}>
-                                <FlatList
-                                showsVerticalScrollIndicator={false}
-                                showsHorizontalScrollIndicator={false}
-                                data={nearByParkingAreas}
-                                renderItem={({item}) => CardComponent(item)}
-                                keyExtractor={(item, index) => index.toString()}
-                                ListFooterComponent={<View style={{height: 20}}/>}
-                                refreshControl={
-                                    <RefreshControl
-                                    refreshing={isLoading}
-                                    onRefresh={onRefresh}
-                                    />
-                                }
-                                />
-                                </View>
-                                )
-                            }  else{
-                                return null
-                            }
-                            
-                            
-                        }
-                        
-                        const renderScene = SceneMap({
-                            parkings: affordableParkings,
-                            rating: mostRatedParkings,
-                            distance: nearByParkings,
-                        });
-                        
-                        
-                        
                         const CardComponent = (item) => (
                             <TouchableOpacity 
                             style={{ top: 20 }}
@@ -326,21 +242,6 @@ import {SafeAreaView,Dimensions,
                                 }
                                 
                                 
-                                
-                                const renderTabBar = props => (
-                                    <TabBar
-                                    {...props}
-                                    renderLabel={({ route, focused, color }) => (
-                                        <Text style={{ color: design.colors.dark, fontSize:16, opacity:0.6,
-                                            textTransform:'capitalize', fontWeight: 'bold' }}>
-                                            {route.title}
-                                            </Text>
-                                            )}
-                                            indicatorStyle={{ backgroundColor: 'red' }}
-                                            style={{ backgroundColor: '#fff' }}
-                                            />
-                                            );
-                                            
                                             return (
                                                 
                                                 <>
@@ -376,14 +277,26 @@ import {SafeAreaView,Dimensions,
                                             </View>
                                             
                                             
-                                            <TabView
-                                            renderTabBar={renderTabBar}
-                                            navigationState={{ index, routes }}
-                                            renderScene={renderScene}
-                                            onIndexChange={setIndex}
-                                            initialLayout={initialLayout}
-                                            style={styles.container}
-                                            />
+                                           {
+                                               !isLoading ?
+                                               <FlatList
+                                               scrollEnabled={true}
+                                               showsVerticalScrollIndicator={false}
+                                               showsHorizontalScrollIndicator={false}
+                                               data={filteredParkingAreas}
+                                               renderItem={({item}) => CardComponent(item)}
+                                               ListFooterComponent={<View style={{height: 20}}/>}
+                                               keyExtractor={(item, index) => index.toString()}
+                                               refreshControl={
+                                                   <RefreshControl
+                                                   refreshing={isLoading}
+                                                   onRefresh={onRefresh}
+                                                   />
+                                               }
+                                               />
+                                               : null
+                                    
+                                           }
                                             
                                             </SafeAreaView>
                                             
@@ -393,7 +306,7 @@ import {SafeAreaView,Dimensions,
                                             );
                                         };
                                         
-                                        export default ParkingAreasScreen;
+                                        export default CloseByParkingsScreen;
                                         
                                         const styles = StyleSheet.create({
                                             container: {
@@ -405,7 +318,7 @@ import {SafeAreaView,Dimensions,
                                                 padding: 10,
                                             },
                                             semicontainer:{
-                                                flex:1,
+                                                // flex:1,
                                                 borderWidth:1,
                                                 borderColor:'#C0c0c0',
                                                 borderRadius:20,
@@ -453,7 +366,7 @@ import {SafeAreaView,Dimensions,
                                                 // marginTop: StatusBar.currentHeight,
                                             },
                                             scene: {
-                                                flex: 1,
+                                                // flex: 1,
                                             },
                                             
                                         });

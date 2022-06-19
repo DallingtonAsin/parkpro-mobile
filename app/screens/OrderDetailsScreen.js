@@ -40,6 +40,7 @@
         if(result.statusCode == "1"){
           const order_details = result.data; 
           if(order_details.length > 0){
+            console.log("Order details", order_details);
             setOrderInfo(order_details);
           }
         }

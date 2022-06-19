@@ -21,7 +21,9 @@ import ChangePinStack from  './ChangePinStack';
 import FeedbackStack from  './FeedbackStack';
 import AppTabStack from  './AppTabStack';
 import WeatherStack from  './WeatherStack';
+import CloseByParkingStack from './CloseByParkingStack';
 import MapScreen from '../../screens/MapScreen';
+
 
 const Drawer = createDrawerNavigator();
 
@@ -37,6 +39,7 @@ const DrawerScreenStack = () => {
         <Drawer.Screen name="EditProfile" component={EditProfileStack}/>
         <Drawer.Screen name="PaymentHistory" component={TransactionsHistoryStack}/>
         <Drawer.Screen name="ParkingAreas" component={ParkingAreasStack}/>
+        <Drawer.Screen name="NearByParkings" component={CloseByParkingStack}/>
         <Drawer.Screen name="ParkingFees" component={ParkingFeesStack}/>
 
         <Drawer.Screen name="Weather" component={WeatherStack}/>
