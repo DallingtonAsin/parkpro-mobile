@@ -48,7 +48,7 @@ const AboutScreen = (props) => {
         <Card style={styles.card}>
         <Card.Content>
         <View style={{ flex: 1, justifyContent: 'center' }}>
-        <Title style={{ color: colors.dark }}>Online Community</Title>
+        <Title style={{ color: colors.dark }}>Online & Social Media</Title>
         
         <View style={{ flexDirection: 'row', marginTop: SIZES.padding,  }}>
         
