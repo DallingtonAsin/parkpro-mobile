@@ -1,17 +1,11 @@
-import React,{useEffect, useState, useContext, useRef} from 'react';
-import { StyleSheet, Text, View,Button,
-  ScrollView, FlatList, Dimensions,
-  TouchableOpacity, TouchableWithoutFeedback, 
-  PermissionsAndroid, Alert, Image} from 'react-native';
+import React,{useEffect, useState} from 'react';
+import { StyleSheet, View, Dimensions, PermissionsAndroid, Alert} from 'react-native';
   import Toast from 'react-native-simple-toast';
   import MapView, { Marker, Callout, PROVIDER_GOOGLE } from 'react-native-maps';
   import * as theme from '../../assets/theme';
   import design from '../../assets/css/styles';
-  import Modal from 'react-native-modal';
-  import ModalDropdown  from 'react-native-modal-dropdown';
   import Geolocation from 'react-native-geolocation-service';
   import FontAwesome from 'react-native-vector-icons/FontAwesome';
-  import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
   import { HeaderBackButton} from '@react-navigation/stack'
   import ProfileContext from '../context/index';
   import { AuthContext } from '../context/context';
@@ -20,8 +14,6 @@ import { StyleSheet, Text, View,Button,
   import Geocoder from 'react-native-geocoding';
   import {CURRENCY} from '@env';
   import { UIActivityIndicator } from 'react-native-indicators';
-  import DateTimePickerModal from "react-native-modal-datetime-picker";
-  import {callHelpLine} from '../components/SharedCommons';
   import { openDatabase } from 'react-native-sqlite-storage';
   import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
   import { useTheme } from '@react-navigation/native';
@@ -36,24 +28,7 @@ import { StyleSheet, Text, View,Button,
   const LONGITUDE_DELTA =  LATITUDE_DELTA + (width / height);
   Geocoder.init(MAP_API_KEY);
   
-  const deviceWidth = Dimensions.get("window").width;
-  const deviceHeight = Dimensions.get("window").height;
-  const availableHours = [0, 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24];
-  
-  const initialState = {
-    hours:{},
-    selectedVehicle: '',
-    startTime: '',
-    endTime: '',
-    
-    start_time: '',
-    end_time: '',
-    diff_hours : 0,
-    total_amount: 0,
-    active:null,
-    activeModal:null,
-  }
-  
+ 
   const mapInitialState =
   {
     location: null,
@@ -77,12 +52,10 @@ import { StyleSheet, Text, View,Button,
   
   const MapScreen = (props) => {
     
-    const [state, setState] = useState(initialState);
+    
     const [region, setRegion] = useState(mapInitialState);
-    const { profile } = useContext(ProfileContext);
     const [currentAddress, setCurrentAddress] = useState('Kampala, Uganda');
     const [nearByParkings, setNearByParkings] = useState([]);
-    const [carType, setCarType] = useState();
     
     const { colors } = useTheme();
     const styles = makeStyles(colors);
@@ -90,7 +63,7 @@ import { StyleSheet, Text, View,Button,
     const [locationServiceEnabled, setLocationServiceEnabled] = useState(false);
     const [displayCurrentAddress, setDisplayCurrentAddress] = useState('fetching your location...');
     
-    
+  
     const CheckIfLocationEnabled = async () => {
       let enabled = await Location.hasServicesEnabledAsync();
       
@@ -105,6 +78,11 @@ import { StyleSheet, Text, View,Button,
           setLocationServiceEnabled(enabled);
         }
       };
+
+      useEffect(() => {
+        GetCurrentLocation();
+        CheckIfLocationEnabled();
+      }, [])
       
       const GetCurrentLocation = async () => {
         const granted = await PermissionsAndroid.check( PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION );
@@ -137,10 +115,6 @@ import { StyleSheet, Text, View,Button,
           }
         };
         
-        
-        
-        
-        
         return(
           <View style={styles.container}>
           <FocusAwareStatusBar barStyle="dark-content" 
@@ -167,31 +141,7 @@ import { StyleSheet, Text, View,Button,
           <FontAwesome name='car' size={theme.SIZES.icon*1.8} color={theme.COLORS.orange}/> 
           
           </Marker>
-          
-          {
-            nearByParkings.length > 0 ?
-            nearByParkings.map(parking =>(
-              <Marker 
-              key={`marker-${parking.id}`}
-              coordinate={parking.coordinate}
-              title={parking.name}
-              description={parking.description}
-              >
-              <TouchableWithoutFeedback>
-              <View style={[
-                styles.marker,
-                styles.shadow, 
-                state.active === parking.id ? styles.active: null
-              ]}>
-              <Text style={[styles.markerStatus, {fontSize:9}]}>{CURRENCY} </Text>
-              <Text style={styles.markerPrice}>{parking.fees[`${carType}`]}</Text>
-              <Text style={[styles.markerStatus, {fontSize:11}]}>({parking.free}/{parking.spots})</Text>
-              </View>
-              </TouchableWithoutFeedback>
-              </Marker>
-              ))
-              : null
-            }
+        
             </MapView>
             
             
