@@ -344,6 +344,7 @@ import {SafeAreaView,Dimensions,
                                             return (
                                                 
                                                 <>
+                                            {  isLoading ?  <AppLoader /> : null }
                                                 
                                                 <SafeAreaView
                                                 style={styles.scrollView}
@@ -387,7 +388,6 @@ import {SafeAreaView,Dimensions,
                                             
                                             </SafeAreaView>
                                             
-                                            {  isLoading ?  <AppLoader /> : null }
                                             
                                             </>
                                             );
