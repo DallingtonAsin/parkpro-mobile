@@ -702,7 +702,6 @@ const HomeScreen = (props) => {
                                       marginTop:20
                                     },
                                     
-                                  
                                     bottomSheetButton:{
                                       flexDirection: 'row',
                                       justifyContent: 'center',
@@ -718,7 +717,6 @@ const HomeScreen = (props) => {
                                       borderColor:design.colors.primary,
                                     },
                                     
-                                   
                                     bottomSheetHeader: {
                                       backgroundColor: '#FFFFFF',
                                       shadowColor: '#333333',
@@ -740,7 +738,6 @@ const HomeScreen = (props) => {
                                       
                                     },
                                     
-                                 
                                     popupHeaderText: {
                                       padding:10, 
                                       fontSize: 19,
