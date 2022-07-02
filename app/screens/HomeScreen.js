@@ -718,10 +718,7 @@ const HomeScreen = (props) => {
                                       borderColor:design.colors.primary,
                                     },
                                     
-                                    scrollView: {
-                                      flex: 1, 
-                                    },
-                                    
+                                   
                                     bottomSheetHeader: {
                                       backgroundColor: '#FFFFFF',
                                       shadowColor: '#333333',
@@ -743,10 +740,7 @@ const HomeScreen = (props) => {
                                       
                                     },
                                     
-                                    label: {
-                                      fontSize:16,
-                                    },
-                                    
+                                 
                                     popupHeaderText: {
                                       padding:10, 
                                       fontSize: 19,
