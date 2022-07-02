@@ -1,39 +1,31 @@
-import React,{useEffect, useState, useContext, useRef} from 'react';
+import React,{useEffect, useState, useContext} from 'react';
+import { StyleSheet, Text, View, Button, ScrollView, Dimensions, TouchableOpacity, Alert} from 'react-native';
 import Modal from 'react-native-modal';
 import * as theme from '../../../assets/theme';
 import design from '../../../assets/css/styles';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import {CURRENCY} from '@env';
 import Toast from 'react-native-simple-toast';
-import { StyleSheet, Text, View,Button, ScrollView, Dimensions, TouchableOpacity, Alert, Image} from 'react-native';
-  import { useTheme } from '@react-navigation/native';
-  import FontAwesome from 'react-native-vector-icons/FontAwesome';
-  import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-  import { usePrevious, callHelpLine } from '../../components/SharedCommons';
-  import ModalDropdown  from 'react-native-modal-dropdown';
-  import { openDatabase } from 'react-native-sqlite-storage';
-  import ProfileContext from '../../context';
-  import { AuthContext } from '../../context/context';
-  import { UIActivityIndicator } from 'react-native-indicators';
-  var _ = require('lodash');
-  
+import { useTheme } from '@react-navigation/native';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import ModalDropdown  from 'react-native-modal-dropdown';
+import { openDatabase } from 'react-native-sqlite-storage';
+import ProfileContext from '../../context';
+import { AuthContext } from '../../context/context';
+import { UIActivityIndicator } from 'react-native-indicators';
+import {CURRENCY} from '@env';
+import { get12HrClockTime , get24HrClockTime, numberWithCommas, diff_hours} from '../sharedHelper/AppUtils';
+import { SelectDropDown } from '../common/SelectDropdown';
+
   const {height, width} = Dimensions.get('screen');
   const db = openDatabase({ name: 'Customers.db' });
   const dbVehicleHelper = require("../../database/vehicles");
-  
-  // function usePrevious(value) {
-  //   const ref = useRef();
-  //   useEffect(() => {
-  //     ref.current = value;
-  //   }, [value]);
-  //   return ref.current;
-  // }
+  const _  = require('lodash');
+
 
   export const RequestScreen = ({item, open, onClose}) => {
     
     const initialState = {
       hours:{},
-      selectedVehicle: '',
       startTime: '',
       endTime: '',
       
@@ -48,6 +40,7 @@ import { StyleSheet, Text, View,Button, ScrollView, Dimensions, TouchableOpacity
     const {getParkingAreas, getVehicleCategories, submitParkingRequest} = React.useContext(AuthContext);
     
     const [state, setState] = useState(initialState);
+    const [selectedVehicle, setSelectedVehicle] = useState('');
     const { colors } = useTheme();
     const styles = makeStyles(colors);
 
@@ -57,6 +50,13 @@ import { StyleSheet, Text, View,Button, ScrollView, Dimensions, TouchableOpacity
             total_space, is_open,
             phone_number, rating 
           } = item;
+
+          let modalRef;
+          const openModal = () => modalRef.show();
+          const saveModalRef = ref => modalRef = ref;
+          const onSelectedOption = value => {
+                     handleVehicle(value)
+           };
       
       
       const deviceWidth = Dimensions.get("window").width;
@@ -66,10 +66,16 @@ import { StyleSheet, Text, View,Button, ScrollView, Dimensions, TouchableOpacity
       const [carTypes, setCarTypes] = useState([]);
       const [carType, setCarType] = useState();
 
-      const [startTime, setStartTime] = useState(null);
-      const [endTime, setEndTime] = useState(null);
-      const [start_time, setStartHourTime] = useState(null);
-      const [end_time, setEndHourTime] = useState(null);
+      const [startTime, setStartTime] = useState('');
+      const [endTime, setEndTime] = useState('');
+
+      const [startTimeText, setStartTimeText] = useState('');
+      const [endTimeText, setEndTimeText] = useState('');
+
+      const [start_time, setStartHourTime] = useState('');
+      const [end_time, setEndHourTime] = useState('');
+
+
       const [amount, setAmount] = useState("0");
       
       const [isStartTimePickerVisible, setStartTimePickerVisibility] = useState(false);
@@ -82,7 +88,7 @@ import { StyleSheet, Text, View,Button, ScrollView, Dimensions, TouchableOpacity
         populateHours();
         populateVehicles();
         fetchVehicleCategories();
-      });
+      }, []);
 
       const populateHours = () => {
         console.log("hours x", availableHours);
@@ -122,10 +128,7 @@ import { StyleSheet, Text, View,Button, ScrollView, Dimensions, TouchableOpacity
               if (vehicles && !_.isEqual(vehicles, myvehicles)) {
                 setVehicleState(myvehicles);
                 if(myvehicles.length > 0){
-                  setState({
-                    ...state,
-                    selectedVehicle: myvehicles[0],
-                  });
+                  setSelectedVehicle(myvehicles[0]);
                 }
               }
 
@@ -174,6 +177,9 @@ import { StyleSheet, Text, View,Button, ScrollView, Dimensions, TouchableOpacity
           const vehicleDetailsArr = selectedItem.split("-");
           const VName = vehicleDetailsArr[0].trim();
           const VNumber = vehicleDetailsArr[1].trim();
+ 
+          setSelectedVehicle(selectedItem);
+          let vehicleType = '';
 
           dbVehicleHelper.searchVehicle(VNumber, VName, async result => {
 
@@ -182,20 +188,21 @@ import { StyleSheet, Text, View,Button, ScrollView, Dimensions, TouchableOpacity
             console.log("Got this vehicle name 1", result.name);
             console.log("Got this vehicle type 1", result.type);
 
-            let vehicleType = result.type;
-            if(selectedItem && vehicleType){
+            vehicleType = result.type;
+
               setState({
                 ...state,
-                selectedVehicle: selectedItem,
                 setCarType: vehicleType
               });
-            }
+
+              if(start_time && end_time){
+                calculateAmount(start_time, end_time);
+                ResetAmount(vehicleType);
+              }
+          
           });
 
-          if(start_time && end_time){
-            calculateAmount(start_time, end_time);
-            ResetAmount(vehicleType);
-          }
+        
           
         }
         
@@ -216,11 +223,19 @@ import { StyleSheet, Text, View,Button, ScrollView, Dimensions, TouchableOpacity
         };
         
         const handleConfirmStartTime = (selectedStartTime) => {
-          let start_hour_time = getTime(selectedStartTime);
+
+          let start_hour_time = get24HrClockTime(selectedStartTime);
+         
+
           if(endTime){
             if(start_hour_time < endTime){
+
+              const sTimeText =  get12HrClockTime(selectedStartTime);
+              setStartTimeText(sTimeText);
+
               setStartTime(start_hour_time);
               setStartHourTime(selectedStartTime);
+
               if(end_time){
                 calculateAmount(selectedStartTime, end_time);
               }
@@ -228,8 +243,13 @@ import { StyleSheet, Text, View,Button, ScrollView, Dimensions, TouchableOpacity
               Alert.alert("Message", "Start time must be less than end time");
             }
           }else{
+
             setStartTime(start_hour_time);
-            setStartHourTime(selectedStartTime);  
+            setStartHourTime(selectedStartTime); 
+
+            const sTimeText =  get12HrClockTime(selectedStartTime);
+            setStartTimeText(sTimeText);
+
             if(end_time){
               calculateAmount(selectedStartTime, end_time);
             }
@@ -237,24 +257,17 @@ import { StyleSheet, Text, View,Button, ScrollView, Dimensions, TouchableOpacity
           hideStartTimePicker();
         };
         
-        const getTime = (selectedDate) => {
-          let currentDate = selectedDate || date;
-          let hours = currentDate.getHours();
-          let minutes = currentDate.getMinutes(); // + ":" + currentDate.getSeconds();
-          hours  = hours > 9 ? hours : '0'+hours; 
-          minutes  = minutes > 9 ? minutes : '0'+minutes; 
-          var ampm = hours >= 12 ? 'PM' : 'AM';
-          let time = hours + ":" + minutes;
-          let timex = hours + ":" + minutes + " " + ampm;
-          return time; 
-        }
-        
         const handleConfirmEndTime = (selectedEndTime) => {
-          let end_hour_time = getTime(selectedEndTime);
+
+          let end_hour_time = get24HrClockTime(selectedEndTime);
           if(startTime){
             if(end_hour_time > startTime){
+
+              const eTimeText = get12HrClockTime(selectedEndTime);
+              setEndTimeText(eTimeText);
               setEndTime(end_hour_time);
               setEndHourTime(selectedEndTime);
+
               if(start_time){
                 calculateAmount(start_time, selectedEndTime);
               }
@@ -263,7 +276,9 @@ import { StyleSheet, Text, View,Button, ScrollView, Dimensions, TouchableOpacity
             }
           }else{
             setEndTime(end_hour_time);
-            setEndHourTime(selectedEndTime); 
+            setEndHourTime(selectedEndTime);
+            const eTimeText = get12HrClockTime(selectedEndTime);
+            setEndTimeText(eTimeText); 
             
             if(start_time){
               calculateAmount(start_time, selectedEndTime);
@@ -273,28 +288,17 @@ import { StyleSheet, Text, View,Button, ScrollView, Dimensions, TouchableOpacity
           console.warn("End time has been picked: ", end_hour_time);
           hideEndTimePicker();
         };
-        
-        function numberWithCommas(x) {
-          return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-        }
-        
-        const diff_hours = (dt2, dt1) => {
-          var diff = Math.abs(new Date(dt2) - new Date(dt1));
-          var minutes = Math.floor((diff/1000)/60);
-          var hours = minutes/60;
-          hours = Math.round(hours * 10) / 10
-          return hours;
-        }
+
+      
         
         const submitRequest = async() => {
-          
-          
+      
           try{
             
             const parking_area_id = item.id;
             const customer_id = profile.id;
             const telephone_no = `${profile.country_code}${profile.phone_number}`;
-            const vehicle_details = state.selectedVehicle;
+            const vehicle_details = selectedVehicle;
             //   let account_balance = profile.account_balance.replace(/,/g, '');
             
             let balance = 9000000; // parseFloat(account_balance);
@@ -494,52 +498,8 @@ import { StyleSheet, Text, View,Button, ScrollView, Dimensions, TouchableOpacity
                 <Text style={{color:theme.COLORS.gray, fontSize:theme.SIZES.font*1.2}}>{description}</Text>
                 </View>
                 
-                <View style={styles.modalInfo1}>
-                
-                <View style={{ flexDirection: 'column'}}>
-                
-                <View style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
-                <View style={[styles.parkingIcon,  ]}>
-                <FontAwesome name='clock-o' size={theme.SIZES.icon*1.3} color={theme.COLORS.orange} style={{paddingTop:5}}/>
-                {
-                  is_open
-                  ? <Text style={{fontSize:theme.SIZES.icon*1.05, color: 'green', opacity:0.6}}> Open</Text>
-                  :  <Text style={{fontSize:theme.SIZES.icon*1.05, color: 'red', opacity:0.6}}> Closed</Text>
-                  
-                }
-                </View> 
-                
-                <View style={[styles.parkingIcon, ]}>
-                <FontAwesome name='star' size={theme.SIZES.icon*1.5} color={theme.COLORS.orange} style={{paddingTop:5}}/>
-                <Text style={{fontSize:theme.SIZES.icon*1.15}}>{rating}</Text>
-                </View>
-                </View>
-                
-                <View style={{flexDirection: 'row',  justifyContent: 'space-evenly'}}>
-                <View style={[styles.parkingIcon,  ]}>
-                <FontAwesome name='road' size={theme.SIZES.icon*1.3} color={theme.COLORS.orange} style={{paddingTop:5}}/>
-                <Text style={{fontSize:theme.SIZES.icon*1.05}}>{distance} km</Text>
-                </View>
-                
-                <View style={[styles.parkingIcon, {paddingLeft:10} ]}>
-                <FontAwesome name='car' size={theme.SIZES.icon*1.3} color={theme.COLORS.orange} style={{paddingTop:5}}/>
-                <Text style={{fontSize:theme.SIZES.icon*1.05}}>{current_free_space}/{total_space}</Text>
-                </View>
-                </View>
-                
-                </View>
-                
-                
-                <View>
-                <TouchableOpacity style={styles.callBtn} 
-                onPress={() =>  callHelpLine(phone_number)}
-                >
-                <FontAwesome5 name="phone-alt" size={18} color={design.colors.gray}/>
-                <Text style={{fontSize:16, paddingLeft:10, color:design.colors.gray}}>Call</Text>
-                </TouchableOpacity>
-                </View>
-                </View>
-                <View>
+              
+                <View style={{paddingVertical: 10 }}>
                 
                 <View style={{marginTop:10}}>
                 <Text style={{fontSize: 16, fontWeight:'bold', opacity:0.6, color:'#000', textTransform:'capitalize'}}>ORDER REQUEST INFORMATION</Text>
@@ -548,17 +508,31 @@ import { StyleSheet, Text, View,Button, ScrollView, Dimensions, TouchableOpacity
                 
                 <View style={styles.orderInfo}>
                 <Text style={{color:theme.COLORS.gray, fontSize:theme.SIZES.font*1.1}}>Vehicle</Text>
+               
                 <View style={styles.modalVehiclesDropdown}>
-                {renderVehicles()}
-                <Text style={{color:theme.COLORS.gray}}></Text>
+
+                  <TouchableOpacity onPress={() => openModal()} style={{padding: 18, elevation:1, borderColor: 'gray'}}>
+                    <Text> { selectedVehicle ? selectedVehicle : 'Select vehicle'}</Text>
+                  </TouchableOpacity>
+
+                    <SelectDropDown 
+                                 items={vehicles}
+                                 saveModalRef={saveModalRef}
+                                 onSelectedOption={onSelectedOption}
+                                 background={colors.primary}
+                                 textColor={colors.text}
+                                 />
+                {/* {renderVehicles()}
+                <Text style={{color:theme.COLORS.gray}}></Text> */}
                 </View>
+
                 </View>
                 
                 <View style={{flexDirection: 'column'}}>
                 
                 <View style={[styles.orderInfo, {flexDirection: 'row'}]}>
                 <Text style={{color:theme.COLORS.gray, fontSize:theme.SIZES.font*1.1}}>Start Time</Text>
-                <Text style={{color:theme.COLORS.gray, fontSize:theme.SIZES.font*1.1, fontWeight:'bold'}}>{startTime}</Text>
+                <Text style={{color:theme.COLORS.gray, fontSize:theme.SIZES.font*1.1, fontWeight:'bold'}}>{startTimeText}</Text>
                 <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
                 <View style={styles.modalVehiclesDropdown}>
                 <View  style={{width:110}}>
@@ -567,6 +541,8 @@ import { StyleSheet, Text, View,Button, ScrollView, Dimensions, TouchableOpacity
                 <DateTimePickerModal
                 isVisible={isStartTimePickerVisible}
                 mode="time"
+                is24Hour={false}
+                locale="en_GB"  // for iOS
                 onConfirm={handleConfirmStartTime}
                 onCancel={hideStartTimePicker}
                 />
@@ -578,7 +554,7 @@ import { StyleSheet, Text, View,Button, ScrollView, Dimensions, TouchableOpacity
                 
                 <View style={[styles.orderInfo, {flexDirection: 'row'}]}>
                 <Text style={{color:theme.COLORS.gray, fontSize:theme.SIZES.font*1.1}}>End Time</Text>
-                <Text style={{color:theme.COLORS.gray, fontSize:theme.SIZES.font*1.1, fontWeight:'bold'}}>{endTime}</Text>
+                <Text style={{color:theme.COLORS.gray, fontSize:theme.SIZES.font*1.1, fontWeight:'bold'}}>{endTimeText}</Text>
                 <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
                 <View style={[styles.modalVehiclesDropdown, {marginLeft:10 }]}>
                 <View  style={{width:110}}>
@@ -587,6 +563,8 @@ import { StyleSheet, Text, View,Button, ScrollView, Dimensions, TouchableOpacity
                 <DateTimePickerModal
                 isVisible={isEndTimePickerVisible}
                 mode="time"
+                is24Hour={false}
+                locale="en_GB"  // for iOS
                 onConfirm={handleConfirmEndTime}
                 onCancel={hideEndTimePicker}
                 />

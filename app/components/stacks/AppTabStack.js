@@ -14,9 +14,9 @@ const BottomTab = createBottomTabNavigator();
 const tabIconFontSize = 24;
 
 const AppTabStack = () => {
-
+    
     const { colors } = useTheme();
-
+    
     return (
         
         <MultiBarProvider
@@ -101,30 +101,29 @@ const AppTabStack = () => {
                                 }}
                                 />
                                 
-                                
                                 <BottomTab.Screen
-                                name="Orders"
-                                component={OrdersStack}
+                                name="Notifications"
+                                component={NotificationStack}
                                 options={{
                                     tabBarIcon: ({ color, size }) => (
                                         <Icon
-                                            name="list-ul"
-                                            style={{
-                                                fontSize: tabIconFontSize,
-                                                color: color
-                                            }}
-                                            />
+                                        name="bell"
+                                        style={{
+                                            fontSize: tabIconFontSize,
+                                            color: color
+                                        }}
+                                        />
                                         )
                                     }}
                                     />
                                     
                                     <BottomTab.Screen
-                                    name="Alerts"
-                                    component={NotificationStack}
+                                    name="Weather"
+                                    component={WeatherStack}
                                     options={{
                                         tabBarIcon: ({ color, size }) => (
                                             <Icon
-                                            name="bell"
+                                            name="cloud-rain"
                                             style={{
                                                 fontSize: tabIconFontSize,
                                                 color: color
@@ -134,13 +133,14 @@ const AppTabStack = () => {
                                         }}
                                         />
                                         
-                                         <BottomTab.Screen
-                                        name="Weather"
-                                        component={WeatherStack}
+                                        
+                                        <BottomTab.Screen
+                                        name="Help"
+                                        component={HelpStack}
                                         options={{
                                             tabBarIcon: ({ color, size }) => (
                                                 <Icon
-                                                name="cloud-rain"
+                                                name="question-circle"
                                                 style={{
                                                     fontSize: tabIconFontSize,
                                                     color: color
@@ -151,26 +151,9 @@ const AppTabStack = () => {
                                             />
                                             
                                             
-                                            <BottomTab.Screen
-                                            name="Help"
-                                            component={HelpStack}
-                                            options={{
-                                                tabBarIcon: ({ color, size }) => (
-                                                    <Icon
-                                                    name="question-circle"
-                                                    style={{
-                                                        fontSize: tabIconFontSize,
-                                                        color: color
-                                                    }}
-                                                    />
-                                                    )
-                                                }}
-                                                />
-                                                
-                                                
-                                                
-                                                </BottomTab.Navigator>
-                                                </MultiBarProvider>
-                                                );
-                                            }
-                                            export default AppTabStack
+                                            
+                                            </BottomTab.Navigator>
+                                            </MultiBarProvider>
+                                            );
+                                        }
+                                        export default AppTabStack

@@ -3,9 +3,8 @@ import {StyleSheet, RefreshControl,Text, Image, View,TouchableOpacity, FlatList 
 import design from '../../assets/css/styles';
 import { DataTable, Divider } from 'react-native-paper';
 import { Card, Title } from 'react-native-paper';
-import {Monetize} from '../components/SharedCommons';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import {callHelpLine} from '../components/SharedCommons';
+import {Monetize} from '../components/sharedHelper/AppUtils';
+import {callHelpLine} from '../components/sharedHelper/AppUtils';
 import { AuthContext } from '../context/context';
 import Toast from 'react-native-simple-toast';
 import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
@@ -38,6 +37,52 @@ const ParkingFeesScreen = ({route, navigation}) => {
             setIsFavourite(false);
         }
     });
+
+    // const removeParkingAreaFromFavourites = (parking) => {
+    //     try{
+    //       if(!parking.id){
+    //         Toast.show('Please unable to get parking area id', Toast.LONG);
+    //         return;
+    //       }
+    //       if(!parking.uniquePId){
+    //         Toast.show('Please unable to get parking area unique id', Toast.LONG);
+    //         return;
+    //       }
+    //       dbParkingHelper.removeParkingFromFavourites(parking, isDeleted => {
+    //         if(isDeleted){
+    //           populateFavouriteParkings();
+    //           Toast.show('Parking area '+parking.name+' successfully removed from favourites.', Toast.LONG);
+    //         }else{
+    //           alert('Unable to remove parking area from favourites');
+    //         }
+    //       });
+    //     }catch(err){
+    //       console.log("Error on removing favourite parking", err);
+    //     }
+    //   }
+      
+     
+    //     const confirmRemoveFavouriteParking = (item) => {
+    //       Alert.alert(
+    //         'Confirm Remove',
+    //         `Are you sure you want to remove  ${item.name} from your favourite parkings?`,
+    //         [
+    //           {
+    //             text: 'Yes',
+    //             onPress: () => {
+    //               removeParkingAreaFromFavourites(item);
+    //             }
+    //           },
+    //           {
+    //             text: 'No',
+    //             onPress: () => {
+                  
+    //             }
+    //           },
+    //         ],
+    //         { cancelable: true }
+    //         );
+    //       }
     
     const [searchQuery, setSearchQuery] = React.useState('');
     const onChangeSearch = query => setSearchQuery(query);
@@ -80,7 +125,7 @@ const ParkingFeesScreen = ({route, navigation}) => {
     const EmptyFlastListMessage = ({item}) => {
         return (
             <Text style={styles.emptyListStyle}>
-               No fees Found
+            No fees Found
             </Text>
             );
         };
@@ -101,7 +146,7 @@ const ParkingFeesScreen = ({route, navigation}) => {
                 const addParkingToFavourites = async() => {
                     try {
                         if(parking_area_id){
-                    
+                            
                             const resp = await searchParkingArea(parking_area_id)
                             if(resp.statusCode == 1){
                                 const parking = resp.data[0];
@@ -140,16 +185,6 @@ const ParkingFeesScreen = ({route, navigation}) => {
                 const FlatListHeader = () => {
                     return (
                         <>
-                        
-                        {
-                            isFavourite ? 
-                            <Text style={{color: design.colors.orange, fontSize:15, fontWeight: 'bold', fontStyle: 'italic'}}>
-                            <FontAwesome5 name={`star`} 
-                            size={16} 
-                            color={design.colors.orange} /> Marked Favourite</Text>
-                            :  null
-                        }
-                        
                         <DataTable.Header>
                         <DataTable.Title><Text style={[styles.tableCell, {fontWeight: 'bold'}]}>Vehicle Type</Text></DataTable.Title>
                         <DataTable.Title><Text style={[styles.tableCell, {fontWeight: 'bold'}]}>Fee per hour</Text></DataTable.Title>
@@ -182,7 +217,7 @@ const ParkingFeesScreen = ({route, navigation}) => {
                             resizeMode="cover"
                             style={{ 
                                 width:'100%', 
-                                height:'45%',
+                                height:'23%',
                                 // borderTopLeftRadius: SIZES.font,
                                 // borderTopRightRadius: SIZES.font
                             }}/>
@@ -215,10 +250,9 @@ const ParkingFeesScreen = ({route, navigation}) => {
                                 </Card.Content>
                                 </View>
                                 
-                                <Card.Actions>
-                                
+                             
                                 <View style={{
-                                    flex:1,
+                                    flex: 1,
                                     flexDirection: 'row',
                                     justifyContent: 'space-between',
                                     position: 'absolute',
@@ -226,9 +260,10 @@ const ParkingFeesScreen = ({route, navigation}) => {
                                     marginBottom:20,
                                 }}>
                                 
+                                <View style={styles.actionButtonView}>
                                 <TouchableOpacity
                                 onPress={() => setIsOpen(true) } 
-                                style={[styles.actionButton, {backgroundColor: colors.primary, borderColor: colors.primary}]}>
+                                style={[styles.actionButton, {backgroundColor: colors.primary}]}>
                                 <Text style={{ 
                                     color: colors.text,
                                     fontSize:14,
@@ -237,21 +272,22 @@ const ParkingFeesScreen = ({route, navigation}) => {
                                     Place request
                                     </Text> 
                                     </TouchableOpacity>
+                                    </View>
                                     
-                                    <TouchableOpacity style={[styles.actionButton, { left:20 }]} onPress={() =>  callHelpLine(phone_number)}>
-                                    <FontAwesome5 name="phone-alt" size={18} color={design.colors.dark}/>
+                                    <View style={styles.actionButtonView}>
+                                    
+                                    <TouchableOpacity style={styles.actionButton} onPress={() =>  callHelpLine(phone_number)}>
                                     <Text style={{
                                         fontSize:16, 
                                         paddingLeft:10, 
                                         fontWeight: 'bold',
                                         color:design.colors.dark
-                                        }}>Call</Text>
+                                    }}>Call</Text>
                                     </TouchableOpacity>
-                                    
-                                    
                                     </View>
                                     
-                                    </Card.Actions>
+                                    </View>
+
                                     </Card>
                                     </>
                                     : null
@@ -324,14 +360,18 @@ const ParkingFeesScreen = ({route, navigation}) => {
                                     alignItems: 'center',
                                     alignSelf: 'center',
                                 },
-                                actionButton:{
-                                    flexDirection: 'row',
-                                    height:50,
-                                    borderWidth:1,
-                                    borderRadius:30,
-                                    justifyContent: 'center',
+                                
+                                actionButtonView:{
+                                    paddingLeft:15,
+                                    paddingRight:15,
+                                    width: '50%'
+                                },
+
+                                actionButton: {
                                     alignItems: 'center',
-                                    width: 180
+                                    borderWidth: 1,
+                                    borderRadius: 30,
+                                    padding: 12,
                                 },
                                 
                                 tableCell:{
