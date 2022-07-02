@@ -87,6 +87,7 @@
     "react-native-modal": "^13.0.0",
     "react-native-modal-datetime-picker": "^13.0.0",
     "react-native-modal-dropdown": "^1.0.2",
+    "react-native-modal-select-list": "^1.1.0",
     "react-native-modalbox": "^2.0.2",
     "react-native-multibar": "^1.1.5",
     "react-native-network-info": "^5.2.1",

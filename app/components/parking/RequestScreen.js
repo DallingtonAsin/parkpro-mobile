@@ -5,16 +5,17 @@ import * as theme from '../../../assets/theme';
 import design from '../../../assets/css/styles';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Toast from 'react-native-simple-toast';
-  import { useTheme } from '@react-navigation/native';
-  import FontAwesome from 'react-native-vector-icons/FontAwesome';
-  import ModalDropdown  from 'react-native-modal-dropdown';
-  import { openDatabase } from 'react-native-sqlite-storage';
-  import ProfileContext from '../../context';
-  import { AuthContext } from '../../context/context';
-  import { UIActivityIndicator } from 'react-native-indicators';
+import { useTheme } from '@react-navigation/native';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import ModalDropdown  from 'react-native-modal-dropdown';
+import { openDatabase } from 'react-native-sqlite-storage';
+import ProfileContext from '../../context';
+import { AuthContext } from '../../context/context';
+import { UIActivityIndicator } from 'react-native-indicators';
 import {CURRENCY} from '@env';
-  import { get12HrClockTime , get24HrClockTime, numberWithCommas, diff_hours} from '../sharedHelper/AppUtils';
-  
+import { get12HrClockTime , get24HrClockTime, numberWithCommas, diff_hours} from '../sharedHelper/AppUtils';
+import { SelectDropDown } from '../common/SelectDropdown';
+
   const {height, width} = Dimensions.get('screen');
   const db = openDatabase({ name: 'Customers.db' });
   const dbVehicleHelper = require("../../database/vehicles");
@@ -25,7 +26,6 @@ import {CURRENCY} from '@env';
     
     const initialState = {
       hours:{},
-      selectedVehicle: '',
       startTime: '',
       endTime: '',
       
@@ -40,6 +40,7 @@ import {CURRENCY} from '@env';
     const {getParkingAreas, getVehicleCategories, submitParkingRequest} = React.useContext(AuthContext);
     
     const [state, setState] = useState(initialState);
+    const [selectedVehicle, setSelectedVehicle] = useState('');
     const { colors } = useTheme();
     const styles = makeStyles(colors);
 
@@ -49,6 +50,13 @@ import {CURRENCY} from '@env';
             total_space, is_open,
             phone_number, rating 
           } = item;
+
+          let modalRef;
+          const openModal = () => modalRef.show();
+          const saveModalRef = ref => modalRef = ref;
+          const onSelectedOption = value => {
+                     handleVehicle(value)
+           };
       
       
       const deviceWidth = Dimensions.get("window").width;
@@ -120,10 +128,7 @@ import {CURRENCY} from '@env';
               if (vehicles && !_.isEqual(vehicles, myvehicles)) {
                 setVehicleState(myvehicles);
                 if(myvehicles.length > 0){
-                  setState({
-                    ...state,
-                    selectedVehicle: myvehicles[0],
-                  });
+                  setSelectedVehicle(myvehicles[0]);
                 }
               }
 
@@ -172,6 +177,9 @@ import {CURRENCY} from '@env';
           const vehicleDetailsArr = selectedItem.split("-");
           const VName = vehicleDetailsArr[0].trim();
           const VNumber = vehicleDetailsArr[1].trim();
+ 
+          setSelectedVehicle(selectedItem);
+          let vehicleType = '';
 
           dbVehicleHelper.searchVehicle(VNumber, VName, async result => {
 
@@ -180,20 +188,21 @@ import {CURRENCY} from '@env';
             console.log("Got this vehicle name 1", result.name);
             console.log("Got this vehicle type 1", result.type);
 
-            let vehicleType = result.type;
-            if(selectedItem && vehicleType){
+            vehicleType = result.type;
+
               setState({
                 ...state,
-                selectedVehicle: selectedItem,
                 setCarType: vehicleType
               });
-            }
+
+              if(start_time && end_time){
+                calculateAmount(start_time, end_time);
+                ResetAmount(vehicleType);
+              }
+          
           });
 
-          if(start_time && end_time){
-            calculateAmount(start_time, end_time);
-            ResetAmount(vehicleType);
-          }
+        
           
         }
         
@@ -289,7 +298,7 @@ import {CURRENCY} from '@env';
             const parking_area_id = item.id;
             const customer_id = profile.id;
             const telephone_no = `${profile.country_code}${profile.phone_number}`;
-            const vehicle_details = state.selectedVehicle;
+            const vehicle_details = selectedVehicle;
             //   let account_balance = profile.account_balance.replace(/,/g, '');
             
             let balance = 9000000; // parseFloat(account_balance);
@@ -499,10 +508,24 @@ import {CURRENCY} from '@env';
                 
                 <View style={styles.orderInfo}>
                 <Text style={{color:theme.COLORS.gray, fontSize:theme.SIZES.font*1.1}}>Vehicle</Text>
+               
                 <View style={styles.modalVehiclesDropdown}>
-                {renderVehicles()}
-                <Text style={{color:theme.COLORS.gray}}></Text>
+
+                  <TouchableOpacity onPress={() => openModal()} style={{padding: 18, elevation:1, borderColor: 'gray'}}>
+                    <Text> { selectedVehicle ? selectedVehicle : 'Select vehicle'}</Text>
+                  </TouchableOpacity>
+
+                    <SelectDropDown 
+                                 items={vehicles}
+                                 saveModalRef={saveModalRef}
+                                 onSelectedOption={onSelectedOption}
+                                 background={colors.primary}
+                                 textColor={colors.text}
+                                 />
+                {/* {renderVehicles()}
+                <Text style={{color:theme.COLORS.gray}}></Text> */}
                 </View>
+
                 </View>
                 
                 <View style={{flexDirection: 'column'}}>
@@ -519,6 +542,7 @@ import {CURRENCY} from '@env';
                 isVisible={isStartTimePickerVisible}
                 mode="time"
                 is24Hour={false}
+                locale="en_GB"  // for iOS
                 onConfirm={handleConfirmStartTime}
                 onCancel={hideStartTimePicker}
                 />
@@ -540,6 +564,7 @@ import {CURRENCY} from '@env';
                 isVisible={isEndTimePickerVisible}
                 mode="time"
                 is24Hour={false}
+                locale="en_GB"  // for iOS
                 onConfirm={handleConfirmEndTime}
                 onCancel={hideEndTimePicker}
                 />
