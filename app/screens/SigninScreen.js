@@ -17,7 +17,7 @@ import Toast from 'react-native-simple-toast';
 import PhoneInput from "react-native-phone-number-input";
 import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { getDeviceId, getDeviceIpAddress, getAppVersionName, storeAccessToken } from '../components/SharedCommons';
+import { getDeviceId, getDeviceIpAddress, getAppVersionName, storeAccessToken } from '../components/sharedHelper/AppUtils';
 import AppLoader from '../components/loaders/AppLoader';
 import { COLORS, SHADOWS, SIZES, FONTS, apiKeys } from '../constants';
 

@@ -99,3 +99,45 @@ export const RateUs = () => {
   });
 }
 
+export const get12HrClockTime = (selectedDate) => {
+
+  let currentDate = selectedDate;
+  let hours = currentDate.getHours();
+  let minutes = currentDate.getMinutes(); // + ":" + currentDate.getSeconds();
+
+  hours  = hours > 9 ? hours : '0'+hours; 
+  minutes  = minutes > 9 ? minutes : '0'+minutes; 
+
+  let hour = hours > 12 ? hours-12 : hours;
+  hour = parseInt(hour);
+
+  let ampm = hours >= 12 ? 'PM' : 'AM';
+  hour = hour > 9 ? hour : `0${hour}`;
+
+  let time = hour + ":" + minutes + " " + ampm;
+  return time; 
+  
+}
+
+export const get24HrClockTime = (selectedDate) => {
+
+  let currentDate = selectedDate || date;
+  let hours = currentDate.getHours();
+  let minutes = currentDate.getMinutes(); // + ":" + currentDate.getSeconds();
+
+  hours  = hours > 9 ? hours : '0'+hours; 
+  minutes  = minutes > 9 ? minutes : '0'+minutes; 
+  let time = hours + ":" + minutes;
+
+  return time; 
+}
+
+
+export const diff_hours = (dt2, dt1) => {
+  var diff = Math.abs(new Date(dt2) - new Date(dt1));
+  var minutes = Math.floor((diff/1000)/60);
+  var hours = minutes/60;
+  hours = Math.round(hours * 10) / 10
+  return hours;
+}
+

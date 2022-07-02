@@ -7,7 +7,8 @@
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "gaa": "cd android && ./gradlew clean && cd .. && npx react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res && cd android && ./gradlew assembleDebug"
   },
   "dependencies": {
     "@expo/vector-icons": "^12.0.5",
@@ -86,6 +87,7 @@
     "react-native-modal": "^13.0.0",
     "react-native-modal-datetime-picker": "^13.0.0",
     "react-native-modal-dropdown": "^1.0.2",
+    "react-native-modal-select-list": "^1.1.0",
     "react-native-modalbox": "^2.0.2",
     "react-native-multibar": "^1.1.5",
     "react-native-network-info": "^5.2.1",

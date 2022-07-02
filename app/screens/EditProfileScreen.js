@@ -15,7 +15,7 @@ import {APP_NAME} from '@env';;
 import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
 import { useTheme } from '@react-navigation/native';
 import AppLoader from '../components/loaders/AppLoader';
-import { isValidateEmail } from '../components/SharedCommons';
+import { isValidateEmail } from '../components/sharedHelper/AppUtils';
 
 var mime = require('mime-types');
 
