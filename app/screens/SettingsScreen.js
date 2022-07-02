@@ -8,7 +8,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Rate, { AndroidMarket } from 'react-native-rate';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {  AirbnbRating } from 'react-native-elements';
-import {getAppVersionName} from '../components/SharedCommons';
+import {getAppVersionName} from '../components/sharedHelper/AppUtils';
 import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
 import { AuthContext } from '../context/context';
 import {useTheme, TouchableRipple, Drawer, Switch, Text } from 'react-native-paper';

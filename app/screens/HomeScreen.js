@@ -31,7 +31,7 @@ import BottomSheet, {
 } from '@gorhom/bottom-sheet';
 import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
 import crashlytics from "@react-native-firebase/crashlytics";
-import { getDeviceId, getDeviceIpAddress, getAppVersionName } from '../components/SharedCommons';
+import { getDeviceId, getDeviceIpAddress, getAppVersionName } from '../components/sharedHelper/AppUtils';
 import { useTheme } from '@react-navigation/native';
 import { useIsMounted } from '../components/common/isMounted';
 import { apiKeys } from '../constants';

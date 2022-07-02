@@ -2,7 +2,7 @@ import React from 'react';
 import { Text,StyleSheet,FlatList, View, TouchableOpacity} from 'react-native';
 import design from '../../assets/css/styles';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import {callHelpLine, SendEmail, SendSms, inboxFromWhatsapp} from '../components/SharedCommons';
+import {callHelpLine, SendEmail, SendSms, inboxFromWhatsapp} from '../components/sharedHelper/AppUtils';
 import {COMPANY_LINE, COMPANY_WHATSAP_LINE, COMPANY_EMAIL} from '@env';
 import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
 import { useTheme } from '@react-navigation/native';

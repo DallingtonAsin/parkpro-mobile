@@ -3,9 +3,9 @@ import {StyleSheet, RefreshControl,Text, Image, View,TouchableOpacity, FlatList 
 import design from '../../assets/css/styles';
 import { DataTable, Divider } from 'react-native-paper';
 import { Card, Title } from 'react-native-paper';
-import {Monetize} from '../components/SharedCommons';
+import {Monetize} from '../components/sharedHelper/AppUtils';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import {callHelpLine} from '../components/SharedCommons';
+import {callHelpLine} from '../components/sharedHelper/AppUtils';
 import { AuthContext } from '../context/context';
 import Toast from 'react-native-simple-toast';
 import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';

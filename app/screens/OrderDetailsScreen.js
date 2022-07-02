@@ -8,7 +8,7 @@
   import { useTheme } from '@react-navigation/native';
   import AppLoader from '../components/loaders/AppLoader';
   import Toast from 'react-native-simple-toast';
-  import { callHelpLine } from '../components/SharedCommons';
+  import { callHelpLine } from '../components/sharedHelper/AppUtils';
   import { COMPANY_LINE } from '@env';
   
   

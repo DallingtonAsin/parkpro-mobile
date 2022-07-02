@@ -1,33 +1,25 @@
-import React,{useEffect, useState, useContext, useRef} from 'react';
+import React,{useEffect, useState, useContext} from 'react';
+import { StyleSheet, Text, View, Button, ScrollView, Dimensions, TouchableOpacity, Alert} from 'react-native';
 import Modal from 'react-native-modal';
 import * as theme from '../../../assets/theme';
 import design from '../../../assets/css/styles';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import {CURRENCY} from '@env';
 import Toast from 'react-native-simple-toast';
-import { StyleSheet, Text, View,Button, ScrollView, Dimensions, TouchableOpacity, Alert, Image} from 'react-native';
   import { useTheme } from '@react-navigation/native';
   import FontAwesome from 'react-native-vector-icons/FontAwesome';
-  import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-  import { usePrevious, callHelpLine } from '../../components/SharedCommons';
   import ModalDropdown  from 'react-native-modal-dropdown';
   import { openDatabase } from 'react-native-sqlite-storage';
   import ProfileContext from '../../context';
   import { AuthContext } from '../../context/context';
   import { UIActivityIndicator } from 'react-native-indicators';
-  var _ = require('lodash');
+import {CURRENCY} from '@env';
+  import { get12HrClockTime , get24HrClockTime, numberWithCommas, diff_hours} from '../sharedHelper/AppUtils';
   
   const {height, width} = Dimensions.get('screen');
   const db = openDatabase({ name: 'Customers.db' });
   const dbVehicleHelper = require("../../database/vehicles");
-  
-  // function usePrevious(value) {
-  //   const ref = useRef();
-  //   useEffect(() => {
-  //     ref.current = value;
-  //   }, [value]);
-  //   return ref.current;
-  // }
+  const _  = require('lodash');
+
 
   export const RequestScreen = ({item, open, onClose}) => {
     
@@ -66,10 +58,16 @@ import { StyleSheet, Text, View,Button, ScrollView, Dimensions, TouchableOpacity
       const [carTypes, setCarTypes] = useState([]);
       const [carType, setCarType] = useState();
 
-      const [startTime, setStartTime] = useState(null);
-      const [endTime, setEndTime] = useState(null);
-      const [start_time, setStartHourTime] = useState(null);
-      const [end_time, setEndHourTime] = useState(null);
+      const [startTime, setStartTime] = useState('');
+      const [endTime, setEndTime] = useState('');
+
+      const [startTimeText, setStartTimeText] = useState('');
+      const [endTimeText, setEndTimeText] = useState('');
+
+      const [start_time, setStartHourTime] = useState('');
+      const [end_time, setEndHourTime] = useState('');
+
+
       const [amount, setAmount] = useState("0");
       
       const [isStartTimePickerVisible, setStartTimePickerVisibility] = useState(false);
@@ -82,7 +80,7 @@ import { StyleSheet, Text, View,Button, ScrollView, Dimensions, TouchableOpacity
         populateHours();
         populateVehicles();
         fetchVehicleCategories();
-      });
+      }, []);
 
       const populateHours = () => {
         console.log("hours x", availableHours);
@@ -216,11 +214,19 @@ import { StyleSheet, Text, View,Button, ScrollView, Dimensions, TouchableOpacity
         };
         
         const handleConfirmStartTime = (selectedStartTime) => {
-          let start_hour_time = getTime(selectedStartTime);
+
+          let start_hour_time = get24HrClockTime(selectedStartTime);
+         
+
           if(endTime){
             if(start_hour_time < endTime){
+
+              const sTimeText =  get12HrClockTime(selectedStartTime);
+              setStartTimeText(sTimeText);
+
               setStartTime(start_hour_time);
               setStartHourTime(selectedStartTime);
+
               if(end_time){
                 calculateAmount(selectedStartTime, end_time);
               }
@@ -228,8 +234,13 @@ import { StyleSheet, Text, View,Button, ScrollView, Dimensions, TouchableOpacity
               Alert.alert("Message", "Start time must be less than end time");
             }
           }else{
+
             setStartTime(start_hour_time);
-            setStartHourTime(selectedStartTime);  
+            setStartHourTime(selectedStartTime); 
+
+            const sTimeText =  get12HrClockTime(selectedStartTime);
+            setStartTimeText(sTimeText);
+
             if(end_time){
               calculateAmount(selectedStartTime, end_time);
             }
@@ -237,24 +248,17 @@ import { StyleSheet, Text, View,Button, ScrollView, Dimensions, TouchableOpacity
           hideStartTimePicker();
         };
         
-        const getTime = (selectedDate) => {
-          let currentDate = selectedDate || date;
-          let hours = currentDate.getHours();
-          let minutes = currentDate.getMinutes(); // + ":" + currentDate.getSeconds();
-          hours  = hours > 9 ? hours : '0'+hours; 
-          minutes  = minutes > 9 ? minutes : '0'+minutes; 
-          var ampm = hours >= 12 ? 'PM' : 'AM';
-          let time = hours + ":" + minutes;
-          let timex = hours + ":" + minutes + " " + ampm;
-          return time; 
-        }
-        
         const handleConfirmEndTime = (selectedEndTime) => {
-          let end_hour_time = getTime(selectedEndTime);
+
+          let end_hour_time = get24HrClockTime(selectedEndTime);
           if(startTime){
             if(end_hour_time > startTime){
+
+              const eTimeText = get12HrClockTime(selectedEndTime);
+              setEndTimeText(eTimeText);
               setEndTime(end_hour_time);
               setEndHourTime(selectedEndTime);
+
               if(start_time){
                 calculateAmount(start_time, selectedEndTime);
               }
@@ -263,7 +267,9 @@ import { StyleSheet, Text, View,Button, ScrollView, Dimensions, TouchableOpacity
             }
           }else{
             setEndTime(end_hour_time);
-            setEndHourTime(selectedEndTime); 
+            setEndHourTime(selectedEndTime);
+            const eTimeText = get12HrClockTime(selectedEndTime);
+            setEndTimeText(eTimeText); 
             
             if(start_time){
               calculateAmount(start_time, selectedEndTime);
@@ -273,22 +279,11 @@ import { StyleSheet, Text, View,Button, ScrollView, Dimensions, TouchableOpacity
           console.warn("End time has been picked: ", end_hour_time);
           hideEndTimePicker();
         };
-        
-        function numberWithCommas(x) {
-          return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-        }
-        
-        const diff_hours = (dt2, dt1) => {
-          var diff = Math.abs(new Date(dt2) - new Date(dt1));
-          var minutes = Math.floor((diff/1000)/60);
-          var hours = minutes/60;
-          hours = Math.round(hours * 10) / 10
-          return hours;
-        }
+
+      
         
         const submitRequest = async() => {
-          
-          
+      
           try{
             
             const parking_area_id = item.id;
@@ -514,7 +509,7 @@ import { StyleSheet, Text, View,Button, ScrollView, Dimensions, TouchableOpacity
                 
                 <View style={[styles.orderInfo, {flexDirection: 'row'}]}>
                 <Text style={{color:theme.COLORS.gray, fontSize:theme.SIZES.font*1.1}}>Start Time</Text>
-                <Text style={{color:theme.COLORS.gray, fontSize:theme.SIZES.font*1.1, fontWeight:'bold'}}>{startTime}</Text>
+                <Text style={{color:theme.COLORS.gray, fontSize:theme.SIZES.font*1.1, fontWeight:'bold'}}>{startTimeText}</Text>
                 <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
                 <View style={styles.modalVehiclesDropdown}>
                 <View  style={{width:110}}>
@@ -523,6 +518,7 @@ import { StyleSheet, Text, View,Button, ScrollView, Dimensions, TouchableOpacity
                 <DateTimePickerModal
                 isVisible={isStartTimePickerVisible}
                 mode="time"
+                is24Hour={false}
                 onConfirm={handleConfirmStartTime}
                 onCancel={hideStartTimePicker}
                 />
@@ -534,7 +530,7 @@ import { StyleSheet, Text, View,Button, ScrollView, Dimensions, TouchableOpacity
                 
                 <View style={[styles.orderInfo, {flexDirection: 'row'}]}>
                 <Text style={{color:theme.COLORS.gray, fontSize:theme.SIZES.font*1.1}}>End Time</Text>
-                <Text style={{color:theme.COLORS.gray, fontSize:theme.SIZES.font*1.1, fontWeight:'bold'}}>{endTime}</Text>
+                <Text style={{color:theme.COLORS.gray, fontSize:theme.SIZES.font*1.1, fontWeight:'bold'}}>{endTimeText}</Text>
                 <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
                 <View style={[styles.modalVehiclesDropdown, {marginLeft:10 }]}>
                 <View  style={{width:110}}>
@@ -543,6 +539,7 @@ import { StyleSheet, Text, View,Button, ScrollView, Dimensions, TouchableOpacity
                 <DateTimePickerModal
                 isVisible={isEndTimePickerVisible}
                 mode="time"
+                is24Hour={false}
                 onConfirm={handleConfirmEndTime}
                 onCancel={hideEndTimePicker}
                 />

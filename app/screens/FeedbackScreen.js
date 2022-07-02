@@ -8,7 +8,7 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { TextInput } from 'react-native-paper';
 import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
 import { useTheme  } from 'react-native-paper';
-import { isValidateEmail } from '../components/SharedCommons';
+import { isValidateEmail } from '../components/sharedHelper/AppUtils';
 import AppLoader from '../components/loaders/AppLoader';
 
 

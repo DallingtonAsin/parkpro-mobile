@@ -9,7 +9,7 @@ import { AuthContext } from '../context/context';
 import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
 import { useTheme  } from 'react-native-paper';
 import AppLoader from '../components/loaders/AppLoader';
-import { isValidateEmail } from '../components/SharedCommons';
+import { isValidateEmail } from '../components/sharedHelper/AppUtils';
 import Toast from 'react-native-simple-toast';
 
 
