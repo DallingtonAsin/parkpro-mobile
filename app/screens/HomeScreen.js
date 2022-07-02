@@ -6,7 +6,6 @@ import {
   Text,
   TouchableOpacity,
   TextInput,
-  Button,
   SafeAreaView,Keyboard,
   Alert, Pressable,
 } from 'react-native';
@@ -15,16 +14,14 @@ import OptionItem from '../components/OptionItem';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BottomSheet as BrSheet } from 'react-native-btr';
-import { Avatar, Divider  } from 'react-native-paper';
+import {  Divider  } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import design from '../../assets/css/styles';
 import ProfileContext from '../context/index';
 import { AuthContext } from '../context/context';
 import Toast from 'react-native-simple-toast';
-import { UIActivityIndicator } from 'react-native-indicators';
 import * as theme from '../../assets/theme';
 import {CURRENCY} from '@env';
-import Dropdown from 'react-native-modal-dropdown';
 import BottomSheet, {
   BottomSheetBackdrop,
   BottomSheetScrollView
@@ -33,9 +30,8 @@ import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
 import { getDeviceId, getDeviceIpAddress, getAppVersionName } from '../components/sharedHelper/AppUtils';
 import { useTheme } from '@react-navigation/native';
 import { useIsMounted } from '../components/common/isMounted';
-import { SelectDropDown } from '../components/common/SelectDropdown';
 import { apiKeys } from '../constants';
-
+import { AddVehicleScreen } from '../components/vehicle';
 
 const dbVehicleHelper = require("../database/vehicles");
 const dbParkingHelper = require("../database/favouriteParkings");
@@ -61,6 +57,7 @@ const HomeScreen = (props) => {
   const { profile } = useContext(ProfileContext);
   const {getVehicleCategories, updateAppDetails } = React.useContext(AuthContext);
   const isMounted = useIsMounted();
+  const [isEditingVehicle, setIsEditingVehicle] = useState(false);
   
   const vehicleBottomSheetRef = useRef(0);
   const favouritesBottomSheetRef = useRef(0);
@@ -82,6 +79,17 @@ const HomeScreen = (props) => {
     favouritesBottomSheetRef.current?.close();
     vehicleBottomSheetRef.current?.snapToIndex(index);
   }, []);
+  
+  const openAddVehicleScreen = () => {
+      setIsSheetVisible(true);
+  }
+
+  const closeAddVehicleScreen = () => {
+    setVehicleData({...initialVehicleState});
+    setIsSheetVisible(false);
+}
+
+ 
   
   
   const openFavouritesSheet = useCallback((index) => {
@@ -281,7 +289,7 @@ const HomeScreen = (props) => {
                         setIsLoading(false);
                         Toast.show('Sorry, vehicle with number '+vehicle.number+' has already been registered.', Toast.LONG);
                       }else{
-                        // insert vehicle
+                       
                         dbVehicleHelper.insertVehicle(vehicle, isInserted => {
                           if(isInserted){
                             setVehicleData({...initialVehicleState});
@@ -333,7 +341,7 @@ const HomeScreen = (props) => {
                     if(isUpdated){
                       setVehicleData({...initialVehicleState});
                       populateVehicles();
-                      setIsEditSheetVisible(false);
+                      setIsSheetVisible(false);
                       Toast.show('Vehicle details updated successfully', Toast.LONG);
                     }else{
                       alert('Unable to update vehicle details');
@@ -367,12 +375,7 @@ const HomeScreen = (props) => {
                 }
               }
               
-              const cancelEditVehicle = () =>{
-                setIsEditSheetVisible(false);
-                setVehicleData({...initialVehicleState});
-              }
-              
-              
+          
               const handleVehicleNameChange = (val) => {
                 setVehicleData({
                   ...vehicle,
@@ -410,7 +413,9 @@ const HomeScreen = (props) => {
                           type: item.type,
                           
                         });
-                        setIsEditSheetVisible(true);
+
+                        setIsSheetVisible(true)
+                        setIsEditingVehicle(true);
                       }
                     },
                     {
@@ -451,10 +456,7 @@ const HomeScreen = (props) => {
                     setIsSheetVisible(!isSheetVisible);
                   };
                   
-                  const toggleEditBottomNavigationView = () => {
-                    setIsEditSheetVisible(!isEditSheetVisible);
-                  };
-                  
+               
                   
                   const FlatListItemSeparator = () => {
                     return (
@@ -541,156 +543,28 @@ const HomeScreen = (props) => {
                                 <FocusAwareStatusBar barStyle="light-content"
                                 backgroundColor={colors.primary} />
                                 
-                                
-                                <BrSheet
-                                visible={isSheetVisible}
-                                onBackButtonPress={toggleBottomNavigationView}
-                                onBackdropPress={toggleBottomNavigationView}
-                                >
-                                
-                                <View style={{ flex:1 }}>
-                                
-                                <View style={styles.iconSection}>
-                                <Avatar.Icon icon={icons.uber} size={80} style={{backgroundColor: colors.text}} /> 
-                                </View>
-                                
-                                <View style={styles.addVehicleBodySection}>
-                                <View style={{alignItems:'center'}}>
-                                <Text style={styles.popupTitle}>Add new vehicle</Text>
-                                </View>
-                                
-                                <View style={styles.inputContainer}>
-                                {/* <Text style={styles.label}>Vehicle Number</Text> */}
-                                <TextInput 
-                                name="vehicleNumber" 
-                                value={vehicle.number}
-                                onSubmitEditing={Keyboard.dismiss}
-                                onChangeText={(val) => handleVehicleNoChange(val)}   
-                                style={styles.input}
-                                placeholderTextColor={design.colors.gray}
-                                placeholder={"Enter vehicle number e.g UAA 231Y"}/>
-                                </View>
-                                
-                                <View style={styles.inputContainer}>
-                                {/* <Text style={styles.label}>Vehicle Name</Text> */}
-                                <TextInput 
-                                name="vehicleName" 
-                                value={vehicle.name}
-                                onSubmitEditing={Keyboard.dismiss}
-                                onChangeText={(val) => handleVehicleNameChange(val)}
-                                style={styles.input}
-                                placeholderTextColor={design.colors.gray}
-                                placeholder={"Enter vehicle name e.g Toyota"}/>
-                                </View>
-                                
-                                <View style={styles.inputContainer}>
-                                <TouchableOpacity onPress={() => openModal()} style={{padding: 18, elevation:1, borderColor: 'gray'}}>
-                                  <Text> {vehicle.type ? vehicle.type : 'Select vehicle type'}</Text>
-                                </TouchableOpacity>
 
-                                <SelectDropDown 
-                                 items={vehicleTypes}
-                                 saveModalRef={saveModalRef}
-                                 onSelectedOption={onSelectedOption}
-                                 background={colors.primary}
-                                 textColor={colors.text}
-                                 />
-
-                                </View>
+                                <AddVehicleScreen
+                                isSheetVisible={isSheetVisible}
+                                toggleBottomNavigationView={toggleBottomNavigationView}
+                                vehicleTypes={vehicleTypes}
+                                vehicle={vehicle}
+                                isLoading={isLoading}
+                                setIsSheetVisible={setIsSheetVisible}
+                                onSelectedOption={onSelectedOption}
+                                saveModalRef={saveModalRef}
+                                openModal={openModal}
+                                handleVehicleNoChange={handleVehicleNoChange}
+                                handleVehicleNameChange={handleVehicleNameChange}
+                                registerVehicle={registerVehicle}
+                                updateVehicle={updateVehicle}
+                                isEditingVehicle={isEditingVehicle}
+                                closeAddVehicleScreen={closeAddVehicleScreen}
+                                />
+                              
                                 
-                                <View>
-                                <TouchableOpacity style={styles.submitVehicleBtn} onPress={()=> registerVehicle() }>
-                                {isLoading ?
-                                  <UIActivityIndicator color='white' size={30} /> :
-                                  <Text style={{color:design.colors.white, marginLeft:10, textTransform:'uppercase'}}>Submit</Text>
-                                }
-                                </TouchableOpacity>
-                                
-                                <TouchableOpacity style={styles.cancelBtn} onPress={() => setIsSheetVisible(false)}>
-                                <Text style={{color:design.colors.dark, marginLeft:10, textTransform:'uppercase'}}>Cancel</Text>
-                                </TouchableOpacity>
-                                </View>
-                                
-                                </View>
-                                
-                                </View>
-                                </BrSheet>
-                                
-                                
-                                <BrSheet
-                                visible={isEditSheetVisible}
-                                onBackButtonPress={toggleEditBottomNavigationView}
-                                onBackdropPress={toggleEditBottomNavigationView}
-                                >
-                                
-                                <View style={{ flex: 3, alignItems: 'center',padding:20, justifyContent: 'center', backgroundColor: design.colors.gray,}}>
-                                <Avatar.Icon icon={icons.uber} style={{backgroundColor:design.colors.white}} /> 
-                                </View>
-                                
-                                
-                                <View style={{ flex: 3, backgroundColor: design.colors.white, padding:20 }}>
-                                <View style={{alignItems:'center'}}>
-                                <Text style={styles.popupTitle}>Edit vehicle details</Text>
-                                </View>
-                                
-                                <View style={styles.inputContainer}>
-                                <Text style={styles.label}>Vehicle Number</Text>
-                                <TextInput 
-                                name="vehicleNumber" 
-                                value={vehicle.number}
-                                onSubmitEditing={Keyboard.dismiss}
-                                onChangeText={(val) => handleVehicleNoChange(val)}   
-                                style={styles.input} placeholder={"Enter vehicle number"}/>
-                                </View>
-                                
-                                <View style={styles.inputContainer}>
-                                <Text style={styles.label}>Vehicle Name</Text>
-                                <TextInput 
-                                name="vehicleName" 
-                                value={vehicle.name}
-                                onSubmitEditing={Keyboard.dismiss}
-                                onChangeText={(val) => handleVehicleNameChange(val)}
-                                style={styles.input} placeholder={"Enter vehicle name"}/>
-                                </View>
-                                
-                                <View style={styles.inputContainer}>
-                                <Text style={styles.label}>Vehicle Type</Text>
-                                <Dropdown
-                                defaultIndex={0}
-                                options={vehicleTypes}
-                                style={styles.vehiclesDropdown}
-                                defaultValue={vehicle.type}
-                                defaultTextStyle={{fontSize:18}}
-                                textStyle={{fontSize:18}}
-                                onSelect={(index, value) => handleVehicleTypeChange(value)}
-                                renderRow={(option) => (
-                                  <Text style={styles.vehiclesDropdownOption}>{option}</Text>
-                                  )}
-                                  />
-                                  </View>
-                                  
-                                  <View>
-                                  <TouchableOpacity style={styles.submitVehicleBtn} onPress={ updateVehicle }>
-                                  {isLoading ?
-                                    <UIActivityIndicator color='white' size={30} /> :
-                                    <Text style={{color:design.colors.white, marginLeft:10, textTransform:'uppercase'}}>
-                                    Submit  <FontAwesome name={"arrow-right"} size={10}/></Text>
-                                  }
-                                  </TouchableOpacity>
-                                  
-                                  <TouchableOpacity style={styles.cancelBtn} onPress={() => cancelEditVehicle() }>
-                                  <Text style={{color:design.colors.dark, marginLeft:10, textTransform:'uppercase'}}>
-                                  Cancel<FontAwesome name={"times"} size={10}/></Text>
-                                  </TouchableOpacity>
-                                  </View>
-                                  </View>
-                                  </BrSheet>
-                                  
-                                  
                                   <View style={styles.container}>
-                                  
-                                  
-                                  
+                                
                                   <View style={{ flex: 1, paddingHorizontal: SIZES.padding, alignItems: "center", justifyContent: "center"}}>
                                   
                                   <View style={{flexDirection: 'column' }}>
@@ -1094,12 +968,6 @@ const HomeScreen = (props) => {
                                       backgroundColor: colors.primary
                                     },
                                     
-                                    addVehicleBodySection:{
-                                      flex: 5, 
-                                      backgroundColor: design.colors.white,
-                                      padding:20 
-                                    },
-                                    
                                     cancelBtn: {
                                       flexDirection: 'row', 
                                       borderWidth:1,
@@ -1125,11 +993,4 @@ const HomeScreen = (props) => {
                                       justifyContent: 'center', bottom:0,
                                       backgroundColor: colors.primary
                                     }
-                                    
-                                    
-                                    
-                                    
                                   });
-                                  
-                                  
-                                  
