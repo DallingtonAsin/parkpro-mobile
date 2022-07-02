@@ -4,7 +4,6 @@ import design from '../../assets/css/styles';
 import { DataTable, Divider } from 'react-native-paper';
 import { Card, Title } from 'react-native-paper';
 import {Monetize} from '../components/sharedHelper/AppUtils';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {callHelpLine} from '../components/sharedHelper/AppUtils';
 import { AuthContext } from '../context/context';
 import Toast from 'react-native-simple-toast';
@@ -38,6 +37,52 @@ const ParkingFeesScreen = ({route, navigation}) => {
             setIsFavourite(false);
         }
     });
+
+    // const removeParkingAreaFromFavourites = (parking) => {
+    //     try{
+    //       if(!parking.id){
+    //         Toast.show('Please unable to get parking area id', Toast.LONG);
+    //         return;
+    //       }
+    //       if(!parking.uniquePId){
+    //         Toast.show('Please unable to get parking area unique id', Toast.LONG);
+    //         return;
+    //       }
+    //       dbParkingHelper.removeParkingFromFavourites(parking, isDeleted => {
+    //         if(isDeleted){
+    //           populateFavouriteParkings();
+    //           Toast.show('Parking area '+parking.name+' successfully removed from favourites.', Toast.LONG);
+    //         }else{
+    //           alert('Unable to remove parking area from favourites');
+    //         }
+    //       });
+    //     }catch(err){
+    //       console.log("Error on removing favourite parking", err);
+    //     }
+    //   }
+      
+     
+    //     const confirmRemoveFavouriteParking = (item) => {
+    //       Alert.alert(
+    //         'Confirm Remove',
+    //         `Are you sure you want to remove  ${item.name} from your favourite parkings?`,
+    //         [
+    //           {
+    //             text: 'Yes',
+    //             onPress: () => {
+    //               removeParkingAreaFromFavourites(item);
+    //             }
+    //           },
+    //           {
+    //             text: 'No',
+    //             onPress: () => {
+                  
+    //             }
+    //           },
+    //         ],
+    //         { cancelable: true }
+    //         );
+    //       }
     
     const [searchQuery, setSearchQuery] = React.useState('');
     const onChangeSearch = query => setSearchQuery(query);

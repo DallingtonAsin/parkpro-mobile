@@ -7,6 +7,12 @@ import { UIActivityIndicator } from 'react-native-indicators';
 import { useTheme } from '@react-navigation/native';
 import design from '../../../assets/css/styles';
 import { icons } from '../../../constants';
+import {  Divider  } from 'react-native-paper';
+import BottomSheet, {
+  BottomSheetBackdrop,
+  BottomSheetScrollView
+} from '@gorhom/bottom-sheet';
+
 
 export const AddVehicleScreen = ({isSheetVisible,
                                   toggleBottomNavigationView,
@@ -37,7 +43,7 @@ export const AddVehicleScreen = ({isSheetVisible,
         
         <View style={styles.addVehicleBodySection}>
         <View style={{alignItems:'center'}}>
-        <Text style={styles.popupTitle}>Add new vehicle</Text>
+        <Text style={styles.popupTitle}>{isEditingVehicle ? 'Edit vehicle details' : 'Add new vehicle'}</Text>
         </View>
         
         <View style={styles.inputContainer}>
@@ -97,6 +103,53 @@ export const AddVehicleScreen = ({isSheetVisible,
     )
 }
 
+export const VehicleScreen = ({vehicleBottomSheetRef, snapPoints, renderVehiclesBackdrop,
+                                handleVehicleSheetChanges,renderHeader, vehicles,
+                                setIsSheetVisible, renderVehicles, 
+                                isSheetVisible, toggleBottomNavigationView }) => {
+
+                                  const { colors } = useTheme();
+                                  const styles = makeStyles(colors);
+
+  return (
+    <>
+     <BrSheet
+        visible={isSheetVisible}
+        onBackButtonPress={toggleBottomNavigationView}
+        onBackdropPress={toggleBottomNavigationView}
+        >
+    <BottomSheet
+    ref={vehicleBottomSheetRef}
+    index={-1}
+    
+    snapPoints={snapPoints}
+    enablePanDownToClose={true}
+    backdropComponent={renderVehiclesBackdrop}
+    onChange={handleVehicleSheetChanges}
+    handleComponent={renderHeader}>
+    
+    <Divider style={styles.divider}/>
+    
+    <BottomSheetScrollView contentContainerStyle={styles.contentContainer}>
+    {
+      vehicles.length > 0 
+      ? vehicles.map(renderVehicles)
+      : <View style={{flex:1, justifyContent: 'center', alignItems: 'center'}}>
+      <Text style={styles.text}>No vehicles added yet.</Text>
+      </View>
+    }
+    </BottomSheetScrollView>
+    
+    <TouchableOpacity style={styles.bottomSheetButton} onPress={setIsSheetVisible}>
+    <Text style={design.vehicle.textAdd}>add vehicle</Text>
+    </TouchableOpacity>
+    
+    </BottomSheet>
+    </BrSheet>
+    </>
+  )
+}
+
 const makeStyles =  (colors) => StyleSheet.create({
 
     iconSection: {
@@ -147,10 +200,44 @@ const makeStyles =  (colors) => StyleSheet.create({
         backgroundColor: colors.primary
       },
 
+      contentContainer: {
+        alignItems: 'center',
+        backgroundColor: colors.text,
+      },
+
+      bottomSheetButton:{
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        alignSelf: 'center',
+        borderWidth:1,
+        marginLeft:10, 
+        marginTop:15,
+        marginBottom:80,
+        height:50,
+        width:'75%',
+        borderRadius:30,
+        borderColor:design.colors.primary,
+      },
+
       addVehicleBodySection:{
         flex: 5, 
         backgroundColor: design.colors.white,
         padding:20 
       },
+
+      popupTitle: {
+        padding:10, 
+        fontSize: 18,
+        textTransform:'uppercase',
+        fontWeight:'bold'
+      },
+
+      divider:{
+        borderBottomColor: '#e2e2e2',
+        borderBottomWidth: 1,
+        marginTop:20
+      },
+      
 
 });

@@ -5,8 +5,7 @@ import {
   Image,
   Text,
   TouchableOpacity,
-  TextInput,
-  SafeAreaView,Keyboard,
+  SafeAreaView,
   Alert, Pressable,
 } from 'react-native';
 import { icons, SIZES } from '../../constants';
@@ -53,7 +52,6 @@ const HomeScreen = (props) => {
   const [favouriteParkings, setFavouriteParkings] = useState([]);
   
   const [isSheetVisible, setIsSheetVisible] = useState(false);
-  const [isEditSheetVisible, setIsEditSheetVisible] = useState(false);
   const { profile } = useContext(ProfileContext);
   const {getVehicleCategories, updateAppDetails } = React.useContext(AuthContext);
   const isMounted = useIsMounted();
@@ -80,18 +78,13 @@ const HomeScreen = (props) => {
     vehicleBottomSheetRef.current?.snapToIndex(index);
   }, []);
   
-  const openAddVehicleScreen = () => {
-      setIsSheetVisible(true);
-  }
-
+  
   const closeAddVehicleScreen = () => {
     setVehicleData({...initialVehicleState});
     setIsSheetVisible(false);
+    setIsEditingVehicle(false);
 }
 
- 
-  
-  
   const openFavouritesSheet = useCallback((index) => {
     vehicleBottomSheetRef.current?.close();
     favouritesBottomSheetRef.current?.snapToIndex(index);
@@ -153,54 +146,7 @@ const HomeScreen = (props) => {
     
   }
   
- 
-  const removeParkingAreaFromFavourites = (parking) => {
-    try{
-      if(!parking.id){
-        Toast.show('Please unable to get parking area id', Toast.LONG);
-        return;
-      }
-      if(!parking.uniquePId){
-        Toast.show('Please unable to get parking area unique id', Toast.LONG);
-        return;
-      }
-      dbParkingHelper.removeParkingFromFavourites(parking, isDeleted => {
-        if(isDeleted){
-          populateFavouriteParkings();
-          Toast.show('Parking area '+parking.name+' successfully removed from favourites.', Toast.LONG);
-        }else{
-          alert('Unable to remove parking area from favourites');
-        }
-      });
-    }catch(err){
-      console.log("Error on removing favourite parking", err);
-    }
-  }
-  
- 
-    const confirmRemoveFavouriteParking = (item) => {
-      Alert.alert(
-        'Confirm Remove',
-        `Are you sure you want to remove  ${item.name} from your favourite parkings?`,
-        [
-          {
-            text: 'Yes',
-            onPress: () => {
-              removeParkingAreaFromFavourites(item);
-            }
-          },
-          {
-            text: 'No',
-            onPress: () => {
-              
-            }
-          },
-        ],
-        { cancelable: true }
-        );
-      }
-      
-      
+
       const renderVehiclesBackdrop = useCallback(
         props => (
           <BottomSheetBackdrop
@@ -665,11 +611,24 @@ const HomeScreen = (props) => {
                                     </View>
                                     </View>
                                     </View>
+
+                                         {/* <VehicleScreen
+                                  vehicleBottomSheetRef={vehicleBottomSheetRef}
+                                  snapPoints={snapPoints}
+                                  renderVehiclesBackdrop={renderVehiclesBackdrop}
+                                  handleVehicleSheetChanges={handleVehicleSheetChanges}
+                                  renderHeader={renderHeader}
+                                  vehicles={vehicles}
+                                  isSheetVisible={isVehicleSheetVisible}
+                                  setIsSheetVisible={setIsVehicleSheetVisible}
+                                  renderVehicles={renderVehicles}
+                                /> */}
                                     
                                     
                                     <BottomSheet
                                     ref={vehicleBottomSheetRef}
                                     index={-1}
+                                    
                                     snapPoints={snapPoints}
                                     enablePanDownToClose={true}
                                     backdropComponent={renderVehiclesBackdrop}
@@ -732,70 +691,9 @@ const HomeScreen = (props) => {
                                       backgroundColor: colors.primary,
                                     },
                                     
-                                    uploadOptions:{
-                                      flexDirection: 'column', 
-                                      justifyContent: 'center',
-                                      alignItems: 'center'
-                                    },
-                                    
-                                    shadow: {
-                                      shadowColor: "#000",
-                                      shadowOffset: {
-                                        width: 0,
-                                        height: 2,
-                                      },
-                                      shadowOpacity: 0.25,
-                                      shadowRadius: 3.84,
-                                      elevation: 5,
-                                    },
-                                    
-                                    
-                                    SheetContentContainer: {
-                                      backgroundColor: 'white',
-                                      padding: 16,
-                                      paddingTop:0,
-                                      // height:'auto',
-                                    },
-                                    
                                     contentContainer: {
                                       alignItems: 'center',
                                       backgroundColor: colors.text,
-                                    },
-                                    
-                                    card:{
-                                      flex:1,
-                                    },
-                                    
-                                    input: {
-                                      backgroundColor: '#ffffff',
-                                      borderRadius: 3,
-                                      padding:10,
-                                      borderWidth: 0.5,
-                                      borderColor:design.colors.primary,
-                                      fontSize:16,
-                                      color: design.colors.black
-                                    },
-                                    
-                                    airtimeInput: {
-                                      backgroundColor: '#ffffff',
-                                      borderRadius: 3,
-                                      padding:15,
-                                      borderWidth: 0.5,
-                                      borderColor:design.colors.primary,
-                                      width: '100%',
-                                    },
-                                    
-                                    button: {
-                                      borderRadius: 20,
-                                      padding: 10,
-                                      elevation: 2
-                                    },
-                                    
-                                    
-                                    textStyle: {
-                                      color: "white",
-                                      fontWeight: "bold",
-                                      textAlign: "center"
                                     },
                                     
                                     divider:{
@@ -804,12 +702,7 @@ const HomeScreen = (props) => {
                                       marginTop:20
                                     },
                                     
-                                    cardContainer:{
-                                      flexDirection: "row",
-                                      textAlign:'center',
-                                      flexWrap: 'wrap',
-                                    },
-                                    
+                                  
                                     bottomSheetButton:{
                                       flexDirection: 'row',
                                       justifyContent: 'center',
@@ -825,60 +718,8 @@ const HomeScreen = (props) => {
                                       borderColor:design.colors.primary,
                                     },
                                     
-                                    inputContainer:{
-                                      padding:10,
-                                    },
-                                    
                                     scrollView: {
                                       flex: 1, 
-                                    },
-                                    
-                                    bottomSheetContainer:{
-                                      flex: 1,
-                                      padding: 24,
-                                      justifyContent: 'center',
-                                      backgroundColor: 'grey',
-                                    },
-                                    
-                                    footer:{
-                                      marginBottom: 30,
-                                      flexDirection: 'row',
-                                      alignItems: 'center',
-                                      alignSelf: 'center',
-                                      justifyContent: 'center',
-                                      
-                                    },
-                                    
-                                    vehiclesDropdown: {
-                                      borderRadius: theme.SIZES.base / 2,
-                                      borderColor: theme.COLORS.overlay,
-                                      borderWidth: 1,
-                                      padding: theme.SIZES.base*1.3,
-                                      width:350,
-                                      justifyContent: 'center',
-                                      alignItems: 'center',
-                                      fontSize: theme.SIZES.font*0.95,
-                                    },
-                                    
-                                    vehiclesDropdownOption: {
-                                      padding: 5,
-                                      fontSize: 18,
-                                    },
-                                    indicator: {
-                                      position: "absolute",
-                                      width: 10,
-                                      height: 4,
-                                      backgroundColor: "#999",
-                                    },
-                                    
-                                    customBottomSheetHeader: {
-                                      alignContent: "center",
-                                      alignItems: "center",
-                                      justifyContent: "center",
-                                      backgroundColor: "white",
-                                      paddingVertical: 14,
-                                      borderBottomWidth: 1,
-                                      borderBottomColor: "#fff",
                                     },
                                     
                                     bottomSheetHeader: {
@@ -902,50 +743,8 @@ const HomeScreen = (props) => {
                                       
                                     },
                                     
-                                    panel: {
-                                      backgroundColor: '#FFFFFF',
-                                    },
-                                    
-                                    panelTitle: {
-                                      fontSize: 22,
-                                      height: 35,
-                                    },
-                                    
-                                    panelSubtitle: {
-                                      fontSize: 14,
-                                      color: 'gray',
-                                      height: 30,
-                                      marginBottom: 10,
-                                    },
-                                    
-                                    morePanel:{
-                                      backgroundColor: '#fff',
-                                      padding:30,
-                                      margin:20,
-                                      borderRadius:5,
-                                      borderColor: design.colors.orange,
-                                      borderWidth:1,
-                                      flexDirection: 'row',
-                                      justifyContent: 'space-between',
-                                      alignContent:'center',
-                                      alignItems: 'center'
-                                    },
-                                    
-                                    moreText: {
-                                      fontSize: 16,
-                                      fontWeight: 'bold',
-                                      opacity: 0.6,
-                                    },
-                                    
                                     label: {
                                       fontSize:16,
-                                    },
-                                    
-                                    popupTitle: {
-                                      padding:10, 
-                                      fontSize: 18,
-                                      textTransform:'uppercase',
-                                      fontWeight:'bold'
                                     },
                                     
                                     popupHeaderText: {
@@ -959,38 +758,5 @@ const HomeScreen = (props) => {
                                       fontSize: 18,
                                       textAlign: 'center',
                                     },
-                                    
-                                    iconSection: {
-                                      flex: 1,
-                                      alignItems: 'center',
-                                      padding:20, 
-                                      justifyContent: 'center',
-                                      backgroundColor: colors.primary
-                                    },
-                                    
-                                    cancelBtn: {
-                                      flexDirection: 'row', 
-                                      borderWidth:1,
-                                      marginLeft:10,
-                                      marginRight:10,
-                                      marginBottom:20,
-                                      padding:15,
-                                      borderRadius:50,
-                                      borderColor:design.colors.primary,
-                                      justifyContent: 'center', bottom:0, 
-                                      backgroundColor:design.colors.white
-                                    },
-                                    
-                                    submitVehicleBtn: {
-                                      flexDirection: 'row', 
-                                      marginLeft:10,
-                                      marginRight:10,
-                                      marginBottom:20,
-                                      marginTop:15,
-                                      padding:15,
-                                      borderRadius:50,
-                                      borderRadius:50,
-                                      justifyContent: 'center', bottom:0,
-                                      backgroundColor: colors.primary
-                                    }
+                                  
                                   });
