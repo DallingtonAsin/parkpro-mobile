@@ -51,12 +51,7 @@ const CustomDrawer = (props) => {
       
     },
     
-    {
-      icon: 'parking',
-      text: 'Nearby parkings',
-      screenToNavigate:'Map',
-    },
-    
+   
     {
       icon: 'cloud-rain',
       text: 'Weather',
@@ -183,25 +178,7 @@ const CustomDrawer = (props) => {
  
       <View style={styles.divider}></View>
       
-      <Drawer.Section title={
-                <Text style={[styles.drawerText, 
-                             {color: colors.drawerText,
-                              fontSize:12,
-                              opacity:0.6
-                              }]}>Preferences</Text>
-                 } >
-      <View style={{flexDirection: 'row'}}>
-      <TouchableRipple onPress={() => {toggleTheme()}}>
-      <View style={styles.preference}>
-      <FontAwesome name="refresh" style={styles.drawerIcon} color={colors.drawerText}/>
-      <Text style={[styles.drawerText, {color: colors.drawerText}]}> Change Theme </Text>
-      <View pointerEvents="none">
-      <Switch value={paperTheme.dark}/>
-      </View>
-      </View>
-      </TouchableRipple>
-      </View>
-      </Drawer.Section>
+    
       </View>
       </View>
       
@@ -249,7 +226,7 @@ const CustomDrawer = (props) => {
           position: 'absolute',
           right: 0,
           left: 0,
-          bottom: 15
+          bottom: 35
         }]}
         onPress={() => logout() }
       >

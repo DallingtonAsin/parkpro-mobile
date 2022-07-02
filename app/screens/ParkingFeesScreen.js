@@ -140,16 +140,6 @@ const ParkingFeesScreen = ({route, navigation}) => {
                 const FlatListHeader = () => {
                     return (
                         <>
-                        
-                        {
-                            isFavourite ? 
-                            <Text style={{color: design.colors.orange, fontSize:15, fontWeight: 'bold', fontStyle: 'italic'}}>
-                            <FontAwesome5 name={`star`} 
-                            size={16} 
-                            color={design.colors.orange} /> Marked Favourite</Text>
-                            :  null
-                        }
-                        
                         <DataTable.Header>
                         <DataTable.Title><Text style={[styles.tableCell, {fontWeight: 'bold'}]}>Vehicle Type</Text></DataTable.Title>
                         <DataTable.Title><Text style={[styles.tableCell, {fontWeight: 'bold'}]}>Fee per hour</Text></DataTable.Title>
@@ -182,7 +172,7 @@ const ParkingFeesScreen = ({route, navigation}) => {
                             resizeMode="cover"
                             style={{ 
                                 width:'100%', 
-                                height:'45%',
+                                height:'23%',
                                 // borderTopLeftRadius: SIZES.font,
                                 // borderTopRightRadius: SIZES.font
                             }}/>

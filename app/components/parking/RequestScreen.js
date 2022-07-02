@@ -494,52 +494,8 @@ import { StyleSheet, Text, View,Button, ScrollView, Dimensions, TouchableOpacity
                 <Text style={{color:theme.COLORS.gray, fontSize:theme.SIZES.font*1.2}}>{description}</Text>
                 </View>
                 
-                <View style={styles.modalInfo1}>
-                
-                <View style={{ flexDirection: 'column'}}>
-                
-                <View style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
-                <View style={[styles.parkingIcon,  ]}>
-                <FontAwesome name='clock-o' size={theme.SIZES.icon*1.3} color={theme.COLORS.orange} style={{paddingTop:5}}/>
-                {
-                  is_open
-                  ? <Text style={{fontSize:theme.SIZES.icon*1.05, color: 'green', opacity:0.6}}> Open</Text>
-                  :  <Text style={{fontSize:theme.SIZES.icon*1.05, color: 'red', opacity:0.6}}> Closed</Text>
-                  
-                }
-                </View> 
-                
-                <View style={[styles.parkingIcon, ]}>
-                <FontAwesome name='star' size={theme.SIZES.icon*1.5} color={theme.COLORS.orange} style={{paddingTop:5}}/>
-                <Text style={{fontSize:theme.SIZES.icon*1.15}}>{rating}</Text>
-                </View>
-                </View>
-                
-                <View style={{flexDirection: 'row',  justifyContent: 'space-evenly'}}>
-                <View style={[styles.parkingIcon,  ]}>
-                <FontAwesome name='road' size={theme.SIZES.icon*1.3} color={theme.COLORS.orange} style={{paddingTop:5}}/>
-                <Text style={{fontSize:theme.SIZES.icon*1.05}}>{distance} km</Text>
-                </View>
-                
-                <View style={[styles.parkingIcon, {paddingLeft:10} ]}>
-                <FontAwesome name='car' size={theme.SIZES.icon*1.3} color={theme.COLORS.orange} style={{paddingTop:5}}/>
-                <Text style={{fontSize:theme.SIZES.icon*1.05}}>{current_free_space}/{total_space}</Text>
-                </View>
-                </View>
-                
-                </View>
-                
-                
-                <View>
-                <TouchableOpacity style={styles.callBtn} 
-                onPress={() =>  callHelpLine(phone_number)}
-                >
-                <FontAwesome5 name="phone-alt" size={18} color={design.colors.gray}/>
-                <Text style={{fontSize:16, paddingLeft:10, color:design.colors.gray}}>Call</Text>
-                </TouchableOpacity>
-                </View>
-                </View>
-                <View>
+              
+                <View style={{paddingVertical: 10 }}>
                 
                 <View style={{marginTop:10}}>
                 <Text style={{fontSize: 16, fontWeight:'bold', opacity:0.6, color:'#000', textTransform:'capitalize'}}>ORDER REQUEST INFORMATION</Text>

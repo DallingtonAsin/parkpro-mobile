@@ -566,11 +566,6 @@ const HomeScreen = (props) => {
                                 <Text style={design.vehicle.text}>{item.name}</Text>
                                 <Text style={design.vehicle.name}>{item.address}</Text>
                               </View>
-                              <View style={design.vehicle.rightContainer}>
-                                <Pressable onPress={() => chooseActionOnFavouriteParking(item)}>
-                                <FontAwesome name={"ellipsis-h"} size={35} style={design.vehicle.ellipsis} />
-                                </Pressable>
-                             </View>
                           </TouchableOpacity>
                             ),[]);
                             
@@ -654,14 +649,12 @@ const HomeScreen = (props) => {
                                   <TouchableOpacity style={styles.submitVehicleBtn} onPress={()=> registerVehicle() }>
                                   {isLoading ?
                                     <UIActivityIndicator color='white' size={30} /> :
-                                    <Text style={{color:design.colors.white, marginLeft:10, textTransform:'uppercase'}}>
-                                    Submit  <FontAwesome name={"arrow-right"} size={10}/></Text>
+                                    <Text style={{color:design.colors.white, marginLeft:10, textTransform:'uppercase'}}>Submit</Text>
                                   }
                                   </TouchableOpacity>
                                   
                                   <TouchableOpacity style={styles.cancelBtn} onPress={() => setIsSheetVisible(false)}>
-                                  <Text style={{color:design.colors.dark, marginLeft:10, textTransform:'uppercase'}}>
-                                  Cancel<FontAwesome name={"times"} size={10}/></Text>
+                                  <Text style={{color:design.colors.dark, marginLeft:10, textTransform:'uppercase'}}>Cancel</Text>
                                   </TouchableOpacity>
                                   </View>
                                   
@@ -781,9 +774,9 @@ const HomeScreen = (props) => {
                                       <View style={{ flexDirection: 'row',  marginTop:30, paddingHorizontal: SIZES.base }}>
                                       
                                       <OptionItem
-                                      icon={icons.parking}
+                                      icon={icons.request}
                                       bgColor={['#fff', '#fff']}
-                                      label="Parkings"
+                                      label="Nearby Parking"
                                       tintColor={colors.icon}
                                       borderRadius={5}
                                       onPress={() => props.navigation.navigate("ParkingAreas") }
@@ -817,10 +810,10 @@ const HomeScreen = (props) => {
                                       <OptionItem
                                       icon={icons.request}
                                       bgColor={['#fff', '#fff']}
-                                      label="Close parkings"
+                                      label="Orders"
                                       borderRadius={5}
                                       tintColor={colors.icon}
-                                      onPress={() => props.navigation.navigate("NearByParkings")}
+                                      onPress={() => props.navigation.navigate("Orders")}
                                       />
                                       
                                       
@@ -896,13 +889,6 @@ const HomeScreen = (props) => {
                                         </View>
                                       }
                                       </BottomSheetScrollView>
-                                      
-                                      
-                                      <TouchableOpacity style={styles.bottomSheetButton} 
-                                      onPress={() => props.navigation.navigate("ParkingAreas") }>
-                                      <Text style={design.vehicle.textAdd}>add favourite parking</Text>
-                                      </TouchableOpacity>
-                                      
                                       </BottomSheet>
                                       
                                       </View>
