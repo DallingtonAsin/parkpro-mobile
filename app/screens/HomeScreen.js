@@ -669,7 +669,7 @@ const HomeScreen = (props) => {
                                       favouriteParkings.length > 0 
                                       ? favouriteParkings.map(renderFavouriteParkings)
                                       : <View style={{flex:1, justifyContent: 'center', alignItems: 'center'}}>
-                                      <Text style={styles.text}>No any favourite parkings added yet.</Text>
+                                      <Text style={styles.text}>No favourite parkings added yet.</Text>
                                       </View>
                                     }
                                     </BottomSheetScrollView>
