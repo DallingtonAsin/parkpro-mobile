@@ -30,11 +30,11 @@ const Drawer = createDrawerNavigator();
 const DrawerScreenStack = () => {
     return(
         <Drawer.Navigator 
-        drawerStyle={{ width:Dimensions.get('window').width - 100, }}
-        drawerContent= {(props) => <CustomDrawer {...props} />
-        }>
+            drawerStyle={{ width:Dimensions.get('window').width - 100, }}
+            drawerContent= {(props) => <CustomDrawer {...props} />}
+         >
 
-        <Drawer.Screen name="Home" component={AppTabStack} />
+        <Drawer.Screen name="Home" component={AppTabStack}/>
         <Drawer.Screen name="Profile" component={ProfileStack}/>
         <Drawer.Screen name="EditProfile" component={EditProfileStack}/>
         <Drawer.Screen name="PaymentHistory" component={TransactionsHistoryStack}/>

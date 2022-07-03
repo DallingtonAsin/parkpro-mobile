@@ -7,11 +7,10 @@ const Stack = createStackNavigator();
  const ParkingAreasStack = ({ navigation }) => {
     return(
       <Stack.Navigator initialRouteName="ParkingAreas"  
-      screenOptions={{
-        headerShown: false
-      }}>
-      <Stack.Screen name="ParkingAreas" component={ ParkingAreasScreen }>
-    </Stack.Screen>
+        screenOptions={{
+          headerShown: false
+        }}>
+      <Stack.Screen name="ParkingAreas" component={ ParkingAreasScreen }/>
     </Stack.Navigator>
     )
 }

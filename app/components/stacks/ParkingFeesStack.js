@@ -9,10 +9,8 @@ const Stack = createStackNavigator();
     return(
       <Stack.Navigator initialRouteName="ParkingFees">
       <Stack.Screen name="ParkingFees" component={ ParkingFeesScreen }
-       options = {() => (StackOption(navigation, 'Parking Fees'))
-      }>
-    </Stack.Screen>
-    </Stack.Navigator>
+        options = {() => (StackOption(navigation, 'Parking Fees'))}/>
+       </Stack.Navigator>
     )
 }
 export default ParkingFeesStack;

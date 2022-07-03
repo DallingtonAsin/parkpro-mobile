@@ -9,10 +9,8 @@ const Stack = createStackNavigator();
     return(
       <Stack.Navigator initialRouteName="Help">
       <Stack.Screen name="Help" component={HelpScreen}
-      options = {() => (StackOption(navigation, 'Contact Us'))
-    }>
-    </Stack.Screen>
-    </Stack.Navigator>
+        options = {() => (StackOption(navigation, 'Contact Us'))}/>
+      </Stack.Navigator>
     )
 }
 export default ContactUsStack

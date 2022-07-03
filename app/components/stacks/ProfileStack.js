@@ -9,10 +9,8 @@ const ProfileStack = ({ navigation }) => {
     return(
       <Stack.Navigator initialRouteName="Profile">
       <Stack.Screen name="Profile" component={ ProfileScreen }
-    options = {() => (StackOption(navigation, 'Profile'))
-  }>
-    </Stack.Screen>
-    </Stack.Navigator>
+         options = {() => (StackOption(navigation, 'Profile'))}/>
+      </Stack.Navigator>
     )
 }
 
