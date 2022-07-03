@@ -3,7 +3,7 @@ import { Text,Image, Button, Linking, View, FlatList, ScrollView, TouchableOpaci
 import design from '../../assets/css/styles';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {Card, Title} from 'react-native-paper';
-import OptionItem from '../components/OptionItem';
+import CardItem from '../components/CardItem';
 import {icons, SIZES } from '../../constants';
 import { SocialIcon } from 'react-native-elements'
 import {APP_NAME, currency} from '@env';
@@ -50,15 +50,20 @@ const AboutScreen = (props) => {
         <View style={{ flex: 1, justifyContent: 'center' }}>
         <Title style={{ color: colors.dark }}>Online & Social Media</Title>
         
-        <View style={{ flexDirection: 'row', marginTop: SIZES.padding,  }}>
+        <View style={{ 
+         flexDirection: 'row',
+         justifyContent: 'space-between',
+         marginTop: SIZES.padding,
+         width: '100%' 
+          }}>
         
         
-        <OptionItem
+        <CardItem
         icon={"globe"}
         bgColor={['#fff', '#fff']}
         label="Website"
-        iconWidth={35} 
-        iconHeight={35}
+        iconWidth={45} 
+        iconHeight={45}
         XWidth={70}
         YHeight={70}
         isSocialMedia={true}
@@ -67,7 +72,7 @@ const AboutScreen = (props) => {
         onPress={() => Linking.openURL("http://www.parkproug.com")}
         />
         
-        <OptionItem
+        <CardItem
         icon={"facebook"}
         bgColor={['#fff', '#fff']}
         label="Facebook"
@@ -81,13 +86,13 @@ const AboutScreen = (props) => {
         onPress={() =>  Linking.openURL("http://www.facebook.com") }
         />
         
-    <OptionItem
+    <CardItem
     icon={"twitter"}
     bgColor={['#fff', '#fff']}
     label="Twitter"
     iconWidth={35} 
     iconHeight={35}
-    XWidth={70} 
+    XWidth={70}
     YHeight={70}
     isSocialMedia={true}
     color={'#1DA1F2'}
@@ -96,9 +101,7 @@ const AboutScreen = (props) => {
     />
     
     
-    
-    
-    <OptionItem
+    <CardItem
     icon={"linkedin"}
     bgColor={['#fff', '#fff']}
     label="Linkedin"
@@ -136,6 +139,7 @@ const makeStyles = (colors) => StyleSheet.create({
         borderRadius: 5,
         backgroundColor: design.colors.white,
     },
+
     mediaGroup:{
         flex:1,
         borderRadius:10,
