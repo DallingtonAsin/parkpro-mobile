@@ -10,10 +10,8 @@ const WeatherStack = ({ navigation }) => {
     return(
       <Stack.Navigator initialRouteName="Weather">
       <Stack.Screen name="Weather" component={WeatherScreen}
-       options = {() => (StackOption(navigation, 'Weather'))
-      }>
-    </Stack.Screen>
-    </Stack.Navigator>
+         options = {() => (StackOption(navigation, 'Weather'))}/>
+      </Stack.Navigator>
     )
 }
 export default WeatherStack

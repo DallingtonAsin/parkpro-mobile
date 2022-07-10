@@ -9,7 +9,7 @@ const Stack = createStackNavigator();
 
 const AppRootStack = () => {
     return(
-        <Stack.Navigator screenOptions={{headerShown: false}}>
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="SplashScreen" component={SplashScreen} />
         <Stack.Screen name="Signin" component={SigninScreen} />
         <Stack.Screen name="Otp" component={OtpInputScreen} />

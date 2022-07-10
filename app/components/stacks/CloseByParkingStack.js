@@ -8,16 +8,13 @@ const Stack = createStackNavigator();
  const CloseByParkingStack = ({ navigation }) => {
     return(
       <Stack.Navigator initialRouteName="NearBy Parkings"  
-      screenOptions={{
-        headerShown: true
-      }}>
+        screenOptions={{
+        headerShown: true}}
+        >
       <Stack.Screen name="CloseByParkings"
-       component={ CloseByParkingsScreen }
-        options = {() => (StackOption(navigation, 'Nearby Parkings'))
-       }
-       >
-    </Stack.Screen>
-    </Stack.Navigator>
+        component={ CloseByParkingsScreen }
+        options = {() => (StackOption(navigation, 'Nearby Parkings'))}/>
+      </Stack.Navigator>
     )
 }
 

@@ -68,13 +68,12 @@ exports.createTableFavouriteParkings = () => {
                 }
                 
           
-                    
                     exports.removeParkingFromFavourites = (parking, callback) => {
                         try{
                             db.transaction((tx) => {
                                 tx.executeSql(
-                                    'DELETE FROM favourite_parkings where id=? AND uniquePId=?',
-                                    [parking.id, parking.uniquePId],
+                                    'DELETE FROM favourite_parkings where uniquePId=?',
+                                    [parking.id],
                                     (tx, results) => {
                                         results.rowsAffected > 0 ? callback(true) : callback(false);
                                     });
@@ -93,10 +92,8 @@ exports.createTableFavouriteParkings = () => {
                                         [parkingId],
                                         (tx, results) => {
                                             if(results.rows.length > 0){
-                                                console.log("row exists")
                                                 callback(true) 
                                             }else{
-                                                console.log("No rows")
                                                 callback(false);
                                             } 
                                         }

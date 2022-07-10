@@ -27,11 +27,8 @@ const HomeStack = ({ navigation }) => {
         <Icon name="bars" size={28} color={colors.text} />
         </TouchableOpacity>
         ),
-      }}
-      >
-      </Stack.Screen>
+      }}/>
       </Stack.Navigator>
       )
-      
     }
     export default HomeStack;

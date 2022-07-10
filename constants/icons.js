@@ -18,7 +18,7 @@ export const web = require("../assets/icons/web.png"); // map-marker
 export const mapMarker = require("../assets/icons/map-marker.png");
 export const uber = require('../assets/images/uber.png');
 export const geo = require('../assets/images/geo.png');
-export const orders = require('../assets/images/orders.png');
+export const orders = require('../assets/icons/file.png');
 export const noInternet = require('../assets/images/no-internet.png');
 
 export const parking2 = require('../assets/images/parking2.png');

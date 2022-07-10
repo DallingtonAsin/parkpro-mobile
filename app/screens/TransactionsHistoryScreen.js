@@ -29,7 +29,7 @@ const TransactionsHistoryScreen = () => {
     return (
       <Text
       style={styles.emptyListStyle}>
-      No Transaction History Found
+      No Transactions Found
       </Text>
       );
     };
@@ -181,8 +181,8 @@ const TransactionsHistoryScreen = () => {
                   fontWeight:'bold', 
                 },
                 emptyListStyle: {
-                  padding: 5,
-                  fontSize: 18,
+                  paddingTop: 20,
+                  fontSize: 17,
                   textAlign: 'center',
                 },
                 itemStyle: {

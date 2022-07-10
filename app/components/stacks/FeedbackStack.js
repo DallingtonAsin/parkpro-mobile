@@ -12,11 +12,8 @@ const Stack = createStackNavigator();
     return(
       <Stack.Navigator initialRouteName="Feedback">
       <Stack.Screen name="Feedback" component={FeedbackScreen}
-       options = {() => (StackOption(navigation, 'Feedback'))
-      }>
-    </Stack.Screen>
-    </Stack.Navigator>
-    
+         options = {() => (StackOption(navigation, 'Feedback'))}/>
+      </Stack.Navigator>
     )
 }
 export default FeedbackStack

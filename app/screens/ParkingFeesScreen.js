@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, RefreshControl,Text, Image, View,TouchableOpacity, FlatList } from 'react-native';
+import {StyleSheet, RefreshControl,Text, Image, View,TouchableOpacity, Alert, FlatList } from 'react-native';
 import design from '../../assets/css/styles';
 import { DataTable, Divider } from 'react-native-paper';
 import { Card, Title } from 'react-native-paper';
@@ -10,14 +10,14 @@ import Toast from 'react-native-simple-toast';
 import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
 import { useTheme } from '@react-navigation/native';
 import AppLoader from '../components/loaders/AppLoader';
-import {  SIZES, assets } from '../constants';
+import { assets } from '../constants';
 import { CircleButton } from '../components';
 import { RequestScreen } from '../components';
 
 
 const dbParkingHelper = require("../database/favouriteParkings");
 
-const ParkingFeesScreen = ({route, navigation}) => {
+const ParkingFeesScreen = ({ route }) => {
     
     const { item } = route.params; 
     const { id: parking_area_id, address, name, photo, phone_number } = item;
@@ -38,51 +38,52 @@ const ParkingFeesScreen = ({route, navigation}) => {
         }
     });
 
-    // const removeParkingAreaFromFavourites = (parking) => {
-    //     try{
-    //       if(!parking.id){
-    //         Toast.show('Please unable to get parking area id', Toast.LONG);
-    //         return;
-    //       }
-    //       if(!parking.uniquePId){
-    //         Toast.show('Please unable to get parking area unique id', Toast.LONG);
-    //         return;
-    //       }
-    //       dbParkingHelper.removeParkingFromFavourites(parking, isDeleted => {
-    //         if(isDeleted){
-    //           populateFavouriteParkings();
-    //           Toast.show('Parking area '+parking.name+' successfully removed from favourites.', Toast.LONG);
-    //         }else{
-    //           alert('Unable to remove parking area from favourites');
-    //         }
-    //       });
-    //     }catch(err){
-    //       console.log("Error on removing favourite parking", err);
-    //     }
-    //   }
+    const removeFromFavourites = (parking) => {
+
+        console.log("Parking area id", parking);
+        
+        try{
+
+          if(!parking.id){
+            Toast.show('Please unable to get parking area id', Toast.LONG);
+            return;
+          }
+
+          dbParkingHelper.removeParkingFromFavourites(parking, isDeleted => {
+            if(isDeleted){
+                setIsFavourite(false);
+                Toast.show('Parking area '+parking.name+' successfully removed from favourites.', Toast.LONG);
+            }else{
+                Toast.show('Unable to remove parking area from favourites', Toast.LONG);
+            }
+          });
+        }catch(err){
+          console.log("Error on removing favourite parking", err);
+        }
+      }
       
      
-    //     const confirmRemoveFavouriteParking = (item) => {
-    //       Alert.alert(
-    //         'Confirm Remove',
-    //         `Are you sure you want to remove  ${item.name} from your favourite parkings?`,
-    //         [
-    //           {
-    //             text: 'Yes',
-    //             onPress: () => {
-    //               removeParkingAreaFromFavourites(item);
-    //             }
-    //           },
-    //           {
-    //             text: 'No',
-    //             onPress: () => {
+        const confirmRemoveFromFavourites = (item) => {
+          Alert.alert(
+            'Confirm Remove',
+            `Are you sure you want to remove  ${item.name} from your favourite parkings?`,
+            [
+              {
+                text: 'Yes',
+                onPress: () => {
+                  removeFromFavourites(item);
+                }
+              },
+              {
+                text: 'No',
+                onPress: () => {
                   
-    //             }
-    //           },
-    //         ],
-    //         { cancelable: true }
-    //         );
-    //       }
+                }
+              },
+            ],
+            { cancelable: true }
+            );
+          }
     
     const [searchQuery, setSearchQuery] = React.useState('');
     const onChangeSearch = query => setSearchQuery(query);
@@ -143,7 +144,7 @@ const ParkingFeesScreen = ({route, navigation}) => {
                     );
                 }
                 
-                const addParkingToFavourites = async() => {
+                const addToFavourites = async() => {
                     try {
                         if(parking_area_id){
                             
@@ -201,14 +202,13 @@ const ParkingFeesScreen = ({route, navigation}) => {
                     
                     return (
                         <>
+
                         <RequestScreen  item={item} open={isOpen} onClose={()=> setIsOpen(false)}/>
                         
                         <View style={styles.container}>
                         
                         <FocusAwareStatusBar barStyle="light-content" 
                         backgroundColor={colors.primary} />
-                        
-                        {/* <View style={styles.semicontainer}> */}
                         
                         { !isLoading ?
                             <>
@@ -217,16 +217,14 @@ const ParkingFeesScreen = ({route, navigation}) => {
                             resizeMode="cover"
                             style={{ 
                                 width:'100%', 
-                                height:'23%',
-                                // borderTopLeftRadius: SIZES.font,
-                                // borderTopRightRadius: SIZES.font
+                                height:'23%'
                             }}/>
                             <CircleButton 
                             imgUrl={assets.heart}
                             imgTintColor={isFavourite ? design.colors.orange : design.colors.gray }
                             right={10} 
                             top={10}
-                            handlePress={() => addParkingToFavourites()}
+                            handlePress={() => isFavourite ? confirmRemoveFromFavourites(item) :  addToFavourites()}
                             />
                             
                             <View style={{ flex:1 }}>
@@ -293,8 +291,6 @@ const ParkingFeesScreen = ({route, navigation}) => {
                                     : null
                                 }
                                 
-                                
-                                {/* </View> */}
                                 </View>
                                 {  isLoading ?  <AppLoader /> : null }
                                 </>

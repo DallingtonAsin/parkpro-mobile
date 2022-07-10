@@ -10,11 +10,8 @@ const SettingsStack = ({ navigation }) => {
     return(
       <Stack.Navigator initialRouteName="Settings">
       <Stack.Screen name="Settings" component={SettingsScreen}
-      options = {() => (StackOption(navigation, 'Settings'))
-    }>
-    </Stack.Screen>
-    </Stack.Navigator>
-    
+        options = {() => (StackOption(navigation, 'Settings'))}/>
+      </Stack.Navigator>
     )
 }
 export default SettingsStack

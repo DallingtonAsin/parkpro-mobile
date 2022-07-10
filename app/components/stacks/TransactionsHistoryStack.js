@@ -9,10 +9,8 @@ const TransactionsHistoryStack = ({ navigation }) => {
     return(
       <Stack.Navigator initialRouteName="Statement">
       <Stack.Screen name="Statement" component={TransactionsHistoryScreen}
-     options = {() => (StackOption(navigation, 'Statement'))
-    }>
-    </Stack.Screen>
-    </Stack.Navigator>
+        options = {() => (StackOption(navigation, 'Transaction History'))}/>
+      </Stack.Navigator>
     )
 }
 export default TransactionsHistoryStack

@@ -11,11 +11,8 @@ const Stack = createStackNavigator();
     return(
       <Stack.Navigator>
       <Stack.Screen name="EditProfileScreen" component={EditProfileScreen}
-     options = {() => (StackOption(navigation, 'Edit Profile'))
-    }>
-    </Stack.Screen>
-    </Stack.Navigator>
-    
+         options = {() => (StackOption(navigation, 'Edit Profile'))}/>
+      </Stack.Navigator>
     )
 }
 export default EditProfileStack
