@@ -348,7 +348,11 @@ const EditProfile = () => {
       </View>
       
       
-      <View style={{flexDirection: 'row', alignItems: 'center', margin:30, justifyContent: 'space-evenly'}}>
+      <View style={{
+        flexDirection: 'row',
+         alignItems: 'center',
+          margin:30,
+           justifyContent: 'space-evenly'}}>
       
       <View style={styles.uploadOptions}>
       <TouchableOpacity onPress={()=> setVisible(false) } style={[styles.icon, {borderColor:'red', backgroundColor: 'red'}]} >
@@ -466,7 +470,7 @@ const EditProfile = () => {
       },
       
       header:{
-        flex:1,
+        flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: design.colors.silver,
@@ -474,8 +478,17 @@ const EditProfile = () => {
       },
       
       body:{
-        flex:3,
+        flex: 3,
         padding:15,
+      },
+
+      footer:{
+        flex:1,
+        // marginBottom: 30,
+        flexDirection: 'row',
+        alignItems: 'center',
+        alignSelf: 'center',
+        justifyContent: 'center',
       },
       
       text:{
@@ -558,6 +571,7 @@ const EditProfile = () => {
         height: 35,
         textAlign: 'center',
       },
+
       panelSubtitle: {
         fontSize: 14,
         color: 'gray',
@@ -627,11 +641,13 @@ const EditProfile = () => {
         marginLeft: 10,
         fontSize:15,
       },
+
       icon: {
         padding: 20,
         borderWidth: 1,
         borderRadius: 50,
       },
+      
       uploadOptions:{
         flexDirection: 'column', 
         justifyContent: 'center',
@@ -648,14 +664,6 @@ const EditProfile = () => {
         backgroundColor: design.colors.success,
         padding:10, borderRadius:50,
         borderColor:'#f4f4f4'
-      },
-      
-      footer:{
-        marginBottom: 30,
-        flexDirection: 'row',
-        alignItems: 'center',
-        alignSelf: 'center',
-        justifyContent: 'center',
       },
       
       button: {
