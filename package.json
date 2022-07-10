@@ -3,9 +3,9 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "android": "react-native run-android",
+    "android": "react-native run-android --no-jetifier",
     "ios": "react-native run-ios",
-    "start": "react-native start",
+    "start": "react-native start --reset-cache",
     "test": "jest",
     "lint": "eslint .",
     "gaa": "cd android && ./gradlew clean && cd .. && npx react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res && cd android && ./gradlew assembleDebug",

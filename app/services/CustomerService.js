@@ -41,6 +41,7 @@ let CustomerService = class {
     
     uploadProfilePicture = async(data) => {
         try{
+            console.log("Update profile data", data);
             const endpoint = api.endpoint.customer.update_profile_mage;
             return await api.axios.postWithFile(endpoint, data);
         }catch(error){

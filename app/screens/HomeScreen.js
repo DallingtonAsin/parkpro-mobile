@@ -9,7 +9,7 @@ import {
   Alert, Pressable,
 } from 'react-native';
 import { icons, SIZES } from '../../constants';
-import CardItem from '../components/CardItem';
+import { HomeCardItem } from '../components/CardItem';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {  Divider  } from 'react-native-paper';
@@ -509,42 +509,21 @@ const HomeScreen = (props) => {
                                 
                                   <View style={styles.container}>
                                 
-                                  <View style={{ flex: 1, paddingHorizontal: SIZES.padding, alignItems: "center", justifyContent: "center"}}>
-                                  
-                                  <View style={{flexDirection: 'column' }}>
-                                  
-                                  <View style={{flexDirection: 'row', justifyContent: "space-around"}}>
-                                  <Text style={{
-                                    color: '#fff',
-                                    fontSize: 24,
-                                    textAlign: 'center',
-                                    fontWeight: "bold",
-                                  }}>My Wallet      
-                                  </Text>
-                                  </View>
+                                    <View style={styles.header}>
+                                      <Text style={styles.mywallet}>My Wallet</Text>
+                                       <Text style={styles.balanceText}>{CURRENCY} {profile.account_balance }</Text>
+                                    </View>
                                   
                                   
-                                  <Text style={{
-                                    color: '#fff',
-                                    fontSize: 28,
-                                    padding: 15,
-                                    textAlign: 'center',
-                                    fontWeight: "bold",
-                                  }}>{CURRENCY} {profile.account_balance }</Text>
-                                  </View>
-                                  </View>
-                                  
-                                  
-                                  <View style={{ flex: 3, backgroundColor:design.colors.white, 
-                                    borderTopLeftRadius:25, borderTopRightRadius:25 }}>
+                                  <View style={styles.body}>
                                     
-                                    <View style={{ padding:10,  borderColor:design.colors.primary}}>
+                                 
+                                    <Text style={styles.bodyHeaderText}>Quick Actions</Text>
+                                   
+                                   
+                                    <View style={styles.cardRow}>
                                     
-                                    <Text style={{fontSize:18, textAlign:'center', fontWeight:'bold',
-                                    color: design.colors.parksmart, opacity:0.8}}>Quick Actions</Text>
-                                    <View style={{ flexDirection: 'row',  marginTop:30, paddingHorizontal: SIZES.base }}>
-                                    
-                                    <CardItem
+                                    <HomeCardItem
                                     icon={icons.request}
                                     bgColor={['#fff', '#fff']}
                                     label="Parking"
@@ -553,7 +532,7 @@ const HomeScreen = (props) => {
                                     onPress={() => props.navigation.navigate("ParkingAreas") }
                                     />
                                     
-                                    <CardItem
+                                    <HomeCardItem
                                     icon={icons.myparkings}
                                     bgColor={['#fff', '#fff']}
                                     label="Favourites"
@@ -563,7 +542,7 @@ const HomeScreen = (props) => {
                                     />
                                     
                                     
-                                    <CardItem
+                                    <HomeCardItem
                                     icon={icons.uber}
                                     bgColor={['#fff', '#fff']}
                                     label="My Vehicles"
@@ -575,10 +554,9 @@ const HomeScreen = (props) => {
                                     
                                     </View>
                                     
-                                    <View style={{flexDirection: 'row', marginTop: SIZES.radius, 
-                                    paddingHorizontal: SIZES.base }}>
+                                    <View style={styles.cardRow}>
                                     
-                                    <CardItem
+                                    <HomeCardItem
                                     icon={icons.orders}
                                     bgColor={['#fff', '#fff']}
                                     label="Orders"
@@ -589,7 +567,7 @@ const HomeScreen = (props) => {
                                     
                                     
                                     
-                                    <CardItem
+                                    <HomeCardItem
                                     icon={icons.topup}
                                     bgColor={['#fff', '#fff']}
                                     label="Deposit"
@@ -598,7 +576,7 @@ const HomeScreen = (props) => {
                                     onPress={() => props.navigation.navigate("TopUp")}
                                     />
                                     
-                                    <CardItem
+                                    <HomeCardItem
                                     icon={icons.statement}
                                     bgColor={['#fff', '#fff']}
                                     label="Transactions"
@@ -607,7 +585,7 @@ const HomeScreen = (props) => {
                                     onPress={() => props.navigation.navigate("PaymentHistory") }
                                     />
                                     </View>
-                                    </View>
+
                                     </View>
 
                                          {/* <VehicleScreen
@@ -688,6 +666,27 @@ const HomeScreen = (props) => {
                                       flex: 1,
                                       backgroundColor: colors.primary,
                                     },
+
+                                    header:{
+                                       flex: 1,
+                                       paddingHorizontal: SIZES.padding,
+                                       alignItems: "center",
+                                       justifyContent: "center"
+                                    },
+
+                                    body:{ 
+                                        flex: 3,
+                                        backgroundColor:design.colors.white, 
+                                        borderTopLeftRadius:25,
+                                        borderTopRightRadius:25,
+                                        padding: 8,
+                                     },
+
+                                    cardRow: {
+                                      flexDirection: 'row',
+                                      marginTop: SIZES.radius, 
+                                      // paddingHorizontal: SIZES.base 
+                                     },
                                     
                                     contentContainer: {
                                       alignItems: 'center',
@@ -747,5 +746,29 @@ const HomeScreen = (props) => {
                                       fontSize: 18,
                                       textAlign: 'center',
                                     },
+
+                                    mywallet:{
+                                        color: '#fff',
+                                        fontSize: 24,
+                                        textAlign: 'center',
+                                        fontWeight: "bold",
+                                    },
+
+                                    balanceText: {
+                                      color: '#fff',
+                                      fontSize: 28,
+                                      padding: 15,
+                                      textAlign: 'center',
+                                      fontWeight: "bold",
+                                    },
+
+                                    bodyHeaderText:{
+                                      fontSize:18,
+                                      textAlign:'center',
+                                      fontWeight:'bold',
+                                      color: design.colors.parksmart,
+                                      opacity:0.8,
+                                      padding:15
+                                    }
                                   
                                   });

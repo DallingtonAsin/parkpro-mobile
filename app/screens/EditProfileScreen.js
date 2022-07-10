@@ -419,19 +419,7 @@ const EditProfile = () => {
       onChangeText={(val) => setData({...state, last_name: val})}
       />
       </View>
-      
-      <View style={styles.form}>
-      <Text style={styles.text}>PHONE NUMBER</Text>
-      <TextInput value={`${state.country_code}${state.phone_number}`}
-      placeholder="Phone Number"
-      style={styles.input} 
-      spellCheck={false}
-      autoCorrect={false}
-      editable={false}
-      onChangeText={(val) => setData({...state, phone_number: val})}
-      />
-      </View>
-      
+ 
       <View style={styles.form}>
       <Text style={styles.text}>Email</Text>
       <TextInput 
@@ -478,9 +466,9 @@ const EditProfile = () => {
       },
       
       header:{
+        flex:1,
         justifyContent: 'center',
         alignItems: 'center',
-        flex:1,
         backgroundColor: design.colors.silver,
         flexDirection: 'row',
       },

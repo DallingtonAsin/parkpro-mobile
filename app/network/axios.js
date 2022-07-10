@@ -72,7 +72,9 @@ let AxiosApi = class {
     
     postWithFile = async(endpoint, data) => {
         try {
-            const headers = await this.getHeader();
+            const headers = await this.getHeader(true);
+            console.log("Headers", headers);
+            console.log("put file data", data);
             const response = this.client().post(endpoint, data, headers).then(res => {
                  if(res.status == 200){
                     return res.data;
@@ -89,12 +91,13 @@ let AxiosApi = class {
         }
     }
     
-    getHeader = async() => {
+    getHeader = async(isMultipart = false) => {
         try{
             const bearerToken = await this.getToken();
             const headers =  {
                 headers: {
-                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'Content-Type': isMultipart ? 'multipart/form-data' : 'application/json',
                     'Authorization': 'Bearer '+bearerToken
                 },      
             }
