@@ -226,25 +226,6 @@ const Settings = ({ navigation }) => {
     }
     </TouchableOpacity>}/>
     
-    
-    <Text style={styles.title}>More</Text>
-    <View style={{ borderBottomColor: '#e2e2e2', borderBottomWidth: 1, }}/>
-    
-    <FlatList
-    data={set3}
-    renderItem={({ item }) =>
-    <TouchableOpacity key={item.key} onPress={() =>{Navigate(item.link)}}
-    style={styles.preferencesOpacity}>
-    <Text style={styles.preferenceText}>
-    <FontAwesome name={item.icon} size={iconSize} />  {item.item}</Text>
-    {
-      (item.data)
-      ? <Text style={{ opacity:0.4, bottom:10, color: colors.dark  }}>{item.data}</Text> 
-      : null
-    }
-    </TouchableOpacity>}/>
-    
-    
     <Drawer.Section title={
       <Text style={styles.title}>Preferences</Text>
     }>
@@ -271,7 +252,21 @@ const Settings = ({ navigation }) => {
     </TouchableRipple>
     </Drawer.Section>
     
+    <Text style={styles.title}>More</Text>
     
+    <FlatList
+    data={set3}
+    renderItem={({ item }) =>
+    <TouchableOpacity key={item.key} onPress={() =>{Navigate(item.link)}}
+    style={styles.preferencesOpacity}>
+    <Text style={styles.preferenceText}>
+    <FontAwesome name={item.icon} size={iconSize} />  {item.item}</Text>
+    {
+      (item.data)
+      ? <Text style={{ opacity:0.4, bottom:10, color: colors.dark  }}>{item.data}</Text> 
+      : null
+    }
+    </TouchableOpacity>}/>
     
     
     </View>

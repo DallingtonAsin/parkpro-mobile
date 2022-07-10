@@ -38,13 +38,13 @@ export default {
   drawerItem:{
     flexDirection: 'row',
     left: 0,
-    paddingTop: 12,
-    paddingBottom: 12,
+    paddingTop: 14,
+    paddingBottom: 14,
     fontSize:45
   },
   
   drawerContent: {
-    flex: 1,
+    flex: 1
   },
 
   drawerText:{
@@ -52,16 +52,14 @@ export default {
   },
 
   drawerIcon:{
-    fontSize:23,
     marginLeft:20,
     marginRight:20,
-    // color:'#000',
   },
 
   userInfoSection: {
     justifyContent: 'center',
     alignItems: 'center',
-    // marginTop:10
+    marginTop: 10
   },
 
   preference: {

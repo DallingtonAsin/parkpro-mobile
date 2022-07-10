@@ -31,9 +31,9 @@ const CustomDrawer = (props) => {
   const { profile } = useContext(ProfileContext);
   const [isVisible, setIsVisible] = useState(false);
   
-  const {  toggleTheme } = React.useContext(AuthContext);
-  const paperTheme = useTheme(); 
+ 
   const { colors } = useTheme();
+  const iconSize = 20;
 
   
   const items = [
@@ -46,7 +46,7 @@ const CustomDrawer = (props) => {
     
     {
       icon: 'user-circle',
-      text: 'My Profile',
+      text: 'Profile',
       screenToNavigate:'Profile',
       
     },
@@ -133,9 +133,7 @@ const CustomDrawer = (props) => {
           global.currentScreenIndex = key;
           props.navigation.navigate(item.screenToNavigate);
         }}>
-        <View>
-        <Icon name={item.icon} style={styles.drawerIcon} color={colors.drawerText}/>
-        </View>
+        <Icon name={item.icon} size={iconSize} style={styles.drawerIcon} color={colors.drawerText}/>
         <Text style={[styles.drawerText, {color: colors.drawerText}]}
         // -style={[{ color: global.currentScreenIndex === key ? '#FFB020' : '#000000' }, styles.drawerText]}
         >
@@ -155,20 +153,20 @@ const CustomDrawer = (props) => {
       <TouchableOpacity style={styles.drawerItem}
       onPress={() => share()}
       >
-      <Icon name="share-alt" style={styles.drawerIcon} color={colors.drawerText}/>
+      <Icon name="share-alt" size={iconSize} style={styles.drawerIcon} color={colors.drawerText}/>
       <Text style={[styles.drawerText, {color: colors.drawerText}]}>Share</Text>
       </TouchableOpacity>
       
       <TouchableOpacity style={styles.drawerItem} 
       onPress={() => props.navigation.navigate("About")}>
-      <Icon name="info-circle" style={styles.drawerIcon} color={colors.drawerText}/>
+      <Icon name="info-circle" size={iconSize} style={styles.drawerIcon} color={colors.drawerText}/>
       <Text style={[styles.drawerText, {color: colors.drawerText}]}>About us</Text>
       </TouchableOpacity>
       
 
     <TouchableOpacity style={styles.drawerItem} onPress={ () => {
       props.navigation.navigate('Settings'); }}>
-      <FontAwesome name="cog" style={styles.drawerIcon} color={colors.drawerText}/>
+      <FontAwesome name="cog" size={iconSize*1.2} style={styles.drawerIcon} color={colors.drawerText}/>
       <Text style={[styles.drawerText, {color: colors.drawerText}]}>Settings</Text>
       </TouchableOpacity>
 
@@ -227,7 +225,7 @@ const CustomDrawer = (props) => {
         }]}
         onPress={() => logout() }
       >
-         <Icon name="power-off" style={styles.drawerIcon} color={colors.drawerText}/>
+         <Icon name="power-off" size={iconSize} style={styles.drawerIcon} color={colors.drawerText}/>
         <Text style={[styles.drawerText, {color: colors.drawerText}]}>Sign Out</Text>
       </TouchableOpacity>
       
