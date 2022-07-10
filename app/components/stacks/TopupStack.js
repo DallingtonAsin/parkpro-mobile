@@ -9,10 +9,8 @@ const TopupStack = ({ navigation }) => {
     return(
       <Stack.Navigator initialRouteName="Statement">
       <Stack.Screen name="TopUp" component={TopUpScreen}
-       options = {() => (StackOption(navigation, 'Top Up'))
-    }>
-    </Stack.Screen>
-    </Stack.Navigator>
+        options = {() => (StackOption(navigation, 'Top Up'))}/>
+      </Stack.Navigator>
     )
 }
 export default TopupStack

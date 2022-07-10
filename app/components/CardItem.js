@@ -5,28 +5,36 @@ import { COLORS, FONTS, SIZES } from '../../constants';
 import design from '../../assets/css/styles';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
-const OptionItem = ({ bgColor, icon, label, tintColor, borderRadius, onPress, labelColor, iconWidth, iconHeight, XWidth, YHeight, isSocialMedia, color }) => {
+const CardItem = ({ bgColor, icon, label, tintColor, borderRadius,
+                    onPress, labelColor, iconWidth, iconHeight,
+                    XWidth, YHeight, isSocialMedia, color }) => {
+
     return (
-        
+
         <TouchableOpacity
         style={[{ flex: 1, alignItems: 'center', justifyContent: 'center' }]}
         onPress={onPress}
         activeOpacity={0.9}
         >
-        <View style={[styles.shadow, { width: XWidth ? XWidth : 90, height: YHeight ? YHeight: 80, borderColor:'#000' }]}>
+        <View style={[styles.shadow, isSocialMedia ? styles.socialMediaCard: '',  { 
+             width: XWidth ? XWidth : 120,
+             height: YHeight ? YHeight: 120,
+             borderColor:'#000',
+             
+             }]}>
+
         <LinearGradient
-        style={[{ flex: 1, alignItems: 'center', justifyContent: 'center', borderRadius: borderRadius ? borderRadius : 10, backgroundColor: 'red' }]}
+        style={[{ flex: 1, alignItems: 'center', justifyContent: 'center',
+        borderRadius: borderRadius ? borderRadius : 10,
+        backgroundColor: 'red' }]}
         colors={bgColor}
         start={{ x: 0, y: 0 }}
         end={{ x: 0, y: 1 }}
         >
         
-        {
-            
-            isSocialMedia ?
-            <FontAwesome name={icon} size={30} color={color}/>
-            :
-            <Image
+        { isSocialMedia
+            ? <FontAwesome name={icon} size={30} color={color}/>
+            : <Image
             source={icon}
             resizeMode="cover"
             style={{
@@ -37,26 +45,28 @@ const OptionItem = ({ bgColor, icon, label, tintColor, borderRadius, onPress, la
             />
               
         } 
+
+          { !isSocialMedia &&  <Text style={{ marginTop: SIZES.base, color: labelColor ? labelColor : design.colors.primary, ...FONTS.body3, fontWeight:'normal', fontSize:15.5 }}>{label}</Text> }
+
         </LinearGradient>
+
         </View>
-        {
-            
-            isSocialMedia
-             ? <Text style={{ marginTop: SIZES.base, color: labelColor ? labelColor : design.colors.primary, ...FONTS.body3, fontWeight:'normal', fontSize:13, textAlign: 'center'}}>{label}</Text>
-             :  <Text style={{ marginTop: SIZES.base, color: labelColor ? labelColor : design.colors.primary, ...FONTS.body3, fontWeight:'normal', fontSize:16 }}>{label}</Text>
-    
-       }
+
+        { isSocialMedia &&  <Text style={{ marginTop: SIZES.base, color: labelColor ? labelColor : design.colors.primary, ...FONTS.body3, fontWeight:'normal', fontSize:13, textAlign: 'center'}}>{label}</Text> }
+         
        
         </TouchableOpacity>
         )
     }
-    export default OptionItem;
+
+export default CardItem;
     
     const styles = StyleSheet.create({
         container: {
             flex: 1,
             backgroundColor: COLORS.white,
         },
+
         shadow: {
             shadowColor: "#000",
             shadowOffset: {
@@ -66,10 +76,15 @@ const OptionItem = ({ bgColor, icon, label, tintColor, borderRadius, onPress, la
             shadowOpacity: 0.25,
             shadowRadius: 1.84,
             
-            elevation: 8,
+            elevation: 5,
         },
+
         socialBg:{
           backgroundColor:'red',
+        },
+
+        socialMediaCard: {
+            paddingLeft:1,
         }
     });
     

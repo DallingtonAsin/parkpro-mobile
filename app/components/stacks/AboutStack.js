@@ -9,11 +9,8 @@ const Stack = createStackNavigator();
     return(
       <Stack.Navigator initialRouteName="About">
       <Stack.Screen name="About" component={AboutScreen}
-     options = {() => (StackOption(navigation, 'About'))
-    }>
-      </Stack.Screen>
+         options = {() => (StackOption(navigation, 'About'))}/>
       </Stack.Navigator>
       )
-    
     }
 export default AboutStack;

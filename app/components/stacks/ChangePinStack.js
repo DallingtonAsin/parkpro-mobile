@@ -10,10 +10,8 @@ const Stack = createStackNavigator();
     return(
       <Stack.Navigator initialRouteName="ChangePin">
       <Stack.Screen name="ChangePin" component={ChangePinScreen}
-        options = {() => (StackOption(navigation, 'Change PIN'))
-        }>
-    </Stack.Screen>
-    </Stack.Navigator>
+         options = {() => (StackOption(navigation, 'Change PIN'))}/>
+      </Stack.Navigator>
     
     )
 }

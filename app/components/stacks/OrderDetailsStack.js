@@ -10,11 +10,8 @@ const Stack = createStackNavigator();
     return(
       <Stack.Navigator initialRouteName="OrderDetails">
       <Stack.Screen name="OrderDetails" component={OrderDetailsScreen}
-      options = {() => (StackOption(navigation, 'Order Details'))
-    }>
-    </Stack.Screen>
-    </Stack.Navigator>
-    
+         options = {() => (StackOption(navigation, 'Order Details'))}/>
+      </Stack.Navigator>
     )
 }
 export default OrderDetailsStack

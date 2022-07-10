@@ -10,11 +10,8 @@ const Stack = createStackNavigator();
     return(
       <Stack.Navigator initialRouteName="Notification">
       <Stack.Screen name="Notifications" component={NotificationScreen}
-      options = {() => (StackOption(navigation, 'Notifications'))
-    }>
-    </Stack.Screen>
-    </Stack.Navigator>
-    
+         options = {() => (StackOption(navigation, 'Notifications'))}/>
+      </Stack.Navigator>
     )
 }
 export default NotificationStack

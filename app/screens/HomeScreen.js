@@ -9,17 +9,15 @@ import {
   Alert, Pressable,
 } from 'react-native';
 import { icons, SIZES } from '../../constants';
-import OptionItem from '../components/OptionItem';
+import CardItem from '../components/CardItem';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { BottomSheet as BrSheet } from 'react-native-btr';
 import {  Divider  } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import design from '../../assets/css/styles';
 import ProfileContext from '../context/index';
 import { AuthContext } from '../context/context';
 import Toast from 'react-native-simple-toast';
-import * as theme from '../../assets/theme';
 import {CURRENCY} from '@env';
 import BottomSheet, {
   BottomSheetBackdrop,
@@ -546,16 +544,16 @@ const HomeScreen = (props) => {
                                     color: design.colors.parksmart, opacity:0.8}}>Quick Actions</Text>
                                     <View style={{ flexDirection: 'row',  marginTop:30, paddingHorizontal: SIZES.base }}>
                                     
-                                    <OptionItem
+                                    <CardItem
                                     icon={icons.request}
                                     bgColor={['#fff', '#fff']}
-                                    label="Nearby Parking"
+                                    label="Parking"
                                     tintColor={colors.icon}
                                     borderRadius={5}
                                     onPress={() => props.navigation.navigate("ParkingAreas") }
                                     />
                                     
-                                    <OptionItem
+                                    <CardItem
                                     icon={icons.myparkings}
                                     bgColor={['#fff', '#fff']}
                                     label="Favourites"
@@ -565,7 +563,7 @@ const HomeScreen = (props) => {
                                     />
                                     
                                     
-                                    <OptionItem
+                                    <CardItem
                                     icon={icons.uber}
                                     bgColor={['#fff', '#fff']}
                                     label="My Vehicles"
@@ -580,8 +578,8 @@ const HomeScreen = (props) => {
                                     <View style={{flexDirection: 'row', marginTop: SIZES.radius, 
                                     paddingHorizontal: SIZES.base }}>
                                     
-                                    <OptionItem
-                                    icon={icons.request}
+                                    <CardItem
+                                    icon={icons.orders}
                                     bgColor={['#fff', '#fff']}
                                     label="Orders"
                                     borderRadius={5}
@@ -591,7 +589,7 @@ const HomeScreen = (props) => {
                                     
                                     
                                     
-                                    <OptionItem
+                                    <CardItem
                                     icon={icons.topup}
                                     bgColor={['#fff', '#fff']}
                                     label="Deposit"
@@ -600,7 +598,7 @@ const HomeScreen = (props) => {
                                     onPress={() => props.navigation.navigate("TopUp")}
                                     />
                                     
-                                    <OptionItem
+                                    <CardItem
                                     icon={icons.statement}
                                     bgColor={['#fff', '#fff']}
                                     label="Transactions"
@@ -671,7 +669,7 @@ const HomeScreen = (props) => {
                                       favouriteParkings.length > 0 
                                       ? favouriteParkings.map(renderFavouriteParkings)
                                       : <View style={{flex:1, justifyContent: 'center', alignItems: 'center'}}>
-                                      <Text style={styles.text}>No any favourite parkings added yet.</Text>
+                                      <Text style={styles.text}>No favourite parkings added yet.</Text>
                                       </View>
                                     }
                                     </BottomSheetScrollView>
