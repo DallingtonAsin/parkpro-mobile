@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import { TouchableOpacity, View, FlatList, Linking, StyleSheet} from 'react-native';
 import Toast from 'react-native-simple-toast';
-import AwesomeAlert from 'react-native-awesome-alerts';
 import Dialog, { DialogFooter, DialogButton, DialogContent } from 'react-native-popup-dialog';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Rate, { AndroidMarket } from 'react-native-rate';
@@ -69,7 +68,6 @@ const Settings = ({ navigation }) => {
   
   const [state, setState] = useState(initialState); 
   const [isVisible, setIsVisible] = useState(false);   
-  const [isEnabled, setIsEnabled] = useState(false);
   
   const {  toggleTheme } = React.useContext(AuthContext);
   const paperTheme = useTheme(); 
@@ -77,22 +75,7 @@ const Settings = ({ navigation }) => {
   const { colors } = useTheme();
   const styles = makeStyles(colors);
   const iconSize = 20;
-  
- 
-  const showAlert = () =>{
-    setState({ 
-      ...state,
-      showAlert:true,
-    });
-  };
-  
-  const hideAlert = () =>{
-    setState({ 
-      ...state,
-      showAlert:false,
-    });
-  };
-  
+
   const RateUs = () => {
     const options = {
       AppleAppID:"2193813192",
@@ -181,30 +164,7 @@ const Settings = ({ navigation }) => {
     </DialogContent>
     </Dialog>
     
-    <AwesomeAlert
-    show={state.showAlert}
-    showProgress={false}
-    title="Clear app cache"
-    progressSize={50}
-    message="Are you sure you want to clear cache?"
-    closeOnTouchOutside={true}
-    useNativeDriver={true}
-    closeOnHardwareBackPress={false}
-    showCancelButton={true}
-    showConfirmButton={true}
-    cancelText="No"
-    confirmText="Yes"
-    cancelButtonColor="#696969"
-    confirmButtonColor="#DD6B55"
-    onCancelPressed={() => {
-      hideAlert();
-    }}
-    onConfirmPressed={() => {
-      handlerClearAppCache();
-    }}
-    />
-    
-    
+
     <View style={styles.body}>
     
     <Text style={styles.title}>Information</Text>
@@ -230,12 +190,12 @@ const Settings = ({ navigation }) => {
       <Text style={styles.title}>Preferences</Text>
     }>
     
-    <TouchableOpacity onPress={() =>{ Navigate("ChangePin") }} style={styles.preferencesOpacity}>
+    <TouchableOpacity onPress={() => { navigation.navigate("ChangePin") }} style={styles.preferencesOpacity}>
     <Text style={styles.preferenceText}>
     <FontAwesome name={'key'} size={iconSize} />  Change Wallet PIN</Text>
     </TouchableOpacity>
 
-    <TouchableOpacity onPress={() =>{ Navigate("ChangePin") }} style={styles.preferencesOpacity}>
+    <TouchableOpacity onPress={() =>{ navigation.navigate("ChangePhoneNumber") }} style={styles.preferencesOpacity}>
     <Text style={styles.preferenceText}>
     <FontAwesome name={'phone'} size={iconSize} />  Change Phone Number</Text>
     </TouchableOpacity>

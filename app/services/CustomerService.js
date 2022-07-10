@@ -140,6 +140,17 @@ let CustomerService = class {
             throw error;
         }
     }
+
+    verifyChangePhoneNumber  = async(data) => {
+        try{
+            const endpoint = api.endpoint.customer.verify_change_phone_number;
+            return await api.axios.post(endpoint, data);
+        }catch(error){
+            throw error;
+        }
+    }
+
+    
 }
 
 module.exports = CustomerService;
