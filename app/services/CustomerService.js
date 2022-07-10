@@ -150,6 +150,15 @@ let CustomerService = class {
         }
     }
 
+    changePhoneNumber  = async(data) => {
+        try{
+            const endpoint = api.endpoint.customer.change_phone_number;
+            return await api.axios.post(endpoint, data);
+        }catch(error){
+            throw error;
+        }
+    }
+
     
 }
 
