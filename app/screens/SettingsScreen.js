@@ -2,28 +2,16 @@ import React, {useState} from 'react';
 import { TouchableOpacity, View, FlatList, Linking, StyleSheet} from 'react-native';
 import Toast from 'react-native-simple-toast';
 import AwesomeAlert from 'react-native-awesome-alerts';
-import { Cache } from 'react-native-cache';
 import Dialog, { DialogFooter, DialogButton, DialogContent } from 'react-native-popup-dialog';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Rate, { AndroidMarket } from 'react-native-rate';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {  AirbnbRating } from 'react-native-elements';
-import {getAppVersionName} from '../components/sharedHelper/AppUtils';
+import { getAppVersionName } from '../components/sharedHelper/AppUtils';
 import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
 import { AuthContext } from '../context/context';
 import {useTheme, TouchableRipple, Drawer, Switch, Text } from 'react-native-paper';
 
 const version  = getAppVersionName();
-
-const cache = new Cache({
-  namespace: "myapp",
-  policy: {
-    maxEntries: 50000
-  },
-  backend: AsyncStorage
-});
-
-
 
 const set2 = [
   {
@@ -64,14 +52,7 @@ const set3 = [
     icon: "star",
     
   },
-  {
-    key: 11,
-    item: "Clear app cache",
-    link: "ClearCache",
-    data: "",
-    icon: "trash",
-    
-  },
+
   
 ];
 
@@ -96,17 +77,7 @@ const Settings = ({ navigation }) => {
   const { colors } = useTheme();
   const styles = makeStyles(colors);
   
-  
-  
-  const handlerClearAppCache = () => {
-    (async () => {
-      cache.clearAll();
-    })();
-    hideAlert();
-    Toast.show('Successfully cleared app cache');
-  };
-  
-  
+ 
   const showAlert = () =>{
     setState({ 
       ...state,

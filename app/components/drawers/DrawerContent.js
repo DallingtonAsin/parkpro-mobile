@@ -73,10 +73,7 @@ const CustomDrawer = (props) => {
     }
   };
   
-  const navigateToTerms = () => {
-    Linking.openURL("https://www.parkproug.com");
-  }
-  
+ 
   const RateUs = () => {
     const options = {
       AppleAppID:"2193813192",
