@@ -150,7 +150,7 @@ const Profile = (props) => {
     
     footer:{
       flex:1,
-      marginBottom: 30,
+      // marginBottom: 30,
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'center',

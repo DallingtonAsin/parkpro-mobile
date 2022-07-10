@@ -211,7 +211,7 @@ const HomeScreen = (props) => {
               }
               
               const registerVehicle = () => {
-                
+
                 try{
                   if (!vehicle.number) {
                     Toast.show('Please enter vehicle number', Toast.LONG);
