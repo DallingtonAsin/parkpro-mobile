@@ -76,6 +76,7 @@ const Settings = ({ navigation }) => {
   
   const { colors } = useTheme();
   const styles = makeStyles(colors);
+  const iconSize = 20;
   
  
   const showAlert = () =>{
@@ -213,10 +214,10 @@ const Settings = ({ navigation }) => {
     data={set2}
     renderItem={({ item }) =>
     <TouchableOpacity key={item.key} onPress={() =>{Navigate(item.link)}}
-    style={{ padding:15, flexDirection:'row', justifyContent:'space-between'}}>
+    style={styles.preferencesOpacity}>
      
-    <Text style={{ fontSize:17, color: colors.dark }}>
-    <FontAwesome name={item.icon} size={18} /> {item.item}
+    <Text style={styles.preferenceText}>
+    <FontAwesome name={item.icon} size={iconSize} /> {item.item}
       </Text>
     {
       (item.data)
@@ -233,9 +234,9 @@ const Settings = ({ navigation }) => {
     data={set3}
     renderItem={({ item }) =>
     <TouchableOpacity key={item.key} onPress={() =>{Navigate(item.link)}}
-    style={{ padding:15, flexDirection:'row', justifyContent:'space-between'}}>
-    <Text style={{ fontSize:17, color: colors.dark }}>
-    <FontAwesome name={item.icon} size={18} />  {item.item}</Text>
+    style={styles.preferencesOpacity}>
+    <Text style={styles.preferenceText}>
+    <FontAwesome name={item.icon} size={iconSize} />  {item.item}</Text>
     {
       (item.data)
       ? <Text style={{ opacity:0.4, bottom:10, color: colors.dark  }}>{item.data}</Text> 
@@ -248,16 +249,21 @@ const Settings = ({ navigation }) => {
       <Text style={styles.title}>Preferences</Text>
     }>
     
-    <TouchableOpacity onPress={() =>{ Navigate("ChangePin") }} style={{ padding:15, flexDirection:'row', justifyContent:'space-between'}}>
-    <Text style={{ fontSize:17, color: colors.dark }}>
-    <FontAwesome name={'key'} size={18} />  Change Wallet PIN</Text>
+    <TouchableOpacity onPress={() =>{ Navigate("ChangePin") }} style={styles.preferencesOpacity}>
+    <Text style={styles.preferenceText}>
+    <FontAwesome name={'key'} size={iconSize} />  Change Wallet PIN</Text>
+    </TouchableOpacity>
+
+    <TouchableOpacity onPress={() =>{ Navigate("ChangePin") }} style={styles.preferencesOpacity}>
+    <Text style={styles.preferenceText}>
+    <FontAwesome name={'phone'} size={iconSize} />  Change Phone Number</Text>
     </TouchableOpacity>
     
     
     <TouchableRipple onPress={() => {toggleTheme()}}>
     <View style={styles.preference}>
-    <Text style={{ fontSize:17, color: colors.dark }}>
-    <FontAwesome name={'refresh'} size={18} />  Change Theme</Text>
+    <Text style={styles.preferenceText}>
+    <FontAwesome name={'refresh'} size={iconSize} />  Change Theme</Text>
     <View pointerEvents="none">
     <Switch value={paperTheme.dark}/>
     </View>
@@ -298,5 +304,17 @@ const Settings = ({ navigation }) => {
       paddingVertical: 12,
       paddingHorizontal: 16,
     },
+
+    preferencesOpacity: { 
+      padding:15,
+      flexDirection:'row',
+      justifyContent:'space-between'
+    },
+
+    preferenceText:{ 
+      fontSize:17,
+       color: colors.dark 
+    },
+
   })
   
