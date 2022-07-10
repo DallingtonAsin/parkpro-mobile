@@ -11,20 +11,49 @@ import { useTheme } from '@react-navigation/native';
 import AppLoader from '../components/loaders/AppLoader';
 import PhoneInput from "react-native-phone-number-input";
 import { removeLeadingZeros } from '../components/sharedHelper/AppUtils';
+import OTPInputView from "@twotalltotems/react-native-otp-input";
 
-
-const ChangePhoneNumberScreen = () => {
+const ChangePhoneNumberScreen = ({ navigation }) => {
   
   const [isLoading, setIsLoading] = useState(false);
   const { profile } = useContext(ProfileContext);
   const [phoneNumber, setPhoneNumber] = useState("");
   const [value, setValue] = useState("");
+  const [otpCode, setOTP] = useState();
+  const [newPhoneNumber, setNewPhoneNumber] = useState("");
+  const [isOtpSent, setIsOtpSent] = useState(false);
+
   const phoneInput = useRef(null);
   
   const { verifyChangePhoneNumber } = React.useContext(AuthContext);
   
   const { colors } = useTheme();
   const styles = makeStyles(colors);
+
+  const sendChangePhoneNumberReq = (phoneDetails) => {
+    try{
+
+      console.log("details of the phone", phoneDetails);
+      //  verifyChangePhoneNumber(phoneDetails).then((result) => {
+      //        if(result.statusCode == '200'){
+      //           navigation.navigate("Otp",{
+      //             countryCode: response.data.country_code,
+      //             phoneNumber: response.data.phone_number,
+      //             otp: response.data.otp
+      //           });
+      //        }
+      //  }).catch(err => {Toast.show(err.message)});
+      
+      navigation.navigate("Otp",{
+        countryCode: phoneDetails.countryCode,
+        phoneNumber: phoneDetails.number,
+        otp: `8976`
+      });
+
+    }catch(err){
+      Toast.show(err.message);
+    }
+  }
   
   const confirmChangePhoneNumber = () => {
     
@@ -51,19 +80,21 @@ const ChangePhoneNumberScreen = () => {
           return;
         }
         
+        setNewPhoneNumber(formattedNumber);
         const changePhoneDetails = {
           userId: profile.id,
           number: number,
           countryCode: phoneInput.current?.getCallingCode(),
           formattedNumber: formattedNumber
         }
+        console.log(`change phone number details`, changePhoneDetails);
         
         Alert.alert(
           null, 
           `We will be verifying your new phone number ${formattedNumber}. is this OK, or would like to edit the number?`,
           [
             {text: 'Edit', onPress: () => console.log('Edit Pressed')},
-            {text: 'OK', onPress: async() => await verifyChangePhoneNumber(changePhoneDetails) },
+            {text: 'OK', onPress: async() => await sendChangePhoneNumberReq(changePhoneDetails) },
           ],
           { cancelable: false }
           );
@@ -81,34 +112,54 @@ const ChangePhoneNumberScreen = () => {
       <SafeAreaView style={styles.container}>
       
       <FocusAwareStatusBar barStyle="light-content" backgroundColor={colors.primary} />
-      
+
+     { !isOtpSent &&
+
       <View style={styles.body}>
-      
-      <Text style={[styles.text_footer, {
-        color: colors.dark
-      }]}>Enter your new phone number</Text>
-      <View style={styles.action2}>
-      
-      
-      <PhoneInput
-      ref={phoneInput}
-      defaultValue={value}
-      defaultCode="UG"
-      layout="first"
-      onChangeText={(text) => {
-        setValue(text);
-      }}
-      onChangeFormattedText={(text) => {
-        setPhoneNumber(text);
-      }}
-      countryPickerProps={{ withAlphaFilter: true }}
-      withShadow
-      autoFocus
-      />
-      
+        <Text style={[styles.text_footer, {
+          color: colors.dark
+        }]}>Enter your new phone number</Text>
+
+        <View style={styles.action2}>
+          <PhoneInput
+          ref={phoneInput}
+          defaultValue={value}
+          defaultCode="UG"
+          layout="first"
+          onChangeText={(text) => {
+            setValue(text);
+          }}
+          onChangeFormattedText={(text) => {
+            setPhoneNumber(text);
+          }}
+          countryPickerProps={{ withAlphaFilter: true }}
+          withShadow
+          autoFocus
+          />
       </View>
-      
       </View>
+
+      }
+
+
+     { isOtpSent &&  <View style={styles.body}>
+
+        <Text style={styles.prompt}>Enter the code we sent you</Text>
+        <Text style={styles.message}> {`Please enter the OTP sent to your phone number (${newPhoneNumber}).`}</Text>
+         
+          <OTPInputView
+              style={{ width: "80%", height: 200, alignSelf: 'center' }}
+              pinCount={4}
+              autoFocusOnLoad
+              code={otpCode}
+              codeInputFieldStyle={styles.underlineStyleBase}
+              codeInputHighlightStyle={styles.underlineStyleHighLighted}
+              onCodeFilled= {(code => {
+              setOTP(code)
+              })}
+              />
+        </View>
+      }
       
       <View style={styles.footer}>
       <TouchableOpacity 
@@ -121,6 +172,8 @@ const ChangePhoneNumberScreen = () => {
       </Text>
       </TouchableOpacity>
       </View>
+
+  
       
       </SafeAreaView>
       
@@ -233,6 +286,30 @@ const ChangePhoneNumberScreen = () => {
         fontSize: 16,
         fontWeight: 'bold',
         opacity:0.7,
+      },
+
+      underlineStyleBase: {
+        width: 70,
+        height: 70,
+        borderWidth: 1,
+        color: design.colors.dark,
+        fontSize: 20
+      },
+      
+      underlineStyleHighLighted: {
+        borderColor: "#03DAC6",
+      },
+
+      prompt: {
+        fontSize: 22,
+        paddingHorizontal: 30,
+        paddingBottom: 20,
+      },
+      
+      message: {
+        textAlign: 'center',
+        fontSize: 16,
+        paddingHorizontal: 30,
       },
       
       
