@@ -19,10 +19,7 @@ import ProfileContext from '../context/index';
 import { AuthContext } from '../context/context';
 import Toast from 'react-native-simple-toast';
 import {CURRENCY} from '@env';
-import BottomSheet, {
-  BottomSheetBackdrop,
-  BottomSheetScrollView
-} from '@gorhom/bottom-sheet';
+import BottomSheet, { BottomSheetBackdrop, BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
 import { getDeviceId, getDeviceIpAddress, getAppVersionName } from '../components/sharedHelper/AppUtils';
 import { useTheme } from '@react-navigation/native';
@@ -155,15 +152,9 @@ const HomeScreen = (props) => {
           []
           );
           
-          const renderFavouritesBackdrop = useCallback(
-            props => (
-              <BottomSheetBackdrop
-              {...props}
-              opacity={0.2}
-              />
-              ),
-              []
-              );
+            const renderFavouritesBackdrop = useCallback(
+                props => ( <BottomSheetBackdrop  {...props}  opacity={0.2} />),
+             []);
               
               const handleVehicleNoChange = (val) => {
                 setVehicleData({
@@ -732,7 +723,6 @@ const HomeScreen = (props) => {
                                       backgroundColor: '#999',
                                       marginTop: 8,
                                       marginBottom: 10,
-                                      
                                     },
                                     
                                     popupHeaderText: {

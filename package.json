@@ -9,7 +9,7 @@
     "test": "jest",
     "lint": "eslint .",
     "gaa": "cd android && ./gradlew clean && cd .. && npx react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res && cd android && ./gradlew assembleDebug",
-    "gar" : "cd android && ./gradlew assembleRelease"
+    "gar": "cd android && ./gradlew assembleRelease"
   },
   "dependencies": {
     "@expo/vector-icons": "^12.0.5",
@@ -104,6 +104,7 @@
     "react-native-progress": "^5.0.0",
     "react-native-push-notification": "^8.0.1",
     "react-native-push-notification-popup": "^1.6.0",
+    "react-native-qrcode-svg": "^6.1.2",
     "react-native-rate": "^1.2.9",
     "react-native-rave": "^2.2.5",
     "react-native-ravepay": "^2.3.2",
