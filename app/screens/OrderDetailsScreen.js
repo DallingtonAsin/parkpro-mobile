@@ -1,6 +1,7 @@
   import React, {useState, useEffect, useRef, useMemo, useCallback} from 'react';
   import {Text, SafeAreaView, Image, RefreshControl, View, ScrollView,
-     FlatList, TouchableWithoutFeedback, StyleSheet, TouchableOpacity, Pressable} from 'react-native';
+     FlatList, TouchableWithoutFeedback, StyleSheet, TouchableOpacity , ToastAndroid} from 'react-native';
+  import CameraRoll from "@react-native-community/cameraroll";
   import { AuthContext } from '../context/context';
   import styles from '../../assets/css/styles';
   import { icons } from '../../constants';
@@ -14,6 +15,7 @@
   import { COMPANY_LINE } from '@env';
   import BottomSheet, { BottomSheetBackdrop, BottomSheetScrollView } from '@gorhom/bottom-sheet';
   import QRCODE from '../components/QRcode';
+  import RNFS from "react-native-fs";
   
   
   const wait = (timeout) => {
@@ -28,6 +30,8 @@
     const innerStyles = makeStyles(colors);
 
     const receiptBottomSheetRef = useRef(0);
+    const receiptQRref = useRef();
+    
     
     const { orderNo, customerId } = route.params;
     const { fetchOrderInfo } = React.useContext(AuthContext);
@@ -83,9 +87,20 @@
       props => ( <BottomSheetBackdrop  {...props}  opacity={0.2} />),
     []);
 
-    const handleReceiptSheetChanges = useCallback((index) => {
-       //  populateFavouriteParkings();
-    }, []);
+
+   const saveQrToDisk = () => {
+       receiptQRref.toDataURL((data) => {
+       const fileName = 'receipt';
+        RNFS.writeFile(RNFS.CachesDirectoryPath+`/${fileName}.png`, data, 'base64')
+          .then((success) => {
+            return CameraRoll.saveToCameraRoll(RNFS.CachesDirectoryPath+`${fileName}.png`, 'photo')
+          })
+          .then(() => {
+            // this.setState({ busy: false, imageSaved: true  })
+            ToastAndroid.show('Saved to gallery !!', ToastAndroid.SHORT)
+          })
+      })
+   }
     
     const renderComponent = (item) => {
       return ( 
@@ -123,12 +138,8 @@
         
         <View style={innerStyles.orderInfoContainer}>
 
-        {/* <View style={{alignSelf: 'center'}}>
-          <QRCODE/>
-        </View> */}
-        
         <View style={innerStyles.orderInfo}>
-          <Text style={innerStyles.subtitle}>Names</Text>
+          <Text style={innerStyles.subtitle}>Name</Text>
           <Text style={innerStyles.info}>{item.name}</Text>
         </View>
         
@@ -198,22 +209,16 @@
               style={[innerStyles.button, innerStyles.buttonOpen]}
               onPress={() => openReceiptSheet(1) }
                  >
-              <Text style={innerStyles.textStyle}>QRcode</Text>
+                 <Text style={innerStyles.textStyle}>QRcode</Text>
              </TouchableOpacity>
 
-          <TouchableWithoutFeedback onPress={() => {callHelpLine(COMPANY_LINE)}}>
-          <Text style={innerStyles.helpCenterText}>Contact support</Text>
-          </TouchableWithoutFeedback>
-
-
-      
+            <TouchableWithoutFeedback onPress={() => {callHelpLine(COMPANY_LINE)}}>
+                <Text style={innerStyles.helpCenterText}>Contact support</Text>
+            </TouchableWithoutFeedback>
 
         </View>
 
-      
-
-       
-        
+    
         </ScrollView>
 
             <BottomSheet
@@ -222,14 +227,20 @@
             snapPoints={snapPoints}
             enablePanDownToClose={true}
             backdropComponent={renderReceiptBackdrop}
-            onChange={handleReceiptSheetChanges}
-            handleComponent={() => renderHeader("Receipt QrCode") }
+            handleComponent={() => renderHeader("Receipt QRCode") }
             >
 
             <Divider style={innerStyles.panelDivider}/>
 
             <BottomSheetScrollView contentContainerStyle={innerStyles.contentContainer}>
-              <QRCODE/>
+              <QRCODE getRef={receiptQRref}/>
+              <TouchableOpacity 
+               style={[styles.btnPrimary, { color: '#fff',
+               backgroundColor: colors.primary,
+               borderColor: colors.primary}]}
+                onPress={() => { saveQrToDisk() }}>
+               <Text style={innerStyles.save}>Save to Gallery</Text>
+              </TouchableOpacity>
             </BottomSheetScrollView>
             </BottomSheet>
 
@@ -324,6 +335,7 @@
             },
 
             contentContainer: {
+              flex:1,
               alignItems: 'center',
               backgroundColor: colors.text,
               marginTop:30
@@ -356,14 +368,17 @@
             
             footer:{
               flex:1,
+              flexDirection: 'row',
               alignItems: 'center',
-              justifyContent: 'center',
+              justifyContent: 'space-around',
               bottom: 0,
               marginTop: 25,
+              paddingRight: 20,
+              paddingLeft: 20
             },
             
             helpCenterText:{
-              fontSize:22,
+              fontSize:18,
               fontWeight:'bold',
               color:styles.colors.orange
             },
@@ -377,11 +392,12 @@
             button: {
               borderRadius: 20,
               padding: 10,
+              width: 120,
               elevation: 2
             },
 
             buttonOpen: {
-              backgroundColor: "#F194FF",
+              backgroundColor: colors.primary,
             },
 
             textStyle: {
@@ -413,8 +429,8 @@
             popupHeaderText: {
               padding:10, 
               fontSize: 19,
-              textTransform:'capitalize',
-              fontWeight:'bold'
+              fontWeight:'bold',
+              // textTransform:'capitalize'
             },
 
             panelDivider:{
@@ -422,6 +438,12 @@
               borderBottomWidth: 1,
               marginTop:20
             },
+
+            save: {
+              color: colors.text,
+              fontSize:16,
+              textTransform: 'capitalize'
+           }
             
             
           });
