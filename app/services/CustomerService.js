@@ -41,6 +41,7 @@ let CustomerService = class {
     
     uploadProfilePicture = async(data) => {
         try{
+            console.log("Update profile data", data);
             const endpoint = api.endpoint.customer.update_profile_mage;
             return await api.axios.postWithFile(endpoint, data);
         }catch(error){
@@ -139,6 +140,26 @@ let CustomerService = class {
             throw error;
         }
     }
+
+    verifyChangePhoneNumber  = async(data) => {
+        try{
+            const endpoint = api.endpoint.customer.verify_change_phone_number;
+            return await api.axios.post(endpoint, data);
+        }catch(error){
+            throw error;
+        }
+    }
+
+    changePhoneNumber  = async(data) => {
+        try{
+            const endpoint = api.endpoint.customer.change_phone_number;
+            return await api.axios.post(endpoint, data);
+        }catch(error){
+            throw error;
+        }
+    }
+
+    
 }
 
 module.exports = CustomerService;

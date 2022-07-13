@@ -1,29 +1,16 @@
 import React, {useState} from 'react';
 import { TouchableOpacity, View, FlatList, Linking, StyleSheet} from 'react-native';
 import Toast from 'react-native-simple-toast';
-import AwesomeAlert from 'react-native-awesome-alerts';
-import { Cache } from 'react-native-cache';
 import Dialog, { DialogFooter, DialogButton, DialogContent } from 'react-native-popup-dialog';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Rate, { AndroidMarket } from 'react-native-rate';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {  AirbnbRating } from 'react-native-elements';
-import {getAppVersionName} from '../components/sharedHelper/AppUtils';
+import { getAppVersionName } from '../components/sharedHelper/AppUtils';
 import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
 import { AuthContext } from '../context/context';
 import {useTheme, TouchableRipple, Drawer, Switch, Text } from 'react-native-paper';
 
 const version  = getAppVersionName();
-
-const cache = new Cache({
-  namespace: "myapp",
-  policy: {
-    maxEntries: 50000
-  },
-  backend: AsyncStorage
-});
-
-
 
 const set2 = [
   {
@@ -64,14 +51,7 @@ const set3 = [
     icon: "star",
     
   },
-  {
-    key: 11,
-    item: "Clear app cache",
-    link: "ClearCache",
-    data: "",
-    icon: "trash",
-    
-  },
+
   
 ];
 
@@ -88,39 +68,14 @@ const Settings = ({ navigation }) => {
   
   const [state, setState] = useState(initialState); 
   const [isVisible, setIsVisible] = useState(false);   
-  const [isEnabled, setIsEnabled] = useState(false);
   
   const {  toggleTheme } = React.useContext(AuthContext);
   const paperTheme = useTheme(); 
   
   const { colors } = useTheme();
   const styles = makeStyles(colors);
-  
-  
-  
-  const handlerClearAppCache = () => {
-    (async () => {
-      cache.clearAll();
-    })();
-    hideAlert();
-    Toast.show('Successfully cleared app cache');
-  };
-  
-  
-  const showAlert = () =>{
-    setState({ 
-      ...state,
-      showAlert:true,
-    });
-  };
-  
-  const hideAlert = () =>{
-    setState({ 
-      ...state,
-      showAlert:false,
-    });
-  };
-  
+  const iconSize = 20;
+
   const RateUs = () => {
     const options = {
       AppleAppID:"2193813192",
@@ -209,30 +164,7 @@ const Settings = ({ navigation }) => {
     </DialogContent>
     </Dialog>
     
-    <AwesomeAlert
-    show={state.showAlert}
-    showProgress={false}
-    title="Clear app cache"
-    progressSize={50}
-    message="Are you sure you want to clear cache?"
-    closeOnTouchOutside={true}
-    useNativeDriver={true}
-    closeOnHardwareBackPress={false}
-    showCancelButton={true}
-    showConfirmButton={true}
-    cancelText="No"
-    confirmText="Yes"
-    cancelButtonColor="#696969"
-    confirmButtonColor="#DD6B55"
-    onCancelPressed={() => {
-      hideAlert();
-    }}
-    onConfirmPressed={() => {
-      handlerClearAppCache();
-    }}
-    />
-    
-    
+
     <View style={styles.body}>
     
     <Text style={styles.title}>Information</Text>
@@ -242,10 +174,10 @@ const Settings = ({ navigation }) => {
     data={set2}
     renderItem={({ item }) =>
     <TouchableOpacity key={item.key} onPress={() =>{Navigate(item.link)}}
-    style={{ padding:15, flexDirection:'row', justifyContent:'space-between'}}>
+    style={styles.preferencesOpacity}>
      
-    <Text style={{ fontSize:17, color: colors.dark }}>
-    <FontAwesome name={item.icon} size={18} /> {item.item}
+    <Text style={styles.preferenceText}>
+    <FontAwesome name={item.icon} size={iconSize} /> {item.item}
       </Text>
     {
       (item.data)
@@ -254,39 +186,25 @@ const Settings = ({ navigation }) => {
     }
     </TouchableOpacity>}/>
     
-    
-    <Text style={styles.title}>More</Text>
-    <View style={{ borderBottomColor: '#e2e2e2', borderBottomWidth: 1, }}/>
-    
-    <FlatList
-    data={set3}
-    renderItem={({ item }) =>
-    <TouchableOpacity key={item.key} onPress={() =>{Navigate(item.link)}}
-    style={{ padding:15, flexDirection:'row', justifyContent:'space-between'}}>
-    <Text style={{ fontSize:17, color: colors.dark }}>
-    <FontAwesome name={item.icon} size={18} />  {item.item}</Text>
-    {
-      (item.data)
-      ? <Text style={{ opacity:0.4, bottom:10, color: colors.dark  }}>{item.data}</Text> 
-      : null
-    }
-    </TouchableOpacity>}/>
-    
-    
     <Drawer.Section title={
       <Text style={styles.title}>Preferences</Text>
     }>
     
-    <TouchableOpacity onPress={() =>{ Navigate("ChangePin") }} style={{ padding:15, flexDirection:'row', justifyContent:'space-between'}}>
-    <Text style={{ fontSize:17, color: colors.dark }}>
-    <FontAwesome name={'key'} size={18} />  Change Wallet PIN</Text>
+    <TouchableOpacity onPress={() => { navigation.navigate("ChangePin") }} style={styles.preferencesOpacity}>
+    <Text style={styles.preferenceText}>
+    <FontAwesome name={'key'} size={iconSize} />  Change Wallet PIN</Text>
+    </TouchableOpacity>
+
+    <TouchableOpacity onPress={() =>{ navigation.navigate("ChangePhoneNumber") }} style={styles.preferencesOpacity}>
+    <Text style={styles.preferenceText}>
+    <FontAwesome name={'phone'} size={iconSize} />  Change Phone Number</Text>
     </TouchableOpacity>
     
     
     <TouchableRipple onPress={() => {toggleTheme()}}>
     <View style={styles.preference}>
-    <Text style={{ fontSize:17, color: colors.dark }}>
-    <FontAwesome name={'refresh'} size={18} />  Change Theme</Text>
+    <Text style={styles.preferenceText}>
+    <FontAwesome name={'refresh'} size={iconSize} />  Change Theme</Text>
     <View pointerEvents="none">
     <Switch value={paperTheme.dark}/>
     </View>
@@ -294,7 +212,21 @@ const Settings = ({ navigation }) => {
     </TouchableRipple>
     </Drawer.Section>
     
+    <Text style={styles.title}>More</Text>
     
+    <FlatList
+    data={set3}
+    renderItem={({ item }) =>
+    <TouchableOpacity key={item.key} onPress={() =>{Navigate(item.link)}}
+    style={styles.preferencesOpacity}>
+    <Text style={styles.preferenceText}>
+    <FontAwesome name={item.icon} size={iconSize} />  {item.item}</Text>
+    {
+      (item.data)
+      ? <Text style={{ opacity:0.4, bottom:10, color: colors.dark  }}>{item.data}</Text> 
+      : null
+    }
+    </TouchableOpacity>}/>
     
     
     </View>
@@ -327,5 +259,17 @@ const Settings = ({ navigation }) => {
       paddingVertical: 12,
       paddingHorizontal: 16,
     },
+
+    preferencesOpacity: { 
+      padding:15,
+      flexDirection:'row',
+      justifyContent:'space-between'
+    },
+
+    preferenceText:{ 
+      fontSize:17,
+       color: colors.dark 
+    },
+
   })
   

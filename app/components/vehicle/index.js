@@ -54,7 +54,7 @@ export const AddVehicleScreen = ({isSheetVisible,
         onChangeText={handleVehicleNoChange}   
         style={styles.input}
         placeholderTextColor={design.colors.gray}
-        placeholder={"Enter vehicle number e.g UAA 231Y"}/>
+        placeholder={"Enter vehicle number e.g UAB 649L"}/>
         </View>
         
         <View style={styles.inputContainer}>

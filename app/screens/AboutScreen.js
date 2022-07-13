@@ -3,7 +3,7 @@ import { Text,Image, Button, Linking, View, FlatList, ScrollView, TouchableOpaci
 import design from '../../assets/css/styles';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {Card, Title} from 'react-native-paper';
-import CardItem from '../components/CardItem';
+import { AboutCardItem } from '../components/CardItem';
 import {icons, SIZES } from '../../constants';
 import { SocialIcon } from 'react-native-elements'
 import {APP_NAME, currency} from '@env';
@@ -58,7 +58,7 @@ const AboutScreen = (props) => {
           }}>
         
         
-        <CardItem
+        <AboutCardItem
         icon={"globe"}
         bgColor={['#fff', '#fff']}
         label="Website"
@@ -72,7 +72,7 @@ const AboutScreen = (props) => {
         onPress={() => Linking.openURL("http://www.parkproug.com")}
         />
         
-        <CardItem
+        <AboutCardItem
         icon={"facebook"}
         bgColor={['#fff', '#fff']}
         label="Facebook"
@@ -86,7 +86,7 @@ const AboutScreen = (props) => {
         onPress={() =>  Linking.openURL("http://www.facebook.com") }
         />
         
-    <CardItem
+    <AboutCardItem
     icon={"twitter"}
     bgColor={['#fff', '#fff']}
     label="Twitter"
@@ -101,7 +101,7 @@ const AboutScreen = (props) => {
     />
     
     
-    <CardItem
+    <AboutCardItem
     icon={"linkedin"}
     bgColor={['#fff', '#fff']}
     label="Linkedin"

@@ -1,5 +1,5 @@
 import React, {useState, useContext} from 'react';
-import { Text,TouchableOpacity,SafeAreaView, View, StyleSheet} from 'react-native';
+import { Text,TouchableOpacity, View, StyleSheet} from 'react-native';
 import design from '../../assets/css/styles';
 import { Avatar, Paragraph, Divider } from 'react-native-paper';
 import ProfileContext from '../context/index';
@@ -58,12 +58,14 @@ const Profile = (props) => {
   }
   
   return(
-    <SafeAreaView style={{flex: 1, backgroundColor: colors.body}}>
+    <View style={styles.container}>
     
     <FocusAwareStatusBar barStyle="light-content" 
     backgroundColor={colors.primary}/>
+    
     <View style={styles.header}>
     
+    <View style={{flex:1}}>
     { profile.image ?
       <ProfilePicture
       isPicture={true}
@@ -74,18 +76,19 @@ const Profile = (props) => {
       : <Avatar.Image size={120} style={styles.avatar} 
       source={require('../../assets/user-profile9.png')} />
     }
+    </View>
+  
+    
+    <View style={{flex: 1, marginTop:80, justifyContent: 'center', alignSelf: 'center'}}>
+    <Text style={styles.name}>{name}</Text>
+    <Text style={styles.name}>{`${profile.country_code}${profile.phone_number}`}</Text>
+    </View>
     
     </View>
     
     
     
     <View style={styles.body}>
-    
-    
-    <View style={{justifyContent: 'center', alignSelf: 'center'}}>
-    <Text style={styles.name}>{name}</Text>
-    <Text style={styles.name}>{`${profile.country_code}${profile.phone_number}`}</Text>
-    </View>
     
     <Divider style={ design.divider1 }/>
     
@@ -104,14 +107,6 @@ const Profile = (props) => {
     <Divider style={ design.divider1 }/>
     
     <View style={styles.formData}>
-    <Text style={styles.text}>PHONE NUMBER</Text>
-    <Text style={styles.userinfo}>{`${profile.country_code}${profile.phone_number}`}</Text>
-    </View>
-    
-    
-    <Divider style={ design.divider1 }/>
-    
-    <View style={styles.formData}>
     <Text style={styles.text}>EMAIL</Text>
     <Text style={styles.userinfo}>{profile.email}</Text>
     </View>
@@ -121,14 +116,15 @@ const Profile = (props) => {
     
     <View style={styles.footer}>
     <TouchableOpacity 
-   style={[design.btnPrimary, { color: '#fff',
-   backgroundColor: colors.primary,
-   borderColor: colors.primary}]}
+    style={[design.btnPrimary, { color: '#fff',
+    backgroundColor: colors.primary,
+    borderColor: colors.primary}]}
     onPress={() => props.navigation.navigate("EditProfile")}>
     <Text style={{color:'#fff', textAlign: 'center', fontSize:15}}>Edit Profile</Text>
     </TouchableOpacity>
     </View>
-    </SafeAreaView>
+    
+    </View>
     );
     
     
@@ -140,22 +136,27 @@ const Profile = (props) => {
   const makeStyles = (colors) => StyleSheet.create({
     container: {
       flex:1,
+      backgroundColor: colors.body
     },
-    scrollView: {
-      borderWidth: 0.3, 
-      borderRadius: 3,
-      borderColor: '#000',
-      paddingHorizontal:10
-    },
+    
     header:{
-      backgroundColor: colors.white,
-      height:130,
-      flex: 1,
+      flex: 2,
     },
+    
     body:{
       flex: 3,
       padding:35,
     },
+    
+    footer:{
+      flex:1,
+      // marginBottom: 30,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    
+    
     text:{
       color: colors.dark, 
       opacity:0.7,
@@ -163,10 +164,12 @@ const Profile = (props) => {
       fontWeight:'bold',
       fontSize:16,
     },
+
     userinfo: {
       opacity:0.7,
       fontSize:17,
     },
+
     avatar: {
       width: 120,
       height: 120,
@@ -174,7 +177,7 @@ const Profile = (props) => {
       borderWidth: 1,
       borderColor: "#e2e2e2",
       backgroundColor:'white',
-      marginTop:40,
+      marginTop:20,
       position: 'absolute',
       alignSelf:'center',
     },
@@ -211,13 +214,7 @@ const Profile = (props) => {
       alignItems: 'center',
     },
     
-    footer:{
-      marginBottom: 30,
-      flexDirection: 'row',
-      alignItems: 'center',
-      alignSelf: 'center',
-      justifyContent: 'center',
-    },
+    
   })
   
   
