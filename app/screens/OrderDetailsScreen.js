@@ -1,15 +1,21 @@
-  import React, {useState, useEffect} from 'react';
-  import {Text, SafeAreaView, Image, RefreshControl, View, FlatList, TouchableWithoutFeedback, StyleSheet} from 'react-native';
+  import React, {useState, useEffect, useRef, useMemo, useCallback} from 'react';
+  import {Text, SafeAreaView, Image, RefreshControl, View, ScrollView, Platform, PermissionsAndroid,
+          FlatList, TouchableWithoutFeedback, StyleSheet, TouchableOpacity, ToastAndroid} from 'react-native';
+  import CameraRoll from "@react-native-community/cameraroll";
   import { AuthContext } from '../context/context';
   import styles from '../../assets/css/styles';
   import { icons } from '../../constants';
   import {APP_NAME, currency} from '@env';
+  import {  Divider  } from 'react-native-paper';
   import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
   import { useTheme } from '@react-navigation/native';
   import AppLoader from '../components/loaders/AppLoader';
   import Toast from 'react-native-simple-toast';
   import { callHelpLine } from '../components/sharedHelper/AppUtils';
   import { COMPANY_LINE } from '@env';
+  import BottomSheet, { BottomSheetBackdrop, BottomSheetScrollView } from '@gorhom/bottom-sheet';
+  import QRCODE from '../components/QRcode';
+  import RNFS from "react-native-fs";
   
   
   const wait = (timeout) => {
@@ -21,9 +27,15 @@
     const [orderInfo, setOrderInfo] = useState([]);
     const [isLoading, setIsLoading] = React.useState(true);
     const { colors } = useTheme();
+    const innerStyles = makeStyles(colors);
+
+    const receiptBottomSheetRef = useRef(0);
+    const receiptQRref = useRef();
+    
     
     const { orderNo, customerId } = route.params;
     const { fetchOrderInfo } = React.useContext(AuthContext);
+    const snapPoints = useMemo(() => ['25%', '75%'], []);
     
     const onRefresh = React.useCallback(() => {
       setIsLoading(true);
@@ -32,6 +44,10 @@
         setIsLoading(false);
       });
     });
+
+    const openReceiptSheet = useCallback((index) => {
+      receiptBottomSheetRef.current?.snapToIndex(index);
+    }, []);
     
     const fetchOrderDetails = async(order_no, customer_id) => {
       try{
@@ -56,11 +72,59 @@
       fetchOrderDetails(orderNo, customerId);
     }, [orderNo, customerId])
     
+      const renderHeader = (title) => {
+      return(
+        <View style={innerStyles.bottomSheetHeader}>
+        <View style={innerStyles.panelHeader}>
+        <View style={innerStyles.panelHandle} />
+        <Text style={innerStyles.popupHeaderText}>{title}</Text>
+        </View>
+        </View>
+        );
+      }
+
+    const renderReceiptBackdrop = useCallback(
+      props => ( <BottomSheetBackdrop  {...props}  opacity={0.2} />),
+    []);
+
+
+   const saveQrToDisk = async() => {
+
+     if (Platform.OS === "android" && !(await hasAndroidPermission())) {
+       return;
+      }
+
+       receiptQRref.toDataURL((data) => {
+       const fileName = 'receipt';
+        RNFS.writeFile(RNFS.CachesDirectoryPath+`/${fileName}.png`, data, 'base64')
+          .then((success) => {
+            return CameraRoll.saveToCameraRoll(RNFS.CachesDirectoryPath+`${fileName}.png`, 'photo')
+          })
+          .then(() => {
+            // this.setState({ busy: false, imageSaved: true  })
+            ToastAndroid.show('Saved to gallery !!', ToastAndroid.SHORT)
+          })
+      })
+   }
+
+  const hasAndroidPermission = async() => {
+    const permission = PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE;
+  
+    const hasPermission = await PermissionsAndroid.check(permission);
+    if (hasPermission) {
+      return true;
+    }
+  
+    const status = await PermissionsAndroid.request(permission);
+    return status === 'granted';
+  }
     
     const renderComponent = (item) => {
       return ( 
-        
-        <View style={{backgroundColor: '#fff' }}>
+        <>
+        <ScrollView style={{backgroundColor: '#fff' }}>
+
+
         <View  style={{flex:1, flexDirection: 'row',
         padding:10,
         justifyContent:'space-between', right:10}}>
@@ -72,6 +136,8 @@
           height: 85,
         }}
         />
+
+
         <View>
         
         <Text style={innerStyles.headerTitle}>Order</Text>
@@ -88,9 +154,9 @@
         
         
         <View style={innerStyles.orderInfoContainer}>
-        
+
         <View style={innerStyles.orderInfo}>
-          <Text style={innerStyles.subtitle}>Names</Text>
+          <Text style={innerStyles.subtitle}>Name</Text>
           <Text style={innerStyles.info}>{item.name}</Text>
         </View>
         
@@ -155,13 +221,54 @@
         
         
         <View style={innerStyles.footer}>
-          <TouchableWithoutFeedback onPress={() => {callHelpLine(COMPANY_LINE)}}>
-          <Text style={innerStyles.helpCenterText}>Contact support</Text>
-          </TouchableWithoutFeedback>
+
+              <TouchableOpacity
+              style={[innerStyles.button, innerStyles.buttonOpen]}
+              onPress={() => openReceiptSheet(1) }
+                 >
+                 <Text style={innerStyles.textStyle}>QRcode</Text>
+             </TouchableOpacity>
+
+            <TouchableWithoutFeedback onPress={() => {callHelpLine(COMPANY_LINE)}}>
+                <Text style={innerStyles.helpCenterText}>Contact support</Text>
+            </TouchableWithoutFeedback>
+
         </View>
-        
-        </View>
-        
+
+    
+        </ScrollView>
+
+            <BottomSheet
+            ref={receiptBottomSheetRef}
+            index={-1}
+            snapPoints={snapPoints}
+            enablePanDownToClose={true}
+            backdropComponent={renderReceiptBackdrop}
+            handleComponent={() => renderHeader("Receipt QRCode") }
+            >
+
+            <Divider style={innerStyles.panelDivider}/>
+
+            <BottomSheetScrollView contentContainerStyle={innerStyles.contentContainer}>
+              <QRCODE 
+               value={JSON.stringify({
+                  name: item.name,
+                  parking: item.parking_area,
+                  bookingPeriod: item.booking_period,
+                  orderNo: item.order_no
+              })}
+              getRef={receiptQRref}/>
+              <TouchableOpacity 
+               style={[styles.btnPrimary, { color: '#fff',
+               backgroundColor: colors.primary,
+               borderColor: colors.primary}]}
+                onPress={() => { saveQrToDisk() }}>
+               <Text style={innerStyles.save}>Save to Gallery</Text>
+              </TouchableOpacity>
+            </BottomSheetScrollView>
+            </BottomSheet>
+
+        </>
         
         );
       }
@@ -209,7 +316,8 @@
           
           
           export default OrderDetailsScreen; 
-          const innerStyles = StyleSheet.create({
+
+          const makeStyles = (colors) => StyleSheet.create({
             container:{
               flex:1,
               padding:8,
@@ -249,6 +357,13 @@
               borderRadius:5,
               marginTop:20,
             },
+
+            contentContainer: {
+              flex:1,
+              alignItems: 'center',
+              backgroundColor: colors.text,
+              marginTop:30
+            },
             
             
             subtitle: {
@@ -277,14 +392,17 @@
             
             footer:{
               flex:1,
+              flexDirection: 'row',
               alignItems: 'center',
-              justifyContent: 'center',
+              justifyContent: 'space-around',
               bottom: 0,
               marginTop: 25,
+              paddingRight: 20,
+              paddingLeft: 20
             },
             
             helpCenterText:{
-              fontSize:22,
+              fontSize:18,
               fontWeight:'bold',
               color:styles.colors.orange
             },
@@ -294,6 +412,62 @@
               justifyContent: 'space-between',
               padding:10
             },
+
+            button: {
+              borderRadius: 20,
+              padding: 10,
+              width: 120,
+              elevation: 2
+            },
+
+            buttonOpen: {
+              backgroundColor: colors.primary,
+            },
+
+            textStyle: {
+              color: "white",
+              fontWeight: "bold",
+              textAlign: "center"
+            },
+
+            bottomSheetHeader: {
+              backgroundColor: '#FFFFFF',
+              shadowColor: '#333333',
+              borderTopLeftRadius: 20,
+              borderTopRightRadius: 20,
+            },
+            
+            panelHeader: {
+              alignItems: 'center',
+            },
+
+            panelHandle: {
+              width: 40,
+              height: 8,
+              borderRadius: 4,
+              backgroundColor: '#999',
+              marginTop: 8,
+              marginBottom: 10,
+            },
+
+            popupHeaderText: {
+              padding:10, 
+              fontSize: 19,
+              fontWeight:'bold',
+              // textTransform:'capitalize'
+            },
+
+            panelDivider:{
+              borderBottomColor: '#e2e2e2',
+              borderBottomWidth: 1,
+              marginTop:20
+            },
+
+            save: {
+              color: colors.text,
+              fontSize:16,
+              textTransform: 'capitalize'
+           }
             
             
           });
