@@ -348,7 +348,11 @@ const EditProfile = () => {
       </View>
       
       
-      <View style={{flexDirection: 'row', alignItems: 'center', margin:30, justifyContent: 'space-evenly'}}>
+      <View style={{
+        flexDirection: 'row',
+         alignItems: 'center',
+          margin:30,
+           justifyContent: 'space-evenly'}}>
       
       <View style={styles.uploadOptions}>
       <TouchableOpacity onPress={()=> setVisible(false) } style={[styles.icon, {borderColor:'red', backgroundColor: 'red'}]} >
@@ -419,19 +423,7 @@ const EditProfile = () => {
       onChangeText={(val) => setData({...state, last_name: val})}
       />
       </View>
-      
-      <View style={styles.form}>
-      <Text style={styles.text}>PHONE NUMBER</Text>
-      <TextInput value={`${state.country_code}${state.phone_number}`}
-      placeholder="Phone Number"
-      style={styles.input} 
-      spellCheck={false}
-      autoCorrect={false}
-      editable={false}
-      onChangeText={(val) => setData({...state, phone_number: val})}
-      />
-      </View>
-      
+ 
       <View style={styles.form}>
       <Text style={styles.text}>Email</Text>
       <TextInput 
@@ -478,16 +470,25 @@ const EditProfile = () => {
       },
       
       header:{
+        flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        flex:1,
         backgroundColor: design.colors.silver,
         flexDirection: 'row',
       },
       
       body:{
-        flex:3,
+        flex: 3,
         padding:15,
+      },
+
+      footer:{
+        flex:1,
+        // marginBottom: 30,
+        flexDirection: 'row',
+        alignItems: 'center',
+        alignSelf: 'center',
+        justifyContent: 'center',
       },
       
       text:{
@@ -570,6 +571,7 @@ const EditProfile = () => {
         height: 35,
         textAlign: 'center',
       },
+
       panelSubtitle: {
         fontSize: 14,
         color: 'gray',
@@ -639,11 +641,13 @@ const EditProfile = () => {
         marginLeft: 10,
         fontSize:15,
       },
+
       icon: {
         padding: 20,
         borderWidth: 1,
         borderRadius: 50,
       },
+      
       uploadOptions:{
         flexDirection: 'column', 
         justifyContent: 'center',
@@ -660,14 +664,6 @@ const EditProfile = () => {
         backgroundColor: design.colors.success,
         padding:10, borderRadius:50,
         borderColor:'#f4f4f4'
-      },
-      
-      footer:{
-        marginBottom: 30,
-        flexDirection: 'row',
-        alignItems: 'center',
-        alignSelf: 'center',
-        justifyContent: 'center',
       },
       
       button: {

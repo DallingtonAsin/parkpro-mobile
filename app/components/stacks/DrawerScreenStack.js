@@ -22,6 +22,10 @@ import FeedbackStack from  './FeedbackStack';
 import AppTabStack from  './AppTabStack';
 import WeatherStack from  './WeatherStack';
 import CloseByParkingStack from './CloseByParkingStack';
+import ChangePhoneNumberStack from './ChangePhoneNumberStack';
+
+
+
 import MapScreen from '../../screens/MapScreen';
 
 
@@ -54,6 +58,8 @@ const DrawerScreenStack = () => {
         <Drawer.Screen name="Feedback" component={FeedbackStack}/>
         <Drawer.Screen name="TopUp" component={TopupStack}/>
         <Drawer.Screen name="About" component={AboutStack}/>
+        <Drawer.Screen name="ChangePhoneNumber" component={ChangePhoneNumberStack}/>
+
 
         </Drawer.Navigator>
     )

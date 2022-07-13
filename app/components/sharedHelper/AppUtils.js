@@ -141,3 +141,10 @@ export const diff_hours = (dt2, dt1) => {
   return hours;
 }
 
+export const removeLeadingZeros = (number) => {
+  while(number.charAt(0) === '0') {
+      number = number.substring(1);
+  }
+  return number;
+}
+

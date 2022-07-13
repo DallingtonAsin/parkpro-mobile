@@ -17,7 +17,9 @@ let  ApiEndpoint = class{
         post_feedback: `customer/feedback`,
         post_app_details: `customer/app/details`,
         resend_otp: `customer/resend-otp`,
-        change_pin: `customer/change-pin`
+        change_pin: `customer/change-pin`,
+        verify_change_phone_number: `customer/verify-change-phone-number`,
+        change_phone_number: `customer/change-phone-number`,
     }
 
     parking = {

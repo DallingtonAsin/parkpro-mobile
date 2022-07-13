@@ -515,6 +515,22 @@ import { Image, RefreshControl,  Text, View, StatusBar, StyleSheet,
                   throw e;
                 }
               },
+
+              verifyChangePhoneNumber: async(data) => {
+                try{
+                  return await services.customer.verifyChangePhoneNumber(data);
+                }catch(e){
+                  throw e;
+                }
+              },
+
+              changePhoneNumber: async(data) => {
+                try{
+                  return await services.customer.changePhoneNumber(data);
+                }catch(e){
+                  throw e;
+                }
+              },
               
               toggleTheme: () => {
                 setIsDarkTheme(isDarkTheme => !isDarkTheme);
