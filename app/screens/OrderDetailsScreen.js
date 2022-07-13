@@ -1,6 +1,6 @@
   import React, {useState, useEffect, useRef, useMemo, useCallback} from 'react';
-  import {Text, SafeAreaView, Image, RefreshControl, View, ScrollView,
-     FlatList, TouchableWithoutFeedback, StyleSheet, TouchableOpacity , ToastAndroid} from 'react-native';
+  import {Text, SafeAreaView, Image, RefreshControl, View, ScrollView, Platform, PermissionsAndroid,
+          FlatList, TouchableWithoutFeedback, StyleSheet, TouchableOpacity, ToastAndroid} from 'react-native';
   import CameraRoll from "@react-native-community/cameraroll";
   import { AuthContext } from '../context/context';
   import styles from '../../assets/css/styles';
@@ -88,7 +88,12 @@
     []);
 
 
-   const saveQrToDisk = () => {
+   const saveQrToDisk = async() => {
+
+     if (Platform.OS === "android" && !(await hasAndroidPermission())) {
+       return;
+      }
+
        receiptQRref.toDataURL((data) => {
        const fileName = 'receipt';
         RNFS.writeFile(RNFS.CachesDirectoryPath+`/${fileName}.png`, data, 'base64')
@@ -101,6 +106,18 @@
           })
       })
    }
+
+  const hasAndroidPermission = async() => {
+    const permission = PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE;
+  
+    const hasPermission = await PermissionsAndroid.check(permission);
+    if (hasPermission) {
+      return true;
+    }
+  
+    const status = await PermissionsAndroid.request(permission);
+    return status === 'granted';
+  }
     
     const renderComponent = (item) => {
       return ( 
@@ -233,7 +250,14 @@
             <Divider style={innerStyles.panelDivider}/>
 
             <BottomSheetScrollView contentContainerStyle={innerStyles.contentContainer}>
-              <QRCODE getRef={receiptQRref}/>
+              <QRCODE 
+               value={JSON.stringify({
+                  name: item.name,
+                  parking: item.parking_area,
+                  bookingPeriod: item.booking_period,
+                  orderNo: item.order_no
+              })}
+              getRef={receiptQRref}/>
               <TouchableOpacity 
                style={[styles.btnPrimary, { color: '#fff',
                backgroundColor: colors.primary,
