@@ -65,7 +65,6 @@ const Profile = (props) => {
     
     <View style={styles.header}>
     
-    <View style={{flex:1}}>
     { profile.image ?
       <ProfilePicture
       isPicture={true}
@@ -73,18 +72,18 @@ const Profile = (props) => {
       shape='circle'
       pictureStyle={styles.avatar} 
       />
-      : <Avatar.Image size={120} style={styles.avatar} 
+      : <Avatar.Image 
+      size={120}
+       style={styles.avatar} 
       source={require('../../assets/user-profile9.png')} />
     }
+
+      <Text style={styles.name}>{name}</Text>
+      <Text style={styles.name}>{`${profile.country_code}${profile.phone_number}`}</Text>
+  
     </View>
   
     
-    <View style={{flex: 1, marginTop:80, justifyContent: 'center', alignSelf: 'center'}}>
-    <Text style={styles.name}>{name}</Text>
-    <Text style={styles.name}>{`${profile.country_code}${profile.phone_number}`}</Text>
-    </View>
-    
-    </View>
     
     
     
@@ -141,6 +140,9 @@ const Profile = (props) => {
     
     header:{
       flex: 2,
+      flexDirection: 'column',
+      alignItems: 'center',
+      marginTop:15
     },
     
     body:{
@@ -177,8 +179,6 @@ const Profile = (props) => {
       borderWidth: 1,
       borderColor: "#e2e2e2",
       backgroundColor:'white',
-      marginTop:20,
-      position: 'absolute',
       alignSelf:'center',
     },
     

@@ -8,6 +8,7 @@ import {  AirbnbRating } from 'react-native-elements';
 import { getAppVersionName } from '../components/sharedHelper/AppUtils';
 import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
 import { AuthContext } from '../context/context';
+import design from '../../assets/css/styles';
 import {useTheme, TouchableRipple, Drawer, Switch, Text } from 'react-native-paper';
 
 const version  = getAppVersionName();
@@ -56,25 +57,16 @@ const set3 = [
 ];
 
 
-
-const initialState = {
-  showAlert:false,
-  cacheSize:"",
-  IsDialogVisible:false,
-  unit:"",
-};
-
 const Settings = ({ navigation }) => {
   
-  const [state, setState] = useState(initialState); 
   const [isVisible, setIsVisible] = useState(false);   
   
-  const {  toggleTheme } = React.useContext(AuthContext);
+  const { toggleTheme } = React.useContext(AuthContext);
   const paperTheme = useTheme(); 
   
   const { colors } = useTheme();
   const styles = makeStyles(colors);
-  const iconSize = 20;
+  const iconSize = 24;
 
   const RateUs = () => {
     const options = {
@@ -175,10 +167,8 @@ const Settings = ({ navigation }) => {
     renderItem={({ item }) =>
     <TouchableOpacity key={item.key} onPress={() =>{Navigate(item.link)}}
     style={styles.preferencesOpacity}>
-     
-    <Text style={styles.preferenceText}>
-    <FontAwesome name={item.icon} size={iconSize} /> {item.item}
-      </Text>
+      <FontAwesome name={item.icon} size={iconSize} color={design.colors.gray} />
+      <Text style={styles.preferenceText}> {item.item} </Text>
     {
       (item.data)
       ? <Text style={{ opacity:0.4, bottom:10, color: colors.dark }}>{item.data}</Text> 
@@ -191,20 +181,23 @@ const Settings = ({ navigation }) => {
     }>
     
     <TouchableOpacity onPress={() => { navigation.navigate("ChangePin") }} style={styles.preferencesOpacity}>
-    <Text style={styles.preferenceText}>
-    <FontAwesome name={'key'} size={iconSize} />  Change Wallet PIN</Text>
+       <FontAwesome name={'key'} size={iconSize} color={design.colors.gray} />
+        <Text style={styles.preferenceText}> Change Wallet PIN</Text>
     </TouchableOpacity>
 
     <TouchableOpacity onPress={() =>{ navigation.navigate("ChangePhoneNumber") }} style={styles.preferencesOpacity}>
-    <Text style={styles.preferenceText}>
-    <FontAwesome name={'phone'} size={iconSize} />  Change Phone Number</Text>
+        <FontAwesome name={'phone'} size={iconSize} color={design.colors.gray}/>
+        <Text style={styles.preferenceText}>  Change Phone Number</Text>
     </TouchableOpacity>
     
     
     <TouchableRipple onPress={() => {toggleTheme()}}>
     <View style={styles.preference}>
-    <Text style={styles.preferenceText}>
-    <FontAwesome name={'refresh'} size={iconSize} />  Change Theme</Text>
+     <View style={{ flexDirection: 'row' }}>
+     <FontAwesome name={'refresh'} size={iconSize} color={design.colors.gray} />
+     <Text style={styles.preferenceText}> Change Theme</Text>
+     </View>
+
     <View pointerEvents="none">
     <Switch value={paperTheme.dark}/>
     </View>
@@ -219,8 +212,9 @@ const Settings = ({ navigation }) => {
     renderItem={({ item }) =>
     <TouchableOpacity key={item.key} onPress={() =>{Navigate(item.link)}}
     style={styles.preferencesOpacity}>
-    <Text style={styles.preferenceText}>
-    <FontAwesome name={item.icon} size={iconSize} />  {item.item}</Text>
+     <FontAwesome name={item.icon} size={iconSize}  color={design.colors.gray}/>
+     <Text style={styles.preferenceText}>
+     {item.item}</Text>
     {
       (item.data)
       ? <Text style={{ opacity:0.4, bottom:10, color: colors.dark  }}>{item.data}</Text> 
@@ -255,20 +249,20 @@ const Settings = ({ navigation }) => {
     
     preference: {
       flexDirection: 'row',
-      justifyContent: 'space-between',
       paddingVertical: 12,
       paddingHorizontal: 16,
+      justifyContent: 'space-between'
     },
 
     preferencesOpacity: { 
-      padding:15,
-      flexDirection:'row',
-      justifyContent:'space-between'
+      padding:16,
+      flexDirection:'row'
     },
 
     preferenceText:{ 
       fontSize:17,
-       color: colors.dark 
+      color: colors.dark,
+      left:15
     },
 
   })

@@ -405,7 +405,8 @@
               bottom: 0,
               marginTop: 25,
               paddingRight: 20,
-              paddingLeft: 20
+              paddingLeft: 20,
+              marginBottom:20,
             },
             
             helpCenterText:{

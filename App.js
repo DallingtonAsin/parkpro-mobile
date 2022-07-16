@@ -600,11 +600,11 @@ import { Image, RefreshControl,  Text, View, StatusBar, StyleSheet,
                   )
                 }
                 
-                if(!enabled){
-                  return (
-                    <EnableLocationScreen theme={theme} userToken={loginState.userToken}/>
-                    )
-                  }
+                // if(!enabled){
+                //   return (
+                //     <EnableLocationScreen theme={theme} userToken={loginState.userToken}/>
+                //     )
+                //   }
                   
                   return (
                     
