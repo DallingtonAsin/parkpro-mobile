@@ -30,9 +30,8 @@
     const innerStyles = makeStyles(colors);
 
     const receiptBottomSheetRef = useRef(0);
-    const receiptQRref = useRef();
-    
-    
+    const [receiptQRref, setReceiptQRref] = useState();
+
     const { orderNo, customerId } = route.params;
     const { fetchOrderInfo } = React.useContext(AuthContext);
     const snapPoints = useMemo(() => ['25%', '75%'], []);
@@ -87,24 +86,32 @@
       props => ( <BottomSheetBackdrop  {...props}  opacity={0.2} />),
     []);
 
-
-   const saveQrToDisk = async() => {
+  
+   const saveQrToDisk = async(item) => {
 
      if (Platform.OS === "android" && !(await hasAndroidPermission())) {
        return;
       }
+      if(receiptQRref){
 
        receiptQRref.toDataURL((data) => {
-       const fileName = 'receipt';
-        RNFS.writeFile(RNFS.CachesDirectoryPath+`/${fileName}.png`, data, 'base64')
+     
+       console.log(`Receipt order number is ${item.order_no}`);
+       let filePath =  RNFS.CachesDirectoryPath+`/${item.order_no}.png`;
+       console.log(`Path is ${filePath}`);
+
+        RNFS.writeFile(filePath, data, 'base64')
           .then((success) => {
-            return CameraRoll.saveToCameraRoll(RNFS.CachesDirectoryPath+`${fileName}.png`, 'photo')
+            return CameraRoll.save(filePath, 'photo')
           })
           .then(() => {
-            // this.setState({ busy: false, imageSaved: true  })
-            ToastAndroid.show('Saved to gallery !!', ToastAndroid.SHORT)
-          })
-      })
+            ToastAndroid.show('QRCode saved to gallery', ToastAndroid.LONG);
+            receiptBottomSheetRef.current?.close();
+          });
+      });
+    }else{
+      console.log(`Non-filled in receipt ref is`, receiptQRref);
+    }
    }
 
   const hasAndroidPermission = async() => {
@@ -255,14 +262,15 @@
                   name: item.name,
                   parking: item.parking_area,
                   bookingPeriod: item.booking_period,
-                  orderNo: item.order_no
+                  orderNo: item.order_no,
+                  amount: item.amount
               })}
-              getRef={receiptQRref}/>
+              getRef={(c) => setReceiptQRref(c)}/> 
               <TouchableOpacity 
                style={[styles.btnPrimary, { color: '#fff',
                backgroundColor: colors.primary,
                borderColor: colors.primary}]}
-                onPress={() => { saveQrToDisk() }}>
+                onPress={() => { saveQrToDisk(item) }}>
                <Text style={innerStyles.save}>Save to Gallery</Text>
               </TouchableOpacity>
             </BottomSheetScrollView>
@@ -290,7 +298,6 @@
           
           return (
             <>
-            
             
             <SafeAreaView style={{flex: 1, backgroundColor:'#fff'}}>
             <FocusAwareStatusBar barStyle="light-content" backgroundColor={colors.primary} />
