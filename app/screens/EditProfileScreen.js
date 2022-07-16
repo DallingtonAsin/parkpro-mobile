@@ -443,7 +443,7 @@ const EditProfile = () => {
       backgroundColor: colors.primary,
       borderColor: colors.primary}]}
       onPress={handleProfileUpdate}>
-      <Text style={{color:'#fff', textTransform:'capitalize', fontSize:15}}>
+      <Text style={design.buttonText}>
       {isLoading ? 'Updating...' : 'Save Profile' } 
       </Text>
       </TouchableOpacity>

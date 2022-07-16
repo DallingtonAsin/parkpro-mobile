@@ -560,13 +560,12 @@ export const RequestScreen = ({item, open, onClose}) => {
             disabled={is_open ? false : true}
             onPress={() => submitRequest()}
             >  
-            <Text style={styles.payText}> 
+            <Text style={design.buttonText}> 
             { isReqProcessing 
               ? <UIActivityIndicator color='#fff' size={25}/>
               : 'Submit Request' 
             }
             </Text>
-            <FontAwesome name='angle-right' size={theme.SIZES.icon*1.75} color={theme.COLORS.white} style={{marginLeft:10}} />
             </TouchableOpacity> 
             
             </ScrollView>
@@ -626,10 +625,4 @@ export const RequestScreen = ({item, open, onClose}) => {
               
             },
 
-            payText: {
-              fontWeight: '600',
-              fontSize: theme.SIZES.base * 1.5,
-              color: theme.COLORS.white,
-              textAlign: 'center',
-            },
           });

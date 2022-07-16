@@ -120,7 +120,7 @@ const Profile = (props) => {
     backgroundColor: colors.primary,
     borderColor: colors.primary}]}
     onPress={() => props.navigation.navigate("EditProfile")}>
-    <Text style={{color:'#fff', textAlign: 'center', fontSize:15}}>Edit Profile</Text>
+    <Text style={design.buttonText}>Edit Profile</Text>
     </TouchableOpacity>
     </View>
     
