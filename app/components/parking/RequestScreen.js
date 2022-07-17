@@ -471,7 +471,8 @@ export const RequestScreen = ({item, open, onClose}) => {
             
             
             <View style={{paddingVertical: 10 }}>
-            
+            { is_open &&  <Text style={{fontSize:14, textTransform:'uppercase', fontWeight: '900', color: design.colors.green}}>Open</Text>}
+            { !is_open &&  <Text style={{fontSize:14, textTransform:'uppercase', fontWeight: '900', color: design.colors.red}}>Closed</Text>}
             <View style={{marginTop:10}}>
             <Text style={{fontSize: 16, fontWeight:'bold', opacity:0.6, color:'#000', textTransform:'capitalize'}}>ORDER REQUEST INFORMATION</Text>
             </View>
@@ -560,13 +561,12 @@ export const RequestScreen = ({item, open, onClose}) => {
             disabled={is_open ? false : true}
             onPress={() => submitRequest()}
             >  
-            <Text style={styles.payText}> 
+            <Text style={design.buttonText}> 
             { isReqProcessing 
               ? <UIActivityIndicator color='#fff' size={25}/>
               : 'Submit Request' 
             }
             </Text>
-            <FontAwesome name='angle-right' size={theme.SIZES.icon*1.75} color={theme.COLORS.white} style={{marginLeft:10}} />
             </TouchableOpacity> 
             
             </ScrollView>
@@ -626,10 +626,4 @@ export const RequestScreen = ({item, open, onClose}) => {
               
             },
 
-            payText: {
-              fontWeight: '600',
-              fontSize: theme.SIZES.base * 1.5,
-              color: theme.COLORS.white,
-              textAlign: 'center',
-            },
           });
