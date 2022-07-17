@@ -1,49 +1,35 @@
 import React from 'react';
 import LinearGradient from 'react-native-linear-gradient';
-import {TouchableOpacity, Image, View, Text, StyleSheet, Pressable} from 'react-native'
+import {TouchableOpacity, Image, View, Text, StyleSheet, Dimensions} from 'react-native'
 import { COLORS, FONTS, SIZES } from '../../constants';
 import design from '../../assets/css/styles';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
-export const HomeCardItem = ({ bgColor, icon, label, tintColor, borderRadius,
-                                onPress, labelColor, XWidth, YHeight }) => {
+export const HomeCardItem = ({ icon, label, tintColor, onPress, labelColor }) => {
+
+    const windowWidth = Dimensions.get('window').width;
+    const windowHeight = Dimensions.get('window').height;
 
     return (
 
-        <TouchableOpacity
-        style={[{
-             flex: 1,
-             alignItems: 'center',
+        <TouchableOpacity style={{
+             width: windowWidth*0.30,
+             height: windowHeight*0.16,
+             borderWidth: 0.6,
+             borderColor: COLORS.gray,
+             borderRadius:10,
              justifyContent: 'center',
+             alignItems: 'center'
+             }}
+             onPress={onPress}
+             > 
 
-             
-             }]}
-        onPress={onPress}
-        activeOpacity={0.9}
-        >
-
-        <View style={[styles.shadow,  { 
-             width: XWidth ? XWidth : 120,
-             height: YHeight ? YHeight: 120,
-             borderColor:'#000',  
-             }]}> 
-
-        <LinearGradient
-        style={[{ 
-        flex:1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderRadius: borderRadius ? borderRadius : 10 }]}
-        colors={bgColor}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 0, y: 1 }}
-        >
         
            <Image
             source={icon}
             resizeMode="cover"
             style={{
-                tintColor: tintColor ? tintColor : '#fff',
+                tintColor: tintColor,
                 width:  45,
                 height: 45,
             }}
@@ -51,9 +37,6 @@ export const HomeCardItem = ({ bgColor, icon, label, tintColor, borderRadius,
 
            <Text style={{ marginTop: SIZES.base, color: labelColor ? labelColor : design.colors.primary, ...FONTS.body3, fontWeight:'normal', fontSize:15.5 }}>{label}</Text> 
 
-        </LinearGradient>
-
-        </View>
 
         </TouchableOpacity>
         )

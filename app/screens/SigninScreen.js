@@ -19,7 +19,7 @@ import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getDeviceId, getDeviceIpAddress, getAppVersionName, storeAccessToken, removeLeadingZeros } from '../components/sharedHelper/AppUtils';
 import AppLoader from '../components/loaders/AppLoader';
-import { COLORS, SHADOWS, SIZES, FONTS, apiKeys } from '../constants';
+import { apiKeys } from '../constants';
 
 
 

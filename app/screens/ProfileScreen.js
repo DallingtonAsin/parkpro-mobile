@@ -83,10 +83,7 @@ const Profile = (props) => {
   
     </View>
   
-    
-    
-    
-    
+  
     <View style={styles.body}>
     
     <Divider style={ design.divider1 }/>

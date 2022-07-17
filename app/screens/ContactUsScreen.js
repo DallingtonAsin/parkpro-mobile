@@ -42,7 +42,7 @@ import { useTheme } from '@react-navigation/native';
       backgroundColor={colors.primary}
       />
       <View style={styles.top}>
-          <Icon name={'question-circle'} size={75} color={design.colors.white}/>
+          <Icon name={'question-circle'} size={65} color={design.colors.white}/>
       </View>
       <View style={styles.body}>
           <Text style={{fontSize: 16, color: '#000', textAlign: 'center', paddingTop:5, paddingBottom:15,

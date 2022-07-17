@@ -8,7 +8,7 @@ import { Text,
   StyleSheet} from 'react-native';
   import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
   import design from '../../assets/css/styles';
-  import { TextInput as RNTextInput, Card, Title, Paragraph } from 'react-native-paper';
+  import { TextInput as RNTextInput, Title } from 'react-native-paper';
   import PushNotification, {Importance} from "react-native-push-notification";
   import { AuthContext } from '../context/context';
   import ProfileContext from '../context/index';
@@ -17,7 +17,7 @@ import { Text,
   import { useTheme  } from 'react-native-paper';
   import AppLoader from '../components/loaders/AppLoader';
   import Toast from 'react-native-simple-toast';
-  
+  import { numberWithCommas} from '../components/sharedHelper/AppUtils';
   // import ReactDOM from "react-dom";
   
   
@@ -122,7 +122,7 @@ import { Text,
               setIsLoading(false);
               
             }else{
-              Toast.show("Enter amount greater than "+min_recharge_amount+" and less than "+max_recharge_amount+"  to top up your account.")
+              Toast.show("Enter amount greater than "+numberWithCommas(min_recharge_amount)+" and less than "+numberWithCommas(max_recharge_amount)+"  to top up your account.")
             }
             
           } else {
@@ -229,15 +229,7 @@ import { Text,
       
       <ScrollView  style={styles.contentContainer}>
       
-      <Card style={{ margin: 15, padding:30, borderWidth:1, borderRadius: 10, borderColor:'#e2e2e2',
-      JustifyContent: 'center', backgroundColor: colors.primary, alignItems:'center' }}>
-      <Card.Content>
-      
-      <Text style={{color:'#fff', opacity:0.7, textAlign: 'center', fontSize:22}}>Wallet Balance</Text>
-      <Paragraph style={{color:'#fff', opacity:0.9, fontWeight:'bold', fontSize:19,padding:10, textAlign: 'center'}}>UGX.<Text>{profile.account_balance}</Text></Paragraph>
-      </Card.Content>
-      </Card>
-      
+  
       {state.hasRecharged ?
         <Text style={{ color: design.colors.green, marginLeft: 18 }}>{state.rechargeResponse}</Text>
         : null}
@@ -248,38 +240,38 @@ import { Text,
           
           
           <View style={{ margin: 20 }}>
-          <Text style={{ fontSize: 15, opacity: 0.7, fontWeight:'bold'  }}>Enter amount </Text>
-          <RNTextInput
-          mode={'outlined'}
-          placeholder="Eg. 10,000"
-          value={state.rechargeAmount}
-          keyboardType='numeric'
-          label="Topup amount"
-          selectionColor={colors.primary}
-          underlineColor={colors.primary}
-          outlineColor={colors.primary}
-          activeUnderlineColor={colors.primary}
-          activeOutlineColor={colors.primary}
-          onChangeText={(text) => { onChangeAmount(text) }}
-          style={{backgroundColor: colors.body, color: colors.primary }}
-          theme={{ colors: { text: design.colors.dark } }}
-          />
-          <Text style={{ opacity: 0.5, color: state.warningColor, fontSize:15 }}>Min: {min_recharge_amount} and Max: {max_recharge_amount}</Text>
+              <Text style={{ fontSize: 15, opacity: 0.7, fontWeight:'bold'  }}>Enter amount </Text>
+              <RNTextInput
+              mode={'outlined'}
+              placeholder="Eg. 10,000"
+              value={state.rechargeAmount}
+              keyboardType='numeric'
+              label="Topup amount"
+              selectionColor={colors.primary}
+              underlineColor={colors.primary}
+              outlineColor={colors.primary}
+              activeUnderlineColor={colors.primary}
+              activeOutlineColor={colors.primary}
+              onChangeText={(text) => { onChangeAmount(text) }}
+              style={{backgroundColor: colors.body, color: colors.primary }}
+              theme={{ colors: { text: design.colors.dark } }}
+              />
+              <Text style={{ opacity: 0.5, color: state.warningColor, fontSize:15 }}>Min: {numberWithCommas(min_recharge_amount)} and Max: {numberWithCommas(max_recharge_amount)}</Text>
           </View>
           
           <Title style={{ fontSize: 15, opacity: 0.7, color: '#000', margin:15 }}>Mobile Money Number </Title>
           
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between', margin: 15 }} >
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', margin: 20 }} >
           
-          <TouchableOpacity>
-          <Icon name="phone" style={design.helpIcon} />
-          </TouchableOpacity>
-          
-          
+        
           <TouchableOpacity>    
           {
-            !state.editMode ? <Text style={{ fontSize: 18 }}>{state.country_code}{state.phone_number}</Text>
-            : <View style={{flexDirection: 'row'}}><TextInput mode={'outlined'}
+            !state.editMode ?
+             <Text style={{ fontSize: 18 }}>{state.country_code}{state.phone_number}</Text>
+            : <View style={{flexDirection: 'row'}}>
+              <Text>{state.country_code}</Text>
+              <TextInput 
+            // mode={'outlined'}
             placeholder="Your phone number"
             value={state.phone_number} 
             keyboardType='numeric'
@@ -309,7 +301,7 @@ import { Text,
           onPress={RechargeUserAccount}
           disabled={false}>
           <Text style={styles.paymentButtonText}> 
-          {isLoading ? 'Loading...' : 'CONFIRM TOP UP' }
+          {isLoading ? 'Loading...' : 'CONFIRM TOPUP' }
           </Text>
           </TouchableOpacity>
           
@@ -337,10 +329,6 @@ import { Text,
           },
           contentContainer:{
             flex:1,
-            borderWidth:1,
-            borderColor: colors.primary,
-            borderRadius:5,
-            margin:8,
           },
           TopupBtn: {
             alignSelf:'center' , 
@@ -356,7 +344,7 @@ import { Text,
           },
           
           bottom:{
-            marginBottom: 30,
+            // marginBottom: 30,
             flexDirection: 'row',
             alignItems: 'center',
             alignSelf: 'center',
@@ -366,20 +354,30 @@ import { Text,
           paymentButtonText: {
             color: design.colors.white,
             textTransform: 'uppercase',
-            fontWeight: '900'
+            fontWeight: 'bold'
           },
           
-          
           textInput: {
-            // fontSize: 16,
             borderBottomWidth: 1,
             backgroundColor: design.colors.white,
             fontWeight: 'normal',
             borderRadius:30,
             borderWidth:1,
           },
+
           inputBox: {
             borderBottomWidth: 1,
             borderBottomColor: 'gray',
+          },
+
+          card: {
+            margin: 15,
+            padding:30,
+            borderWidth:1,
+            borderRadius: 10,
+            borderColor:'#e2e2e2',
+            justifyContent: 'center',
+            backgroundColor: colors.primary,
+            alignItems:'center'
           }
         })
