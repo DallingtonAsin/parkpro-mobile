@@ -170,21 +170,18 @@ const FeedbackScreen = () => {
     value={state.description}
     onChangeText={(text) => {setState({...state, description: text}) }}
     />
-    
-    <TouchableOpacity
-    style={[styles.btnPrimary, css.footer, { 
-      backgroundColor: colors.primary,
-      borderColor: colors.primary
-    }]}
-    onPress={() => { sendFeedback() }} >
-    <Text style = {{ color: colors.text, fontWeight: 'bold', fontSize:18 }}>
-    {isLoading ? 'Sending...': 'Send' }
-    </Text>
-    </TouchableOpacity>
-    
-    </View>
-    
-    
+</View>
+
+     <View style={css.footer}>
+         <TouchableOpacity 
+            style={[styles.btnPrimary, {
+            backgroundColor: colors.primary,
+            borderColor: colors.primary}]}
+            onPress={() => { sendFeedback() }}
+         >
+         <Text style = {{ color: colors.text, fontWeight: 'bold', textTransform: 'uppercase', fontSize:16 }}>{isLoading ? 'Sending...': 'Send' }</Text>
+         </TouchableOpacity>
+      </View> 
     
     </View>
     
@@ -225,21 +222,7 @@ const FeedbackScreen = () => {
       justifyContent: 'center'
     },
     
-    submit: {
-      color: '#fff',
-      borderRadius:5,
-      padding:15,
-      backgroundColor: colors.primary,
-      borderColor: colors.primary,
-      position: 'absolute',
-      bottom: 0,
-      width: '90%',
-      justifyContent: 'center',
-      alignItems: 'center',
-      fontWeight: 'bold',
-      marginBottom: 30,
-    },
-    
+  
     btnText: {
       textTransform: 'uppercase',
       color: colors.white,
