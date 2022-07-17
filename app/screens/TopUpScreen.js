@@ -142,6 +142,7 @@ import { Text,
     
     
     const onChangeAmount = (val) => {
+      let num = numberWithCommas(val);
       setData({
         ...state,
         rechargeAmount: val

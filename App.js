@@ -602,9 +602,9 @@ import { Image, RefreshControl,  Text, View, StatusBar, StyleSheet,
                 
                 if(!enabled){
                   return (
-                    <EnableLocationScreen theme={theme} userToken={loginState.userToken}/>
-                    )
-                  }
+                        <EnableLocationScreen theme={theme} userToken={loginState.userToken}/>
+                        )
+                }
                   
                   return (
                     
@@ -633,6 +633,7 @@ import { Image, RefreshControl,  Text, View, StatusBar, StyleSheet,
                     container: {
                       flex: 1, 
                     },
+                    
                     scrollView: {
                       flex: 1, 
                       backgroundColor: '#fff',
