@@ -471,7 +471,8 @@ export const RequestScreen = ({item, open, onClose}) => {
             
             
             <View style={{paddingVertical: 10 }}>
-            
+            { is_open &&  <Text style={{fontSize:14, textTransform:'uppercase', fontWeight: '900', color: design.colors.green}}>Open</Text>}
+            { !is_open &&  <Text style={{fontSize:14, textTransform:'uppercase', fontWeight: '900', color: design.colors.red}}>Closed</Text>}
             <View style={{marginTop:10}}>
             <Text style={{fontSize: 16, fontWeight:'bold', opacity:0.6, color:'#000', textTransform:'capitalize'}}>ORDER REQUEST INFORMATION</Text>
             </View>
