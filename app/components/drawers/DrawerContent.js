@@ -162,16 +162,20 @@ const CustomDrawer = (props) => {
       <Icon name="info-circle" size={iconSize} style={styles.drawerIcon} color={colors.drawerText}/>
       <Text style={[styles.drawerText, {color: colors.drawerText}]}>About us</Text>
       </TouchableOpacity>
-      
 
-    <TouchableOpacity style={styles.drawerItem} onPress={ () => {
+      <TouchableOpacity style={styles.drawerItem} 
+      onPress={() => props.navigation.navigate("Feedback")}>
+      <Icon name="comments" size={iconSize} style={styles.drawerIcon} color={colors.drawerText}/>
+      <Text style={[styles.drawerText, {color: colors.drawerText}]}>Send Feedback</Text>
+      </TouchableOpacity>
+      
+      <View style={styles.divider}></View>
+
+      <TouchableOpacity style={styles.drawerItem} onPress={ () => {
       props.navigation.navigate('Settings'); }}>
       <FontAwesome name="cog" size={iconSize*1.2} style={styles.drawerIcon} color={colors.drawerText}/>
       <Text style={[styles.drawerText, {color: colors.drawerText}]}>Settings</Text>
       </TouchableOpacity>
-
- 
-      <View style={styles.divider}></View>
       
     
       </View>
