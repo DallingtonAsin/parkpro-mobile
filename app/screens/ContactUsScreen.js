@@ -25,11 +25,11 @@ import { useTheme } from '@react-navigation/native';
     const CardComponent = ({info}) => (
       <TouchableOpacity  style={{ backgroundColor:'#ffffff', borderWidth:1, borderColor:'#e2e2e2',margin:5, borderRadius:6 }} onPress={info.method}>
       <View style = { design.helpContainer} >
-      <Icon name={info.iconName} style={[design.helpIcon, {color: colors.icon, borderColor: colors.icon}]} size={20}/>
-      <View style={{flexDirection: 'column', marginLeft:15}}>
-      <Text style={styles.channel}>{info.name}</Text>
-      <Text style={{fontSize:16}}>{info.text}</Text>
-      </View>
+        <Icon name={info.iconName} style={[design.helpIcon, {color: colors.icon, borderColor: colors.icon}]} size={20}/>
+        <View style={{flexDirection: 'column', marginLeft:15}}>
+          <Text style={styles.channel}>{info.name}</Text>
+          <Text style={{fontSize:16}}>{info.text}</Text>
+        </View>
       </View>
       </TouchableOpacity>
       );
@@ -42,17 +42,17 @@ import { useTheme } from '@react-navigation/native';
       backgroundColor={colors.primary}
       />
       <View style={styles.top}>
-      <Icon name={'question-circle'} size={75} color={design.colors.white}/>
+          <Icon name={'question-circle'} size={65} color={design.colors.white}/>
       </View>
       <View style={styles.body}>
-      <Text style={{fontSize: 16, color: '#000', textAlign: 'center', paddingTop:5, paddingBottom:15,
-        }}>Kindly contact us for any kind of assistance.</Text>
-      <FlatList
-      showsVerticalScrollIndicator={false}
-      showsHorizontalScrollIndicator={false}
-      data={communicationChannels}
-      renderItem={({item}) => <CardComponent info={item} />}
-      />
+          <Text style={{fontSize: 16, color: '#000', textAlign: 'center', paddingTop:5, paddingBottom:15,
+            }}>Kindly contact us for any kind of assistance.</Text>
+          <FlatList
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
+          data={communicationChannels}
+          renderItem={({item}) => <CardComponent info={item} />}
+          />
       </View>
       </View>
     
@@ -67,6 +67,7 @@ import { useTheme } from '@react-navigation/native';
     container: {
       flex: 1,
       backgroundColor: colors.primary,
+      marginBottom:30
     },
     
     top:{
@@ -83,6 +84,7 @@ import { useTheme } from '@react-navigation/native';
       borderTopRightRadius: 40,
       padding:30,
       backgroundColor: design.colors.white,
+      
     },
 
     card: {

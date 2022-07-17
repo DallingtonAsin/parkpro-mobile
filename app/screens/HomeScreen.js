@@ -473,7 +473,7 @@ const HomeScreen = (props) => {
                               }
                               
                               return (
-                                <SafeAreaView style={{flex: 1}}>
+                                <>
                                 
                                 <FocusAwareStatusBar barStyle="light-content"
                                 backgroundColor={colors.primary} />
@@ -500,47 +500,44 @@ const HomeScreen = (props) => {
                                 
                                   <View style={styles.container}>
                                 
-                                    <View style={styles.header}>
-                                      <Text style={styles.mywallet}>My Wallet</Text>
-                                       <Text style={styles.balanceText}>{CURRENCY} {profile.account_balance }</Text>
-                                    </View>
+                                     <View style={styles.header}>
+                                         <Text style={styles.mywallet}>My Wallet</Text>
+                                         <Text style={styles.balanceText}>{CURRENCY} {profile.account_balance }</Text>
+                                     </View>
                                   
                                   
                                   <View style={styles.body}>
-                                    
-                                 
                                     <Text style={styles.bodyHeaderText}>Quick Actions</Text>
-                                   
                                    
                                     <View style={styles.cardRow}>
                                     
-                                    <HomeCardItem
-                                    icon={icons.request}
-                                    bgColor={['#fff', '#fff']}
-                                    label="Parking"
-                                    tintColor={colors.icon}
-                                    borderRadius={5}
-                                    onPress={() => props.navigation.navigate("ParkingAreas") }
-                                    />
+                                      <HomeCardItem
+                                      icon={icons.request}
+                                      bgColor={['#fff', '#fff']}
+                                      label="Parking"
+                                      tintColor={colors.icon}
+                                      borderRadius={5}
+                                      onPress={() => props.navigation.navigate("ParkingAreas") }
+                                      />
                                     
-                                    <HomeCardItem
-                                    icon={icons.myparkings}
-                                    bgColor={['#fff', '#fff']}
-                                    label="Favourites"
-                                    borderRadius={5}
-                                    tintColor={colors.icon}
-                                    onPress={() => openFavouritesSheet(1)}
-                                    />
+                                      <HomeCardItem
+                                      icon={icons.myparkings}
+                                      bgColor={['#fff', '#fff']}
+                                      label="Favourites"
+                                      borderRadius={5}
+                                      tintColor={colors.icon}
+                                      onPress={() => openFavouritesSheet(1)}
+                                      />
                                     
                                     
-                                    <HomeCardItem
-                                    icon={icons.uber}
-                                    bgColor={['#fff', '#fff']}
-                                    label="My Vehicles"
-                                    borderRadius={5}
-                                    tintColor={colors.icon}
-                                    onPress={() => openVehiclesSheet(1)}
-                                    />
+                                      <HomeCardItem
+                                      icon={icons.uber}
+                                      bgColor={['#fff', '#fff']}
+                                      label="My Vehicles"
+                                      borderRadius={5}
+                                      tintColor={colors.icon}
+                                      onPress={() => openVehiclesSheet(1)}
+                                      />
                                     
                                     
                                     </View>
@@ -645,7 +642,7 @@ const HomeScreen = (props) => {
                                     </BottomSheet>
                                     
                                     </View>
-                                    </SafeAreaView>
+                                    </>
                                     );
                                   };
                                   
@@ -669,14 +666,15 @@ const HomeScreen = (props) => {
                                         flex: 3,
                                         backgroundColor:design.colors.white, 
                                         borderTopLeftRadius:25,
-                                        borderTopRightRadius:25,
-                                        padding: 8,
+                                        borderTopRightRadius:25
                                      },
 
                                     cardRow: {
                                       flexDirection: 'row',
+                                      justifyContent: 'space-between',
                                       marginTop: SIZES.radius, 
-                                      // paddingHorizontal: SIZES.base 
+                                      marginLeft:10,
+                                      marginRight:10
                                      },
                                     
                                     contentContainer: {

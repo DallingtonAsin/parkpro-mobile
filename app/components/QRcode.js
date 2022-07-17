@@ -1,7 +1,6 @@
 import React from 'react';
 import QRCode from 'react-native-qrcode-svg';
 
-
 const QRCODE = ({value, getRef}) => {
     return(
         <QRCode
@@ -14,5 +13,5 @@ const QRCODE = ({value, getRef}) => {
         )
     }
     
-    export default QRCODE
+export default QRCODE
     

@@ -333,8 +333,8 @@ const EditProfile = () => {
       
       <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
       <View>
-      <Text style={styles.panelTitle}>Profile Photo</Text>
-      <Text style={styles.panelSubtitle}>Upload Profile Picture</Text>
+      <Text style={styles.panelTitle}>Profile Picture</Text>
+      <Text style={styles.panelSubtitle}>Change profile photo</Text>
       </View>
       
       {
@@ -382,21 +382,21 @@ const EditProfile = () => {
       
       
       <View style={styles.header}>
-      {
-        !isUpdatingImage ? 
-        state.image ?
-        <Avatar.Image size={120} style={styles.avatar} 
-        source={{uri: state.image }} />
-        : <Avatar.Image size={120} style={styles.avatar} 
-        source={require('../../assets/user-profile9.png')} />
-        : 
-        <View style={styles.avatar1}>
-        <UIActivityIndicator color='black' size={27}/>
-        </View>
-      } 
-      <TouchableOpacity onPress={toggleBottomNavigationView} style={styles.camera}>
-      <Icon name="camera" color={design.colors.white}  size={18}/>
-      </TouchableOpacity>    
+          {
+            !isUpdatingImage ? 
+            state.image ?
+            <Avatar.Image size={120} style={styles.avatar} 
+            source={{uri: state.image }} />
+            : <Avatar.Image size={120} style={styles.avatar} 
+            source={require('../../assets/user-profile9.png')} />
+            : 
+            <View style={styles.avatar1}>
+            <UIActivityIndicator color='black' size={27}/>
+            </View>
+          } 
+          <TouchableOpacity onPress={toggleBottomNavigationView} style={styles.camera}>
+          <Icon name="camera" color={design.colors.white}  size={18}/>
+          </TouchableOpacity>    
       </View>
       
       
@@ -443,7 +443,7 @@ const EditProfile = () => {
       backgroundColor: colors.primary,
       borderColor: colors.primary}]}
       onPress={handleProfileUpdate}>
-      <Text style={{color:'#fff', textTransform:'capitalize', fontSize:15}}>
+      <Text style={design.buttonText}>
       {isLoading ? 'Updating...' : 'Save Profile' } 
       </Text>
       </TouchableOpacity>
@@ -470,10 +470,10 @@ const EditProfile = () => {
       },
       
       header:{
-        flex: 1,
+        flex: 2,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: design.colors.silver,
+        backgroundColor: design.colors.white,
         flexDirection: 'row',
       },
       
@@ -498,6 +498,7 @@ const EditProfile = () => {
         textTransform:'capitalize',
         fontSize:16,
       },
+
       avatar: {
         width: 120,
         height: 120,
@@ -505,8 +506,6 @@ const EditProfile = () => {
         borderWidth: 1,
         borderColor: "#e2e2e2",
         backgroundColor:'white',
-        color: 'red',
-        marginTop:90,
         position: 'absolute',
       },
       

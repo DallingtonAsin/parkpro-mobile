@@ -797,6 +797,13 @@ export default {
     borderRadius:30,
     borderWidth:1,
   },
+
+  buttonText: {
+   color:'#fff',
+   fontSize:16,
+   textTransform:'capitalize',
+   fontWeight: 'bold'
+  }
   
  
   

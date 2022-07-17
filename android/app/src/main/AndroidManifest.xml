@@ -28,6 +28,7 @@
       android:roundIcon="@mipmap/ic_launcher_round"
       android:allowBackup="false"
       android:usesCleartextTraffic="true"
+      android:requestLegacyExternalStorage="true"
       android:theme="@style/AppTheme">
       <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyCi37U2RYVZidLevjqPPyHZaAZLV9JODDg"/>
         <!-- Change the value to true to enable pop-up for in foreground on receiving remote notifications (for prevent duplicating while showing local notifications set this to false) -->
