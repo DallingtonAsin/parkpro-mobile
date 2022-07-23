@@ -273,6 +273,7 @@ import { Text,
             setValue(text);
           }}
           countryPickerProps={{ withAlphaFilter: true }}
+          containerStyle={{width: '100%'}}
           withShadow
           autoFocus
           />
