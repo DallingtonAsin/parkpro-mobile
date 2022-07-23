@@ -162,7 +162,7 @@ const OtpInputScreen = ({ route, navigation }) => {
     <Text style={styles.continueText}> 
     { isLoading 
     ? <Text>Loading...</Text> 
-    : <Text style={{ textTransform: 'uppercase', fontWeight: 'bold'}}>Verify</Text> } 
+    : <Text style={{ textTransform: 'capitalize', fontWeight: 'bold'}}>Verify</Text> } 
     </Text>
     </TouchableOpacity>
     </SafeAreaView>
@@ -257,7 +257,7 @@ const OtpInputScreen = ({ route, navigation }) => {
     
     continueText: {
       color: design.colors.white,
-      fontSize: 18,
+      fontSize: 20,
       textAlign: 'center',
       marginLeft:10,
     },

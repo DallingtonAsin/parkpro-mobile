@@ -191,18 +191,20 @@ const Settings = ({ navigation }) => {
     </TouchableOpacity>
     
     
-    <TouchableRipple onPress={() => {toggleTheme()}}>
-    <View style={styles.preference}>
-     <View style={{ flexDirection: 'row' }}>
-     <FontAwesome name={'refresh'} size={iconSize} color={design.colors.gray} />
-     <Text style={styles.preferenceText}> Change Theme</Text>
-     </View>
+    {/* <TouchableRipple onPress={() => {toggleTheme()}}>
+       <View style={styles.preference}>
+         <View style={{ flexDirection: 'row' }}>
+           <FontAwesome name={'refresh'} size={iconSize} color={design.colors.gray} />
+           <Text style={styles.preferenceText}> Change Theme</Text>
+         </View>
 
-    <View pointerEvents="none">
-    <Switch value={paperTheme.dark}/>
-    </View>
-    </View>
-    </TouchableRipple>
+         <View pointerEvents="none">
+           <Switch value={paperTheme.dark}/>
+         </View>
+      </View>
+    </TouchableRipple> */}
+
+
     </Drawer.Section>
     
     <Text style={styles.title}>More</Text>
