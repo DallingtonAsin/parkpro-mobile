@@ -15,8 +15,8 @@ import ProfileContext from '../../context/index';
 import { color } from 'react-native-reanimated';
 
 const url = "https://parkproug.com/";
-const title = "Check this cool app "+APP_NAME+"";
-const message = "Hey, I found this cool app "+APP_NAME+" so please check it out.";
+const title = "Download this cool app called "+APP_NAME+"";
+const message = "Download "+APP_NAME+" using this link";
 
 const options = {
   title,
