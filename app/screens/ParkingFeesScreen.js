@@ -13,7 +13,7 @@ import AppLoader from '../components/loaders/AppLoader';
 import { assets } from '../constants';
 import { CircleButton } from '../components';
 import { RequestScreen } from '../components';
-
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 const dbParkingHelper = require("../database/favouriteParkings");
 
@@ -231,7 +231,8 @@ const ParkingFeesScreen = ({ route }) => {
                             
                             <Card.Content>
                             <Title style={{color: colors.dark }}>{name}</Title>
-                            <Text style={{color: colors.dark, fontSize:14 }}>{address} </Text>
+                            <Text style={{color: colors.dark, fontSize:15 }}>
+                            <FontAwesome name="map-marker" size={18} color={design.colors.warning}/> {address}</Text>
                             <FlatList
                             data={fees}
                             renderItem={({item}) => <CustomDataTable item={item}/>}

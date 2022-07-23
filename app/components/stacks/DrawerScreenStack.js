@@ -47,10 +47,10 @@ const DrawerScreenStack = () => {
         <Drawer.Screen name="ParkingFees" component={ParkingFeesStack}/>
 
         <Drawer.Screen name="Weather" component={WeatherStack}/>
-        <Drawer.Screen name="Map" options ={{ drawerLabel: 'Map' }} component={MapScreen}/>
-        <Drawer.Screen name="Help" options ={{ drawerLabel:'Help' }} component={HelpStack}/>
-        <Drawer.Screen name="Notifications" options ={{ drawerLabel: 'Notification' }} component={NotificationStack}/>
-        <Drawer.Screen name="Settings" options ={{ drawerLabel: 'Settings' }} component={SettingsStack}/>
+        <Drawer.Screen name="Map" component={MapScreen} options ={{ drawerLabel: 'Map' }}/>
+        <Drawer.Screen name="Help" component={HelpStack} options={{ drawerLabel:'Help' }}/>
+        <Drawer.Screen name="Notifications" component={NotificationStack} options ={{ drawerLabel: 'Notification' }}/>
+        <Drawer.Screen name="Settings" component={SettingsStack} options ={{ drawerLabel: 'Settings' }}/>
         <Drawer.Screen name="ChangePin" component={ChangePinStack}/>
 
         <Drawer.Screen name="Orders" component={OrdersStack}/>

@@ -14,20 +14,20 @@ import { Image, RefreshControl,  Text, View, StatusBar, StyleSheet,
   import SplashScreen from 'react-native-splash-screen'
   import {  icons} from './constants';
   import GlobalFont from 'react-native-global-font';
-  const services = require("./app/services");
-  import AppLoaderAnimation from './app/components/loaders/AppLoaderAnimation';
   import { customDefaultTheme,  customDarkTheme} from './assets/themes';
   import messaging from '@react-native-firebase/messaging';
-  import auth from '@react-native-firebase/auth';
-  import firestore from '@react-native-firebase/firestore';
   import PushNotification, { Importance } from "react-native-push-notification";
   import Toast from 'react-native-simple-toast';
   import { useIsMounted } from './app/components/common/isMounted';
   import LocationEnabler from 'react-native-location-enabler';
-  import { navigationRef } from './app/components/navigators/RootNavigation';
   import design from './assets/css/styles';
-  import { COLORS, SHADOWS, SIZES, FONTS, apiKeys } from './app/constants';
-  
+  import { apiKeys } from './app/constants';
+  import { UIActivityIndicator } from 'react-native-indicators';
+  const services = require("./app/services");
+  import auth from '@react-native-firebase/auth';
+  import firestore from '@react-native-firebase/firestore';
+  import AppLoaderAnimation from './app/components/loaders/AppLoaderAnimation';
+
   
   const {
     PRIORITIES: { HIGH_ACCURACY },
@@ -65,11 +65,11 @@ import { Image, RefreshControl,  Text, View, StatusBar, StyleSheet,
   const listenForPushNotification = () => {
     
     PushNotification.channelBlocked(channel_id, function (blocked) {
-      console.log(blocked); // true/false
+      // console.log(blocked);
     });
     
     PushNotification.checkPermissions((permissions) => {
-      console.log("Permissions", permissions);
+      // console.log("Permissions", permissions);
     });
     
     const subscribe = messaging().onMessage(async remoteMessage => {
@@ -88,7 +88,7 @@ import { Image, RefreshControl,  Text, View, StatusBar, StyleSheet,
     authStatus === messaging.AuthorizationStatus.PROVISIONAL;
     
     if (enabled) {
-      console.log('Authorization status:', authStatus);
+      // console.log('Authorization status:', authStatus);
     }
   }
   
@@ -590,7 +590,11 @@ import { Image, RefreshControl,  Text, View, StatusBar, StyleSheet,
             
             if(loginState.isLoading) {
               return (
-                <AppLoaderAnimation/>
+                // <AppLoaderAnimation/>
+                <>
+                  <StatusBar barStyle="light-content" backgroundColor={theme.colors.primary} />
+                  <UIActivityIndicator color={theme.colors.primary} size={60}/>
+                </>
                 )
               }
               
@@ -602,9 +606,9 @@ import { Image, RefreshControl,  Text, View, StatusBar, StyleSheet,
                 
                 if(!enabled){
                   return (
-                    <EnableLocationScreen theme={theme} userToken={loginState.userToken}/>
-                    )
-                  }
+                        <EnableLocationScreen theme={theme} userToken={loginState.userToken}/>
+                        )
+                }
                   
                   return (
                     
@@ -633,6 +637,7 @@ import { Image, RefreshControl,  Text, View, StatusBar, StyleSheet,
                     container: {
                       flex: 1, 
                     },
+                    
                     scrollView: {
                       flex: 1, 
                       backgroundColor: '#fff',
@@ -670,4 +675,5 @@ import { Image, RefreshControl,  Text, View, StatusBar, StyleSheet,
                       flex: 1,
                       backgroundColor: design.colors.white,
                     }
+
                   });

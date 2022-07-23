@@ -1,4 +1,4 @@
-import React, {useEffect, useState,useContext } from 'react';
+import React, {useEffect, useState,useContext, useRef } from 'react';
 import { Text,
   TextInput, 
   View, 
@@ -18,7 +18,7 @@ import { Text,
   import AppLoader from '../components/loaders/AppLoader';
   import Toast from 'react-native-simple-toast';
   import { numberWithCommas} from '../components/sharedHelper/AppUtils';
-  // import ReactDOM from "react-dom";
+  import PhoneInput from "react-native-phone-number-input";
   
   
   PushNotification.configure({
@@ -38,17 +38,7 @@ import { Text,
   
   
   const initialState = {
-    
-    // Profile state
-    id: null,
-    name: '',
-    firstname: '',
-    lastname: '',
-    username: '',
-    country_code: '',
-    phone_number: '',
-    email: '',
-    
+  
     // top up state
     hasRecharged: null,
     rechargeResponse: null,
@@ -75,66 +65,98 @@ import { Text,
     const { colors } = useTheme();
     const styles = makeStyles(colors);
     
-    
+    const phoneInput = useRef(null);
+    const [value, setValue] = useState(profile.phone_number);
+
+
+    const getPhoneNumberFromRef = () => {
+      const phoneObj = phoneInput.current?.getNumberAfterPossiblyEliminatingZero();
+      let number = phoneObj.number;
+      const startsWithZero = number.startsWith("0");
+      number = startsWithZero ? removeLeadingZeros(number) : number;
+      return number;
+    }
+
     const RechargeUserAccount = async() => {
       try{
-        if(profile.id){
-          
-          const rechargeAmount = parseFloat(state.rechargeAmount);
-          
-          if (state.phone_number && state.rechargeAmount ) {
-            if(rechargeAmount >= MIN_TOPUP_AMOUNT && rechargeAmount <= MAX_TOPUP_AMOUNT){
-              let amount = state.rechargeAmount;
-              amount = parseFloat(amount.replace(/[^\d.]+/g, ''));
-              
-              setIsLoading(true);
-              
-              const data = {
-                customer_id: state.id,
-                amount: state.rechargeAmount,
-                country_code: state.country_code,
-                phone_number: state.phone_number,
-              }
-              
-              const res = await depositMoney(data);
-              console.log("Response for top up is", res);
-              const statusCode = res.statusCode;
-              const message = res.message;
-              
-              if(statusCode == 1){
-                const customer = res.data;
-                let result = await asyncCustomerProfile(state.id);
-                
-                setProfile(customer);
-                await syncProfileData(customer);
-                await getProfile(customer);
-                
-                Toast.show(message);
-                testPushNotification();
-                setData({
-                  ...state,
-                  rechargeAmount: '',
-                });
-              }else{
-                Toast.show(res.message, Toast.LONG);
-              }
-              
-              setIsLoading(false);
-              
-            }else{
-              Toast.show("Enter amount greater than "+numberWithCommas(min_recharge_amount)+" and less than "+numberWithCommas(max_recharge_amount)+"  to top up your account.")
-            }
-            
-          } else {
-            Toast.show("Enter amount to top up your account", Toast.LONG)
-          }
-          
-        } else {
-          Toast.show("Unable to get logged in user", Toast.LONG)
+        
+        
+        if(!state.rechargeAmount){
+          Toast.show('Please enter amount to topup your account', Toast.LONG);
+          return;
         }
         
-      }
-      catch(err){
+        if(state.rechargeAmount){
+          const rechargeAmount = parseFloat(state.rechargeAmount);
+          if(rechargeAmount < MIN_TOPUP_AMOUNT){
+            Toast.show(`Please enter amount greater than ${numberWithCommas(MIN_TOPUP_AMOUNT)}`, Toast.LONG);
+            return;
+          } 
+          if(rechargeAmount > MAX_TOPUP_AMOUNT){
+            Toast.show(`Please enter amount less than ${numberWithCommas(MAX_TOPUP_AMOUNT)}`, Toast.LONG);
+            return;
+          }
+        }
+        
+        if(!value){
+          Toast.show('Please enter phone number to withdraw from.', Toast.LONG);
+          return;
+        }
+        
+        if(value){
+
+          let number = getPhoneNumberFromRef();
+          if(number.length != 9){
+            Toast.show('Please enter a valid phone number', Toast.LONG);
+            return;
+          }
+          
+        }
+
+        if(!profile.id){
+          Toast.show('Unable to capture your profile details', Toast.LONG);
+          return;
+        }
+        
+        let amount = state.rechargeAmount;
+        amount = parseFloat(amount.replace(/[^\d.]+/g, ''));
+        let countryCode =  phoneInput.current?.getCallingCode();
+        
+        
+        const data = {
+          customer_id: profile.id,
+          amount: state.rechargeAmount,
+          country_code: countryCode,
+          phone_number: getPhoneNumberFromRef(),
+        }
+
+        const res = await depositMoney(data);
+        console.log("Response for top up is", res);
+        const statusCode = res.statusCode;
+        const message = res.message;
+        
+        if(statusCode == 1){
+          
+          const customer = res.data;
+          await asyncCustomerProfile(state.id);
+          
+          setProfile(customer);
+          await syncProfileData(customer);
+          await getProfile(customer);
+          
+          Toast.show(message);
+          testPushNotification();
+          setData({
+            ...state,
+            rechargeAmount: '',
+          });
+        }else{
+          Toast.show(res.message, Toast.LONG);
+        }
+        
+        setIsLoading(false);
+        
+      }catch(err){
         Toast.show(err.message, Toast.LONG);
       }
       setIsLoading(false);
@@ -142,28 +164,14 @@ import { Text,
     
     
     const onChangeAmount = (val) => {
+      let num = numberWithCommas(val);
       setData({
         ...state,
         rechargeAmount: val
       });
     }
     
-    const onChangePhoneNumber = (val) => {
-      setData({
-        ...state,
-        phone_number: val,
-      });
-    }
-    
-    const savePhoneNumber = () => {
-      setData({
-        ...state,
-        phone_number: state.phone_number,
-        editMode: false,
-      });
-    }
-    
-    
+
     const testPushNotification = () => {
       PushNotification.localNotification({
         channelId: "ParkPro256",
@@ -200,6 +208,7 @@ import { Text,
     }
     
     useEffect(() => {
+
       let isMounted = true;
       if(isMounted) {
         getProfile(profile);
@@ -207,16 +216,7 @@ import { Text,
       return () => { isMounted = false };
     }, []);
     
-    
-    
-    const editPhone = () => {
-      setData({
-        ...state,
-        editMode: true
-      });
-    }
-    
-    
+   
     return (
       
       <>
@@ -229,7 +229,7 @@ import { Text,
       
       <ScrollView  style={styles.contentContainer}>
       
-  
+      
       {state.hasRecharged ?
         <Text style={{ color: design.colors.green, marginLeft: 18 }}>{state.rechargeResponse}</Text>
         : null}
@@ -240,144 +240,134 @@ import { Text,
           
           
           <View style={{ margin: 20 }}>
-              <Text style={{ fontSize: 15, opacity: 0.7, fontWeight:'bold'  }}>Enter amount </Text>
-              <RNTextInput
-              mode={'outlined'}
-              placeholder="Eg. 10,000"
-              value={state.rechargeAmount}
-              keyboardType='numeric'
-              label="Topup amount"
-              selectionColor={colors.primary}
-              underlineColor={colors.primary}
-              outlineColor={colors.primary}
-              activeUnderlineColor={colors.primary}
-              activeOutlineColor={colors.primary}
-              onChangeText={(text) => { onChangeAmount(text) }}
-              style={{backgroundColor: colors.body, color: colors.primary }}
-              theme={{ colors: { text: design.colors.dark } }}
-              />
-              <Text style={{ opacity: 0.5, color: state.warningColor, fontSize:15 }}>Min: {numberWithCommas(min_recharge_amount)} and Max: {numberWithCommas(max_recharge_amount)}</Text>
+          <Text style={{ fontSize: 15, opacity: 0.7, fontWeight:'bold'  }}>Enter amount </Text>
+          <RNTextInput
+          mode={'outlined'}
+          placeholder="Eg. 10,000"
+          value={state.rechargeAmount}
+          keyboardType='numeric'
+          label="Topup amount"
+          selectionColor={colors.primary}
+          underlineColor={colors.primary}
+          outlineColor={colors.primary}
+          activeUnderlineColor={colors.primary}
+          activeOutlineColor={colors.primary}
+          onChangeText={(text) => { onChangeAmount(text) }}
+          style={{backgroundColor: colors.body, color: colors.primary }}
+          theme={{ colors: { text: design.colors.dark } }}
+          />
+          <Text style={{ opacity: 0.5, color: state.warningColor, fontSize:15 }}>Min: {numberWithCommas(min_recharge_amount)} and Max: {numberWithCommas(max_recharge_amount)}</Text>
           </View>
           
           <Title style={{ fontSize: 15, opacity: 0.7, color: '#000', margin:15 }}>Mobile Money Number </Title>
           
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between', margin: 20 }} >
+          <View style={{ margin: 20 }} >
           
+          
+          <PhoneInput
+          ref={phoneInput}
+          defaultValue={value}
+          defaultCode="UG"
+          layout="first"
+          onChangeText={(text) => {
+            setValue(text);
+          }}
+          countryPickerProps={{ withAlphaFilter: true }}
+          containerStyle={{width: '100%'}}
+          withShadow
+          autoFocus
+          />
         
-          <TouchableOpacity>    
-          {
-            !state.editMode ?
-             <Text style={{ fontSize: 18 }}>{state.country_code}{state.phone_number}</Text>
-            : <View style={{flexDirection: 'row'}}>
-              <Text>{state.country_code}</Text>
-              <TextInput 
-            // mode={'outlined'}
-            placeholder="Your phone number"
-            value={state.phone_number} 
-            keyboardType='numeric'
-            style={styles.inputBox}
-            onChangeText={(text) => { onChangePhoneNumber(text) }}  /></View>
-          }
-          </TouchableOpacity>  
-          
-          {
-            !state.editMode ?  <TouchableOpacity onPress={editPhone}>
-            <Text style={{ color: '#5bc0de' }}><Icon name="pencil" size={30} /></Text>
-            </TouchableOpacity>
-            :  <TouchableOpacity onPress={savePhoneNumber}>
-            <Text style={{ color: 'green' }}><Icon name="check-circle" size={30} /></Text>
-            </TouchableOpacity>
-          } 
-          
-          </View>
-          
-          </ScrollView >
-          
-          <View style={styles.bottom}>
-          <TouchableOpacity
-          style={[design.btnPrimary, { color: '#fff',
+        </View>
+        
+        </ScrollView >
+        
+        <View style={styles.bottom}>
+        <TouchableOpacity
+        style={[design.btnPrimary, { color: '#fff',
+        backgroundColor: colors.primary,
+        borderColor: colors.primary}]}
+        onPress={RechargeUserAccount}
+        disabled={false}>
+        <Text style={styles.paymentButtonText}> 
+        {isLoading ? 'Loading...' : 'CONFIRM TOPUP' }
+        </Text>
+        </TouchableOpacity>
+        
+        </View>
+        </KeyboardAvoidingView>
+        
+        </>
+        
+        );
+      }
+      
+      export default TopUpScreen
+      
+      
+      const makeStyles = (colors) => StyleSheet.create({
+        container:{
+          flex:1,
+          borderColor:'#C0C0C0',
+          backgroundColor: colors.body,
+          shadowColor: '#e2e2e2',
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.7,
+          shadowRadius: 2,
+          elevation: 1,
+        },
+        contentContainer:{
+          flex:1,
+        },
+        TopupBtn: {
+          alignSelf:'center' , 
+        },
+        
+        paymentButton: {
+          borderRadius:5,
           backgroundColor: colors.primary,
-          borderColor: colors.primary}]}
-          onPress={RechargeUserAccount}
-          disabled={false}>
-          <Text style={styles.paymentButtonText}> 
-          {isLoading ? 'Loading...' : 'CONFIRM TOPUP' }
-          </Text>
-          </TouchableOpacity>
+          borderColor: colors.primary,
+          position: 'absolute',
+          bottom: 0,
+          width: '90%',
+        },
+        
+        bottom:{
+          // marginBottom: 30,
+          flexDirection: 'row',
+          alignItems: 'center',
+          alignSelf: 'center',
+          justifyContent: 'center',
           
-          </View>
-          </KeyboardAvoidingView>
-          
-          </>
-          
-          );
+        },
+        paymentButtonText: {
+          fontSize: 18,
+          color: design.colors.white,
+          textTransform: 'capitalize',
+          fontWeight: 'bold'
+        },
+        
+        textInput: {
+          borderBottomWidth: 1,
+          backgroundColor: design.colors.white,
+          fontWeight: 'normal',
+          borderRadius:30,
+          borderWidth:1,
+        },
+        
+        inputBox: {
+          borderBottomWidth: 1,
+          borderBottomColor: 'gray',
+        },
+        
+        card: {
+          margin: 15,
+          padding:30,
+          borderWidth:1,
+          borderRadius: 10,
+          borderColor:'#e2e2e2',
+          justifyContent: 'center',
+          backgroundColor: colors.primary,
+          alignItems:'center'
         }
-        
-        export default TopUpScreen
-        
-        
-        const makeStyles = (colors) => StyleSheet.create({
-          container:{
-            flex:1,
-            borderColor:'#C0C0C0',
-            backgroundColor: colors.body,
-            shadowColor: '#e2e2e2',
-            shadowOffset: { width: 0, height: 2 },
-            shadowOpacity: 0.7,
-            shadowRadius: 2,
-            elevation: 1,
-          },
-          contentContainer:{
-            flex:1,
-          },
-          TopupBtn: {
-            alignSelf:'center' , 
-          },
-          
-          paymentButton: {
-            borderRadius:5,
-            backgroundColor: colors.primary,
-            borderColor: colors.primary,
-            position: 'absolute',
-            bottom: 0,
-            width: '90%',
-          },
-          
-          bottom:{
-            // marginBottom: 30,
-            flexDirection: 'row',
-            alignItems: 'center',
-            alignSelf: 'center',
-            justifyContent: 'center',
-            
-          },
-          paymentButtonText: {
-            color: design.colors.white,
-            textTransform: 'uppercase',
-            fontWeight: 'bold'
-          },
-          
-          textInput: {
-            borderBottomWidth: 1,
-            backgroundColor: design.colors.white,
-            fontWeight: 'normal',
-            borderRadius:30,
-            borderWidth:1,
-          },
-
-          inputBox: {
-            borderBottomWidth: 1,
-            borderBottomColor: 'gray',
-          },
-
-          card: {
-            margin: 15,
-            padding:30,
-            borderWidth:1,
-            borderRadius: 10,
-            borderColor:'#e2e2e2',
-            justifyContent: 'center',
-            backgroundColor: colors.primary,
-            alignItems:'center'
-          }
-        })
+      })
