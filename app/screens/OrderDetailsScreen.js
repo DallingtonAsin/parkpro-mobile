@@ -1,472 +1,528 @@
   import React, {useState, useEffect, useRef, useMemo, useCallback} from 'react';
   import {Text, SafeAreaView, Image, RefreshControl, View, ScrollView, Platform, PermissionsAndroid,
-          FlatList, TouchableWithoutFeedback, StyleSheet, TouchableOpacity, ToastAndroid} from 'react-native';
-  import CameraRoll from "@react-native-community/cameraroll";
-  import { AuthContext } from '../context/context';
-  import styles from '../../assets/css/styles';
-  import { icons } from '../../constants';
-  import {APP_NAME, currency} from '@env';
-  import {  Divider  } from 'react-native-paper';
-  import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
-  import { useTheme } from '@react-navigation/native';
-  import AppLoader from '../components/loaders/AppLoader';
-  import Toast from 'react-native-simple-toast';
-  import { callHelpLine } from '../components/sharedHelper/AppUtils';
-  import { COMPANY_LINE } from '@env';
-  import BottomSheet, { BottomSheetBackdrop, BottomSheetScrollView } from '@gorhom/bottom-sheet';
-  import QRCODE from '../components/QRcode';
-  import RNFS from "react-native-fs";
-  
-  
-  const wait = (timeout) => {
-    return new Promise(resolve => setTimeout(resolve, timeout));
-  }
-  
-  const OrderDetailsScreen = ({route, navigation}) => {
+    FlatList, TouchableWithoutFeedback, StyleSheet, TouchableOpacity, ToastAndroid} from 'react-native';
+    import CameraRoll from "@react-native-community/cameraroll";
+    import { AuthContext } from '../context/context';
+    import styles from '../../assets/css/styles';
+    import { icons } from '../../constants';
+    import {APP_NAME, currency} from '@env';
+    import {  Divider  } from 'react-native-paper';
+    import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
+    import { useTheme } from '@react-navigation/native';
+    import AppLoader from '../components/loaders/AppLoader';
+    import Toast from 'react-native-simple-toast';
+    import { callHelpLine } from '../components/sharedHelper/AppUtils';
+    import { COMPANY_LINE } from '@env';
+    import BottomSheet, { BottomSheetBackdrop, BottomSheetScrollView } from '@gorhom/bottom-sheet';
+    import QRCODE from '../components/QRcode';
+    import Share from "react-native-share";
+    import RNFS from "react-native-fs";
+ 
     
-    const [orderInfo, setOrderInfo] = useState([]);
-    const [isLoading, setIsLoading] = React.useState(true);
-    const { colors } = useTheme();
-    const innerStyles = makeStyles(colors);
-
-    const receiptBottomSheetRef = useRef(0);
-    const [receiptQRref, setReceiptQRref] = useState();
-
-    const { orderNo, customerId } = route.params;
-    const { fetchOrderInfo } = React.useContext(AuthContext);
-    const snapPoints = useMemo(() => ['25%', '75%'], []);
+    const wait = (timeout) => {
+      return new Promise(resolve => setTimeout(resolve, timeout));
+    }
     
-    const onRefresh = React.useCallback(() => {
-      setIsLoading(true);
-      wait(2000).then(() =>{
-        fetchOrderDetails(orderNo, customerId);
-        setIsLoading(false);
+    const OrderDetailsScreen = ({route, navigation}) => {
+      
+      const [orderInfo, setOrderInfo] = useState([]);
+      const [isLoading, setIsLoading] = React.useState(true);
+      const { colors } = useTheme();
+      const innerStyles = makeStyles(colors);
+      
+      const receiptBottomSheetRef = useRef(0);
+      const [receiptQRref, setReceiptQRref] = useState();
+      
+      const { orderNo, customerId } = route.params;
+      const { fetchOrderInfo } = React.useContext(AuthContext);
+      const snapPoints = useMemo(() => ['25%', '75%'], []);
+      
+      const onRefresh = React.useCallback(() => {
+        setIsLoading(true);
+        wait(2000).then(() =>{
+          fetchOrderDetails(orderNo, customerId);
+          setIsLoading(false);
+        });
       });
-    });
-
-    const openReceiptSheet = useCallback((index) => {
-      receiptBottomSheetRef.current?.snapToIndex(index);
-    }, []);
-    
-    const fetchOrderDetails = async(order_no, customer_id) => {
-      try{
-        
-        const result = await fetchOrderInfo(order_no, customer_id);
-        if(result.statusCode == "1"){
-          const order_details = result.data; 
-          if(order_details.length > 0){
-            console.log("Order details", order_details);
-            setOrderInfo(order_details);
+      
+      const openReceiptSheet = useCallback((index) => {
+        receiptBottomSheetRef.current?.snapToIndex(index);
+      }, []);
+      
+      const fetchOrderDetails = async(order_no, customer_id) => {
+        try{
+          
+          const result = await fetchOrderInfo(order_no, customer_id);
+          if(result.statusCode == "1"){
+            const order_details = result.data; 
+            if(order_details.length > 0){
+              console.log("Order details", order_details);
+              setOrderInfo(order_details);
+            }
           }
+        }catch(err){
+          Toast.show(err.message, Toast.LONG);
         }
-      }catch(err){
-        Toast.show(err.message, Toast.LONG);
-      }
-      setIsLoading(false);
-
-    }
-    
-    useEffect(() => {
-      setIsLoading(true);
-      fetchOrderDetails(orderNo, customerId);
-    }, [orderNo, customerId])
-    
-      const renderHeader = (title) => {
-      return(
-        <View style={innerStyles.bottomSheetHeader}>
-          <View style={innerStyles.panelHeader}>
-            <View style={innerStyles.panelHandle}>
-               <Text style={innerStyles.popupHeaderText}>{title}</Text>
-            </View>
-           </View>
-        </View>
-        );
-      }
-
-    const renderReceiptBackdrop = useCallback(
-      props => ( <BottomSheetBackdrop  {...props}  opacity={0.2} />),
-    []);
-
-  
-   const saveQrToDisk = async(item) => {
-
-     if (Platform.OS === "android" && !(await hasAndroidPermission())) {
-       return;
-      }
-      if(receiptQRref){
-
-       receiptQRref.toDataURL((data) => {
-     
-       console.log(`Receipt order number is ${item.order_no}`);
-       let filePath =  RNFS.CachesDirectoryPath+`/${item.order_no}.png`;
-       console.log(`Path is ${filePath}`);
-
-        RNFS.writeFile(filePath, data, 'base64')
-          .then((success) => {
-            return CameraRoll.save(filePath, 'photo')
-          })
-          .then(() => {
-            ToastAndroid.show('QRCode saved to gallery', ToastAndroid.LONG);
-            receiptBottomSheetRef.current?.close();
-          });
-      });
-    }else{
-      console.log(`Non-filled in receipt ref is`, receiptQRref);
-    }
-   }
-
-  const hasAndroidPermission = async() => {
-    const permission = PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE;
-  
-    const hasPermission = await PermissionsAndroid.check(permission);
-    if (hasPermission) {
-      return true;
-    }
-  
-    const status = await PermissionsAndroid.request(permission);
-    return status === 'granted';
-  }
-    
-    const renderComponent = (item) => {
-      return ( 
-        <>
-        <ScrollView style={{backgroundColor: '#fff' }}>
-
-
-        <View  style={{flex:1, flexDirection: 'row',
-        padding:10,
-        justifyContent:'space-between', right:10}}>
-        <Image
-        source={icons.parking6}
-        resizeMode="contain"
-        style={{
-          width: 85,
-          height: 85,
-        }}
-        />
-
-
-        <View>
+        setIsLoading(false);
         
-        <Text style={innerStyles.headerTitle}>Order</Text>
-        <Text style={innerStyles.headerText}>{item.request_date}</Text>
-        <Text style={innerStyles.headerText}>{APP_NAME} Wallet</Text>
-        </View>
-        
-        <View>
-        <Text style={innerStyles.headerTitle}>{item.amount}</Text>
-        <Text style={innerStyles.headerText}>{currency}</Text> 
-        </View>
-        
-        </View>
-        
-        
-        <View style={innerStyles.orderInfoContainer}>
-
-        <View style={innerStyles.orderInfo}>
-          <Text style={innerStyles.subtitle}>Parking Area</Text>
-          <Text style={innerStyles.info}>{item.parking_area}</Text>
-        </View>
-
-        <View style={innerStyles.divider}></View>
-
-        <View style={innerStyles.orderInfo}>
-          <Text style={innerStyles.subtitle}>Order No</Text>
-          <Text style={innerStyles.info}>{item.order_no}</Text>
-        </View>
-        
-        
-     
-        
-        
-        <View style={innerStyles.divider}></View>
-        
-        <View style={innerStyles.orderInfo}>
-          <Text style={innerStyles.subtitle}>Booking Period</Text>
-          <Text style={innerStyles.info}>{item.booking_period}</Text>
-        </View>
-        
-        <View style={innerStyles.divider}></View>
-        
-        <View style={innerStyles.orderInfo}>
-          <Text style={innerStyles.subtitle}>Total Time</Text>
-          <Text style={innerStyles.info}>{item.parking_hours}</Text>
-        </View>
-        
-        <View style={innerStyles.divider}></View>
-        
-        <View style={innerStyles.orderInfo}>
-          <Text style={innerStyles.subtitle}>Vehicle Type</Text>
-          <Text style={innerStyles.info}>{item.car_type}</Text>
-        </View>
-        
-        <View style={innerStyles.divider}></View>
-        
-        <View style={innerStyles.orderInfo}>
-          <Text style={innerStyles.subtitle}>Fee per hour</Text>
-          <Text style={innerStyles.info}>{currency} {item.fee_per_hour}</Text>
-        </View>
-        
-        <View style={innerStyles.divider}></View>
-        
-        <View style={innerStyles.orderInfo}>
-          <Text style={innerStyles.subtitle}>Total amount paid</Text>
-          <Text style={innerStyles.info}>{currency} {item.amount}</Text>
-        </View>
-
-        </View>
-        
-        
-        <View style={innerStyles.footer}>
-
-              <TouchableOpacity
-              style={[innerStyles.button, innerStyles.buttonOpen]}
-              onPress={() => openReceiptSheet(1) }
-                 >
-                 <Text style={innerStyles.textStyle}>QRcode</Text>
-             </TouchableOpacity>
-
-            <TouchableWithoutFeedback onPress={() => {callHelpLine(COMPANY_LINE)}}>
-                <Text style={innerStyles.helpCenterText}>Contact support</Text>
-            </TouchableWithoutFeedback>
-
-        </View>
-
-    
-        </ScrollView>
-
-            <BottomSheet
-            ref={receiptBottomSheetRef}
-            index={-1}
-            snapPoints={snapPoints}
-            enablePanDownToClose={true}
-            backdropComponent={renderReceiptBackdrop}
-            handleComponent={() => renderHeader("Receipt QRCode") }
-            >
-
-            <Divider style={innerStyles.panelDivider}/>
-
-            <BottomSheetScrollView contentContainerStyle={innerStyles.contentContainer}>
-              <QRCODE 
-               value={JSON.stringify({
-                  name: item.name,
-                  telephone: item.telephone_no,
-                  parking: item.parking_area,
-                  bookingPeriod: item.booking_period,
-                  orderNo: item.order_no,
-                  amount: item.amount
-              })}
-              getRef={(c) => setReceiptQRref(c)}/> 
-              <TouchableOpacity 
-               style={[styles.btnPrimary, { color: '#fff',
-               backgroundColor: colors.primary,
-               borderColor: colors.primary}]}
-                onPress={() => { saveQrToDisk(item) }}>
-               <Text style={innerStyles.save}>Save to Gallery</Text>
-              </TouchableOpacity>
-            </BottomSheetScrollView>
-            </BottomSheet>
-
-        </>
-        
-        );
       }
       
-      const NoOrders = () =>{
-        return (
-          <View style={innerStyles.noContentContainer}>
-          <Text style={innerStyles.text}>No Orders found</Text>
+      
+      
+      useEffect(() => {
+        setIsLoading(true);
+        fetchOrderDetails(orderNo, customerId);
+      }, [orderNo, customerId])
+      
+      const renderHeader = (title) => {
+        return(
+          <View style={innerStyles.bottomSheetHeader}>
+          <View style={innerStyles.panelHeader}>
+          <View style={innerStyles.panelHandle}>
+          <Text style={innerStyles.popupHeaderText}>{title}</Text>
+          </View>
+          </View>
           </View>
           );
         }
-        const FlatListItemSeparator = () => {
-          return (
-            <View style={innerStyles.divider}/>
-            );
+        
+        const renderReceiptBackdrop = useCallback(
+          props => ( <BottomSheetBackdrop  {...props}  opacity={0.2} />),
+          []);
+          
+          
+          
+          const shareImage = (filePath) => {
+            
+            
+            RNFS.exists(filePath).then((fileExists) => {
+              if(fileExists){
+                
+                RNFS.readFile(filePath, 'base64')
+                .then((base64Data) => {
+                  
+                  // here's base64 encoded image
+                  var imageUrl = 'data:image/png;base64,' + base64Data;
+                  let imageDetails = {
+                    title: 'Share Receipt QRCode',
+                    message: 'Parking Receipt QRCode',
+                    url: imageUrl,
+                  };
+                  
+                  // share image
+                  Share.open(imageDetails)
+                  .then((res) => {
+                    console.log(res);
+                  })
+                  .catch((err) => {
+                    err && console.log(err);
+                  });
+                  
+                  // remove the file from storage if it exists
+                  RNFS.exists(filePath).then((exists) => {
+                    if(exists){
+                      RNFS.unlink(filePath)
+                      .then(() => {
+                        console.log('Receipt QR Image removed from storage');
+                      }).catch((err) => {
+                        console.log('Unable to remove file from storage', err.message);
+                      });
+                    }
+                  }).catch((err) => {
+                    console.log('Unable to check if file exists in storage', err.message);
+                  });
+                  
+                });
+              }
+            });
           }
           
-          
-          
-          return (
-            <>
+          const downloadOrShareQRCode = async(item, share=false) => {
             
-            <SafeAreaView style={{flex: 1, backgroundColor:'#fff'}}>
-            <FocusAwareStatusBar barStyle="light-content" backgroundColor={colors.primary} />
-            { !isLoading ?
-              <FlatList style= {{ backgroundColor:'#ffffff', height:'100%' }}
-              data={orderInfo}
-              renderItem={({ item }) => renderComponent(item)}
-              keyExtractor={(item, index) => String(index)}
-              ListEmptyComponent={<NoOrders/>} 
-              ItemSeparatorComponent={FlatListItemSeparator}
-              refreshControl={<RefreshControl refreshing={isLoading} onRefresh={onRefresh}/>}
-              /> 
-              : null
+            if (Platform.OS === "android" && !(await hasAndroidPermission())) {
+              return;
             }
-            </SafeAreaView>
+            if(receiptQRref){
+              
+              receiptQRref.toDataURL((data) => {
+                
+                console.log(`Receipt order number is ${item.order_no}`);
+                let filePath =  RNFS.CachesDirectoryPath+`/${item.order_no}.png`;
+                console.log(`Path is ${filePath}`);
+                
+                RNFS.writeFile(filePath, data, 'base64')
+                .then((success) => {
+                  CameraRoll.save(filePath, 'photo');
+                  if(share){
+                    shareImage(filePath);
+                  }
+                })
+                .then(() => {
+                  if(!share){
+                    ToastAndroid.show('QRCode saved to gallery', ToastAndroid.LONG);
+                  }
+                  receiptBottomSheetRef.current?.close();
+                });
+              });
+            }else{
+              console.log(`Non-filled in receipt ref is`, receiptQRref);
+            }
+          }
+          
+          const hasAndroidPermission = async() => {
+            const permission = PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE;
             
-            {  isLoading ?  <AppLoader /> : null }
+            const hasPermission = await PermissionsAndroid.check(permission);
+            if (hasPermission) {
+              return true;
+            }
+            
+            const status = await PermissionsAndroid.request(permission);
+            return status === 'granted';
+          }
+          
+          const renderComponent = (item) => {
+            return ( 
+              <>
+              <ScrollView style={{backgroundColor: '#fff' }}>
+              
+              
+              <View  style={{flex:1, flexDirection: 'row',
+              padding:10,
+              justifyContent:'space-between', right:10}}>
+              <Image
+              source={icons.parking6}
+              resizeMode="contain"
+              style={{
+                width: 85,
+                height: 85,
+              }}
+              />
+              
+              
+              <View>
+              
+              <Text style={innerStyles.headerTitle}>Order</Text>
+              <Text style={innerStyles.headerText}>{item.request_date}</Text>
+              <Text style={innerStyles.headerText}>{APP_NAME} Wallet</Text>
+              </View>
+              
+              <View>
+              <Text style={innerStyles.headerTitle}>{item.amount}</Text>
+              <Text style={innerStyles.headerText}>{currency}</Text> 
+              </View>
+              
+              </View>
+              
+              
+              <View style={innerStyles.orderInfoContainer}>
+              
+              <View style={innerStyles.orderInfo}>
+              <Text style={innerStyles.subtitle}>Parking Area</Text>
+              <Text style={innerStyles.info}>{item.parking_area}</Text>
+              </View>
+              
+              <View style={innerStyles.divider}></View>
+              
+              <View style={innerStyles.orderInfo}>
+              <Text style={innerStyles.subtitle}>Order No</Text>
+              <Text style={innerStyles.info}>{item.order_no}</Text>
+              </View>
+              
+              
+              
+              
+              
+              <View style={innerStyles.divider}></View>
+              
+              <View style={innerStyles.orderInfo}>
+              <Text style={innerStyles.subtitle}>Booking Period</Text>
+              <Text style={innerStyles.info}>{item.booking_period}</Text>
+              </View>
+              
+              <View style={innerStyles.divider}></View>
+              
+              <View style={innerStyles.orderInfo}>
+              <Text style={innerStyles.subtitle}>Total Time</Text>
+              <Text style={innerStyles.info}>{item.parking_hours}</Text>
+              </View>
+              
+              <View style={innerStyles.divider}></View>
+              
+              <View style={innerStyles.orderInfo}>
+              <Text style={innerStyles.subtitle}>Vehicle Type</Text>
+              <Text style={innerStyles.info}>{item.car_type}</Text>
+              </View>
+              
+              <View style={innerStyles.divider}></View>
+              
+              <View style={innerStyles.orderInfo}>
+              <Text style={innerStyles.subtitle}>Fee per hour</Text>
+              <Text style={innerStyles.info}>{currency} {item.fee_per_hour}</Text>
+              </View>
+              
+              <View style={innerStyles.divider}></View>
+              
+              <View style={innerStyles.orderInfo}>
+              <Text style={innerStyles.subtitle}>Total amount paid</Text>
+              <Text style={innerStyles.info}>{currency} {item.amount}</Text>
+              </View>
+              
+              </View>
+              
+              
+              <View style={innerStyles.footer}>
+              
+              <TouchableOpacity
+              style={[innerStyles.button, innerStyles.buttonOpen]}
+              onPress={() => openReceiptSheet(1) }
+              >
+              <Text style={innerStyles.textStyle}>QRcode</Text>
+              </TouchableOpacity>
+              
+              <TouchableWithoutFeedback onPress={() => {callHelpLine(COMPANY_LINE)}}>
+              <Text style={innerStyles.helpCenterText}>Contact support</Text>
+              </TouchableWithoutFeedback>
+              
+              </View>
+              
+              
+              </ScrollView>
+           
+              <BottomSheet
+              ref={receiptBottomSheetRef}
+              index={-1}
+              snapPoints={snapPoints}
+              enablePanDownToClose={true}
+              backdropComponent={renderReceiptBackdrop}
+              handleComponent={() => renderHeader("Receipt QRCode") }
+              >
+              
+              <Divider style={innerStyles.panelDivider}/>
+              
+              <BottomSheetScrollView contentContainerStyle={innerStyles.contentContainer}>
+              <QRCODE 
+              value={JSON.stringify({
+                name: item.name,
+                telephone: item.telephone_no,
+                parking: item.parking_area,
+                bookingPeriod: item.booking_period,
+                orderNo: item.order_no,
+                amount: item.amount
+              })}
+              getRef={(c) => setReceiptQRref(c)}/> 
+              
+              <TouchableOpacity 
+              style={[styles.btnPrimary, { color: '#fff',
+              backgroundColor: colors.primary,
+              borderColor: colors.primary}]}
+              onPress={() => { downloadOrShareQRCode(item, true) }}>
+              <Text style={innerStyles.save}>Share Receipt</Text>
+              </TouchableOpacity>
+            
+            </BottomSheetScrollView>
+            </BottomSheet>
             
             </>
-            );
             
+            );
           }
           
-          
-          export default OrderDetailsScreen; 
-
-          const makeStyles = (colors) => StyleSheet.create({
-            container:{
-              flex:1,
-              padding:8,
-              flexDirection:'row',
+          const NoOrders = () =>{
+            return (
+              <View style={innerStyles.noContentContainer}>
+              <Text style={innerStyles.text}>No Orders found</Text>
+              </View>
+              );
+            }
+            const FlatListItemSeparator = () => {
+              return (
+                <View style={innerStyles.divider}/>
+                );
+              }
               
-            },
-            noContentContainer:{
-              flex:1,
-              alignItems: 'center',
-              justifyContent: 'center',
-              padding:10,
-              backgroundColor: '#fff'
               
-            },
-            text:{
-              fontSize: 18,
-              fontWeight: 'bold',
-            },
-            description: {
-              right:15,
-              left:0,
               
-            },
-            divider:{
-              width:'100%',
-              height:1,
-              marginTop:5,
-              backgroundColor:'#e2e2e2',
-            },
-            
-            orderInfoContainer:{
-              flex: 1,
-              borderWidth:1, 
-              borderColor:'#e2e2e2',
-              padding:10,
-              margin:10,
-              borderRadius:5,
-              marginTop:20,
-            },
-
-            contentContainer: {
-              flex:1,
-              alignItems: 'center',
-              backgroundColor: colors.text,
-              marginTop:30
-            },
-            
-            
-            subtitle: {
-              fontWeight:'bold',
-              opacity:0.9, 
-              fontSize:18, 
-              color:styles.colors.parksmart,
-              opacity:0.8,
-            },
-            
-            info:{
-              color:'#808080',
-              fontSize:16
-            },
-            
-            headerTitle:{
-              fontSize:18,
-              fontWeight: 'bold',
-              color:styles.colors.primary
-            },
-            
-            headerText:{
-              fontSize:16,
-              color: '#808080',
-            },
-            
-            footer:{
-              flex:1,
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-around',
-              bottom: 0,
-              marginTop: 25,
-              paddingRight: 20,
-              paddingLeft: 20,
-              marginBottom:20,
-            },
-            
-            helpCenterText:{
-              fontSize:18,
-              fontWeight:'bold',
-              color:styles.colors.orange
-            },
-
-            orderInfo: {
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              padding:10
-            },
-
-            button: {
-              borderRadius: 20,
-              padding: 10,
-              width: 120,
-              elevation: 2
-            },
-
-            buttonOpen: {
-              backgroundColor: colors.primary,
-            },
-
-            textStyle: {
-              color: "white",
-              fontWeight: "bold",
-              textAlign: "center"
-            },
-
-            bottomSheetHeader: {
-              backgroundColor: '#FFFFFF',
-              shadowColor: '#333333',
-              borderTopLeftRadius: 20,
-              borderTopRightRadius: 20,
-            },
-            
-            panelHeader: {
-              alignItems: 'center',
-            },
-
-            panelHandle: {
-              width: 40,
-              height: 8,
-              borderRadius: 4,
-              backgroundColor: '#999',
-              marginTop: 8,
-              marginBottom: 10,
-            },
-
-            popupHeaderText: {
-              padding:10, 
-              fontSize: 19,
-              fontWeight:'bold',
-              // textTransform:'capitalize'
-            },
-
-            panelDivider:{
-              borderBottomColor: '#e2e2e2',
-              borderBottomWidth: 1,
-              marginTop:20
-            },
-
-            save: {
-              color: colors.text,
-              fontSize:16,
-              textTransform: 'capitalize'
-           }
-            
-            
-          });
+              return (
+                <>
+                
+                <SafeAreaView style={{flex: 1, backgroundColor:'#fff'}}>
+                <FocusAwareStatusBar barStyle="light-content" backgroundColor={colors.primary} />
+                { !isLoading ?
+                  <FlatList style= {{ backgroundColor:'#ffffff', height:'100%' }}
+                  data={orderInfo}
+                  renderItem={({ item }) => renderComponent(item)}
+                  keyExtractor={(item, index) => String(index)}
+                  ListEmptyComponent={<NoOrders/>} 
+                  ItemSeparatorComponent={FlatListItemSeparator}
+                  refreshControl={<RefreshControl refreshing={isLoading} onRefresh={onRefresh}/>}
+                  /> 
+                  : null
+                }
+                </SafeAreaView>
+                
+                {  isLoading ?  <AppLoader /> : null }
+                
+                </>
+                );
+                
+              }
+              
+              
+              export default OrderDetailsScreen; 
+              
+              const makeStyles = (colors) => StyleSheet.create({
+                container:{
+                  flex:1,
+                  padding:8,
+                  flexDirection:'row',
+                  
+                },
+                noContentContainer:{
+                  flex:1,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  padding:10,
+                  backgroundColor: '#fff'
+                  
+                },
+                text:{
+                  fontSize: 18,
+                  fontWeight: 'bold',
+                },
+                description: {
+                  right:15,
+                  left:0,
+                  
+                },
+                divider:{
+                  width:'100%',
+                  height:1,
+                  marginTop:5,
+                  backgroundColor:'#e2e2e2',
+                },
+                
+                orderInfoContainer:{
+                  flex: 1,
+                  borderWidth:1, 
+                  borderColor:'#e2e2e2',
+                  padding:10,
+                  margin:10,
+                  borderRadius:5,
+                  marginTop:20,
+                },
+                
+                contentContainer: {
+                  flex:1,
+                  alignItems: 'center',
+                  backgroundColor: colors.text,
+                  marginTop:30
+                },
+                
+                
+                subtitle: {
+                  fontWeight:'bold',
+                  opacity:0.9, 
+                  fontSize:18, 
+                  color:styles.colors.parksmart,
+                  opacity:0.8,
+                },
+                
+                info:{
+                  color:'#808080',
+                  fontSize:16
+                },
+                
+                headerTitle:{
+                  fontSize:18,
+                  fontWeight: 'bold',
+                  color:styles.colors.primary
+                },
+                
+                headerText:{
+                  fontSize:16,
+                  color: '#808080',
+                },
+                
+                footer:{
+                  flex:1,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-around',
+                  bottom: 0,
+                  marginTop: 25,
+                  paddingRight: 20,
+                  paddingLeft: 20,
+                  marginBottom:20,
+                },
+                
+                helpCenterText:{
+                  fontSize:18,
+                  fontWeight:'bold',
+                  color:styles.colors.orange
+                },
+                
+                orderInfo: {
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  padding:10
+                },
+                
+                button: {
+                  borderRadius: 20,
+                  padding: 10,
+                  width: 120,
+                  elevation: 2
+                },
+                
+                buttonOpen: {
+                  backgroundColor: colors.primary,
+                },
+                
+                textStyle: {
+                  color: "white",
+                  fontWeight: "bold",
+                  textAlign: "center"
+                },
+                
+                bottomSheetHeader: {
+                  backgroundColor: '#FFFFFF',
+                  shadowColor: '#333333',
+                  borderTopLeftRadius: 20,
+                  borderTopRightRadius: 20,
+                },
+                
+                panelHeader: {
+                  alignItems: 'center',
+                },
+                
+                panelHandle: {
+                  width: 40,
+                  height: 8,
+                  borderRadius: 4,
+                  backgroundColor: '#999',
+                  marginTop: 8,
+                  marginBottom: 10,
+                },
+                
+                popupHeaderText: {
+                  padding:10, 
+                  fontSize: 19,
+                  fontWeight:'bold',
+                  // textTransform:'capitalize'
+                },
+                
+                panelDivider:{
+                  borderBottomColor: '#e2e2e2',
+                  borderBottomWidth: 1,
+                  marginTop:20
+                },
+                
+                save: {
+                  color: colors.text,
+                  fontSize:16,
+                  textTransform: 'capitalize'
+                }
+                
+                
+              });
