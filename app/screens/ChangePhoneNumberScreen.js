@@ -138,7 +138,8 @@ const ChangePhoneNumberScreen = ({ navigation }) => {
     
     if(value.length != 9){
       Toast.show('Please enter a valid phone number', Toast.LONG);
-    }else{
+    }
+    else{
       
       const isNumberValid = phoneInput.current?.isValidNumber(number);
       if(isNumberValid){

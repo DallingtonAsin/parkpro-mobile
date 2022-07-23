@@ -74,10 +74,11 @@
       const renderHeader = (title) => {
       return(
         <View style={innerStyles.bottomSheetHeader}>
-        <View style={innerStyles.panelHeader}>
-        <View style={innerStyles.panelHandle} />
-        <Text style={innerStyles.popupHeaderText}>{title}</Text>
-        </View>
+          <View style={innerStyles.panelHeader}>
+            <View style={innerStyles.panelHandle}>
+               <Text style={innerStyles.popupHeaderText}>{title}</Text>
+            </View>
+           </View>
         </View>
         );
       }
@@ -163,30 +164,19 @@
         <View style={innerStyles.orderInfoContainer}>
 
         <View style={innerStyles.orderInfo}>
-          <Text style={innerStyles.subtitle}>Name</Text>
-          <Text style={innerStyles.info}>{item.name}</Text>
+          <Text style={innerStyles.subtitle}>Parking Area</Text>
+          <Text style={innerStyles.info}>{item.parking_area}</Text>
         </View>
-        
+
         <View style={innerStyles.divider}></View>
-        
-        <View style={innerStyles.orderInfo}>
-          <Text style={innerStyles.subtitle}>Telephone</Text>
-          <Text style={innerStyles.info}>{item.telephone_no}</Text>
-        </View>
-        
-        <View style={innerStyles.divider}></View>
-        
+
         <View style={innerStyles.orderInfo}>
           <Text style={innerStyles.subtitle}>Order No</Text>
           <Text style={innerStyles.info}>{item.order_no}</Text>
         </View>
         
-        <View style={innerStyles.divider}></View>
         
-        <View style={innerStyles.orderInfo}>
-          <Text style={innerStyles.subtitle}>Parking Area</Text>
-          <Text style={innerStyles.info}>{item.parking_area}</Text>
-        </View>
+     
         
         
         <View style={innerStyles.divider}></View>
@@ -260,6 +250,7 @@
               <QRCODE 
                value={JSON.stringify({
                   name: item.name,
+                  telephone: item.telephone_no,
                   parking: item.parking_area,
                   bookingPeriod: item.booking_period,
                   orderNo: item.order_no,
