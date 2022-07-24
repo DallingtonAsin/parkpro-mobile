@@ -39,7 +39,6 @@ import { Text,
   
   const initialState = {
   
-    // top up state
     hasRecharged: null,
     rechargeResponse: null,
     rechargeAmount: '',
@@ -120,7 +119,7 @@ import { Text,
         
         let amount = state.rechargeAmount;
         amount = parseFloat(amount.replace(/[^\d.]+/g, ''));
-        let countryCode =  phoneInput.current?.getCallingCode();
+        let countryCode =  `+${phoneInput.current?.getCallingCode()}`;
         
         
         const data = {
@@ -130,31 +129,30 @@ import { Text,
           phone_number: getPhoneNumberFromRef(),
         }
 
-        const res = await depositMoney(data);
-        console.log("Response for top up is", res);
-        const statusCode = res.statusCode;
-        const message = res.message;
-        
-        if(statusCode == 1){
+        console.log(`Topup data`, data);
+        setIsLoading(true);
+        depositMoney(data).then( async(res) => {
+
+          console.log("Response for top up is", res);
+          const statusCode = res.statusCode;
+          const message = res.message;
           
-          const customer = res.data;
-          await asyncCustomerProfile(state.id);
+          if(statusCode == 1){
           
-          setProfile(customer);
-          await syncProfileData(customer);
-          await getProfile(customer);
-          
-          Toast.show(message);
-          testPushNotification();
-          setData({
-            ...state,
-            rechargeAmount: '',
-          });
-        }else{
-          Toast.show(res.message, Toast.LONG);
-        }
-        
-        setIsLoading(false);
+            Toast.show(message);
+            testPushNotification();
+
+            setData({
+              ...state,
+              rechargeAmount: '',
+            });
+
+          }else{
+            Toast.show(res.message, Toast.LONG);
+          }
+
+          setIsLoading(false);
+        });
         
       }catch(err){
         Toast.show(err.message, Toast.LONG);
