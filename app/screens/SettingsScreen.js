@@ -46,7 +46,7 @@ const set2 = [
 const set3 = [
   {
     key: 10,
-    item: "Rate App on Store",
+    item: "Rate Us",
     link: "RateUs",
     data: "",
     icon: "star",
@@ -61,12 +61,12 @@ const Settings = ({ navigation }) => {
   
   const [isVisible, setIsVisible] = useState(false);   
   
-  const { toggleTheme } = React.useContext(AuthContext);
+  const { toggleTheme, signOut } = React.useContext(AuthContext);
   const paperTheme = useTheme(); 
   
   const { colors } = useTheme();
   const styles = makeStyles(colors);
-  const iconSize = 24;
+  const iconSize = 25;
 
   const RateUs = () => {
     const options = {
@@ -86,6 +86,10 @@ const Settings = ({ navigation }) => {
         console.error(`Example page Rate.rate() error: ${errorMessage}`)
       }
     });
+  }
+
+  const logout = async() => {
+    await signOut();
   }
   
   const Navigate = (link) =>{
@@ -224,7 +228,13 @@ const Settings = ({ navigation }) => {
     }
     </TouchableOpacity>}/>
     
+    <View style={{ borderBottomColor: '#f1f1f1', borderBottomWidth: 1, }}/>
+    <TouchableOpacity onPress={() => logout() } style={styles.preferencesOpacity}>
+        <FontAwesome name={'power-off'} size={iconSize} color={design.colors.gray}/>
+        <Text style={styles.preferenceText}>  Sign Out</Text>
+    </TouchableOpacity>
     
+
     </View>
     
     </View>

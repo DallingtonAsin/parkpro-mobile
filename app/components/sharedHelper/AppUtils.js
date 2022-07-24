@@ -14,7 +14,7 @@ export const callHelpLine = (phoneNumber) => {
 };
 
 export const SendEmail = (email) =>{
-  Communications.email([email],null,null,'', '');
+   Linking.openURL(`mailto:${email}?subject=Message`);
 };
 
 export const SendSms = (telephone_number) => {

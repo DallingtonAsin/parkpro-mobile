@@ -472,7 +472,7 @@ export const RequestScreen = ({item, open, onClose}) => {
             
             
             <View style={{paddingVertical: 10 }}>
-              <Text style={{fontSize: 16 }}>Working hours:  <Text style={{ fontWeight:'bold', left: 5 }}>{`${item.opens_at}-${item.closes_at}`}</Text></Text>
+              <Text style={{fontSize: 16 }}>Working hours:  <Text style={{ fontWeight:'bold', left: 5 }}>{item.working_hours}</Text></Text>
             { is_open &&  <Text style={{fontSize:14, textTransform:'capitalize', fontWeight: '900', color: design.colors.green}}>Open</Text>}
             { !is_open &&  <Text style={{fontSize:14, textTransform:'capitalize', fontWeight: '900', color: design.colors.red}}>Closed</Text>}
           
