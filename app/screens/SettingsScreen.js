@@ -46,7 +46,7 @@ const set2 = [
 const set3 = [
   {
     key: 10,
-    item: "Rate App on Store",
+    item: "Rate Us",
     link: "RateUs",
     data: "",
     icon: "star",
@@ -66,7 +66,7 @@ const Settings = ({ navigation }) => {
   
   const { colors } = useTheme();
   const styles = makeStyles(colors);
-  const iconSize = 24;
+  const iconSize = 25;
 
   const RateUs = () => {
     const options = {
