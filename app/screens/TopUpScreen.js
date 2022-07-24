@@ -157,7 +157,6 @@ import { Text,
       }catch(err){
         Toast.show(err.message, Toast.LONG);
       }
-      setIsLoading(false);
     }
     
     
