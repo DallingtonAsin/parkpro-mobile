@@ -27,7 +27,6 @@ const options = {
 
 const CustomDrawer = (props) => {
   
-  const { signOut } = React.useContext(AuthContext);
   const { profile } = useContext(ProfileContext);
   const [isVisible, setIsVisible] = useState(false);
   
@@ -60,11 +59,7 @@ const CustomDrawer = (props) => {
     
     
   ];
-  
-  const logout = async() => {
-    await signOut();
-  }
-  
+
   const share = async (customOptions = options) => {
     try {
       await Share.open(customOptions);
@@ -215,24 +210,6 @@ const CustomDrawer = (props) => {
       
       </View>
       </DrawerContentScrollView>
-      
-    
-
-      <TouchableOpacity
-        style={[
-          styles.drawerItem, 
-          {
-          position: 'absolute',
-          right: 0,
-          left: 0,
-          bottom: 35
-        }]}
-        onPress={() => logout() }
-      >
-         <Icon name="power-off" size={iconSize} style={styles.drawerIcon} color={colors.drawerText}/>
-        <Text style={[styles.drawerText, {color: colors.drawerText}]}>Sign Out</Text>
-      </TouchableOpacity>
-      
       
       </View>
       )
