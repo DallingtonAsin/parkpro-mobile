@@ -484,9 +484,9 @@ import { Image, RefreshControl,  Text, View, StatusBar, StyleSheet,
                 }
               },
               
-              fetchParkingFees: async(id) => {
+              fetchParkingInfo: async(id) => {
                 try{
-                  return await services.parking.fetchParkingFees(id);
+                  return await services.parking.fetchParkingInfo(id);
                 }catch(e){
                   throw e;
                 }

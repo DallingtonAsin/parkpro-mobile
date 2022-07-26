@@ -82,8 +82,11 @@ export const RequestScreen = ({item, open, onClose}) => {
 
   useEffect(() => {
     populateVehicles();
+  })
+
+  useEffect(() => {
     fetchVehicleCategories();
-  }, [vehicles, carTypes])
+  }, [carTypes])
   
   const populateHours = () => {
     
@@ -114,10 +117,7 @@ export const RequestScreen = ({item, open, onClose}) => {
           for (let i = 0; i < temp.length; ++i){
             myvehicles.push(`${temp[i]['name']} - ${temp[i]['number']}`); // : ${temp[i]['name']}
           }
-          
-          console.log("myvehicles x", vehicles);
-          console.log("myvehicles y", myvehicles);
-          
+  
           if (vehicles && !_.isEqual(vehicles, myvehicles)) {
               setVehicleState(myvehicles);
           }

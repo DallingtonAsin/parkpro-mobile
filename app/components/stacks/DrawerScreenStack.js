@@ -6,7 +6,7 @@ import { Dimensions } from 'react-native';
 import AboutStack from  './AboutStack';
 import ParkingAreasStack from  './ParkingAreasStack';
 import ProfileStack from  './ProfileStack';
-import ParkingFeesStack from  './ParkingFeesStack';
+import ParkingInfoStack from  './ParkingInfoStack';
 
 import TransactionsHistoryStack from  './TransactionsHistoryStack';
 import TopupStack from  './TopupStack';
@@ -44,7 +44,7 @@ const DrawerScreenStack = () => {
         <Drawer.Screen name="PaymentHistory" component={TransactionsHistoryStack}/>
         <Drawer.Screen name="ParkingAreas" component={ParkingAreasStack}/>
         <Drawer.Screen name="NearByParkings" component={CloseByParkingStack}/>
-        <Drawer.Screen name="ParkingFees" component={ParkingFeesStack}/>
+        <Drawer.Screen name="ParkingInfo" component={ParkingInfoStack}/>
 
         <Drawer.Screen name="Weather" component={WeatherStack}/>
         <Drawer.Screen name="Map" component={MapScreen} options ={{ drawerLabel: 'Map' }}/>

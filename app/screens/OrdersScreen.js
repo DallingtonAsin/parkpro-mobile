@@ -71,6 +71,7 @@ import AppLoader from '../components/loaders/AppLoader';
     
     
     const renderComponent = (item) => {
+      
       return ( 
         <TouchableOpacity 
         style={{flexDirection: 'row', justifyContent: 'space-around', padding:5}}
@@ -92,7 +93,7 @@ import AppLoader from '../components/loaders/AppLoader';
         <View style={{ flexDirection: 'column'}}>
         <Text style={{ fontWeight:'bold',opacity:0.9, fontSize:16, color:styles.colors.parksmart }}>Order</Text>
         <Text style={{color:'#808080', fontSize:15}}>{item.request_date}</Text>
-        <Text style={{color:'#808080', fontSize:15}}>{APP_NAME} Wallet</Text>
+        <Text style={{color:'#808080', fontSize:15}}>{item.parking_area}</Text>
         </View>
         
         <View style={{ flexDirection: 'column'}}>

@@ -113,7 +113,7 @@ const Settings = ({ navigation }) => {
       navigation.navigate(link);
       break;
       case "RateUs":
-      setIsVisible(true);
+      Linking.openURL(`https://play.google.com/store/apps/details?id=com.twitter.android&hl=en&gl=US`);
       break;
       case "Copyrights":
       Linking.openURL(`https://parkproug.com`);

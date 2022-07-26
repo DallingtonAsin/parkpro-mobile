@@ -1,12 +1,11 @@
-import React, {useEffect, useState,useContext, useRef } from 'react';
-import { Text,
+  import React, {useEffect, useState,useContext, useMemo, useCallback, useRef } from 'react';
+  import { Text,
   TextInput, 
   View, 
   ScrollView,
   TouchableOpacity,
   KeyboardAvoidingView ,
   StyleSheet} from 'react-native';
-  import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
   import design from '../../assets/css/styles';
   import { TextInput as RNTextInput, Title } from 'react-native-paper';
   import PushNotification, {Importance} from "react-native-push-notification";
@@ -19,8 +18,12 @@ import { Text,
   import Toast from 'react-native-simple-toast';
   import { numberWithCommas} from '../components/sharedHelper/AppUtils';
   import PhoneInput from "react-native-phone-number-input";
+  import { renderHeader } from '../components/bottomSheets/renderHender';
+  import BottomSheet, { BottomSheetBackdrop, BottomSheetScrollView } from '@gorhom/bottom-sheet';
+  import {  Divider  } from 'react-native-paper';
   
-  
+
+
   PushNotification.configure({
     onNotification: function (notification) {
       console.log('LOCAL NOTIFICATION ==>', notification);
@@ -67,6 +70,22 @@ import { Text,
     const phoneInput = useRef(null);
     const [value, setValue] = useState(profile.phone_number);
 
+    const confirmTopupSheet = useRef(0);
+    const snapPoints = useMemo(() => ['25%', '75%'], []);
+
+    const renderConfirmTopupBackdrop = useCallback(
+      props => (
+        <BottomSheetBackdrop
+        {...props}
+        opacity={0.2}
+        />
+        ),
+        []
+        );
+
+        const openConfirmTopupSheet = useCallback((index) => {
+          confirmTopupSheet.current?.snapToIndex(index);
+        }, []);
 
     const getPhoneNumberFromRef = () => {
       const phoneObj = phoneInput.current?.getNumberAfterPossiblyEliminatingZero();
@@ -224,9 +243,6 @@ import { Text,
       
       <FocusAwareStatusBar barStyle="light-content" backgroundColor={colors.primary} />
       
-      <ScrollView  style={styles.contentContainer}>
-      
-      
       {state.hasRecharged ?
         <Text style={{ color: design.colors.green, marginLeft: 18 }}>{state.rechargeResponse}</Text>
         : null}
@@ -276,23 +292,48 @@ import { Text,
           />
         
         </View>
+
+     
         
-        </ScrollView >
-        
-        <View style={styles.bottom}>
+
         <TouchableOpacity
-        style={[design.btnPrimary, { color: '#fff',
+        style={[design.btnPrimary, styles.bottom, { color: '#fff',
         backgroundColor: colors.primary,
         borderColor: colors.primary}]}
-        onPress={RechargeUserAccount}
+        // onPress={RechargeUserAccount}
+        onPress={() => openConfirmTopupSheet(1)}
         disabled={false}>
         <Text style={styles.paymentButtonText}> 
         {isLoading ? 'Loading...' : 'CONFIRM TOPUP' }
         </Text>
         </TouchableOpacity>
         
-        </View>
         </KeyboardAvoidingView>
+
+        <BottomSheet
+                ref={confirmTopupSheet}
+                index={-1}
+                
+                snapPoints={snapPoints}
+                enablePanDownToClose={true}
+                backdropComponent={renderConfirmTopupBackdrop}
+                handleComponent={() => renderHeader("Enter your PIN") }>
+                
+                <Divider style={styles.divider}/>
+                
+                <BottomSheetScrollView contentContainerStyle={styles.contentContainer}>
+                 <TextInput placeholder='Enter your pin'/>
+                </BottomSheetScrollView>
+                
+                <TouchableOpacity style={styles.bottomSheetButton} 
+                  // onPress={() => openConfirmTopupSheet(1)}
+                  >
+                <Text style={design.vehicle.textAdd}>Confirm</Text>
+                </TouchableOpacity>
+                                    
+       </BottomSheet>
+
+       
         
         </>
         
