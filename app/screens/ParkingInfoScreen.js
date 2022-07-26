@@ -17,7 +17,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 const dbParkingHelper = require("../database/favouriteParkings");
 
-const ParkingFeesScreen = ({ route }) => {
+const ParkingInfoScreen = ({ route }) => {
     
     const { item } = route.params; 
     const { id: parking_area_id, address, name, photo, phone_number } = item;
@@ -28,6 +28,7 @@ const ParkingFeesScreen = ({ route }) => {
     const [isOpen, setIsOpen] = useState(false);
     
     const { colors } = useTheme();
+    console.log(`item on parking info`, item);
     
     
     dbParkingHelper.doesParkingExistinFavourites(parking_area_id, exists => {
@@ -87,7 +88,7 @@ const ParkingFeesScreen = ({ route }) => {
     
     const [searchQuery, setSearchQuery] = React.useState('');
     const onChangeSearch = query => setSearchQuery(query);
-    const { fetchParkingFees, searchParkingArea } = React.useContext(AuthContext);
+    const { fetchParkingInfo, searchParkingArea } = React.useContext(AuthContext);
     
     const onRefresh = React.useCallback(async () => {
         setIsLoading(true);
@@ -98,12 +99,12 @@ const ParkingFeesScreen = ({ route }) => {
     }, [isLoading]);
     
     
-    const getParkingFees = async() => {
+    const getParkingInfo = async() => {
         
         try{
             if(parking_area_id){
                 setIsLoading(true);
-                await fetchParkingFees(parking_area_id).then(res => {
+                await fetchParkingInfo(parking_area_id).then(res => {
                     if(res.statusCode == 1){
                         setFees(res.data);
                     }
@@ -148,7 +149,8 @@ const ParkingFeesScreen = ({ route }) => {
                     try {
                         if(parking_area_id){
                             
-                            const resp = await searchParkingArea(parking_area_id)
+                            const resp = await searchParkingArea(parking_area_id);
+                            
                             if(resp.statusCode == 1){
                                 const parking = resp.data[0];
                                 if(parking){
@@ -197,7 +199,7 @@ const ParkingFeesScreen = ({ route }) => {
                     
                     
                     useEffect(() => {
-                        getParkingFees();
+                        getParkingInfo();
                     }, [parking_area_id]);
                     
                     return (
@@ -233,20 +235,30 @@ const ParkingFeesScreen = ({ route }) => {
                             <Title style={{color: colors.dark }}>{name}</Title>
                             <Text style={{color: colors.dark, fontSize:15 }}>
                             <FontAwesome name="map-marker" size={18} color={design.colors.warning}/> {address}</Text>
-                            <FlatList
-                            data={fees}
-                            renderItem={({item}) => <CustomDataTable item={item}/>}
-                            ItemSeparatorComponent = { FlatListItemSeparator }
-                            ListHeaderComponent={FlatListHeader}
-                            ListEmptyComponent={EmptyFlastListMessage}
-                            keyExtractor={(item, index) => index.toString()}
-                            refreshControl={
+
+                            <Text style={{fontSize: 15 }}>
+                            <FontAwesome name="clock-o" size={14} color={design.colors.warning}/> Working hours: 
+                            <Text style={{ fontWeight:'normal' }}>  {item.working_hours}
+                            {item.is_open &&  <Text style={{fontSize:14, textTransform: 'uppercase', fontWeight: 'bold', opacity: 0.6, color: design.colors.green, left: 10}}> open</Text>}
+                            {!item.is_open &&  <Text style={{fontSize:14, textTransform: 'uppercase', fontWeight: 'bold', opacity: 0.6, color: design.colors.red, left: 10}}> closed</Text>}
+                            </Text>
+                            </Text>
+ 
+                                </Card.Content>
+
+                                 <FlatList
+                                data={fees}
+                                renderItem={({item}) => <CustomDataTable item={item}/>}
+                                ItemSeparatorComponent = { FlatListItemSeparator }
+                                ListHeaderComponent={FlatListHeader}
+                                ListEmptyComponent={EmptyFlastListMessage}
+                                keyExtractor={(item, index) => index.toString()}
+                                refreshControl={
                                 <RefreshControl
                                 refreshing={isLoading}
                                 onRefresh={onRefresh}
-                                />}
-                                />
-                                </Card.Content>
+                                />}/>
+
                                 </View>
                                 
                              
@@ -298,7 +310,7 @@ const ParkingFeesScreen = ({ route }) => {
                                 );
                             };
                             
-                            export default ParkingFeesScreen;
+                            export default ParkingInfoScreen;
                             
                             const styles = StyleSheet.create({
                                 container: {

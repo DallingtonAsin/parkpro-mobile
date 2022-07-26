@@ -69,8 +69,9 @@ export const AddVehicleScreen = ({isSheetVisible,
         </View>
         
         <View style={styles.inputContainer}>
-        <TouchableOpacity onPress={() => openModal()} style={{padding: 18, elevation:1, borderColor: 'gray'}}>
-          <Text> {vehicle.type ? vehicle.type : 'Select vehicle type'}</Text>
+        <TouchableOpacity onPress={() => openModal()}
+         style={[styles.input, { padding: 12 }]}>
+          <Text style={{color: design.colors.gray, fontSize:16}}> {vehicle.type ? vehicle.type : 'Select vehicle type'}</Text>
         </TouchableOpacity>
 
         <SelectDropDown 

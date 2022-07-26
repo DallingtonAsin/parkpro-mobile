@@ -40,7 +40,7 @@ let ParkingService =  class{
         }
     }
     
-    fetchParkingFees = async(id) => {
+    fetchParkingInfo = async(id) => {
         try{
             const endpoint = `${api.endpoint.parking.fetch_parking_fees}?parking_area_id=${id}`;
             return await api.axios.fetch(endpoint);

@@ -803,7 +803,42 @@ export default {
    fontSize:16,
    textTransform:'capitalize',
    fontWeight: 'bold'
-  }
+  },
+
+  bottomSheetPanel: {
+
+    bottomSheetHeader: {
+      backgroundColor: '#FFFFFF',
+      shadowColor: '#333333',
+      borderTopLeftRadius: 20,
+      borderTopRightRadius: 20,
+    },
+
+    panelHeader: {
+      alignItems: 'center',
+      padding: 0
+    },
+
+    panelHandle: {
+      width: 40,
+      height: 8,
+      borderRadius: 4,
+      backgroundColor: '#999',
+      marginTop: 8,
+      marginBottom: 10,
+    },
+
+    popupHeaderText: {
+      marginTop: 5,
+      paddingVertical: 2,
+      fontSize: 19,
+      textTransform:'capitalize',
+      fontWeight:'bold'
+    }
+
+  },
+  
+
   
  
   

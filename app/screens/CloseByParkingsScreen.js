@@ -204,8 +204,8 @@ import {SafeAreaView,Dimensions,
                                 
                                 
                                 const goToFeesScreen = (item) => { 
-                                    props.navigation.navigate("ParkingFees", {
-                                        screen: 'ParkingFees',
+                                    props.navigation.navigate("ParkingInfo", {
+                                        screen: 'ParkingInfo',
                                         params: {
 
                                                  item: item
