@@ -1,7 +1,6 @@
 import React from 'react'
 import { View, Text, StyleSheet } from 'react-native'
 import { colors as utilColors } from '../utils/index'
-import {  MaterialCommunityIcons, Ionicons } from '@expo/vector-icons'
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import FocusAwareStatusBar  from '../../components/common/FocusAwareStatusBar';

@@ -5,6 +5,7 @@ import WeatherInfo from '../components/weather/WeatherInfo'
 import UnitsPicker from '../components/weather/UnitsPicker'
 import ReloadIcon from '../components/weather/ReloadIcon'
 import WeatherDetails from '../components/weather/WeatherDetails'
+import HourlyForecast from "../components/weather/HourlyForecast";
 import { WEATHER_API_KEY } from '@env';
 import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
 import { useTheme  } from 'react-native-paper';
@@ -12,7 +13,6 @@ import AppLoader from '../components/loaders/AppLoader';
 import * as Location from 'expo-location';
 
 const BASE_WEATHER_URL = "https://api.openweathermap.org/data/2.5/weather?";
-const url =  `https://api.openweathermap.org/data/2.5/onecall?&units=metric&exclude=minutely&appid=${WEATHER_API_KEY}`;
 LogBox.ignoreAllLogs(true);
 
 const WeatherScreen = () => {
@@ -33,6 +33,11 @@ const WeatherScreen = () => {
   
   const refreshWeather = async() => {
     await load();
+  }
+
+  const getForecastApiUrl = (metric) => {
+    const url =  `https://api.openweathermap.org/data/2.5/onecall?&units=${metric}&exclude=minutely&appid=${WEATHER_API_KEY}`;
+    return url;
   }
   
   
@@ -79,7 +84,8 @@ const WeatherScreen = () => {
               setErrorMessage(result.message)
             }
             
-            const resp = await fetch( `${url}&lat=${latitude}&lon=${longitude}`);
+            const forecastApiUrl = getForecastApiUrl(unitsSystem);
+            const resp = await fetch( `${forecastApiUrl}&lat=${latitude}&lon=${longitude}`);
             const data = await resp.json();
             if(!resp.ok) {
               Alert.alert(`Error retrieving weather data: ${data.message}`); 
@@ -144,31 +150,9 @@ const WeatherScreen = () => {
           <WeatherDetails currentWeather={currentWeather} currentWeatherDetails={currentWeatherDetails} unitsSystem={unitsSystem}/>
           
           
-          <View>
-          <Text style={styles.subtitle}>Hourly Forecast</Text>
-          <FlatList horizontal
-          data={forecast.hourly.slice(0, 24)}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem={(hour) => {
-            const weather = hour.item.weather[0];
-            var dt = new Date(hour.item.dt * 1000);
-            return <View style={styles.hour}>
-            <Text style={styles.text}>{dt.toLocaleTimeString().replace(/:\d+ /, ' ')}</Text>
-            <Text style={styles.text}>{Math.round(hour.item.temp)}°C</Text>
-            <Image
-            style={styles.smallIcon}
-            source={{
-              uri: `http://openweathermap.org/img/wn/${weather.icon}@4x.png`,
-            }}
-            />
-            <Text style={styles.text}>{weather.description}</Text>
-            </View>
-          }}
-          />
-          </View>
-          
-          
-          
+          <HourlyForecast forecast={forecast} unitsSystem={unitsSystem}/>
+        
+
           </ScrollView>
           </SafeAreaView>
           
@@ -223,12 +207,7 @@ const WeatherScreen = () => {
               fontSize: 42,
               color: '#e96e50',
             },
-            subtitle: {
-              fontSize: 20,
-              marginVertical: 12,
-              marginLeft: 10,
-              color: '#e96e50',
-            },
+          
             
             loading: {
               flex: 1,
@@ -272,10 +251,7 @@ const WeatherScreen = () => {
               width: 250,
               height: 200,
             },
-            smallIcon: {
-              width: 100,
-              height: 100,
-            },
+          
             text:{
               fontSize:16
             }

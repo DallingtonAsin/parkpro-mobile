@@ -26,6 +26,7 @@ import { useTheme } from '@react-navigation/native';
 import { useIsMounted } from '../components/common/isMounted';
 import { apiKeys } from '../constants';
 import { AddVehicleScreen } from '../components/vehicle';
+import { renderHeader } from '../components/bottomSheets/renderHender';
 
 const dbVehicleHelper = require("../database/vehicles");
 const dbParkingHelper = require("../database/favouriteParkings");
@@ -433,8 +434,8 @@ const HomeScreen = (props) => {
                         ),[]);
                         
                         const GotoFeesPage = (item) => { 
-                          props.navigation.navigate("ParkingFees", {
-                            screen: 'ParkingFees',
+                          props.navigation.navigate("ParkingInfo", {
+                            screen: 'ParkingInfo',
                             params: { parking_area_id: item.id, 
                               parking_area: item.name,
                               address: item.address,
@@ -461,16 +462,6 @@ const HomeScreen = (props) => {
                             ),[]);
                             
                             
-                            const renderHeader = (title) => {
-                              return(
-                                <View style={styles.bottomSheetHeader}>
-                                <View style={styles.panelHeader}>
-                                <View style={styles.panelHandle} />
-                                <Text style={styles.popupHeaderText}>{title}</Text>
-                                </View>
-                                </View>
-                                );
-                              }
                               
                               return (
                                 <>
@@ -608,7 +599,7 @@ const HomeScreen = (props) => {
                                       : <View style={{flex:1, justifyContent: 'center', alignItems: 'center'}}>
                                       <Text style={styles.text}>No vehicles added yet.</Text>
                                       </View>
-                                    }
+                                     }
                                     </BottomSheetScrollView>
                                     
                                     <TouchableOpacity style={styles.bottomSheetButton} onPress={() => {setIsSheetVisible(true)}}>
@@ -701,33 +692,6 @@ const HomeScreen = (props) => {
                                       width:'75%',
                                       borderRadius:30,
                                       borderColor:design.colors.primary,
-                                    },
-                                    
-                                    bottomSheetHeader: {
-                                      backgroundColor: '#FFFFFF',
-                                      shadowColor: '#333333',
-                                      borderTopLeftRadius: 20,
-                                      borderTopRightRadius: 20,
-                                    },
-                                    
-                                    panelHeader: {
-                                      alignItems: 'center',
-                                    },
-                                    
-                                    panelHandle: {
-                                      width: 40,
-                                      height: 8,
-                                      borderRadius: 4,
-                                      backgroundColor: '#999',
-                                      marginTop: 8,
-                                      marginBottom: 10,
-                                    },
-                                    
-                                    popupHeaderText: {
-                                      padding:10, 
-                                      fontSize: 19,
-                                      textTransform:'capitalize',
-                                      fontWeight:'bold'
                                     },
                                     
                                     text: {

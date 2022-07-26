@@ -252,19 +252,21 @@ import {SafeAreaView,Dimensions,
                             <View style={{flexDirection:'column'}}>
                             <Title style={{ color: design.colors.dark }}>{item.name}</Title>
                             
-                            <Paragraph style={{fontSize:16, color: design.colors.dark  }}>{item.address}</Paragraph>
+                            <Paragraph style={{fontSize:16, color: design.colors.dark  }}>
+                            <FontAwesome name="map-marker" size={18} color={design.colors.warning}/> {item.address}</Paragraph>
                             </View>
                             
                             <View style={{flexDirection:'row', justifyContent:'space-between'}}>
                             
                             <View style={{justifyContent:'flex-start'}}>
-                            <Text style={{color:design.colors.dark}}>
-                            Capacity: <Text style={{color:design.colors.dark, fontSize:16}}>{item.spots}</Text>
-                            </Text> 
-                            
+                         
                             <Text style={{color:design.colors.dark}}>
                             Available:  <Text style={{color:design.colors.dark, fontSize:16}}>{item.free}</Text>
                             </Text>
+
+                            {item.is_open &&  <Text style={{fontSize:14, textTransform: 'uppercase', fontWeight: 'bold', opacity: 0.6, color: design.colors.green}}>Open</Text>}
+                            {!item.is_open &&  <Text style={{fontSize:14, textTransform: 'uppercase', fontWeight: 'bold',  opacity: 0.6, color: design.colors.red}}>Closed</Text>}
+
                             </View>
                             
                             <View style={{flexDirection:'column', justifyContent:'flex-end'}}>
@@ -288,8 +290,8 @@ import {SafeAreaView,Dimensions,
                                 
                                 
                                 const goToFeesScreen = (item) => { 
-                                    props.navigation.navigate("ParkingFees", {
-                                        screen: 'ParkingFees',
+                                    props.navigation.navigate("ParkingInfo", {
+                                        screen: 'ParkingInfo',
                                         params: {
 
                                                  item: item
