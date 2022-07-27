@@ -28,7 +28,6 @@ const ParkingInfoScreen = ({ route }) => {
     const [isOpen, setIsOpen] = useState(false);
     
     const { colors } = useTheme();
-    console.log(`item on parking info`, item);
     
     
     dbParkingHelper.doesParkingExistinFavourites(parking_area_id, exists => {
