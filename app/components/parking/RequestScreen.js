@@ -30,8 +30,7 @@ export const RequestScreen = ({item, open, onClose}) => {
         end_time: '',
         active: null
   }
-  console.log(`Item parking`, item);
-  
+
   const { profile } = useContext(ProfileContext);
   const { getVehicleCategories, submitParkingRequest} = React.useContext(AuthContext);
   
@@ -473,8 +472,8 @@ export const RequestScreen = ({item, open, onClose}) => {
             
             <View style={{paddingVertical: 10 }}>
               <Text style={{fontSize: 16 }}>Working hours:  <Text style={{ fontWeight:'bold', left: 5 }}>{item.working_hours}</Text></Text>
-            { is_open &&  <Text style={{fontSize:14, textTransform:'capitalize', fontWeight: '900', color: design.colors.green}}>Open</Text>}
-            { !is_open &&  <Text style={{fontSize:14, textTransform:'capitalize', fontWeight: '900', color: design.colors.red}}>Closed</Text>}
+            { is_open &&  <Text style={{fontSize:14, textTransform:'uppercase', fontWeight: '900', color: design.colors.green}}>Open</Text>}
+            { !is_open &&  <Text style={{fontSize:14, textTransform:'uppercase', fontWeight: '900', color: design.colors.red}}>Closed</Text>}
           
             <View style={{marginTop: 25}}>
             <Text style={{fontSize: 16, fontWeight:'bold', opacity:0.6, color:'#000', textTransform:'capitalize'}}>ORDER REQUEST INFORMATION</Text>

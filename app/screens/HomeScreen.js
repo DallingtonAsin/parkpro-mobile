@@ -435,13 +435,15 @@ const HomeScreen = (props) => {
                   ),[]);
                   
                   const GotoFeesPage = (item) => { 
+                    console.log(`Item onto info screen`, item);
+                    item.id = item.uniquePId;
+                    console.log(`Item onto info screen 2`, item);
+
+                    // return;
                     props.navigation.navigate("ParkingInfo", {
                       screen: 'ParkingInfo',
-                      params: { parking_area_id: item.id, 
-                        parking_area: item.name,
-                        address: item.address,
-                        phone_number: item.phone_number,
-                        photo: item.photo,
+                      params: {
+                        item: item
                       }
                     });
                   }
@@ -499,7 +501,7 @@ const HomeScreen = (props) => {
                               <Text style={styles.balanceText}>
                               {CURRENCY} 
                                 { hideBalance && <Text> .....</Text> }
-                                { !hideBalance && <Text> 98,00{profile.account_balance}</Text> } 
+                                { !hideBalance && <Text> {profile.account_balance}</Text> } 
                               </Text>
                            <TouchableOpacity onPress={() => { setHideBalance(!hideBalance) }}>
                              { hideBalance && <FontAwesome name={"eye"} size={26} style={{color: colors.text, top:10, left:18}} /> }
