@@ -1,6 +1,6 @@
   import React, {useEffect, useState,useContext, useMemo, useCallback, useRef } from 'react';
   import { Text,
-    View, 
+    View, Linking,
     TouchableOpacity,
     KeyboardAvoidingView ,
     StyleSheet, Alert} from 'react-native';
@@ -182,14 +182,19 @@
               console.log(`Topup data`, data);
               setIsLoading(true);
               depositMoney(data).then( async(res) => {
-                
+                setIsLoading(false);
                 console.log("Response for top up is", res);
                 const statusCode = res.statusCode;
                 const message = res.message;
                 
                 if(statusCode == 1){
                   
-                  openConfirmTopupSheet(1);
+                  if(res.data.link){
+                    let redirectUrl = res.data.link
+                    return Linking.openURL(redirectUrl);
+                  }
+                  
+                  // openConfirmTopupSheet(1);
                   // Toast.show(message);
                   // testPushNotification();
                   
@@ -202,7 +207,7 @@
                   Toast.show(res.message, Toast.LONG);
                 }
                 
-                setIsLoading(false);
+             
               });
             }catch(err){
               throw err;
@@ -330,7 +335,6 @@
                 <BottomSheet
                 ref={confirmTopupSheet}
                 index={-1}
-                
                 snapPoints={snapPoints}
                 enablePanDownToClose={true}
                 backdropComponent={renderConfirmTopupBackdrop}
