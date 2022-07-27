@@ -39,6 +39,7 @@
         
         const id = profile.id;
         let resp = await getCustomerNotifications(id);
+        console.log(`Resp for notifications`, resp);
         
         setIsLoading(false);
         
