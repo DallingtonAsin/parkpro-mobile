@@ -59,60 +59,33 @@ const AboutScreen = (props) => {
         
         
         <AboutCardItem
-        icon={"globe"}
-        bgColor={['#fff', '#fff']}
-        label="Website"
-        iconWidth={45} 
-        iconHeight={45}
-        XWidth={70}
-        YHeight={70}
-        isSocialMedia={true}
-        color={'#43609C'}
-        labelColor={colors.dark}
-        onPress={() => Linking.openURL("http://www.parkproug.com")}
+            icon={"globe"}
+            label="Website"
+            color={'#43609C'}
+            onPress={() => Linking.openURL("http://www.parkproug.com")}
         />
         
         <AboutCardItem
-        icon={"facebook"}
-        bgColor={['#fff', '#fff']}
-        label="Facebook"
-        iconWidth={35} 
-        iconHeight={35}
-        XWidth={70}
-        YHeight={70}
-        isSocialMedia={true}
-        color={'#43609C'}
-        labelColor={colors.dark}
-        onPress={() =>  Linking.openURL("http://www.facebook.com") }
+            icon={"facebook"}
+            bgColor={['#fff', '#fff']}
+            label="Facebook"
+            color={'#43609C'}
+            onPress={() =>  Linking.openURL("http://www.facebook.com") }
         />
         
     <AboutCardItem
-    icon={"twitter"}
-    bgColor={['#fff', '#fff']}
-    label="Twitter"
-    iconWidth={35} 
-    iconHeight={35}
-    XWidth={70}
-    YHeight={70}
-    isSocialMedia={true}
-    color={'#1DA1F2'}
-    labelColor={colors.dark}
-    onPress={() =>  Linking.openURL("https://www.twitter.com") }
+        icon={"twitter"}
+        label="Twitter"
+        color={'#1DA1F2'}
+        onPress={() =>  Linking.openURL("https://www.twitter.com") }
     />
     
     
     <AboutCardItem
-    icon={"linkedin"}
-    bgColor={['#fff', '#fff']}
-    label="Linkedin"
-    iconWidth={35} 
-    iconHeight={35}
-    XWidth={70}
-    YHeight={70}
-    isSocialMedia={true}
-    color={'#0e76a8'}
-    labelColor={colors.dark}
-    onPress={() =>  Linking.openURL("http://www.linkedin.com") }
+        icon={"linkedin"}
+        label="Linkedin"
+        color={'#0e76a8'}
+        onPress={() =>  Linking.openURL("http://www.linkedin.com") }
     />
     
     </View>
