@@ -4,7 +4,7 @@ import { DataTable, Divider } from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AuthContext } from '../context/context';
 import { icons } from '../../constants';
-import Toast from 'react-native-simple-toast';8
+import Toast from 'react-native-simple-toast';
 import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
 import { useTheme  } from 'react-native-paper';
 import AppLoader from '../components/loaders/AppLoader';
@@ -92,7 +92,7 @@ const TransactionsHistoryScreen = () => {
               const profile = JSON.parse(userProfile);
               const id = profile.id;
               const resp = await getCustomerTransactions(id);
-              if(resp.statusCode == 1){
+              if(resp.statusCode == 200){
                 const transactions = resp.data;
                 if(transactions.length > 0){
                   setTransaction(transactions);
@@ -188,6 +188,7 @@ const TransactionsHistoryScreen = () => {
                 itemStyle: {
                   padding: 10,
                 },
+                
                 headerFooterStyle: {
                   width: '100%',
                   height: 45,
@@ -220,9 +221,9 @@ const TransactionsHistoryScreen = () => {
                   padding: 20,
                   marginVertical: 8
                 },
+
                 header: {
                   fontSize: 20,
-                  backgroundColor: colors.bodyText,
                   fontWeight: 'bold',
                   textAlign: 'center',
                 },
@@ -230,11 +231,14 @@ const TransactionsHistoryScreen = () => {
                   fontSize: 24
                 },
                 cellText:{
-                  fontSize:16
+                  fontSize:16,
+                  color: '#000',
+                  textTransform: 'capitalize'
                 },
                 rowHeaderText:{
                   fontWeight: 'bold',
-                  color: colors.primary,
+                  color: '#000',
+                  // color: colors.primary,
                 }
                 
               });

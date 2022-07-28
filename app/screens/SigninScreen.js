@@ -104,14 +104,14 @@ const SigninScreen = ({ navigation }) => {
                 
                 let response = await sendSmsVerification(requestParams);
                 console.log("API response", response);
-                if(response.statusCode == 1){
-                    
-                    await storeAccessToken(response.data.access_token);
+                if(response.statusCode == 200){
+                    let data = response.data;
+                    await storeAccessToken(data.access_token);
                     
                     navigation.navigate("Otp",{
-                        countryCode: response.data.country_code,
-                        phoneNumber: response.data.phone_number,
-                        otp: response.data.otp
+                        countryCode: data.country_code,
+                        phoneNumber: data.phone_number,
+                        otp: data.otp
                     });
                 }else{
                     Toast.show(response.message, Toast.LONG);

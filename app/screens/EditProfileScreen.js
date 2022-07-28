@@ -116,7 +116,7 @@ const EditProfile = () => {
       const statusCode = result.statusCode;
       const message = result.message;
       
-      if(statusCode == 1){
+      if(statusCode == 200){
         
         const customer = result.data;
         console.log("Profile data after updating profile", customer);
@@ -200,7 +200,7 @@ const EditProfile = () => {
         if(statusCode == 0){
           Alert.alert("Message", message);
         }
-        if(statusCode == 1){
+        if(statusCode == 200){
           const customer = response.data;
           setProfile(customer);
           await syncProfileData(customer);
@@ -269,7 +269,7 @@ const EditProfile = () => {
       const statusCode = response.statusCode;
       const message = response.message;
       
-      if(statusCode == 1){
+      if(statusCode == 200){
         const customer = response.data;
         console.log("Data on removing profile image", customer);
         setProfile(customer);

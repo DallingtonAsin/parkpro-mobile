@@ -531,6 +531,15 @@ import { Image, RefreshControl,  Text, View, StatusBar, StyleSheet,
                   throw e;
                 }
               },
+
+              hasInternetConnection: () => {
+                let isConnected = NetInfo.fetch().then(state => {
+                    return state.isConnected;
+                }).catch((err) => {
+                    throw err;
+                });
+                return isConnected; 
+              },
               
               toggleTheme: () => {
                 setIsDarkTheme(isDarkTheme => !isDarkTheme);

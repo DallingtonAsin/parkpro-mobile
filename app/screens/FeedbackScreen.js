@@ -81,7 +81,7 @@ const FeedbackScreen = () => {
         const statusCode = result.statusCode;
         const message = result.message;
         
-        if(statusCode == 1){
+        if(statusCode == 200){
           setState({...initialState});
           Toast.show(message);
         }else{
@@ -170,85 +170,85 @@ const FeedbackScreen = () => {
     value={state.description}
     onChangeText={(text) => {setState({...state, description: text}) }}
     />
-</View>
-
-     <View style={css.footer}>
-         <TouchableOpacity 
-            style={[styles.btnPrimary, {
-            backgroundColor: colors.primary,
-            borderColor: colors.primary}]}
-            onPress={() => { sendFeedback() }}
-         >
-         <Text style = {{ color: colors.text, fontWeight: 'bold', textTransform: 'uppercase', fontSize:16 }}>{isLoading ? 'Sending...': 'Send' }</Text>
-         </TouchableOpacity>
-      </View> 
-    
     </View>
     
-    {  isLoading ?  <AppLoader /> : null }
-    
-    </>
-    
-    );
-  }
-  
-  export default FeedbackScreen
-  
-  const makeStyles =  (colors) => StyleSheet.create({
-    container:{
-      flex:1
-    },
-    
-    top:{
-      flex:2,
-      justifyContent: 'center', 
-      alignItems: 'center',
+    <View style={css.footer}>
+    <TouchableOpacity 
+    style={[styles.btnPrimary, {
+      backgroundColor: colors.primary,
+      borderColor: colors.primary}]}
+      onPress={() => { sendFeedback() }}
+      >
+      <Text style = {{ color: colors.text, fontWeight: 'bold', textTransform: 'uppercase', fontSize:16 }}>{isLoading ? 'Sending...': 'Send' }</Text>
+      </TouchableOpacity>
+      </View> 
       
-    },
+      </View>
+      
+      {  isLoading ?  <AppLoader /> : null }
+      
+      </>
+      
+      );
+    }
     
-    body:{
-      flex: 4, 
-      backgroundColor: colors.secondary,
-      borderTopLeftRadius: 40,
-      borderTopRightRadius: 40,
-      padding:30,
-    },
+    export default FeedbackScreen
     
-    
-    footer:{
-      flexDirection: 'row',
-      alignItems: 'center',
-      alignSelf: 'center',
-      justifyContent: 'center'
-    },
-    
-  
-    btnText: {
-      textTransform: 'uppercase',
-      color: colors.white,
-      fontSize:15, 
-      fontWeight: 'bold',
-    },
-    
-    textArea: {
-      backgroundColor: styles.colors.white,
-      borderRadius: 20
-    },
-    
-    input:{
-      backgroundColor: styles.colors.white,
-      borderRadius:20,
-      color: '#000',
-    },
-    
-    title: {
-      fontSize:15,
-      fontWeight: 'bold',
-      opacity:0.7,
-    },
-    
-    
-    
-    
-    
-  });
+    const makeStyles =  (colors) => StyleSheet.create({
+      container:{
+        flex:1
+      },
+      
+      top:{
+        flex:2,
+        justifyContent: 'center', 
+        alignItems: 'center',
+        
+      },
+      
+      body:{
+        flex: 4, 
+        backgroundColor: colors.secondary,
+        borderTopLeftRadius: 40,
+        borderTopRightRadius: 40,
+        padding:30,
+      },
+      
+      
+      footer:{
+        flexDirection: 'row',
+        alignItems: 'center',
+        alignSelf: 'center',
+        justifyContent: 'center'
+      },
+      
+      
+      btnText: {
+        textTransform: 'uppercase',
+        color: colors.white,
+        fontSize:15, 
+        fontWeight: 'bold',
+      },
+      
+      textArea: {
+        backgroundColor: styles.colors.white,
+        borderRadius: 20
+      },
+      
+      input:{
+        backgroundColor: styles.colors.white,
+        borderRadius:20,
+        color: '#000',
+      },
+      
+      title: {
+        fontSize:15,
+        fontWeight: 'bold',
+        opacity:0.7,
+      },
+      
+      
+      
+      
+      
+    });

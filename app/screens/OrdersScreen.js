@@ -45,9 +45,10 @@ import AppLoader from '../components/loaders/AppLoader';
         const id = profile.id;
         let resp = await fetchMyParkingRequests(id);
        
-        if(resp.statusCode == 1){
-          if(resp.data.length > 0){
-            setParkingRequests(resp.data);
+        if(resp.statusCode == 200){
+          const data = resp.data;
+          if(data.length > 0){
+            setParkingRequests(data);
           }
         }else{
           Toast.show(resp.message);

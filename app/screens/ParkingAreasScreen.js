@@ -59,7 +59,8 @@ import {SafeAreaView,
             
             try{
                 const resp = await getParkingAreas();
-                if(resp.statusCode == 1){
+                console.log(`Parkings data`, resp);
+                if(resp.statusCode == 200){
                     const parkings = resp.data;
                     if(parkings.length > 0) {
                         setFilteredParkingAreas(parkings);

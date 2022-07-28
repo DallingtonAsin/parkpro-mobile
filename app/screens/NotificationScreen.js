@@ -43,7 +43,7 @@
         
         setIsLoading(false);
         
-        if(resp.statusCode == 1){
+        if(resp.statusCode == 200){
           const notificationsData = resp.data;
           if(notificationsData.length > 0){
             setNotifications(notificationsData);

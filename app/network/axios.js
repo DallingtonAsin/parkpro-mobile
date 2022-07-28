@@ -1,5 +1,7 @@
 const axios = require('axios');
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import ApiResponse from  './responses/ApiResponse';
+import NetInfo from "@react-native-community/netinfo";
 
 let AxiosApi = class {
     
@@ -18,12 +20,12 @@ let AxiosApi = class {
         try {
             const headers = await this.getHeader();
             const response = this.client().get(endpoint, headers).then(res => {
-                if(res.status == 200){
-                    return res.data;
-                 }else{
-                     return res;
-                 }
-            }).catch(err => console.log("Axios error on fetch", err));
+                // console.log(`Result`, res);
+                return this.getSuccessResponse(res, true);
+                
+            }).catch(err => {
+                return this.getFailedResponse(err);
+            });
             return response;
         } catch (error) {
             throw error;
@@ -34,14 +36,10 @@ let AxiosApi = class {
         try {
             const headers = await this.getHeader();
             const response = this.client().post(endpoint, data, headers).then(res => {
-                if(res.status == 200){
-                    return res.data;
-                 }else{
-                     return res;
-                 }
+                // console.log(`Result`, res);
+                return this.getSuccessResponse(res);
             }).catch(err => {
-                console.log("Axios error on post", err);
-                throw err;
+                return this.getFailedResponse(err);
             });
             return response;
         } catch (error) {
@@ -54,17 +52,12 @@ let AxiosApi = class {
         try {
             const headers = await this.getHeader();
             const response = this.client().put(endpoint, data, headers).then(res => {
-                if(res.status == 200){
-                    return res.data;
-                 }else{
-                     return res;
-                 }
+                return this.getSuccessResponse(res);
             }).catch(err => {
-                console.log("Axios error on put", err)
-                throw err;
+                return this.getFailedResponse(err);
             });
-            
             return response;
+            
         } catch (error) {
             throw error;
         }
@@ -73,18 +66,12 @@ let AxiosApi = class {
     postWithFile = async(endpoint, data) => {
         try {
             const headers = await this.getHeader(true);
-            console.log("Headers", headers);
-            console.log("put file data", data);
             const response = this.client().post(endpoint, data, headers).then(res => {
-                 if(res.status == 200){
-                    return res.data;
-                 }else{
-                     return res;
-                 }
+                return this.getSuccessResponse(res);
             }).catch(err => {
-                console.log("Axios error on post with file", err);
-                throw err;
+                return this.getFailedResponse(err);
             });
+            
             return response;
         } catch (error) {
             throw error;
@@ -93,6 +80,7 @@ let AxiosApi = class {
     
     getHeader = async(isMultipart = false) => {
         try{
+            
             const bearerToken = await this.getToken();
             const headers =  {
                 headers: {
@@ -102,6 +90,7 @@ let AxiosApi = class {
                 },      
             }
             return headers;
+            
         }catch(err){
             throw err;
         }
@@ -114,6 +103,63 @@ let AxiosApi = class {
                 token = null;
             }
             return token;
+        }catch(err){
+            throw err;
+        }
+    }
+    
+    hasInternetConnection = () => {
+        let isConnected = NetInfo.fetch().then(state => {
+            return state.isConnected;
+        }).catch((err) => {
+            throw err;
+        });
+        return isConnected; 
+    }
+    
+    checkInternetConnection = async() => {
+        let hasInternet =  await this.hasInternetConnection();
+        console.log('Has internet conncetion', hasInternet);
+        if(!hasInternet){
+            throw new Error("You have don't internet connection");
+        }
+    }
+    
+    getSuccessResponse = (response, isGet=false) => {
+        try{
+            let data = null, message = null, result = null;
+            
+            if(response.status == 200){
+                if(isGet){
+                    data = response.data;
+                    message = 'SUCCESS';
+                    console.log('Data on fetching', data);
+                }else{
+                    data = response.data.data;
+                    message = response.data.message;
+                    console.log('Data on posting', data);
+                }
+
+                console.log(`Response message`, message);  
+                result =  new ApiResponse(response.status, message, data)
+            }else{
+                result = new ApiResponse(response.status, message, data);
+            }
+            
+            return result;
+        }catch(err){
+            throw err;
+        }
+    }
+    
+    getFailedResponse = (error) => {
+        try{
+            if (error.response) {
+                let errorMessage = error.message === 'Network Error' ? 'No internet Connection' : error.message;
+                return new ApiResponse(error.response.status, errorMessage, null);
+            }else{
+                throw error;
+            }
         }catch(err){
             throw err;
         }

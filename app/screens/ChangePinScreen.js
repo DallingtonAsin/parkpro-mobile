@@ -65,7 +65,7 @@ const Password = () => {
       console.log("Req params", reqParams);
       setIsLoading(true);
       const response = await changePin(reqParams);
-      if(response.statusCode == "1"){
+      if(response.statusCode == 200){
         setState(initialState);
         Toast.show(response.message, Toast.LONG);
       }else{

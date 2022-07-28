@@ -63,7 +63,7 @@ const ChangePhoneNumberScreen = ({ navigation }) => {
       verifyChangePhoneNumber(phoneDetails).then((response) => {
         setIsLoading(false);
         
-        if(response.statusCode == '1'){
+        if(response.statusCode == 200){
           setIsOtpSent(true);
           setOTP(response.data.otp);
         }else{
@@ -101,7 +101,7 @@ const ChangePhoneNumberScreen = ({ navigation }) => {
       changePhoneNumber(data).then(async (response) => {
         setIsLoading(false);
 
-        if(response.statusCode == '1'){
+        if(response.statusCode == 200){
 
           setIsOtpSent(false);
           const customer = response.data;
