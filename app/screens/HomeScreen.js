@@ -171,7 +171,7 @@ const HomeScreen = (props) => {
           try{
             
             const result = await getVehicleCategories();
-            if(result.statusCode == '1'){
+            if(result.statusCode == 200){
               const data = result.data;
               const vehicle_types = [];
               for(let i=0; i<data.length; i++) {

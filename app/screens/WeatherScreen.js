@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View , PermissionsAndroid, ActivityIndicator, ScrollView, SafeAreaView, RefreshControl, LogBox, FlatList, Image   } from "react-native";
+import React, { useEffect, useState, useContext } from "react";
+import { StyleSheet, Text, View , PermissionsAndroid, ActivityIndicator, ScrollView, SafeAreaView, RefreshControl, LogBox, FlatList, Image, ToastAndroid   } from "react-native";
 import Geolocation from 'react-native-geolocation-service';
 import WeatherInfo from '../components/weather/WeatherInfo'
 import UnitsPicker from '../components/weather/UnitsPicker'
@@ -11,24 +11,35 @@ import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
 import { useTheme  } from 'react-native-paper';
 import AppLoader from '../components/loaders/AppLoader';
 import * as Location from 'expo-location';
+import { AuthContext } from '../context/context';
+import Toast from 'react-native-simple-toast';
+
 
 const BASE_WEATHER_URL = "https://api.openweathermap.org/data/2.5/weather?";
 LogBox.ignoreAllLogs(true);
 
 const WeatherScreen = () => {
-  
+  // hasInternetConnection
   const [errorMessage, setErrorMessage] = useState(null);
   const [currentWeather, setCurrentWeather] = useState(null);
   const [forecast, setForecast] = useState(null);
   const [currentWeatherDetails, setCurrentWeatherDetails] = useState(null);
   const [unitsSystem , setUnitsSystem] = useState('metric');
   const [isLoading, setIsLoading] = useState(true);
+  const [isConnected, setIsConnected] = useState(false);
   const { colors } = useTheme();
   
+  const { hasInternetConnection } = React.useContext(AuthContext);
   
-  useEffect(() => {
-    load();
-  }, [unitsSystem]);
+  useEffect(async() => {
+    let isConnected = await hasInternetConnection();
+    setIsConnected(isConnected);
+    if(!isConnected){
+      setIsLoading(false);
+    }else{
+      load();
+    }
+  }, [isConnected, unitsSystem]);
   
   
   const refreshWeather = async() => {
@@ -49,6 +60,7 @@ const WeatherScreen = () => {
     
     try {
       
+
       const granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
         {
@@ -66,6 +78,14 @@ const WeatherScreen = () => {
         setErrorMessage("Location permission needed to load weather denied!");
         return;
       } 
+      
+      console.log('Has internet', isConnected);
+      if(!isConnected){
+        setIsLoading(true);
+        Toast.show('No internet Conncetion', Toast.LONG);
+        return;
+      }
+
       setIsLoading(true);
 
       Geolocation.getCurrentPosition(
@@ -116,12 +136,13 @@ const WeatherScreen = () => {
       
     }
     
-    if ((!forecast || !currentWeatherDetails)) {
-      return <SafeAreaView style={styles.loading}>
-      <FocusAwareStatusBar barStyle="light-content" backgroundColor={colors.primary} />
-        {  isLoading ?  <AppLoader /> : null }
-      </SafeAreaView>
-    }
+      if ((!forecast || !currentWeatherDetails)) {
+        return <SafeAreaView style={styles.loading}>
+        <FocusAwareStatusBar barStyle="light-content" backgroundColor={colors.primary} />
+          {  isLoading && isConnected ?  <AppLoader /> : null }
+        </SafeAreaView>
+      }
+   
     
     
     if(currentWeatherDetails && forecast){
@@ -156,7 +177,7 @@ const WeatherScreen = () => {
           </ScrollView>
           </SafeAreaView>
           
-          {  isLoading ?  <AppLoader /> : null }
+          {  isLoading && isConnected ?  <AppLoader /> : null }
           
           </>
           );

@@ -70,7 +70,7 @@ import {SafeAreaView,Dimensions,
             
             try{
                 const resp = await getParkingAreas();
-                if(resp.statusCode == 1){
+                if(resp.statusCode == 200){
                     const parkings = resp.data;
                     if(parkings.length > 0) {
                         setFilteredParkingAreas(parkings);
@@ -97,7 +97,7 @@ import {SafeAreaView,Dimensions,
                         JSON.stringify(position.coords.longitude);
                         setIsLoading(true);
                         const resp = await getNearByParkingAreas(currentLatitude, currentLongitude);
-                        if(resp.statusCode == 1){
+                        if(resp.statusCode == 200){
                             const nearByParkings = resp.data;
                             if(nearByParkings.length > 0) {
                                 setNearByParkingAreas(nearByParkings);
@@ -126,7 +126,7 @@ import {SafeAreaView,Dimensions,
                 
                 try{
                     const resp = await getTopRatedParkingAreas();
-                    if(resp.statusCode == 1){
+                    if(resp.statusCode == 200){
                         const topRatedParkings = resp.data;
                         if(topRatedParkings.length > 0) {
                             setTopRatedParkingAreas(topRatedParkings);

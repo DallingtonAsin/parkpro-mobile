@@ -372,7 +372,7 @@ export const RequestScreen = ({item, open, onClose}) => {
                 const resp = await submitParkingRequest(reqParams);
                 console.log("Resp", resp);
                 
-                if(resp.statusCode == 1){
+                if(resp.statusCode == 200){
                   
                   setStartTime('');
                   setEndTime('');

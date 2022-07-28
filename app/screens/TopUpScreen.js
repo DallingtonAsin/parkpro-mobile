@@ -187,10 +187,10 @@
                 const statusCode = res.statusCode;
                 const message = res.message;
                 
-                if(statusCode == 1){
-                  
-                  if(res.data.link){
-                    let redirectUrl = res.data.link
+                if(statusCode == 200){
+                  let data = res.data;
+                  if(data.link){
+                    let redirectUrl = data.link
                     return Linking.openURL(redirectUrl);
                   }
                   
@@ -204,7 +204,7 @@
                   // });
                   
                 }else{
-                  Toast.show(res.message, Toast.LONG);
+                  Toast.show(message, Toast.LONG);
                 }
                 
              
