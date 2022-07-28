@@ -47,8 +47,9 @@ const OtpInputScreen = ({ route, navigation }) => {
         }
         setIsTimerOn(true);
         const result = await resendSignupOTP(reqParams);
-        if(result.statusCode == "1"){
-          const newOTP = result.data.otp;
+        if(result.statusCode == 200){
+          let data = result.data;
+          const newOTP = data.otp;
           setOTP(newOTP);
         }else{
           Toast.show(result.message, Toast.LONG);
@@ -78,11 +79,12 @@ const OtpInputScreen = ({ route, navigation }) => {
       }
       setIsLoading(true);
       let response = await verifyOTP(reqParams); 
+      console.log(`Verify otp response`, response);
       const statusCode = response.statusCode;
       const message = response.message;
       const data = response.data;
       
-      if(statusCode == 1){
+      if(statusCode == 200){
         if(data.is_registered){
           await goToHomeScreen(data);
         }else{

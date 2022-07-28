@@ -104,7 +104,7 @@ const ParkingInfoScreen = ({ route }) => {
             if(parking_area_id){
                 setIsLoading(true);
                 await fetchParkingInfo(parking_area_id).then(res => {
-                    if(res.statusCode == 1){
+                    if(res.statusCode == 200){
                         setFees(res.data);
                     }
                     const timer = setTimeout(() => {
@@ -150,7 +150,7 @@ const ParkingInfoScreen = ({ route }) => {
                             
                             const resp = await searchParkingArea(parking_area_id);
                             
-                            if(resp.statusCode == 1){
+                            if(resp.statusCode == 200){
                                 const parking = resp.data[0];
                                 if(parking){
                                     setIsAdding(true);

@@ -53,7 +53,7 @@
         try{
           
           const result = await fetchOrderInfo(order_no, customer_id);
-          if(result.statusCode == "1"){
+          if(result.statusCode == 200){
             const order_details = result.data; 
             if(order_details.length > 0){
               console.log("Order details", order_details);

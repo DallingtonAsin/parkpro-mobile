@@ -133,7 +133,7 @@ const SignupScreen = ({route, navigation}) => {
             let response = await createProfile(reqParams);
             let message = response.message
             let statusCode = response.statusCode;
-            if(statusCode == 1){
+            if(statusCode == 200){
                 let user = response.data;
                 await goToHomeScreen(user);
             }else{
