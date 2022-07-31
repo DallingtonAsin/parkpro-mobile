@@ -388,10 +388,12 @@
                       const statusCode = res.statusCode;
                       
                       if(statusCode == 200){
-                        const user = res.data;
+                        let user = res.data;
                         console.log(`User profile data`, user);
                         await AsyncStorage.setItem("userProfile", JSON.stringify(user));
                         providerValue.setProfile(user);
+                        user.isUpdated = true;
+                        return user;
                       }
                       
                     }).catch((error) => {
@@ -624,10 +626,14 @@
                 // });
                 
                 listenForBackgroundPushNotification()
-                .then(result => {
+                .then(async result => {
                   if(result){
                     if(user && user.id){
-                      authContext.asyncCustomerProfile(user.id);
+                      let response = await authContext.asyncCustomerProfile(user.id);
+                      console.log('Result of updating prof', response);
+                      if(response && response.isUpdated){
+                        dispatch({ type: 'LOGIN', id: response.phone_number, userToken: response.access_token})
+                      }
                     }
                   }
                 });
