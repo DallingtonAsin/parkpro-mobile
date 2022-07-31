@@ -6,6 +6,7 @@ import {MAJOR_VERSION, MINOR_VERSION, PATCH_VERSION,PRE_RELEASE } from '@env';
 import { getUniqueId } from 'react-native-device-info';
 import { NetworkInfo } from "react-native-network-info";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import PushNotification from "react-native-push-notification";
 
 export const isUndefined = (state) => typeof state === "undefined";
 
@@ -14,7 +15,7 @@ export const callHelpLine = (phoneNumber) => {
 };
 
 export const SendEmail = (email) =>{
-   Linking.openURL(`mailto:${email}?subject=Message`);
+  Linking.openURL(`mailto:${email}?subject=Message`);
 };
 
 export const SendSms = (telephone_number) => {
@@ -26,11 +27,11 @@ export const inboxFromWhatsapp = (whatsappNumber) => {
 }
 
 export const getDeviceId = () => {
-   return getUniqueId();
+  return getUniqueId();
 }
 
 export const getDeviceIpAddress = async(x) => {
-    return await NetworkInfo.getIPAddress();
+  return await NetworkInfo.getIPAddress();
 }
 
 export const Monetize = (num) => {
@@ -55,96 +56,108 @@ export const getAppVersionName = () => {
 
 export const isValidateEmail = (email) => {
   return String(email)
-    .toLowerCase()
-    .match(
-      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+  .toLowerCase()
+  .match(
+    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     );
-};
-
-
-export const storeAccessToken = async(accessToken) => {
-  var value = JSON.stringify(accessToken);
-  try {
-    await AsyncStorage.setItem("accessToken", value);
-  } catch (error) {
-    console.log(error);
-  }
-}
-
-export const usePrevious = value => {
-  const ref = useRef();
-  useEffect(() => {
-    ref.current = value;
-  });
-  return ref.current;
-};
-
-export const RateUs = () => {
-  const options = {
-    AppleAppID:"2193813192",
-    GooglePackageName:"com.mywebsite.myapp",
-    AmazonPackageName:"com.mywebsite.myapp",
-    OtherAndroidURL:"http://www.randomappstore.com/app/47172391",
-    preferredAndroidMarket: AndroidMarket.Google,
-    preferInApp:false,
-    openAppStoreIfInAppFails:true,
-    fallbackPlatformURL:"http://www.mywebsite.com/myapp.html",
-  }
-  Rate.rate(options, (success, errorMessage)=>{
-    if (success) {
-    }
-    if (errorMessage) {
-      console.error(`Example page Rate.rate() error: ${errorMessage}`)
-    }
-  });
-}
-
-export const get12HrClockTime = (selectedDate) => {
-
-  let currentDate = selectedDate;
-  let hours = currentDate.getHours();
-  let minutes = currentDate.getMinutes(); // + ":" + currentDate.getSeconds();
-
-  hours  = hours > 9 ? hours : '0'+hours; 
-  minutes  = minutes > 9 ? minutes : '0'+minutes; 
-
-  let hour = hours > 12 ? hours-12 : hours;
-  hour = parseInt(hour);
-
-  let ampm = hours >= 12 ? 'PM' : 'AM';
-  hour = hour > 9 ? hour : `0${hour}`;
-
-  let time = hour + ":" + minutes + " " + ampm;
-  return time; 
+  };
   
-}
-
-export const get24HrClockTime = (selectedDate) => {
-
-  let currentDate = selectedDate || date;
-  let hours = currentDate.getHours();
-  let minutes = currentDate.getMinutes(); // + ":" + currentDate.getSeconds();
-
-  hours  = hours > 9 ? hours : '0'+hours; 
-  minutes  = minutes > 9 ? minutes : '0'+minutes; 
-  let time = hours + ":" + minutes;
-
-  return time; 
-}
-
-
-export const diff_hours = (dt2, dt1) => {
-  var diff = Math.abs(new Date(dt2) - new Date(dt1));
-  var minutes = Math.floor((diff/1000)/60);
-  var hours = minutes/60;
-  hours = Math.round(hours * 10) / 10
-  return hours;
-}
-
-export const removeLeadingZeros = (number) => {
-  while(number.charAt(0) === '0') {
-      number = number.substring(1);
+  
+  export const storeAccessToken = async(accessToken) => {
+    var value = JSON.stringify(accessToken);
+    try {
+      await AsyncStorage.setItem("accessToken", value);
+    } catch (error) {
+      console.log(error);
+    }
   }
-  return number;
-}
-
+  
+  export const usePrevious = value => {
+    const ref = useRef();
+    useEffect(() => {
+      ref.current = value;
+    });
+    return ref.current;
+  };
+  
+  export const RateUs = () => {
+    const options = {
+      AppleAppID:"2193813192",
+      GooglePackageName:"com.mywebsite.myapp",
+      AmazonPackageName:"com.mywebsite.myapp",
+      OtherAndroidURL:"http://www.randomappstore.com/app/47172391",
+      preferredAndroidMarket: AndroidMarket.Google,
+      preferInApp:false,
+      openAppStoreIfInAppFails:true,
+      fallbackPlatformURL:"http://www.mywebsite.com/myapp.html",
+    }
+    Rate.rate(options, (success, errorMessage)=>{
+      if (success) {
+      }
+      if (errorMessage) {
+        console.error(`Example page Rate.rate() error: ${errorMessage}`)
+      }
+    });
+  }
+  
+  export const get12HrClockTime = (selectedDate) => {
+    
+    let currentDate = selectedDate;
+    let hours = currentDate.getHours();
+    let minutes = currentDate.getMinutes(); // + ":" + currentDate.getSeconds();
+    
+    hours  = hours > 9 ? hours : '0'+hours; 
+    minutes  = minutes > 9 ? minutes : '0'+minutes; 
+    
+    let hour = hours > 12 ? hours-12 : hours;
+    hour = parseInt(hour);
+    
+    let ampm = hours >= 12 ? 'PM' : 'AM';
+    hour = hour > 9 ? hour : `0${hour}`;
+    
+    let time = hour + ":" + minutes + " " + ampm;
+    return time; 
+    
+  }
+  
+  export const get24HrClockTime = (selectedDate) => {
+    
+    let currentDate = selectedDate || date;
+    let hours = currentDate.getHours();
+    let minutes = currentDate.getMinutes(); // + ":" + currentDate.getSeconds();
+    
+    hours  = hours > 9 ? hours : '0'+hours; 
+    minutes  = minutes > 9 ? minutes : '0'+minutes; 
+    let time = hours + ":" + minutes;
+    
+    return time; 
+  }
+  
+  
+  export const diff_hours = (dt2, dt1) => {
+    var diff = Math.abs(new Date(dt2) - new Date(dt1));
+    var minutes = Math.floor((diff/1000)/60);
+    var hours = minutes/60;
+    hours = Math.round(hours * 10) / 10
+    return hours;
+  }
+  
+  export const removeLeadingZeros = (number) => {
+    while(number.charAt(0) === '0') {
+      number = number.substring(1);
+    }
+    return number;
+  }
+  
+  export  const displayPushNotification = (channel_id, title, message) => {
+    PushNotification.localNotification({
+      channelId: channel_id,
+      color: "red", 
+      title: title, 
+      message: message, 
+      playSound: true,
+      soundName: "default",
+      timeoutAfter: 60000,
+      priority: "high", 
+    });
+  }
