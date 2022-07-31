@@ -20,7 +20,14 @@
     import BottomSheet, { BottomSheetBackdrop, BottomSheetScrollView } from '@gorhom/bottom-sheet';
     import {  Divider  } from 'react-native-paper';
     import OTPInputView from "@twotalltotems/react-native-otp-input";
-    
+    import { WebView } from 'react-native-webview';
+
+
+    const OTPPaymentScreen = ({url}) => {
+      return(
+         <WebView source={{ uri: url }} style={{ marginTop: 20 }} />
+      )
+    }
     
     PushNotification.configure({
       onNotification: function (notification) {
@@ -190,7 +197,8 @@
                 if(statusCode == 200){
                   let data = res.data;
                   if(data.link){
-                    let redirectUrl = data.link
+                    let redirectUrl = data.link;
+                    // return <OTPPaymentScreen url={redirectUrl}/>
                     return Linking.openURL(redirectUrl);
                   }
                   
