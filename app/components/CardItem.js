@@ -43,8 +43,7 @@ export const HomeCardItem = ({ icon, label, tintColor, onPress, labelColor }) =>
     }
 
 
-export const AboutCardItem = ({ bgColor, icon, label, borderRadius,
-                                onPress, labelColor, XWidth, YHeight, color }) => {
+export const AboutCardItem = ({ icon, label, onPress, color }) => {
 
 return (
 
@@ -53,28 +52,17 @@ style={[{ flex: 1, alignItems: 'center', justifyContent: 'center' }]}
 onPress={onPress}
 activeOpacity={0.9}
 >
-<View style={[styles.shadow, styles.socialMediaCard,  { 
- width: XWidth ? XWidth : 120,
- height: YHeight ? YHeight: 120,
- borderColor:'#000',
- 
- }]}>
-
-<LinearGradient
-style={[{ flex: 1, alignItems: 'center', justifyContent: 'center',
-borderRadius: borderRadius ? borderRadius : 10 }]}
-colors={bgColor}
-start={{ x: 0, y: 0 }}
-end={{ x: 0, y: 1 }}
->
- <FontAwesome name={icon} size={30} color={color}/>
-</LinearGradient>
-
-</View>
-
- <Text style={{ marginTop: SIZES.base, color: labelColor ? labelColor : design.colors.primary, ...FONTS.body3, fontWeight:'normal', fontSize:13, textAlign: 'center'}}>{label}</Text> 
-
-
+    <View style={[styles.shadow, styles.socialMediaCard,  { 
+    width: 70,
+    height: 70,
+    borderColor:'#000', 
+    justifyContent: 'center',
+    alignItems: 'center'
+    
+    }]}>
+    <FontAwesome name={icon} size={30} color={color}/>
+    </View>
+ <Text style={{ marginTop: SIZES.base, color: '#000', ...FONTS.body3, fontWeight:'normal', fontSize:13, textAlign: 'center'}}>{label}</Text> 
 </TouchableOpacity>
 )
 }
@@ -87,15 +75,8 @@ end={{ x: 0, y: 1 }}
         },
 
         shadow: {
-            shadowColor: "#000",
-            shadowOffset: {
-                width: 0,
-                height: 2,
-            },
-            shadowOpacity: 0.25,
-            shadowRadius: 1.84,
-            
-            elevation: 5,
+            borderWidth:0.6,
+            borderRadius: 5
         },
 
         socialBg:{

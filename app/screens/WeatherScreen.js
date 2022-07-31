@@ -36,6 +36,7 @@ const WeatherScreen = () => {
     setIsConnected(isConnected);
     if(!isConnected){
       setIsLoading(false);
+      Toast.show('No internet Conncetion', Toast.LONG);
     }else{
       load();
     }
@@ -77,15 +78,7 @@ const WeatherScreen = () => {
       if (granted != PermissionsAndroid.RESULTS.GRANTED) {
         setErrorMessage("Location permission needed to load weather denied!");
         return;
-      } 
-      
-      console.log('Has internet', isConnected);
-      if(!isConnected){
-        setIsLoading(true);
-        Toast.show('No internet Conncetion', Toast.LONG);
-        return;
       }
-
       setIsLoading(true);
 
       Geolocation.getCurrentPosition(
