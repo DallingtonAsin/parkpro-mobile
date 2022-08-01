@@ -626,14 +626,10 @@
                 // });
                 
                 listenForBackgroundPushNotification()
-                .then(async result => {
+                .then(result => {
                   if(result){
                     if(user && user.id){
-                      let response = await authContext.asyncCustomerProfile(user.id);
-                      console.log('Result of updating prof', response);
-                      if(response && response.isUpdated){
-                        dispatch({ type: 'LOGIN', id: response.phone_number, userToken: response.access_token})
-                      }
+                       authContext.asyncCustomerProfile(user.id);
                     }
                   }
                 });
