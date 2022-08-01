@@ -616,27 +616,25 @@
                 requestUserPermission();
                 deviceInformation();
                 
-                // listenForPushNotification()
-                // .then(result => {
-                //   if(result){
-                //     if(user && user.id){
-                //       authContext.asyncCustomerProfile(user.id);
-                //     }
-                //   }
-                // });
-                
-                listenForBackgroundPushNotification()
-                .then(result => {
+                listenForPushNotification()
+                .then(async(result) => {
                   if(result){
                     if(user && user.id){
-                       authContext.asyncCustomerProfile(user.id);
+                      await authContext.asyncCustomerProfile(user.id);
+                    }
+                  }
+                });
+                
+                listenForBackgroundPushNotification()
+                .then(async(result) => {
+                  if(result){
+                    if(user && user.id){
+                      await authContext.asyncCustomerProfile(user.id);
                     }
                   }
                 });
                 
                 setTimeout(async() => {
-                  
-                  
                   
                   try{
                     userToken = await AsyncStorage.getItem("userToken");
