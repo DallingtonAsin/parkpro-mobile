@@ -17,7 +17,7 @@
     import { numberWithCommas} from '../components/sharedHelper/AppUtils';
     import PhoneInput from "react-native-phone-number-input";
     import { renderHeader } from '../components/bottomSheets/renderHender';
-    import BottomSheet, { BottomSheetBackdrop, BottomSheetScrollView } from '@gorhom/bottom-sheet';
+    import BottomSheet, { BottomSheetBackdrop, BottomSheetScrollView, SHEET_STATE } from '@gorhom/bottom-sheet';
     import {  Divider  } from 'react-native-paper';
     import OTPInputView from "@twotalltotems/react-native-otp-input";
     import { WebView } from 'react-native-webview';
@@ -195,7 +195,13 @@
                 const message = res.message;
                 
                 if(statusCode == 200){
+
                   let data = res.data;
+                  setData({
+                   ...state,
+                   rechargeAmount: '',
+                  });
+
                   if(data.link){
                     let redirectUrl = data.link;
                     // return <OTPPaymentScreen url={redirectUrl}/>

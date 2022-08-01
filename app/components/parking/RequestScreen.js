@@ -32,7 +32,7 @@ export const RequestScreen = ({item, open, onClose}) => {
   }
 
   const { profile } = useContext(ProfileContext);
-  const { getVehicleCategories, submitParkingRequest} = React.useContext(AuthContext);
+  const { getVehicleCategories, submitParkingRequest, asyncCustomerProfile} = React.useContext(AuthContext);
   
   const [state, setState] = useState(initialState);
   const [selectedVehicle, setSelectedVehicle] = useState('');
@@ -264,7 +264,7 @@ export const RequestScreen = ({item, open, onClose}) => {
         }
       }
       
-      console.warn("End time has been picked: ", end_hour_time);
+      console.log("End time has been picked: ", end_hour_time);
       hideEndTimePicker();
     }catch(err){
       Toast.show(err.message, Toast.LONG);
@@ -281,10 +281,11 @@ export const RequestScreen = ({item, open, onClose}) => {
         const customer_id = profile.id;
         const telephone_no = `${profile.country_code}${profile.phone_number}`;
         const vehicle_details = selectedVehicle;
-        let account_balance = '9000000'; // profile.account_balance.replace(/,/g, '');
+        let account_balance = profile.account_balance.replace(/,/g, '');
         
         let balance = parseFloat(account_balance);
-        const total_amount =parseFloat(amount);
+        let amt = amount.replace(/,/g, '');
+        const total_amount =parseFloat(amt);
 
         console.log("Balance: " + balance);
         console.log("Total amount: " + total_amount);
@@ -332,15 +333,13 @@ export const RequestScreen = ({item, open, onClose}) => {
         }
         
         if(balance < total_amount){
-          Toast.show('You have insufficient account balance to send this parking request.', Toast.LONG);
+          Toast.show('You have insufficient wallet balance to submit this parking request.', Toast.LONG);
           return;
         }
         
         
         if(customer_id && parking_area_id && telephone_no && vehicle_details
           && carType && startTime && endTime) {
-            
-            
             
             const vehicleDetailsArr = vehicle_details.split("-");
             const vehicleName = vehicleDetailsArr[0].trim();
@@ -373,6 +372,9 @@ export const RequestScreen = ({item, open, onClose}) => {
                 console.log("Resp", resp);
                 
                 if(resp.statusCode == 200){
+
+                  const user = resp.data;
+                  await asyncCustomerProfile(customer_id);
                   
                   setStartTime('');
                   setEndTime('');
