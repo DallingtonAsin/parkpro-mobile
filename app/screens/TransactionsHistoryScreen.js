@@ -49,7 +49,10 @@ const TransactionsHistoryScreen = () => {
     <DataTable.Row>
     <DataTable.Cell style={styles.tableCell}><Text style={styles.cellText}>{getDate(props.item.date)}</Text></DataTable.Cell>
     <DataTable.Cell style={styles.tableCell}><Text style={styles.cellText}>{props.item.type}</Text></DataTable.Cell>
-    <DataTable.Cell style={styles.tableCell}><Text style={styles.cellText}>{ props.item.credit && convertToNum(props.item.credit) > 0 ? `${props.item.credit}` : `${props.item.debt}`  }</Text></DataTable.Cell>
+    <DataTable.Cell style={styles.tableCell}>
+    {  props.item.credit && convertToNum(props.item.credit) > 0 && <Text style={styles.cellText}>{props.item.credit}</Text> }
+    {  props.item.debt && convertToNum(props.item.debt) > 0 && <Text style={styles.cellText}>{`-${props.item.debt}`}</Text> }
+    </DataTable.Cell>
     <DataTable.Cell style={styles.tableCell}><Text style={styles.cellText}>{props.item.balance}</Text></DataTable.Cell>
     </DataTable.Row>
     );
@@ -226,7 +229,7 @@ const TransactionsHistoryScreen = () => {
                   fontWeight: 'bold',
                   textAlign: 'center'
                 },
-
+                
                 title: {
                   fontSize: 24
                 },

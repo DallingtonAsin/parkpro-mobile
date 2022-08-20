@@ -49,7 +49,7 @@ const HomeScreen = (props) => {
   
   const [isSheetVisible, setIsSheetVisible] = useState(false);
   const { profile } = useContext(ProfileContext);
-  const {getVehicleCategories, updateAppDetails } = React.useContext(AuthContext);
+  const {getVehicleCategories, updateAppDetails, asyncCustomerProfile } = React.useContext(AuthContext);
   const isMounted = useIsMounted();
   const [isEditingVehicle, setIsEditingVehicle] = useState(false);
   const [hideBalance, setHideBalance] = useState(false);
@@ -90,9 +90,24 @@ const HomeScreen = (props) => {
   
   useEffect(() => {
     
+    const asyncUserProfile = async() => {
+      await asyncCustomerProfile(profile.id);
+    }
+    
+    asyncUserProfile()
+    .catch((error => {console.log(`Error on asyncing user profile`, error)}));
+    
+    
     dbVehicleHelper.createVehiclesTable();
     dbParkingHelper.createTableFavouriteParkings();
-    updateUserAppDetails();
+
+    const updateUserDetails = async() => {
+        await updateUserAppDetails();
+    }
+
+    updateUserDetails()
+    .catch((error => {console.log(`Error on asyncing user details`, error)}));
+    
     
     populateVehicleTypes();
     populateVehicles();
@@ -438,7 +453,7 @@ const HomeScreen = (props) => {
                     console.log(`Item onto info screen`, item);
                     item.id = item.uniquePId;
                     console.log(`Item onto info screen 2`, item);
-
+                    
                     // return;
                     props.navigation.navigate("ParkingInfo", {
                       screen: 'ParkingInfo',
@@ -496,19 +511,19 @@ const HomeScreen = (props) => {
                         
                         <View style={styles.header}>
                         <Text style={styles.mywallet}>My Wallet</Text>
-
+                        
                         <View style= {{flexDirection : 'row', padding: 15, justifyContent: 'space-around'}}>
-                              <Text style={styles.balanceText}>
-                              {CURRENCY} 
-                                { hideBalance && <Text> .....</Text> }
-                                { !hideBalance && <Text> {profile.account_balance}</Text> } 
-                              </Text>
-                           <TouchableOpacity onPress={() => { setHideBalance(!hideBalance) }}>
-                             { hideBalance && <FontAwesome name={"eye"} size={26} style={{color: colors.text, top:10, left:18}} /> }
-                             { !hideBalance && <FontAwesome name={"eye-slash"} size={26} style={{color: colors.text, top:10, left:18}} /> }
-                           </TouchableOpacity>
+                        <Text style={styles.balanceText}>
+                        {CURRENCY} 
+                        { hideBalance && <Text> .....</Text> }
+                        { !hideBalance && <Text> {profile.account_balance}</Text> } 
+                        </Text>
+                        <TouchableOpacity onPress={() => { setHideBalance(!hideBalance) }}>
+                        { hideBalance && <FontAwesome name={"eye"} size={26} style={{color: colors.text, top:10, left:18}} /> }
+                        { !hideBalance && <FontAwesome name={"eye-slash"} size={26} style={{color: colors.text, top:10, left:18}} /> }
+                        </TouchableOpacity>
                         </View>
-
+                        
                         </View>
                         
                         
