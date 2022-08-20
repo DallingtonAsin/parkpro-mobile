@@ -39,7 +39,17 @@ export const Monetize = (num) => {
 }
 
 export const Numberize = (num) => {
-  return num.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+  if(num){
+    return num.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+  }else{
+    return num;
+  }
+  
+}
+
+export const convertToNum = (numStr) => {
+   numStr = numStr.replace(',', '');
+   return parseFloat(numStr);
 }
 
 export const numberWithCommas = (x) => {

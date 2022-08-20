@@ -8,6 +8,7 @@ import Toast from 'react-native-simple-toast';
 import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
 import { useTheme  } from 'react-native-paper';
 import AppLoader from '../components/loaders/AppLoader';
+import { convertToNum } from '../components/sharedHelper/AppUtils';
 
 const wait = (timeout) => {
   return new Promise(resolve => setTimeout(resolve, timeout));
@@ -48,8 +49,7 @@ const TransactionsHistoryScreen = () => {
     <DataTable.Row>
     <DataTable.Cell><Text style={styles.cellText}>{getDate(props.item.date)}</Text></DataTable.Cell>
     <DataTable.Cell><Text style={styles.cellText}>{props.item.type}</Text></DataTable.Cell>
-    <DataTable.Cell><Text style={styles.cellText}>{props.item.credit}</Text></DataTable.Cell>
-    <DataTable.Cell><Text style={styles.cellText}>{props.item.debt}</Text></DataTable.Cell>
+    <DataTable.Cell><Text style={styles.cellText}>{ props.item.credit && convertToNum(props.item.credit) > 0 ? `${props.item.credit}` : `${props.item.debt}`  }</Text></DataTable.Cell>
     <DataTable.Cell><Text style={styles.cellText}>{props.item.balance}</Text></DataTable.Cell>
     </DataTable.Row>
     );
@@ -64,11 +64,10 @@ const TransactionsHistoryScreen = () => {
         return (
           <>
           <DataTable.Header>
-          <DataTable.Title><Text style={styles.rowHeaderText}>DATE</Text></DataTable.Title>
-          <DataTable.Title><Text style={styles.rowHeaderText}>TYPE</Text></DataTable.Title>
-          <DataTable.Title><Text style={styles.rowHeaderText}>CREDIT</Text></DataTable.Title>
-          <DataTable.Title><Text style={styles.rowHeaderText}>DEBT</Text></DataTable.Title>
-          <DataTable.Title><Text style={styles.rowHeaderText}>BALANCE</Text></DataTable.Title>
+          <DataTable.Title><Text style={styles.rowHeaderText}>Date</Text></DataTable.Title>
+          <DataTable.Title><Text style={styles.rowHeaderText}>Type</Text></DataTable.Title>
+          <DataTable.Title><Text style={styles.rowHeaderText}>Amount</Text></DataTable.Title>
+          <DataTable.Title><Text style={styles.rowHeaderText}>Balance</Text></DataTable.Title>
           </DataTable.Header>
           </>
           );
@@ -235,9 +234,11 @@ const TransactionsHistoryScreen = () => {
                   color: '#000',
                   textTransform: 'capitalize'
                 },
+
                 rowHeaderText:{
                   fontWeight: 'bold',
                   color: '#000',
+                  textTransform: 'uppercase'
                   // color: colors.primary,
                 }
                 

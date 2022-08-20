@@ -593,7 +593,7 @@
               
               useEffect(async() => {
                 
-                let fontName = 'Inter-Light'
+                let fontName = 'Roboto-Regular'
                 GlobalFont.applyGlobal(fontName);
                 
                 let user = null, userToken = null;
