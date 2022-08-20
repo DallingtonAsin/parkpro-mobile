@@ -434,7 +434,7 @@ const HomeScreen = (props) => {
                   </View>
                   ),[]);
                   
-                  const GotoFeesPage = (item) => { 
+                  const viewParkingInfo = (item) => { 
                     console.log(`Item onto info screen`, item);
                     item.id = item.uniquePId;
                     console.log(`Item onto info screen 2`, item);
@@ -452,8 +452,8 @@ const HomeScreen = (props) => {
                     
                     (item) => (
                       <TouchableOpacity 
-                      onPress={() => { GotoFeesPage(item) }}
-                      key={item.id} 
+                      onPress={() => { viewParkingInfo(item) }}
+                      key={item.uniquePId} 
                       style={[design.vehicle.container,{padding:10}]}
                       >
                       <Icon name="map-marker" size={30} color="#4F8EF7" />

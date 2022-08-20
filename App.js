@@ -16,15 +16,17 @@
     import GlobalFont from 'react-native-global-font';
     import { customDefaultTheme,  customDarkTheme} from './assets/themes';
     import messaging from '@react-native-firebase/messaging';
-    import PushNotification, { Importance } from "react-native-push-notification";
+    
     import { useIsMounted } from './app/components/common/isMounted';
     import LocationEnabler from 'react-native-location-enabler';
     import design from './assets/css/styles';
-    import { apiKeys } from './app/constants';
+    import { apiKeys, appConstants } from './app/constants';
     import { UIActivityIndicator } from 'react-native-indicators';
-    import { displayPushNotification } from './app/components/sharedHelper/AppUtils';
     import { reject } from 'lodash';
     const services = require("./app/services");
+    import PushNotification from "react-native-push-notification";
+
+    const channel_id = appConstants.NOTIFICATION_CHANNEL;
     
     
     const {
@@ -39,65 +41,12 @@
       data: null,
     }
     
-    const channel_id= "app-notifications";
-    
-    PushNotification.configure({
-      onRegister: function (token) {
-        console.log("TOKEN:", token);
-      },
-      
-      onNotification: function (notification) {
-        console.log('LOCAL NOTIFICATION ==>', notification);
-      },
-      onAction: function (notification) {
-        console.log("ACTION:", notification.action);
-        console.log("NOTIFICATION:", notification);
-        
-        // process the action
-      },
-      requestPermissions: Platform.OS === 'ios',
-    });
-    
-    
-    
-    PushNotification.createChannel({
-      channelId: channel_id, 
-      channelName: "app-notifications", 
-      importance: Importance.HIGH,
-    },
-    (created) => {}
-    );
-    
+  
     const wait = (timeout) => {
       return new Promise(resolve => setTimeout(resolve, timeout));
     }
     
-    const listenForPushNotification = async() => {
-      
-      PushNotification.channelBlocked(channel_id, function (blocked) {
-        // console.log(blocked);
-      });
-      
-      PushNotification.checkPermissions((permissions) => {
-        // console.log("Permissions", permissions);
-      });
-      
-      return new Promise((resolve) => { 
-        messaging().onMessage(async remoteMessage => {
-          
-          let body = remoteMessage.notification.body;
-          let title = remoteMessage.notification.title;
-          displayPushNotification(channel_id, title, body);
-          if(title && body){
-            resolve(title);
-          }else{
-            reject('Unable to get notification');
-          }
-        });
-      })
-      
-    }
-    
+  
     const listenForBackgroundPushNotification = async() => {
       
       PushNotification.channelBlocked(channel_id, function (blocked) {});
@@ -108,7 +57,6 @@
           
           let body = remoteMessage.notification.body;
           let title = remoteMessage.notification.title;
-          displayPushNotification(channel_id, title, body);
           if(title && body){
             resolve(title);
           }else{
@@ -615,15 +563,6 @@
                 
                 requestUserPermission();
                 deviceInformation();
-                
-                listenForPushNotification()
-                .then(async(result) => {
-                  if(result){
-                    if(user && user.id){
-                      await authContext.asyncCustomerProfile(user.id);
-                    }
-                  }
-                });
                 
                 listenForBackgroundPushNotification()
                 .then(async(result) => {

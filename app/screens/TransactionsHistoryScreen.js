@@ -23,9 +23,9 @@ const TransactionsHistoryScreen = () => {
   const { getCustomerTransactions } = React.useContext(AuthContext);
   const { colors } = useTheme();
   const styles = makeStyles(colors);
-
   
-
+  
+  
   const EmptyFlastListMessage = ({item}) => {
     return (
       <Text
@@ -47,10 +47,10 @@ const TransactionsHistoryScreen = () => {
   
   const CustomDataTable = (props) => (
     <DataTable.Row>
-    <DataTable.Cell><Text style={styles.cellText}>{getDate(props.item.date)}</Text></DataTable.Cell>
-    <DataTable.Cell><Text style={styles.cellText}>{props.item.type}</Text></DataTable.Cell>
-    <DataTable.Cell><Text style={styles.cellText}>{ props.item.credit && convertToNum(props.item.credit) > 0 ? `${props.item.credit}` : `${props.item.debt}`  }</Text></DataTable.Cell>
-    <DataTable.Cell><Text style={styles.cellText}>{props.item.balance}</Text></DataTable.Cell>
+    <DataTable.Cell style={styles.tableCell}><Text style={styles.cellText}>{getDate(props.item.date)}</Text></DataTable.Cell>
+    <DataTable.Cell style={styles.tableCell}><Text style={styles.cellText}>{props.item.type}</Text></DataTable.Cell>
+    <DataTable.Cell style={styles.tableCell}><Text style={styles.cellText}>{ props.item.credit && convertToNum(props.item.credit) > 0 ? `${props.item.credit}` : `${props.item.debt}`  }</Text></DataTable.Cell>
+    <DataTable.Cell style={styles.tableCell}><Text style={styles.cellText}>{props.item.balance}</Text></DataTable.Cell>
     </DataTable.Row>
     );
     
@@ -64,10 +64,10 @@ const TransactionsHistoryScreen = () => {
         return (
           <>
           <DataTable.Header>
-          <DataTable.Title><Text style={styles.rowHeaderText}>Date</Text></DataTable.Title>
-          <DataTable.Title><Text style={styles.rowHeaderText}>Type</Text></DataTable.Title>
-          <DataTable.Title><Text style={styles.rowHeaderText}>Amount</Text></DataTable.Title>
-          <DataTable.Title><Text style={styles.rowHeaderText}>Balance</Text></DataTable.Title>
+          <DataTable.Title style={styles.tableCell}><Text style={styles.rowHeaderText}>Date</Text></DataTable.Title>
+          <DataTable.Title style={styles.tableCell}><Text style={styles.rowHeaderText}>Type</Text></DataTable.Title>
+          <DataTable.Title style={styles.tableCell}><Text style={styles.rowHeaderText}>Amount</Text></DataTable.Title>
+          <DataTable.Title style={styles.tableCell}><Text style={styles.rowHeaderText}>Balance</Text></DataTable.Title>
           </DataTable.Header>
           </>
           );
@@ -97,7 +97,7 @@ const TransactionsHistoryScreen = () => {
                   setTransaction(transactions);
                 }
               }else{
-                 Toast.show(resp.message);
+                Toast.show(resp.message);
               }
               setIsLoading(false);
             }catch(err){
@@ -161,9 +161,9 @@ const TransactionsHistoryScreen = () => {
                   :  null
                 }
                 </View>
-
+                
                 {  isLoading ?  <AppLoader /> : null }
-
+                
                 </>
                 ); 
               }
@@ -220,26 +220,34 @@ const TransactionsHistoryScreen = () => {
                   padding: 20,
                   marginVertical: 8
                 },
-
+                
                 header: {
                   fontSize: 20,
                   fontWeight: 'bold',
-                  textAlign: 'center',
+                  textAlign: 'center'
                 },
+
                 title: {
                   fontSize: 24
                 },
+                
                 cellText:{
                   fontSize:16,
                   color: '#000',
-                  textTransform: 'capitalize'
+                  textTransform: 'capitalize',
+                  textAlign: 'center',
                 },
-
+                
                 rowHeaderText:{
                   fontWeight: 'bold',
                   color: '#000',
                   textTransform: 'uppercase'
                   // color: colors.primary,
+                },
+                
+                tableCell:{
+                  justifyContent: 'center',
+                  alignItems:'center'
                 }
                 
               });
