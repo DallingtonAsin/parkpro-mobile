@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from 'react-native'
 import { colors as utilColors } from '../utils/index'
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import FocusAwareStatusBar  from '../../components/common/FocusAwareStatusBar';
+import FocusAwareStatusBar  from '../common/FocusAwareStatusBar';
 import { useTheme  } from 'react-native-paper';
 
 const { PRIMARY_COLOR, SECONDARY_COLOR, BORDER_COLOR } = utilColors

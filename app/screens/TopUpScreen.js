@@ -29,22 +29,7 @@
       )
     }
     
-    PushNotification.configure({
-      onNotification: function (notification) {
-        console.log('LOCAL NOTIFICATION ==>', notification);
-      },
-      requestPermissions: Platform.OS === 'ios',
-    });
-    
-    PushNotification.createChannel({
-      channelId: "topup-notifications", 
-      channelName: "topup-notifications", 
-      importance: Importance.HIGH,
-    },
-    (created) => {}
-    );
-    
-    
+   
     const initialState = {
       
       hasRecharged: null,
@@ -228,20 +213,7 @@
             }
           }
           
-          
-          const testPushNotification = () => {
-            PushNotification.localNotification({
-              channelId: "ParkPro256",
-              color: "red", 
-              title: "Message", 
-              message: "Transaction successful", 
-              playSound: true,
-              soundName: "default",
-              timeoutAfter: 8000,
-            });
-          }
-          
-          
+
           const getProfile = (user) => {         
             const id = user.id;
             const first_name = user.first_name;

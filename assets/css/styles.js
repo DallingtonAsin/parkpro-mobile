@@ -71,8 +71,6 @@ export default {
   
   
   container: {
-    // flex: 1,
-    fontFamily: 'sans-serif',
     flexDirection: 'column',
     backgroundColor: '#fff',
     justifyContent: 'center',
@@ -134,7 +132,6 @@ export default {
     justifyContent: 'center',
     textTransform: 'uppercase',
     borderRadius: 60,
-    fontFamily:'Roboto',
     height: 50,
     width: 350,
     
@@ -151,14 +148,12 @@ export default {
   btnText: {
     color: '#FFFFFF',
     fontWeight: '600',
-    fontFamily:'Roboto',
   },
   
   title: {
     fontSize: 30,
     fontWeight: '600',
     color: "#203838",
-    fontFamily: 'Roboto',
     marginTop:15,
     
   },
@@ -167,7 +162,6 @@ export default {
     fontSize:16,
     fontWeight: '600',
     color: "#203838",
-    fontFamily: 'Roboto',
     margin:5,
     
   },
@@ -519,11 +513,9 @@ export default {
     
     container: {
       flex: 1,
-      fontFamily: 'sans-serif',
       flexDirection: 'column',
       backgroundColor: '#fff',
       margin:0,
-      fontFamily:'Roboto',
       borderColor:'#000'
       
     },

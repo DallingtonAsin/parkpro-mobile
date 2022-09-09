@@ -4,6 +4,8 @@ import android.app.Application;
 import android.content.Context;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
+import com.reactlibrarylizhming.ScreenCaptureSecurePackage;
+import com.reactlibrarylizhming.ScreenCaptureSecurePackage;
 import com.pusherman.networkinfo.RNNetworkInfoPackage;
 import com.swmansion.reanimated.ReanimatedPackage;
 import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
@@ -19,6 +21,7 @@ import java.util.Arrays;
 import org.devio.rn.splashscreen.SplashScreenReactPackage;
 import com.facebook.react.bridge.JSIModulePackage;
 import com.swmansion.reanimated.ReanimatedJSIModulePackage;
+
 
 
 public class MainApplication extends Application implements ReactApplication {
@@ -38,6 +41,7 @@ public class MainApplication extends Application implements ReactApplication {
           // Packages that cannot be autolinked yet can be added manually here, for example:
           // packages.add(new MyReactNativePackage());
           // packages.add(new MainReactPackage(),
+            // new ScreenCaptureSecurePackage(),
             // new RNNetworkInfoPackage(),-
             // new ReanimatedPackage(),
             // new ReactNativePushNotificationPackage());

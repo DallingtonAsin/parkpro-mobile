@@ -1,4 +1,8 @@
 rootProject.name = 'ParkPro'
+include ':react-native-screen-capture-secure'
+project(':react-native-screen-capture-secure').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-screen-capture-secure/android')
+include ':react-native-screen-capture-secure'
+project(':react-native-screen-capture-secure').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-screen-capture-secure/android')
 include ':react-native-network-info'
 project(':react-native-network-info').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-network-info/android')
 include ':react-native-reanimated'
@@ -14,3 +18,5 @@ project(':react-native-splash-screen').projectDir = new File(rootProject.project
 include ':app'
 include ':react-native-network-info'
 project(':react-native-network-info').projectDir = new File(settingsDir, '../node_modules/react-native-network-info/android')
+include ':react-native-screenshot-prevent'
+project(':react-native-screenshot-prevent').projectDir = new File(rootProject.projectDir, 	'../node_modules/react-native-screenshot-prevent/android')

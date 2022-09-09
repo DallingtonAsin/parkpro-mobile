@@ -153,12 +153,14 @@ const ParkingInfoScreen = ({ route }) => {
                             if(resp.statusCode == 200){
                                 const parking = resp.data[0];
                                 if(parking){
-                                    setIsAdding(true);
                                     dbParkingHelper.doesParkingExistinFavourites(parking.id, exists => {
+                                      console.log(`Parking id is ${parking.id} and exists ${exists}`)
                                         if(exists){
                                             Toast.show(`${parking.name} has already been added to favourites.`, Toast.LONG);
                                         }else{
+                                            setIsAdding(true);
                                             dbParkingHelper.addParkingIntoFavourites(parking, isInserted => {
+                                                setIsAdding(false);
                                                 if(isInserted){
                                                     Toast.show(`Parking ${parking.name} has been successfully added to favourites.`, Toast.LONG);
                                                 }else{
@@ -167,7 +169,7 @@ const ParkingInfoScreen = ({ route }) => {
                                             });
                                         }
                                         
-                                        setIsAdding(false);
+                                     
                                     });
                                 }else{
                                     Toast.show(`Unable to fetch parking at this time.`);    

@@ -23,9 +23,6 @@ import AppTabStack from  './AppTabStack';
 import WeatherStack from  './WeatherStack';
 import CloseByParkingStack from './CloseByParkingStack';
 import ChangePhoneNumberStack from './ChangePhoneNumberStack';
-
-
-
 import MapScreen from '../../screens/MapScreen';
 
 
