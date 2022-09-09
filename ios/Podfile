@@ -18,6 +18,8 @@ target 'ParkSmart' do
 
   pod 'react-native-network-info', :path => '../node_modules/react-native-network-info'
 
+  pod 'react-native-screen-capture-secure', :path => '../node_modules/react-native-screen-capture-secure'
+
   target 'ParkSmartTests' do
     inherit! :complete
     # Pods for testing

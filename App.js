@@ -24,8 +24,9 @@
     import { UIActivityIndicator } from 'react-native-indicators';
     import { reject } from 'lodash';
     const services = require("./app/services");
+    import ScreenCaptureSecure from 'react-native-screen-capture-secure';
     import PushNotification from "react-native-push-notification";
-
+    
     const channel_id = appConstants.NOTIFICATION_CHANNEL;
     
     
@@ -41,12 +42,12 @@
       data: null,
     }
     
-  
+    
     const wait = (timeout) => {
       return new Promise(resolve => setTimeout(resolve, timeout));
     }
     
-  
+    
     const listenForBackgroundPushNotification = async() => {
       
       PushNotification.channelBlocked(channel_id, function (blocked) {});
@@ -540,6 +541,9 @@
               
               
               useEffect(async() => {
+                
+                ScreenCaptureSecure.disableSecure();
+                
                 
                 let fontName = 'Roboto-Regular'
                 GlobalFont.applyGlobal(fontName);

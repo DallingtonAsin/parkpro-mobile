@@ -1,5 +1,5 @@
 {
-  "name": "ParkPro",
+  "name": "parkpro",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -115,7 +115,9 @@
     "react-native-rename": "^2.9.0",
     "react-native-safe-area-context": "^3.3.2",
     "react-native-safe-modules": "^1.0.3",
+    "react-native-screen-capture-secure": "^1.0.5",
     "react-native-screens": "^3.4.0",
+    "react-native-screenshot-prevent": "^1.0.4",
     "react-native-scroll-bottom-sheet": "^0.7.0",
     "react-native-searchable-dropdown": "^1.1.3",
     "react-native-select-dropdown": "^1.5.0",

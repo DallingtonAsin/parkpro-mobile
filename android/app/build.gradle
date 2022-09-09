@@ -248,6 +248,7 @@ implementation project(':react-native-push-notification')
 implementation project(':react-native-splash-screen')
 implementation 'androidx.appcompat:appcompat:1.1.0-rc01'
 implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0-alpha02'
+  compile project(':react-native-screenshot-prevent')
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
       exclude group:'com.facebook.fbjni'

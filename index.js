@@ -8,6 +8,8 @@ import App from './App';
 import {name as appName} from './app.json';
 import { appConstants } from './app/constants';
 import PushNotification, { Importance } from "react-native-push-notification";
+import ScreenCaptureSecure from 'react-native-screen-capture-secure';
+import RNPreventScreenshot from 'react-native-screenshot-prevent';
 const channel_id = appConstants.NOTIFICATION_CHANNEL;
 
 PushNotification.configure({
@@ -41,7 +43,8 @@ PushNotification.createChannel({
 }
 );
 
-
+ScreenCaptureSecure.disableSecure();
+RNPreventScreenshot.enabled(false);
 const MyApp = () => (
     <App/>
     )
