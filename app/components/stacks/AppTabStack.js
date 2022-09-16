@@ -6,7 +6,7 @@ import HomeStack from './HomeStack';
 import HelpStack from './ContactUsStack';
 import WeatherStack from './WeatherStack';
 import NotificationStack from './NotificationStack';
-import OrdersStack from './OrdersStack';
+import MapStack from './MapStack';
 import { useTheme  } from 'react-native-paper';
 import styles from '../../../assets/css/styles';
 
