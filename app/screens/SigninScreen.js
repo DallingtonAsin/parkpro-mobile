@@ -6,8 +6,7 @@ import {
     SafeAreaView,
     Platform,
     StyleSheet,
-    Alert,
-    Modal
+    Alert
 } from 'react-native';
 
 import * as Animatable from 'react-native-animatable';
@@ -167,7 +166,7 @@ const SigninScreen = ({ navigation }) => {
             
             <TouchableOpacity 
             style={styles.btnPrimary}
-            onPress={() => confirmPhoneNumber()}
+            onPress={confirmPhoneNumber}
             >
             <Text style={styles.buttonText}>
             {isLoading ?  'Loading...' : 'Continue' } 

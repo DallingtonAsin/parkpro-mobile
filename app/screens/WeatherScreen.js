@@ -31,15 +31,22 @@ const WeatherScreen = () => {
   
   const { hasInternetConnection } = React.useContext(AuthContext);
   
-  useEffect(async() => {
-    let isConnected = await hasInternetConnection();
-    setIsConnected(isConnected);
-    if(!isConnected){
-      setIsLoading(false);
-      Toast.show('No internet Conncetion', Toast.LONG);
-    }else{
-      load();
+  useEffect(() => {
+
+    async function checkInternetConnection(){
+          let hasConnection = await hasInternetConnection();
+          setIsConnected(hasConnection);
+          if(!hasConnection){
+            setIsLoading(false);
+            Toast.show('No internet Conncetion', Toast.LONG);
+          }else{
+            load();
+          }
     }
+
+    checkInternetConnection();
+    
+   
   }, [isConnected, unitsSystem]);
   
   

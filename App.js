@@ -199,13 +199,13 @@
                 return deviceLanguage;
               }
 
-              const onChangeToken = (token, language) => {
+              const onChangeToken = async(token, language) => {
                 
                 var data = {};
                 data[`${apiKeys.DEVICE_TOKEN}`] = token;
                 data[`${apiKeys.DEVICE_TYPE}`] = Platform.OS;
                 data[`${apiKeys.DEVICE_LANGUAGE}`] = language;
-                loadDeviceInfo(data).done();
+                await loadDeviceInfo(data).done();
                 
               }
               
@@ -266,18 +266,19 @@
                 
                 
                 goToHomeScreen: async(user) => {
-                  let userToken = null;
+                  
                   try{
                     
-                    userToken = user.access_token;
-                    setProfile(user);
-                    
-                    await AsyncStorage.setItem("userToken", userToken);
-                    await AsyncStorage.setItem("userProfile", JSON.stringify(user));
-                    dispatch({ type: 'LOGIN', id: user.phone_number, userToken: userToken})
-                    
+                      console.log(`User details are`, user);
+                      let userToken = user.access_token;
+                      setProfile(user);
+                      
+                      await AsyncStorage.setItem("userToken", userToken);
+                      await AsyncStorage.setItem("userProfile", JSON.stringify(user));
+                      dispatch({ type: 'LOGIN', id: user.id, userToken: userToken})
+                  
                   }catch(e){
-                    console.log("Got exception on async storage", e);
+                    console.log("Got exception on async storage", e.message);
                     throw e;
                   } 
                 },
@@ -545,15 +546,20 @@
               
               
               
-              useEffect(async() => {
+              useEffect(() => {
                 
-                
+                let user = null, userToken = null;
+                 async function fetchUserData() {
+                  // You can await here
+                  user = await AsyncStorage.getItem("userProfile");
+                 
+                }
+                fetchUserData();
                 
                 let fontName = 'Roboto-Regular'
                 GlobalFont.applyGlobal(fontName);
                 
-                let user = null, userToken = null;
-                user = await AsyncStorage.getItem("userProfile");
+            
                 user = JSON.parse(user);
                 
                 NetInfo.fetch().then(state => {
@@ -572,19 +578,29 @@
                 requestUserPermission();
                 deviceInformation();
                 
-                listenForBackgroundPushNotification()
-                .then(async(result) => {
-                  if(result){
-                    if(user && user.id){
-                      await authContext.asyncCustomerProfile(user.id);
+                async function syncUserInfo(){
+                  listenForBackgroundPushNotification()
+                  .then(async(result) => {
+                    if(result){
+                      if(user && user.id){
+                        await authContext.asyncCustomerProfile(user.id);
+                      }
                     }
-                  }
-                });
-                
-                setTimeout(async() => {
+                  });
+                }
+              
+                syncUserInfo();
+
+                setTimeout(() => {
                   
                   try{
-                    userToken = await AsyncStorage.getItem("userToken");
+
+                    async function getUserToken(){
+                      userToken = await AsyncStorage.getItem("userToken");
+                    }
+
+                    getUserToken();
+                    
                     if(userToken){
                       
                       isMounted.current &&  setProfile(user);
