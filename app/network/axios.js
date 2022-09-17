@@ -133,7 +133,6 @@ let AxiosApi = class {
                 if(isGet){
                     data = response.data;
                     message = 'SUCCESS';
-                    console.log('Data on fetching', data);
                 }else{
                     data = response.data.data;
                     message = response.data.message;
