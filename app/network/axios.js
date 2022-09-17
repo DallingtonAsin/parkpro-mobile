@@ -137,10 +137,10 @@ let AxiosApi = class {
                 }else{
                     data = response.data.data;
                     message = response.data.message;
-                    console.log('Data on posting', data);
+                    // console.log('Data on posting', data);
                 }
 
-                console.log(`Response message`, message);  
+                // console.log(`Response message`, message);  
                 result =  new ApiResponse(response.status, message, data)
             }else{
                 result = new ApiResponse(response.status, message, data);

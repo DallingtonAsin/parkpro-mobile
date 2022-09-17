@@ -102,7 +102,7 @@ const SigninScreen = ({ navigation }) => {
                 setIsLoading(true);
                 
                 let response = await sendSmsVerification(requestParams);
-                console.log("API response", response);
+                // console.log("API response", response);
                 if(response.statusCode == 200){
                     let data = response.data;
                     await storeAccessToken(data.access_token);

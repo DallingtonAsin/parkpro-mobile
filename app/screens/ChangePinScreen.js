@@ -54,7 +54,7 @@ const Password = () => {
         return;
       }
       
-      console.log(`Current pin:  ${state.current_pin}, New pin: ${state.new_pin} and Confirm pin ${state.confirm_pin}`);
+      // console.log(`Current pin:  ${state.current_pin}, New pin: ${state.new_pin} and Confirm pin ${state.confirm_pin}`);
       
       const reqParams = {
         id: profile.id,
@@ -62,7 +62,7 @@ const Password = () => {
         newPin: state.new_pin,
         confirmPin: state.confirm_pin
       }
-      console.log("Req params", reqParams);
+      // console.log("Req params", reqParams);
       setIsLoading(true);
       const response = await changePin(reqParams);
       if(response.statusCode == 200){
@@ -107,7 +107,7 @@ const Password = () => {
       current_pin: code
     })}}
     onCodeFilled= {(code => {
-      console.log("Your current pin", code)
+      // console.log("Your current pin", code)
     })}
     />
     <TouchableOpacity onPress={() => {setSecureCurrentPin(!secureCurrentPin)}}>
@@ -133,7 +133,7 @@ const Password = () => {
       new_pin: code
     })}}
     onCodeFilled= {(code => {
-      console.log("Your new pin", code)
+      // console.log("Your new pin", code)
     })}
     />
     <TouchableOpacity onPress={() => {setSecureNewPin(!secureNewPin)}}>
@@ -160,7 +160,7 @@ const Password = () => {
       confirm_pin: code
     })}}
     onCodeFilled= {(code => {
-      console.log("Your confirm pin", code)
+      // console.log("Your confirm pin", code)
     })}
     />
     <TouchableOpacity onPress={() => {setSecureConfirmPin(!secureConfirmPin)}}>

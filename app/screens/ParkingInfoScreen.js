@@ -40,7 +40,7 @@ const ParkingInfoScreen = ({ route }) => {
 
     const removeFromFavourites = (parking) => {
 
-        console.log("Parking area id", parking);
+        // console.log("Parking area id", parking);
         
         try{
 
@@ -154,7 +154,7 @@ const ParkingInfoScreen = ({ route }) => {
                                 const parking = resp.data[0];
                                 if(parking){
                                     dbParkingHelper.doesParkingExistinFavourites(parking.id, exists => {
-                                      console.log(`Parking id is ${parking.id} and exists ${exists}`)
+                                    //   console.log(`Parking id is ${parking.id} and exists ${exists}`)
                                         if(exists){
                                             Toast.show(`${parking.name} has already been added to favourites.`, Toast.LONG);
                                         }else{

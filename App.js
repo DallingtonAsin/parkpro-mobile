@@ -199,47 +199,41 @@
                 return deviceLanguage;
               }
 
-              const onChangeToken = async(token, language) => {
+          
+              const changeDeviceToken = async(token, language) => {
                 
-                var data = {};
-                data[`${apiKeys.DEVICE_TOKEN}`] = token;
-                data[`${apiKeys.DEVICE_TYPE}`] = Platform.OS;
-                data[`${apiKeys.DEVICE_LANGUAGE}`] = language;
-                await loadDeviceInfo(data).done();
-                
+                let data = {};
+
+                if(token && language){
+                  data[`${apiKeys.DEVICE_TOKEN}`] = token;
+                  data[`${apiKeys.DEVICE_TYPE}`] = Platform.OS;
+                  data[`${apiKeys.DEVICE_LANGUAGE}`] = language;
+                  let info = JSON.stringify(data);
+                  await AsyncStorage.setItem(apiKeys.DEVICE_INFO, info);
+                }
+             
               }
               
-              const deviceInformation = () => {
-                var language = getLocale();
+              const deviceInformation = async() => {
+
+                try{
+                let language = getLocale();
                 
                 messaging()
                 .getToken()
-                .then(token => {
+                .then(async(token) => {
                   if (token) {
-                    onChangeToken(token, language)
-                  } else {
-                    console.log("User does not have device token");
+                    await changeDeviceToken(token, language)
                   } 
-                });
+                }).catch((err) => { throw err });
                 
-                messaging().onTokenRefresh(token => {
-                  if (token) {
-                    onChangeToken(token, language)
-                  } else {
-                    console.log("User does not have device token");
-                  } 
-                });
+              }catch(err){
+                throw err;
+              }
                 
               }
 
-              const loadDeviceInfo = async (deviceData) => {
-                var value = JSON.stringify(deviceData);
-                try {
-                  await AsyncStorage.setItem(apiKeys.DEVICE_INFO, value);
-                } catch (error) {
-                  console.log(error);
-                }
-              }; 
+               
               
              
               
@@ -268,8 +262,7 @@
                 goToHomeScreen: async(user) => {
                   
                   try{
-                    
-                      console.log(`User details are`, user);
+
                       let userToken = user.access_token;
                       setProfile(user);
                       
@@ -344,7 +337,6 @@
                       
                       if(statusCode == 200){
                         let user = res.data;
-                        console.log(`User profile data`, user);
                         await AsyncStorage.setItem("userProfile", JSON.stringify(user));
                         providerValue.setProfile(user);
                         user.isUpdated = true;
@@ -573,10 +565,14 @@
                 });
                 
                 unsubscribe();
-                
-                
                 requestUserPermission();
-                deviceInformation();
+                syncUserInfo();
+
+                try{
+                  deviceInformation();
+                }catch(err){
+                  console.log(`Error from getting device information is`, err.message);
+                }
                 
                 async function syncUserInfo(){
                   listenForBackgroundPushNotification()
@@ -589,7 +585,6 @@
                   });
                 }
               
-                syncUserInfo();
 
                 setTimeout(() => {
                   

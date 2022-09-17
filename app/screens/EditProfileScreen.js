@@ -62,7 +62,7 @@ const EditProfile = ({navigation}) => {
       cropping: true,
       compressImageQuality: 0.7,
     }).then(async image => {
-      console.log("Camera image object",image);
+      // console.log("Camera image object",image);
       await SubmitProfileUpdateDetails(image);
     });
   }
@@ -73,7 +73,7 @@ const EditProfile = ({navigation}) => {
       height: 400,
       cropping: true,
     }).then( async(image) => {
-      console.log("Gallery image object",image);
+      // console.log("Gallery image object",image);
       await SubmitProfileUpdateDetails(image);
     });
   }
@@ -123,7 +123,7 @@ const EditProfile = ({navigation}) => {
           if(statusCode == 200){
             
             const customer = result.data;
-            console.log("Profile data after updating profile", customer);
+            // console.log("Profile data after updating profile", customer);
             
             setProfile(customer);
             await syncProfileData(customer);
@@ -288,7 +288,7 @@ const EditProfile = ({navigation}) => {
         
         if(statusCode == 200){
           const customer = response.data;
-          console.log("Data on removing profile image", customer);
+          // console.log("Data on removing profile image", customer);
           setProfile(customer);
           await syncProfileData(customer);
           await updateUserProfile(customer);

@@ -110,7 +110,7 @@ const WeatherScreen = () => {
             if(!resp.ok) {
               Alert.alert(`Error retrieving weather data: ${data.message}`); 
             } else {
-              console.log(`Forecast data`, data);
+              // console.log(`Forecast data`, data);
               setForecast(data);
             }
             

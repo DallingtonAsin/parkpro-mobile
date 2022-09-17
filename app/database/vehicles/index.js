@@ -95,9 +95,6 @@ exports.createVehiclesTable = () => {
                         
                         
                         exports.searchVehicle = (number, name, callback) => {
-                            console.log("Vehicle number received", number);
-                            console.log("Vehicle name received", name);
-
 
                             try{
                                 db.transaction((tx) => {
@@ -108,7 +105,6 @@ exports.createVehiclesTable = () => {
                                             var len = results.rows.length;
                                             if (len > 0) {
                                               let res = results.rows.item(0);
-                                              console.log("Iyeee results", res);
                                               callback(res);
                                             }
                                         });
@@ -128,10 +124,8 @@ exports.createVehiclesTable = () => {
                                             [vehicle_number],
                                             (tx, results) => {
                                                 if(results.rows.length > 0){
-                                                    console.log("row exists")
                                                     callback(true) 
                                                 }else{
-                                                    console.log("No rows")
                                                     callback(false);
                                                 } 
                                             }

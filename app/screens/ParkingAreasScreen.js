@@ -59,7 +59,7 @@ import {SafeAreaView,
             
             try{
                 const resp = await getParkingAreas();
-                console.log(`Parkings data`, resp);
+                // console.log(`Parkings data`, resp);
                 if(resp.statusCode == 200){
                     const parkings = resp.data;
                     if(parkings.length > 0) {

@@ -79,7 +79,7 @@ const OtpInputScreen = ({ route, navigation }) => {
       }
       setIsLoading(true);
       let response = await verifyOTP(reqParams); 
-      console.log(`Verify otp response`, response);
+      // console.log(`Verify otp response`, response);
       const statusCode = response.statusCode;
       const message = response.message;
       const data = response.data;

@@ -171,11 +171,11 @@
           const sendTopupRequest = (data) => {
             try{
 
-              console.log(`Topup data`, data);
+              // console.log(`Topup data`, data);
               setIsLoading(true);
               depositMoney(data).then( async(res) => {
                 setIsLoading(false);
-                console.log("Response for top up is", res);
+                // console.log("Response for top up is", res);
                 const statusCode = res.statusCode;
                 const message = res.message;
                 

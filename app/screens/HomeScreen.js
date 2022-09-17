@@ -450,9 +450,9 @@ const HomeScreen = (props) => {
                   ),[]);
                   
                   const viewParkingInfo = (item) => { 
-                    console.log(`Item onto info screen`, item);
+                    // console.log(`Item onto info screen`, item);
                     item.id = item.uniquePId;
-                    console.log(`Item onto info screen 2`, item);
+                    // console.log(`Item onto info screen 2`, item);
                     
                     // return;
                     props.navigation.navigate("ParkingInfo", {

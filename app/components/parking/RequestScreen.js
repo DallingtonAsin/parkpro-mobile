@@ -95,7 +95,7 @@ export const RequestScreen = ({item, open, onClose}) => {
         hours: availableHours
       });
     }else{
-      console.log("Not safe on hours");
+      // console.log("Not safe on hours");
     }
   }
   
@@ -164,8 +164,8 @@ export const RequestScreen = ({item, open, onClose}) => {
       
       dbVehicleHelper.searchVehicle(number, name, async result => {
         
-        console.log(`Here are vehicle details 1`, result);
-        console.log(`Vehicle number ${result.number}, name ${result.name} and type ${ result.type}`);
+        // console.log(`Here are vehicle details 1`, result);
+        // console.log(`Vehicle number ${result.number}, name ${result.name} and type ${ result.type}`);
         
         let vehicleType = result.type;
         setCarType(vehicleType);
@@ -264,7 +264,7 @@ export const RequestScreen = ({item, open, onClose}) => {
         }
       }
       
-      console.log("End time has been picked: ", end_hour_time);
+      // console.log("End time has been picked: ", end_hour_time);
       hideEndTimePicker();
     }catch(err){
       Toast.show(err.message, Toast.LONG);
@@ -287,9 +287,9 @@ export const RequestScreen = ({item, open, onClose}) => {
         let amt = amount.replace(/,/g, '');
         const total_amount =parseFloat(amt);
 
-        console.log("Balance: " + balance);
-        console.log("Total amount: " + total_amount);
-        console.log("Selected vehicle", vehicle_details);
+        // console.log("Balance: " + balance);
+        // console.log("Total amount: " + total_amount);
+        // console.log("Selected vehicle", vehicle_details);
         
         if (!parking_area_id) {
           Toast.show('Please select parking', Toast.LONG);
@@ -345,13 +345,13 @@ export const RequestScreen = ({item, open, onClose}) => {
             const vehicleName = vehicleDetailsArr[0].trim();
             const vehicleNumber = vehicleDetailsArr[1].trim();
             
-            console.log(`Vehicle name ${vehicleName} and number ${vehicleNumber}`);
+            // console.log(`Vehicle name ${vehicleName} and number ${vehicleNumber}`);
             
             if(vehicleName && vehicleNumber){
               dbVehicleHelper.searchVehicle(vehicleNumber, vehicleName, async result => {
                 
-                console.log(`Here are vehicle details`, result);
-                console.log(`Vehicle number ${result.number}, name ${result.name} and type ${ result.type}`);
+                // console.log(`Here are vehicle details`, result);
+                // console.log(`Vehicle number ${result.number}, name ${result.name} and type ${ result.type}`);
                 
                 const vehicleType = result.type;
                 
@@ -365,11 +365,11 @@ export const RequestScreen = ({item, open, onClose}) => {
                   end_time: endTime
                 }
                 
-                console.log("Request data", reqParams);
+                // console.log("Request data", reqParams);
                 setIsReqProcessing(true);
                 
                 const resp = await submitParkingRequest(reqParams);
-                console.log("Resp", resp);
+                // console.log("Resp", resp);
                 
                 if(resp.statusCode == 200){
 
@@ -425,11 +425,11 @@ export const RequestScreen = ({item, open, onClose}) => {
 
           setAmount(total);
           
-          console.log("Diff in hours", hours);
-          console.log("Fees per hour", fees[`${carType}`]);
+          // console.log("Diff in hours", hours);
+          // console.log("Fees per hour", fees[`${carType}`]);
           
           total = numberWithCommas(total);
-          console.log('Total is', total);
+          // console.log('Total is', total);
 
           setAmount(total);
 
