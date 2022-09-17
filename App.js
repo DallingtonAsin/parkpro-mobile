@@ -541,12 +541,6 @@
         }), []);
         
         
-        const fetchUserToken = useCallback(async () => {
-          let token = await AsyncStorage.getItem("userToken");
-          setAccessToken(token);
-        }, [accessToken]);
-        
-        
         const fetchUserData = useCallback(async () => {
           let data = await AsyncStorage.getItem("userProfile");
           data = JSON.parse(data);
@@ -556,7 +550,7 @@
         useEffect(() => {
           
           
-          fetchUserToken();
+          let user = null, userToken = null;
           fetchUserData();
           
           let fontName = 'Roboto-Regular'
@@ -582,37 +576,37 @@
             console.log(`Error from getting device information is`, err.message);
           }
           
-          let user = loggedInUser;
-          let userToken = accessToken;  // loggedInUser && loggedInUser.access_token ? loggedInUser.access_token: null;
-          
-          // console.log(`User`, user);
-          // console.log(`userToken`, userToken);
-
-          if(user && userToken){
-            //  isMounted.current &&
-              setProfile(user);
-          }
-          
           async function syncUserInfo(){
             listenForBackgroundPushNotification()
             .then(async(result) => {
               if(result){
-                if(user && user.id){
-                  await authContext.asyncCustomerProfile(user.id);
+                if(profile && profile.id){
+                  await authContext.asyncCustomerProfile(profile.id);
                 }
               }
             });
           }
           
-          
-          setTimeout(() => {
-            
+          setTimeout(async() => {
+
+            try{
+              user = await AsyncStorage.getItem("userProfile");
+              userToken = await AsyncStorage.getItem("userToken");
+              if(user && userToken){
+                
+                isMounted.current &&  setProfile(user);
+                
+              }
+            }catch(e){
+              console.log("Error on async storage", e);
+            }
+
             dispatch({ type: 'REGISTER', userToken: userToken});
           }, 2500);
           
           SplashScreen.hide();
           
-        }, [loggedInUser, accessToken]);
+        }, []);
         
         if(loginState.isLoading) {
           return (
