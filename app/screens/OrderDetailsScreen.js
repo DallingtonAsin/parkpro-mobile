@@ -1,7 +1,7 @@
   import React, {useState, useEffect, useRef, useMemo, useCallback} from 'react';
   import {Text, SafeAreaView, Image, RefreshControl, View, ScrollView, Platform, PermissionsAndroid,
     FlatList, TouchableWithoutFeedback, StyleSheet, TouchableOpacity, ToastAndroid} from 'react-native';
-    import CameraRoll from "@react-native-community/cameraroll";
+    import { CameraRoll } from "@react-native-camera-roll/camera-roll";
     import { AuthContext } from '../context/context';
     import styles from '../../assets/css/styles';
     import { icons } from '../../constants';

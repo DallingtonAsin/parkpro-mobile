@@ -18,22 +18,21 @@
     import messaging from '@react-native-firebase/messaging';
     
     import { useIsMounted } from './app/components/common/isMounted';
-    import LocationEnabler from 'react-native-location-enabler';
+    // import LocationEnabler from 'react-native-location-enabler';
     import design from './assets/css/styles';
     import { apiKeys, appConstants } from './app/constants';
     import { UIActivityIndicator } from 'react-native-indicators';
     import { reject } from 'lodash';
     const services = require("./app/services");
-    import ScreenCaptureSecure from 'react-native-screen-capture-secure';
     import PushNotification from "react-native-push-notification";
     
     const channel_id = appConstants.NOTIFICATION_CHANNEL;
     
     
-    const {
-      PRIORITIES: { HIGH_ACCURACY },
-      useLocationSettings,
-    } = LocationEnabler;
+    // const {
+    //   PRIORITIES: { HIGH_ACCURACY },
+    //   useLocationSettings,
+    // } = LocationEnabler;
     
     const initialLoginState = {
       isLoading: true,
@@ -92,14 +91,14 @@
       const theme = isDarkTheme ? customDarkTheme : customDefaultTheme;
       const isMounted = useIsMounted();
       
-      const [enabled, requestResolution] = useLocationSettings(
-        {
-          priority: HIGH_ACCURACY,
-          alwaysShow: true, 
-          needBle: true,
-        },
-        false 
-        );
+      // const [enabled, requestResolution] = useLocationSettings(
+      //   {
+      //     priority: HIGH_ACCURACY,
+      //     alwaysShow: true, 
+      //     needBle: true,
+      //   },
+      //   false 
+      //   );
         
         
         const OfflineScreen = () => {
@@ -158,36 +157,38 @@
           };
           
           
-          const EnableLocationScreen = () => {
+          // const EnableLocationScreen = () => {
             
-            const css =  makeStyles(theme.colors);
+          //   const css =  makeStyles(theme.colors);
             
-            return(
-              <View style={css.container}>
-              <StatusBar barStyle="light-content" backgroundColor={theme.colors.primary} />
+          //   return(
+          //     <View style={css.container}>
+          //     <StatusBar barStyle="light-content" backgroundColor={theme.colors.primary} />
               
-              <View style={css.header}>
-              <FontAwesome name={"map-marker"} size={135} color={theme.colors.text} style={{ top:-80 }}/>
-              <Text style={{textAlign: 'center', fontSize:30, color: theme.colors.text,
-              fontWeight: 'bold'}}>Where are you?</Text>
-              <Text style={{textAlign: 'center', fontSize:18, 
-              color: theme.colors.text, top:35, fontStyle: 'normal' }}>
-              Enabling your location is important because it helps us 
-              get you the closest parking areas.</Text>
-              </View>
+          //     <View style={css.header}>
+          //     <FontAwesome name={"map-marker"} size={135} color={theme.colors.text} style={{ top:-80 }}/>
+          //     <Text style={{textAlign: 'center', fontSize:30, color: theme.colors.text,
+          //     fontWeight: 'bold'}}>Where are you?</Text>
+          //     <Text style={{textAlign: 'center', fontSize:18, 
+          //     color: theme.colors.text, top:35, fontStyle: 'normal' }}>
+          //     Enabling your location is important because it helps us 
+          //     get you the closest parking areas.</Text>
+          //     </View>
               
-              <View style={css.footer}>
-              <TouchableOpacity style={[design.btnSecondary, 
-                { color: '#fff', backgroundColor: theme.colors.text,
-                borderColor: theme.colors.primary, alignSelf: 'center'}]}
-                onPress={requestResolution}>
-                <Text style={{color:design.colors.dark, textTransform:'uppercase',
-                fontSize:16, fontWeight: 'bold'}}>Enable Your Location </Text>
-                </TouchableOpacity>
-                </View>
-                </View>
-                )
-              }
+          //     <View style={css.footer}>
+          //     <TouchableOpacity style={[design.btnSecondary, 
+          //       { color: '#fff', backgroundColor: theme.colors.text,
+          //       borderColor: theme.colors.primary, alignSelf: 'center'}]}
+          //       onPress={requestResolution}>
+          //       <Text style={{color:design.colors.dark, textTransform:'uppercase',
+          //       fontSize:16, fontWeight: 'bold'}}>Enable Your Location </Text>
+          //       </TouchableOpacity>
+          //       </View>
+          //       </View>
+          //       )
+          //     }
+
+         
               
               const getLocale = () => {
                 const deviceLanguage =
@@ -196,6 +197,16 @@
                 NativeModules.SettingsManager.settings.AppleLanguages[0] //iOS 13
                 : NativeModules.I18nManager.localeIdentifier;
                 return deviceLanguage;
+              }
+
+              const onChangeToken = (token, language) => {
+                
+                var data = {};
+                data[`${apiKeys.DEVICE_TOKEN}`] = token;
+                data[`${apiKeys.DEVICE_TYPE}`] = Platform.OS;
+                data[`${apiKeys.DEVICE_LANGUAGE}`] = language;
+                loadDeviceInfo(data).done();
+                
               }
               
               const deviceInformation = () => {
@@ -220,17 +231,7 @@
                 });
                 
               }
-              
-              const onChangeToken = (token, language) => {
-                
-                var data = {};
-                data[`${apiKeys.DEVICE_TOKEN}`] = token;
-                data[`${apiKeys.DEVICE_TYPE}`] = Platform.OS;
-                data[`${apiKeys.DEVICE_LANGUAGE}`] = language;
-                loadDeviceInfo(data).done();
-                
-              }
-              
+
               const loadDeviceInfo = async (deviceData) => {
                 var value = JSON.stringify(deviceData);
                 try {
@@ -239,6 +240,10 @@
                   console.log(error);
                 }
               }; 
+              
+             
+              
+             
               
               const authContext = React.useMemo(() => ({
                 
@@ -542,7 +547,6 @@
               
               useEffect(async() => {
                 
-                ScreenCaptureSecure.disableSecure();
                 
                 
                 let fontName = 'Roboto-Regular'
@@ -612,11 +616,11 @@
                     )
                   }
                   
-                  if(!enabled){
-                    return (
-                      <EnableLocationScreen theme={theme} userToken={loginState.userToken}/>
-                      )
-                    }
+                  // if(!enabled){
+                  //   return (
+                  //     <EnableLocationScreen theme={theme} userToken={loginState.userToken}/>
+                  //     )
+                  //   }
                     
                     return (
                       
