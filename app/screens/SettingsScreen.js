@@ -61,8 +61,7 @@ const Settings = ({ navigation }) => {
   
   const [isVisible, setIsVisible] = useState(false);   
   
-  const { toggleTheme, signOut } = React.useContext(AuthContext);
-  const paperTheme = useTheme(); 
+  const { signOut } = React.useContext(AuthContext);
   
   const { colors } = useTheme();
   const styles = makeStyles(colors);

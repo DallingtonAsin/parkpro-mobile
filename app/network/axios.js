@@ -36,7 +36,7 @@ let AxiosApi = class {
         try {
             const headers = await this.getHeader();
             const response = this.client().post(endpoint, data, headers).then(res => {
-                console.log(`Result`, res);
+                // console.log(`Result`, res);
                 return this.getSuccessResponse(res);
             }).catch(err => {
                 return this.getFailedResponse(err);
