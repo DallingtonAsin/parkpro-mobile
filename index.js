@@ -38,7 +38,7 @@ PushNotification.createChannel({
     importance: Importance.HIGH,
 },
 (created) => {
-    console.log(`Channel created?`, created);
+    // console.log(`Channel created?`, created);
 }
 );
 

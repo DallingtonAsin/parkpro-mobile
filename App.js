@@ -91,6 +91,8 @@
       const [loggedInUser, setLoggedInUser] = React.useState();
       const [accessToken, setAccessToken] = React.useState();
       
+      const [isLoading, setIsLoading] = useState(true);
+      
       
       const theme = isDarkTheme ? customDarkTheme : customDefaultTheme;
       const isMounted = useIsMounted();
@@ -282,9 +284,9 @@
           
           signOut: async() => {
             try{
-              await AsyncStorage.removeItem("userToken");
-              await AsyncStorage.removeItem("userProfile");
-              dispatch({ type: 'LOGOUT' });
+              // await AsyncStorage.removeItem("userToken");
+              // await AsyncStorage.removeItem("userProfile");
+              // dispatch({ type: 'LOGOUT' });
             }catch(e){
               throw e;
             }
@@ -541,20 +543,21 @@
         }), []);
         
         
-        const fetchUserData = useCallback(async () => {
-          let data = await AsyncStorage.getItem("userProfile");
-          data = JSON.parse(data);
-          setLoggedInUser(data);
-        }, [loggedInUser]);
         
         useEffect(() => {
           
           
-          let user = null, userToken = null;
-          fetchUserData();
-          
           let fontName = 'Roboto-Regular'
           GlobalFont.applyGlobal(fontName);
+          
+          
+          const fetchData = async() =>{
+            const response = await AsyncStorage.getItem("userProfile");
+            let user = JSON.parse(response);
+            setProfile(user);
+            setLoggedInUser(user);
+          }
+          fetchData();
           
           NetInfo.fetch().then(state => {
             isMounted.current && setIsConnected(state.isConnected);
@@ -567,46 +570,34 @@
           });
           
           unsubscribe();
+          
+          
           requestUserPermission();
-          syncUserInfo();
+          deviceInformation();
           
-          try{
-            deviceInformation();
-          }catch(err){
-            console.log(`Error from getting device information is`, err.message);
-          }
-          
-          async function syncUserInfo(){
-            listenForBackgroundPushNotification()
-            .then(async(result) => {
-              if(result){
-                if(profile && profile.id){
-                  await authContext.asyncCustomerProfile(profile.id);
-                }
+          listenForBackgroundPushNotification()
+          .then(async(result) => {
+            if(result){
+              if(user && user.id){
+                await authContext.asyncCustomerProfile(user.id);
               }
-            });
-          }
+            }
+          });
           
           setTimeout(async() => {
-
+            
             try{
-              user = await AsyncStorage.getItem("userProfile");
-              userToken = await AsyncStorage.getItem("userToken");
-              if(user && userToken){
-                
-                isMounted.current &&  setProfile(user);
-                
-              }
+             let userToken = await AsyncStorage.getItem("userToken");
+              dispatch({ type: 'REGISTER', userToken: userToken});
             }catch(e){
               console.log("Error on async storage", e);
             }
-
-            dispatch({ type: 'REGISTER', userToken: userToken});
+           
           }, 2500);
           
           SplashScreen.hide();
           
-        }, []);
+        }, [loggedInUser]);
         
         if(loginState.isLoading) {
           return (
