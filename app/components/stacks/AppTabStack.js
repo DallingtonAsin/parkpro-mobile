@@ -6,12 +6,13 @@ import HomeStack from './HomeStack';
 import HelpStack from './ContactUsStack';
 import WeatherStack from './WeatherStack';
 import NotificationStack from './NotificationStack';
-import MapStack from './MapStack';
+import ZoomStack from './ZoomStack';
 import { useTheme  } from 'react-native-paper';
 import styles from '../../../assets/css/styles';
 
 const BottomTab = createBottomTabNavigator();
-const tabIconFontSize = 24;
+const tabIconFontSize = 18;
+
 
 const AppTabStack = () => {
     
@@ -150,10 +151,26 @@ const AppTabStack = () => {
                                             }}
                                             />
                                             
-                                            
-                                            
-                                            </BottomTab.Navigator>
-                                            </MultiBarProvider>
-                                            );
-                                        }
-                                        export default AppTabStack
+                                            <BottomTab.Screen
+                                            name="Meeting"
+                                            component={ZoomStack}
+                                            options={{
+                                                tabBarIcon: ({ color, size }) => (
+                                                    <Icon
+                                                    name="video"
+                                                    style={{
+                                                        fontSize: tabIconFontSize,
+                                                        color: color
+                                                    }}
+                                                    />
+                                                    )
+                                                }}
+                                                />
+                                                
+                                                
+                                                
+                                                </BottomTab.Navigator>
+                                                </MultiBarProvider>
+                                                );
+                                            }
+                                            export default AppTabStack

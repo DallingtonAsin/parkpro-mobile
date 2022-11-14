@@ -1,6 +1,6 @@
-  import React, {useEffect, useCallback, useState, useMemo} from 'react';
-  import { Image, RefreshControl,  Text, View, StatusBar, StyleSheet,
-    SafeAreaView, ScrollView, Platform, NativeModules, TouchableOpacity} from 'react-native';
+  import React, {useEffect, useState, useMemo, useRef} from 'react';
+  import { Image, RefreshControl,  Text, StatusBar, StyleSheet,
+    SafeAreaView, ScrollView, Platform,PermissionsAndroid, NativeModules} from 'react-native';
     import { NavigationContainer } from '@react-navigation/native';
     import { Provider as PaperProvider } from 'react-native-paper';
     import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -25,9 +25,22 @@
     import { reject } from 'lodash';
     const services = require("./app/services");
     import PushNotification from "react-native-push-notification";
-    import { acc } from 'react-native-reanimated';
+    
+    import {
+      ClientRoleType,
+      createAgoraRtcEngine,
+      IRtcEngine,
+      RtcSurfaceView,
+      ChannelProfileType,
+    } from 'react-native-agora';
     
     const channel_id = appConstants.NOTIFICATION_CHANNEL;
+    import {AGORA_APP_ID, AGORA_CHANNEL_NAME, AGORA_TEMP_TOKEN} from '@env';
+
+    const appId = AGORA_APP_ID;
+    const channelName = AGORA_CHANNEL_NAME;
+    const token = AGORA_TEMP_TOKEN;
+    const uid = 0;
     
     
     // const {
@@ -81,7 +94,18 @@
     
     
     const App = ()  => {
-      
+
+    
+
+     const getPermission = async () => {
+      if (Platform.OS === 'android') {
+          await PermissionsAndroid.requestMultiple([
+              PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
+              PermissionsAndroid.PERMISSIONS.CAMERA,
+          ]);
+      }
+    };
+  
       
       const [profile, setProfile] = useState(null);
       const providerValue = useMemo(() => ({profile, setProfile}), [profile, setProfile]); 
@@ -549,6 +573,7 @@
           
           let fontName = 'Roboto-Regular'
           GlobalFont.applyGlobal(fontName);
+          getPermission();
           
           
           const fetchData = async() =>{
@@ -587,12 +612,12 @@
           setTimeout(async() => {
             
             try{
-             let userToken = await AsyncStorage.getItem("userToken");
+              let userToken = await AsyncStorage.getItem("userToken");
               dispatch({ type: 'REGISTER', userToken: userToken});
             }catch(e){
               console.log("Error on async storage", e);
             }
-           
+            
           }, 2500);
           
           SplashScreen.hide();
