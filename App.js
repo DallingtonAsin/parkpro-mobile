@@ -1,4 +1,4 @@
-  import React, {useEffect, useState, useMemo, useRef} from 'react';
+  import React, {useEffect, useState, useMemo} from 'react';
   import { Image, RefreshControl,  Text, StatusBar, StyleSheet,
     SafeAreaView, ScrollView, Platform,PermissionsAndroid, NativeModules} from 'react-native';
     import { NavigationContainer } from '@react-navigation/native';
@@ -25,24 +25,8 @@
     import { reject } from 'lodash';
     const services = require("./app/services");
     import PushNotification from "react-native-push-notification";
-    
-    import {
-      ClientRoleType,
-      createAgoraRtcEngine,
-      IRtcEngine,
-      RtcSurfaceView,
-      ChannelProfileType,
-    } from 'react-native-agora';
-    
     const channel_id = appConstants.NOTIFICATION_CHANNEL;
-    import {AGORA_APP_ID, AGORA_CHANNEL_NAME, AGORA_TEMP_TOKEN} from '@env';
 
-    const appId = AGORA_APP_ID;
-    const channelName = AGORA_CHANNEL_NAME;
-    const token = AGORA_TEMP_TOKEN;
-    const uid = 0;
-    
-    
     // const {
     //   PRIORITIES: { HIGH_ACCURACY },
     //   useLocationSettings,
