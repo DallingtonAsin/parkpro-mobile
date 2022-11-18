@@ -11813,7 +11813,8 @@
     "prop-types" "^15.5.10"
 
 "react-native-material-textfield@github:vishaljadav24/react-native-material-textfield":
-  "resolved" "git+ssh://git@github.com/vishaljadav24/react-native-material-textfield.git#e2d155446ab9057fc7bf6251492fe445d47c07c2"
+  "integrity" "sha512-3+DkpMABQyNMkWGiQ7HpcnSRbaKZAopuS9P9Wv6AQ9npRMAoCyvcval8QFUBlZO5ngxXQF0x+QhuPv+B2cAVOA=="
+  "resolved" "git+ssh://git@github.com/vishaljadav24/react-native-material-textfield.git"
   "version" "0.16.1"
   dependencies:
     "prop-types" "^15.5.9"
