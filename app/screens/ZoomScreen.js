@@ -55,13 +55,11 @@ const ZoomScreen = () => {
   };
 
   useEffect(() => {
-    // Initialize Agora engine when the app starts
     setupVideoSDKEngine();
   });
 
   const setupVideoSDKEngine = async () => {
     try {
-      // use the helper function to get permissions
       if (Platform.OS === 'android') {
         await getPermission();
       }
@@ -134,7 +132,7 @@ const ZoomScreen = () => {
   if (isDefaultApp) {
     return (
       <>
-        <SafeAreaView style={styles.main}>
+        {/* <SafeAreaView style={styles.main}>
           <FocusAwareStatusBar
             barStyle="light-content"
             backgroundColor={colors.primary}
@@ -181,7 +179,7 @@ const ZoomScreen = () => {
             <Text style={styles.info}>{message}</Text>
           </ScrollView>
         </SafeAreaView>
-        {isLoading ? <AppLoader /> : null}
+        {isLoading ? <AppLoader /> : null} */}
       </>
     );
   } else {

@@ -19,7 +19,6 @@ import {SafeAreaView,
         
         const { getParkingAreas } = React.useContext(AuthContext);
         const [isLoading, setIsLoading] = useState(false);
-        
         const [parkingAreas, setParkingAreas] = useState([]);
         const [filteredParkingAreas, setFilteredParkingAreas] = useState([]);
         
@@ -27,8 +26,6 @@ import {SafeAreaView,
         const { colors } = useTheme();
         
         const [query, setSearch] = useState('');
-        
-        
         
         const handleSearch = (text) => {
             if(text){

@@ -37,7 +37,6 @@ const SigninScreen = ({ navigation }) => {
         
         const phoneObj = phoneInput.current?.getNumberAfterPossiblyEliminatingZero();
         let number = phoneObj.number;
-        
         const startsWithZero = number.startsWith("0");
         if(startsWithZero){
             number = removeLeadingZeros(number);
