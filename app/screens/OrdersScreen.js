@@ -1,16 +1,16 @@
 import React, {useState, useContext } from 'react';
-import {Text, SafeAreaView, Image,RefreshControl, TouchableWithoutFeedback,
+import {Text, SafeAreaView,RefreshControl,
   TouchableOpacity,View, FlatList, StyleSheet} from 'react-native';
   import { AuthContext } from '../context/context';
   import styles from '../../assets/css/styles';
   import FontAwesome from 'react-native-vector-icons/FontAwesome';
   import Toast from 'react-native-simple-toast';
   import ProfileContext from '../context/index';
-  import { icons } from '../../constants';
-  import {APP_NAME, currency} from '@env';
+  import { currency} from '@env';
   import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
   import { useTheme } from '@react-navigation/native';
 import AppLoader from '../components/loaders/AppLoader';
+import Icon from 'react-native-vector-icons/FontAwesome5';
   
 
   const wait = (timeout) => {
@@ -79,16 +79,7 @@ import AppLoader from '../components/loaders/AppLoader';
         onPress={() => showOrderInfo(item) }
         >
         <View>
-        {/* <Image source={require('../../assets/icons/money.jpg')}  style={{ width:70, height:70, borderRadius:50} }  /> */}
-        {/* <Image
-        source={icons.parking6}
-        resizeMode="contain"
-        style={{
-          width: 55,
-          height: 55,
-        }}
-        /> */}
-        
+          <Icon name={'parking'} size={45} color={colors.icon}/>
         </View>
         
         <View style={{ flexDirection: 'column'}}>
