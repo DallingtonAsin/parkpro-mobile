@@ -3,7 +3,9 @@ import LinearGradient from 'react-native-linear-gradient';
 import {TouchableOpacity, Image, View, Text, StyleSheet, Dimensions} from 'react-native'
 import { COLORS, FONTS, SIZES } from '../../constants';
 import design from '../../assets/css/styles';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/FontAwesome5';
+import Icon5 from 'react-native-vector-icons/FontAwesome5';
+
 
 export const HomeCardItem = ({ icon, label, tintColor, onPress, labelColor }) => {
 
@@ -24,16 +26,7 @@ export const HomeCardItem = ({ icon, label, tintColor, onPress, labelColor }) =>
              onPress={onPress}
              > 
 
-        
-           <Image
-            source={icon}
-            resizeMode="cover"
-            style={{
-                tintColor: tintColor,
-                width:  45,
-                height: 45,
-            }}
-            />
+           <Icon name={icon} size={35} color={tintColor}/>
 
            <Text style={{ marginTop: SIZES.base, color: labelColor ? labelColor : design.colors.primary, ...FONTS.body3, fontWeight:'normal', fontSize:15.5 }}>{label}</Text> 
 

@@ -80,14 +80,14 @@ import AppLoader from '../components/loaders/AppLoader';
         >
         <View>
         {/* <Image source={require('../../assets/icons/money.jpg')}  style={{ width:70, height:70, borderRadius:50} }  /> */}
-        <Image
+        {/* <Image
         source={icons.parking6}
         resizeMode="contain"
         style={{
           width: 55,
           height: 55,
         }}
-        />
+        /> */}
         
         </View>
         

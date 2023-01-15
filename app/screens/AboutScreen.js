@@ -4,9 +4,8 @@ import design from '../../assets/css/styles';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {Card, Title} from 'react-native-paper';
 import { AboutCardItem } from '../components/CardItem';
-import {icons, SIZES } from '../../constants';
-import { SocialIcon } from 'react-native-elements'
-import {APP_NAME, currency} from '@env';
+import { SIZES } from '../../constants';
+import {APP_NAME} from '@env';
 import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
 import { useTheme } from '@react-navigation/native';
 

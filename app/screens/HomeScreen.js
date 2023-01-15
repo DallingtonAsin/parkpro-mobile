@@ -429,10 +429,10 @@ const HomeScreen = (props) => {
               const renderVehicles =  useCallback(
                 (item) => (
                   <View key={item.id} style={{flexDirection: 'row', padding:12}}>
-                  <Image
+                  {/* <Image
                   source={require('../../assets/images/UberX.jpeg')}
                   style={design.vehicle.image}
-                  />
+                  /> */}
                   <View style={design.vehicle.middleContainer}>
                   <Text style={[design.vehicle.text, {color: '#000'}]}>{item.number}</Text>
                   <Text style={[design.vehicle.name, {color: '#000'}]}>{item.name}</Text>
@@ -529,7 +529,7 @@ const HomeScreen = (props) => {
                         <View style={styles.cardRow}>
                         
                         <HomeCardItem
-                        icon={icons.request}
+                        icon={'parking'}
                         bgColor={['#fff', '#fff']}
                         label="Parking"
                         tintColor={colors.icon}
@@ -538,7 +538,7 @@ const HomeScreen = (props) => {
                         />
                         
                         <HomeCardItem
-                        icon={icons.myparkings}
+                        icon={'bookmark'}
                         bgColor={['#fff', '#fff']}
                         label="Favourites"
                         borderRadius={5}
@@ -548,7 +548,7 @@ const HomeScreen = (props) => {
                         
                         
                         <HomeCardItem
-                        icon={icons.uber}
+                        icon={'car'}
                         bgColor={['#fff', '#fff']}
                         label="My Vehicles"
                         borderRadius={5}
@@ -562,7 +562,7 @@ const HomeScreen = (props) => {
                         <View style={styles.cardRow}>
                         
                         <HomeCardItem
-                        icon={icons.orders}
+                        icon={'shopping-cart'}
                         bgColor={['#fff', '#fff']}
                         label="Orders"
                         borderRadius={5}
@@ -573,7 +573,7 @@ const HomeScreen = (props) => {
                         
                         
                         <HomeCardItem
-                        icon={icons.topup}
+                        icon={'plus-circle'}
                         bgColor={['#fff', '#fff']}
                         label="Deposit"
                         borderRadius={5}
@@ -582,7 +582,7 @@ const HomeScreen = (props) => {
                         />
                         
                         <HomeCardItem
-                        icon={icons.statement}
+                        icon={'wallet'}
                         bgColor={['#fff', '#fff']}
                         label="Transactions"
                         borderRadius={5}

@@ -38,7 +38,7 @@ export const AddVehicleScreen = ({isSheetVisible,
         <View style={{ flex:1 }}>
         
         <View style={styles.iconSection}>
-        <Avatar.Icon icon={icons.uber} size={80} style={{backgroundColor: colors.text}} /> 
+        {/* <Avatar.Icon icon={icons.uber} size={80} style={{backgroundColor: colors.text}} />  */}
         </View>
         
         <View style={styles.addVehicleBodySection}>

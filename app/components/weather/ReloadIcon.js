@@ -1,6 +1,5 @@
 import React from 'react'
 import { View, Platform, StyleSheet } from 'react-native'
-import { Ionicons, FontAwesome5 } from '@expo/vector-icons'
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { colors } from '../utils/index'
 

@@ -129,7 +129,7 @@ const TransactionsHistoryScreen = () => {
             <View style={{height:130,backgroundColor: colors.primary}}>
             <View style={{alignItems: 'center', margin:20}}>
             
-            <Image
+            {/* <Image
             source={icons.statement}
             resizeMode="cover"
             style={{
@@ -137,7 +137,7 @@ const TransactionsHistoryScreen = () => {
               width:  50,
               height:  50,
             }}
-            />
+            /> */}
             
             <Text style={{color: '#fff', fontSize:18, padding:10, textTransform: 'capitalize' }}>Transactions</Text>
             </View>
