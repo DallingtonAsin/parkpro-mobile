@@ -190,14 +190,14 @@
               <View  style={{flex:1, flexDirection: 'row',
               padding:10,
               justifyContent:'space-between', right:10}}>
-              <Image
+              {/* <Image
               source={icons.parking6}
               resizeMode="contain"
               style={{
                 width: 85,
                 height: 85,
               }}
-              />
+              /> */}
               
               
               <View>

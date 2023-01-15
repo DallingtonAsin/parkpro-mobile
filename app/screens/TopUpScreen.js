@@ -20,16 +20,9 @@
     import BottomSheet, { BottomSheetBackdrop, BottomSheetScrollView, SHEET_STATE } from '@gorhom/bottom-sheet';
     import {  Divider  } from 'react-native-paper';
     import OTPInputView from "@twotalltotems/react-native-otp-input";
-    import { WebView } from 'react-native-webview';
-
-
-    const OTPPaymentScreen = ({url}) => {
-      return(
-         <WebView source={{ uri: url }} style={{ marginTop: 20 }} />
-      )
-    }
+  
     
-   
+  
     const initialState = {
       
       hasRecharged: null,
@@ -189,7 +182,6 @@
 
                   if(data.link){
                     let redirectUrl = data.link;
-                    // return <OTPPaymentScreen url={redirectUrl}/>
                     return Linking.openURL(redirectUrl);
                   }
                   
