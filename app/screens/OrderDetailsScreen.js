@@ -1,7 +1,7 @@
   import React, {useState, useEffect, useRef, useMemo, useCallback} from 'react';
   import {Text, SafeAreaView, Image, RefreshControl, View, ScrollView, Platform, PermissionsAndroid,
     FlatList, TouchableWithoutFeedback, StyleSheet, TouchableOpacity, ToastAndroid} from 'react-native';
-    import CameraRoll from "@react-native-community/cameraroll";
+    import { CameraRoll } from "@react-native-camera-roll/camera-roll";
     import { AuthContext } from '../context/context';
     import styles from '../../assets/css/styles';
     import { icons } from '../../constants';
@@ -56,7 +56,7 @@
           if(result.statusCode == 200){
             const order_details = result.data; 
             if(order_details.length > 0){
-              console.log("Order details", order_details);
+              // console.log("Order details", order_details);
               setOrderInfo(order_details);
             }
           }
@@ -123,7 +123,7 @@
                     if(exists){
                       RNFS.unlink(filePath)
                       .then(() => {
-                        console.log('Receipt QR Image removed from storage');
+                        // console.log('Receipt QR Image removed from storage');
                       }).catch((err) => {
                         console.log('Unable to remove file from storage', err.message);
                       });
@@ -146,9 +146,9 @@
               
               receiptQRref.toDataURL((data) => {
                 
-                console.log(`Receipt order number is ${item.order_no}`);
+                // console.log(`Receipt order number is ${item.order_no}`);
                 let filePath =  RNFS.CachesDirectoryPath+`/${item.order_no}.png`;
-                console.log(`Path is ${filePath}`);
+                // console.log(`Path is ${filePath}`);
                 
                 RNFS.writeFile(filePath, data, 'base64')
                 .then((success) => {
@@ -165,7 +165,7 @@
                 });
               });
             }else{
-              console.log(`Non-filled in receipt ref is`, receiptQRref);
+              // console.log(`Non-filled in receipt ref is`, receiptQRref);
             }
           }
           

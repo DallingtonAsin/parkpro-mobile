@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { SafeAreaView, View, StyleSheet, Alert, Text, TouchableOpacity } from "react-native";
+import { SafeAreaView, View, StyleSheet, Text, TouchableOpacity } from "react-native";
 import OTPInputView from "@twotalltotems/react-native-otp-input";
 import design from '../../assets/css/styles';
 import FontAwesome from 'react-native-vector-icons/FontAwesome5';
@@ -8,7 +8,7 @@ import FocusAwareStatusBar  from '../components/common/FocusAwareStatusBar';
 import { useTheme } from '@react-navigation/native';
 import AppLoader from '../components/loaders/AppLoader';
 import Toast from 'react-native-simple-toast';
-import CountDown from 'react-native-countdown-component';
+// import CountDown from 'react-native-countdown-component';
 
 
 const OtpInputScreen = ({ route, navigation }) => {
@@ -79,14 +79,17 @@ const OtpInputScreen = ({ route, navigation }) => {
       }
       setIsLoading(true);
       let response = await verifyOTP(reqParams); 
-      console.log(`Verify otp response`, response);
+      // console.log(`Verify otp response`, response);
       const statusCode = response.statusCode;
       const message = response.message;
       const data = response.data;
       
       if(statusCode == 200){
         if(data.is_registered){
-          await goToHomeScreen(data);
+          let resp = await goToHomeScreen(data);
+          if(resp){
+            navigation.navigate("Home");
+          }
         }else{
           
           navigation.navigate("Signup",
@@ -132,7 +135,7 @@ const OtpInputScreen = ({ route, navigation }) => {
     })}
     />
 
-    <View style={{paddingRight:30, top: -60 , alignSelf: 'flex-end'}}>
+    {/* <View style={{paddingRight:30, top: -60 , alignSelf: 'flex-end'}}>
     {
       isTimerOn ?
       <CountDown
@@ -153,7 +156,7 @@ const OtpInputScreen = ({ route, navigation }) => {
       </View>
     }
     
-    </View>
+    </View> */}
     
     
     {invalidCode && <Text style={styles.error}>{message}</Text>}

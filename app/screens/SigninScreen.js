@@ -6,8 +6,7 @@ import {
     SafeAreaView,
     Platform,
     StyleSheet,
-    Alert,
-    Modal
+    Alert
 } from 'react-native';
 
 import * as Animatable from 'react-native-animatable';
@@ -38,7 +37,6 @@ const SigninScreen = ({ navigation }) => {
         
         const phoneObj = phoneInput.current?.getNumberAfterPossiblyEliminatingZero();
         let number = phoneObj.number;
-        
         const startsWithZero = number.startsWith("0");
         if(startsWithZero){
             number = removeLeadingZeros(number);
@@ -103,7 +101,7 @@ const SigninScreen = ({ navigation }) => {
                 setIsLoading(true);
                 
                 let response = await sendSmsVerification(requestParams);
-                console.log("API response", response);
+                // console.log("API response", response);
                 if(response.statusCode == 200){
                     let data = response.data;
                     await storeAccessToken(data.access_token);
@@ -167,7 +165,7 @@ const SigninScreen = ({ navigation }) => {
             
             <TouchableOpacity 
             style={styles.btnPrimary}
-            onPress={() => confirmPhoneNumber()}
+            onPress={confirmPhoneNumber}
             >
             <Text style={styles.buttonText}>
             {isLoading ?  'Loading...' : 'Continue' } 

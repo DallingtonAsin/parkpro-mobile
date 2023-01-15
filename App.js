@@ -1,6 +1,6 @@
   import React, {useEffect, useState, useMemo} from 'react';
-  import { Image, RefreshControl,  Text, View, StatusBar, StyleSheet,
-    SafeAreaView, ScrollView, Platform, NativeModules, TouchableOpacity} from 'react-native';
+  import { Image, RefreshControl,  Text, StatusBar, StyleSheet,
+    SafeAreaView, ScrollView, Platform,PermissionsAndroid, NativeModules} from 'react-native';
     import { NavigationContainer } from '@react-navigation/native';
     import { Provider as PaperProvider } from 'react-native-paper';
     import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -18,22 +18,19 @@
     import messaging from '@react-native-firebase/messaging';
     
     import { useIsMounted } from './app/components/common/isMounted';
-    import LocationEnabler from 'react-native-location-enabler';
+    // import LocationEnabler from 'react-native-location-enabler';
     import design from './assets/css/styles';
     import { apiKeys, appConstants } from './app/constants';
     import { UIActivityIndicator } from 'react-native-indicators';
     import { reject } from 'lodash';
     const services = require("./app/services");
-    import ScreenCaptureSecure from 'react-native-screen-capture-secure';
     import PushNotification from "react-native-push-notification";
-    
     const channel_id = appConstants.NOTIFICATION_CHANNEL;
-    
-    
-    const {
-      PRIORITIES: { HIGH_ACCURACY },
-      useLocationSettings,
-    } = LocationEnabler;
+
+    // const {
+    //   PRIORITIES: { HIGH_ACCURACY },
+    //   useLocationSettings,
+    // } = LocationEnabler;
     
     const initialLoginState = {
       isLoading: true,
@@ -81,607 +78,617 @@
     
     
     const App = ()  => {
-      
+
+    
+
+     const getPermission = async () => {
+      if (Platform.OS === 'android') {
+          await PermissionsAndroid.requestMultiple([
+              PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
+              PermissionsAndroid.PERMISSIONS.CAMERA,
+          ]);
+      }
+    };
+  
       
       const [profile, setProfile] = useState(null);
       const providerValue = useMemo(() => ({profile, setProfile}), [profile, setProfile]); 
       const [loginState, dispatch] = React.useReducer(loginReducer, initialLoginState);
       const [isConnected, setIsConnected] = React.useState(false);
       const [isDarkTheme, setIsDarkTheme] = React.useState(false);
+      const [loggedInUser, setLoggedInUser] = React.useState();
+      const [accessToken, setAccessToken] = React.useState();
+      
+      const [isLoading, setIsLoading] = useState(true);
+      
       
       const theme = isDarkTheme ? customDarkTheme : customDefaultTheme;
       const isMounted = useIsMounted();
       
-      const [enabled, requestResolution] = useLocationSettings(
-        {
-          priority: HIGH_ACCURACY,
-          alwaysShow: true, 
-          needBle: true,
-        },
-        false 
-        );
-        
-        
-        const OfflineScreen = () => {
-          const [refreshing, setRefreshing] = React.useState(false);
-          const onRefresh = React.useCallback(() => {
-            setRefreshing(true);
-            wait(2000).then(() =>{
-              NetInfo.fetch().then(state => {
-                setIsConnected(state.isConnected);
-                setRefreshing(false);
-              });
-              
+      // const [enabled, requestResolution] = useLocationSettings(
+      //   {
+      //     priority: HIGH_ACCURACY,
+      //     alwaysShow: true, 
+      //     needBle: true,
+      //   },
+      //   false 
+      //   );
+      
+      
+      const OfflineScreen = () => {
+        const [refreshing, setRefreshing] = React.useState(false);
+        const onRefresh = React.useCallback(() => {
+          setRefreshing(true);
+          wait(2000).then(() =>{
+            NetInfo.fetch().then(state => {
+              setIsConnected(state.isConnected);
+              setRefreshing(false);
             });
+            
+          });
+        });
+        
+        return (
+          <SafeAreaView  style={styles.container}>
+          <ScrollView
+          contentContainerStyle={styles.scrollView}
+          refreshControl={
+            <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            />
+          }
+          >
+          
+          <Image
+          source={icons.noInternet}
+          resizeMode="contain"
+          style={{
+            tintColor: '#808080',
+            width: 120,
+            height: 120,
+          }}
+          />
+          
+          <Text style={[styles.title, {
+            color: '#fd5e53',
+          }]}>No internet connection...</Text>
+          <Text style={{fontSize: 16, color: '#808080', padding:15}}>
+          Ops...it seems you are not connected on internet. Check your internet connection
+          and try again.
+          </Text>
+          <FontAwesome 
+          name={"refresh"}
+          color={'#C0C0C0'}
+          size={50}
+          style={styles.refresh}
+          onPress={onRefresh}
+          /><Text style={{color: '#808080', fontSize: 14}}>Pull down to refresh</Text>
+          </ScrollView>
+          
+          </SafeAreaView >
+          );
+        };
+        
+        
+        // const EnableLocationScreen = () => {
+        
+        //   const css =  makeStyles(theme.colors);
+        
+        //   return(
+        //     <View style={css.container}>
+        //     <StatusBar barStyle="light-content" backgroundColor={theme.colors.primary} />
+        
+        //     <View style={css.header}>
+        //     <FontAwesome name={"map-marker"} size={135} color={theme.colors.text} style={{ top:-80 }}/>
+        //     <Text style={{textAlign: 'center', fontSize:30, color: theme.colors.text,
+        //     fontWeight: 'bold'}}>Where are you?</Text>
+        //     <Text style={{textAlign: 'center', fontSize:18, 
+        //     color: theme.colors.text, top:35, fontStyle: 'normal' }}>
+        //     Enabling your location is important because it helps us 
+        //     get you the closest parking areas.</Text>
+        //     </View>
+        
+        //     <View style={css.footer}>
+        //     <TouchableOpacity style={[design.btnSecondary, 
+        //       { color: '#fff', backgroundColor: theme.colors.text,
+        //       borderColor: theme.colors.primary, alignSelf: 'center'}]}
+        //       onPress={requestResolution}>
+        //       <Text style={{color:design.colors.dark, textTransform:'uppercase',
+        //       fontSize:16, fontWeight: 'bold'}}>Enable Your Location </Text>
+        //       </TouchableOpacity>
+        //       </View>
+        //       </View>
+        //       )
+        //     }
+        
+        
+        
+        const getLocale = () => {
+          const deviceLanguage =
+          Platform.OS === 'ios'
+          ? NativeModules.SettingsManager.settings.AppleLocale ||
+          NativeModules.SettingsManager.settings.AppleLanguages[0] //iOS 13
+          : NativeModules.I18nManager.localeIdentifier;
+          return deviceLanguage;
+        }
+        
+        
+        const changeDeviceToken = async(token, language) => {
+          
+          let data = {};
+          
+          if(token && language){
+            data[`${apiKeys.DEVICE_TOKEN}`] = token;
+            data[`${apiKeys.DEVICE_TYPE}`] = Platform.OS;
+            data[`${apiKeys.DEVICE_LANGUAGE}`] = language;
+            let info = JSON.stringify(data);
+            await AsyncStorage.setItem(apiKeys.DEVICE_INFO, info);
+          }
+          
+        }
+        
+        const deviceInformation = async() => {
+          
+          try{
+            let language = getLocale();
+            
+            messaging()
+            .getToken()
+            .then(async(token) => {
+              if (token) {
+                await changeDeviceToken(token, language)
+              } 
+            }).catch((err) => { throw err });
+            
+          }catch(err){
+            throw err;
+          }
+          
+        }
+        
+    
+        const authContext = React.useMemo(() => ({
+          
+          
+          sendSmsVerification: async(data) => {
+            try{
+              return await services.customer.sendOTP(data);
+            }catch(e){
+              throw e;
+            }
+          },
+          
+          verifyOTP: async(data) => {
+            try{
+              return await services.customer.verifyOtp(data);
+            }catch(e){
+              throw e;
+            }
+          },
+          
+          
+          goToHomeScreen: async(user) => {
+            
+            try{
+              
+              let userToken = user.access_token;
+              setProfile(user);
+              
+              await AsyncStorage.setItem("userToken", userToken);
+              await AsyncStorage.setItem("userProfile", JSON.stringify(user));
+              dispatch({ type: 'LOGIN', id: user.id, userToken: userToken})
+              
+            }catch(e){
+              console.log("Got exception on async storage", e.message);
+              throw e;
+            } 
+          },
+          
+          signOut: async() => {
+            try{
+              // await AsyncStorage.removeItem("userToken");
+              // await AsyncStorage.removeItem("userProfile");
+              // dispatch({ type: 'LOGOUT' });
+            }catch(e){
+              throw e;
+            }
+            
+          },
+          
+          
+          createProfile: async(data) => {
+            try{
+              return await services.customer.createProfile(data);
+            }catch(e){
+              throw e;
+            }
+          },
+          
+          
+          updateProfile: async(data) => {
+            try{
+              return await services.customer.updateProfile(data);
+            }catch(e){
+              throw e;
+            }
+          },
+          
+          UpdateProfileImage: async(data) => {
+            try{
+              return await services.customer.uploadProfilePicture(data);
+            }catch(e){
+              throw e;
+            }
+          },
+          
+          deleteProfilePicture: async(data) => {
+            try{
+              return await services.customer.removeProfilePicture(data);
+            }catch(e){
+              throw e;
+            }
+          },
+          
+          changePin: async(data) => {
+            try{
+              return await services.customer.changePin(data);
+            }catch(e){
+              throw e;
+            }
+          },
+          
+          asyncCustomerProfile: async(id) => {
+            
+            try{
+              return services.customer.getCustomerData(id).then(async(res) => {
+                const statusCode = res.statusCode;
+                
+                if(statusCode == 200){
+                  let user = res.data;
+                  await AsyncStorage.setItem("userProfile", JSON.stringify(user));
+                  providerValue.setProfile(user);
+                  user.isUpdated = true;
+                  return user;
+                }
+                
+              }).catch((error) => {
+                throw error;
+              });
+            }catch(e){
+              throw e;
+            }
+          },
+          
+          getCustomerNotifications: async(id) => {
+            try{
+              return await services.customer.getNotifications(id);
+            }catch(e){
+              throw e;
+            }
+          },
+          
+          getCustomerTransactions: async(id) => {
+            try{
+              return await services.transaction.getTransactionHistory(id);
+            }catch(e){
+              throw e;
+            }
+          },
+          
+          getParkingAreas: async() => {
+            try{
+              return await services.parking.fetchParkingAreas();
+            }catch(e){
+              throw e;
+            }
+          },
+          
+          getVehicleCategories: async() => {
+            try{
+              return await services.parking.getCarTypes();
+            }catch(e){
+              throw e;
+            }
+          },
+          
+          
+          
+          updatePassword: async(data) => {
+            try{
+              return await services.customer.changePassword(data)
+            }catch(e){
+              throw e;
+            }
+          },
+          
+          
+          postSuggestion: async(data) => {
+            try{
+              return await services.customer.postSuggestion(data);
+            }catch(e){
+              throw e;
+            }
+          },
+          
+          
+          depositMoney: async(data) => {
+            try{
+              return await services.customer.topUp(data);
+            }catch(e){
+              throw e;
+            }
+          },
+          
+          filterParkingAreas: async(data) => {
+            try{
+              return await services.parking.filterParkingAreas(data);
+            }catch(e){
+              throw e;
+            }
+          },
+          
+          searchParkingArea: async(id) => {
+            try{
+              return await services.parking.fetchParkingDetailsById(id);
+            }catch(e){
+              throw e;
+            }
+          },
+          
+          getNearByParkingAreas: async(lat, long) => {
+            try{
+              const result = await services.parking.fetchNearByParkingAreas(lat, long);
+              return result;
+            }catch(e){
+              throw e;
+            }
+          },
+          
+          getTopRatedParkingAreas: async() => {
+            try{
+              const result = await services.parking.fetchTopRatedParkingAreas();
+              return result;
+            }catch(e){
+              throw e;
+            }
+          },
+          
+          submitParkingRequest: async(data) => {
+            try{
+              return await services.parking.postParkingRequest(data);
+            }
+            catch(e){
+              throw e;
+            }
+            
+          },
+          
+          syncProfileData: async(data) => {
+            try{
+              await AsyncStorage.setItem("userProfile", JSON.stringify(data));
+              return {"message": 'done', "statusCode": 1};
+            }catch(e){
+              throw e;
+            }
+          },
+          
+          fetchMyParkingRequests: async(id) => {
+            try{
+              return await services.parking.getMyParkingRequests(id);
+            }catch(e){
+              throw e;
+            }
+          },
+          
+          fetchParkingInfo: async(id) => {
+            try{
+              return await services.parking.fetchParkingInfo(id);
+            }catch(e){
+              throw e;
+            }
+          },
+          
+          fetchOrderInfo: async(order_no, customer_id) => {
+            try{
+              return await services.transaction.getOrderDetails(order_no, customer_id);
+            }catch(e){
+              throw e;
+            }
+          },
+          
+          updateAppDetails: async(data) => {
+            try{
+              return await services.customer.postAppDetails(data);
+            }catch(e){
+              throw e;
+            }
+          },
+          
+          resendSignupOTP: async(data) => {
+            try{
+              return await services.customer.resendSignupOTP(data);
+            }catch(e){
+              throw e;
+            }
+          },
+          
+          verifyChangePhoneNumber: async(data) => {
+            try{
+              return await services.customer.verifyChangePhoneNumber(data);
+            }catch(e){
+              throw e;
+            }
+          },
+          
+          changePhoneNumber: async(data) => {
+            try{
+              return await services.customer.changePhoneNumber(data);
+            }catch(e){
+              throw e;
+            }
+          },
+          
+          hasInternetConnection: () => {
+            let isConnected = NetInfo.fetch().then(state => {
+              return state.isConnected;
+            }).catch((err) => {
+              throw err;
+            });
+            return isConnected; 
+          },
+          
+          toggleTheme: () => {
+            setIsDarkTheme(isDarkTheme => !isDarkTheme);
+          }
+          
+          
+        }), []);
+        
+        
+        
+        useEffect(() => {
+          
+          
+          let fontName = 'Roboto-Regular'
+          GlobalFont.applyGlobal(fontName);
+          getPermission();
+          
+          
+          const fetchData = async() =>{
+            const response = await AsyncStorage.getItem("userProfile");
+            let user = JSON.parse(response);
+            setProfile(user);
+            setLoggedInUser(user);
+          }
+          fetchData();
+          
+          NetInfo.fetch().then(state => {
+            isMounted.current && setIsConnected(state.isConnected);
+            
           });
           
-          return (
-            <SafeAreaView  style={styles.container}>
-            <ScrollView
-            contentContainerStyle={styles.scrollView}
-            refreshControl={
-              <RefreshControl
-              refreshing={refreshing}
-              onRefresh={onRefresh}
-              />
+          const unsubscribe = NetInfo.addEventListener(state => {
+            isMounted.current && setIsConnected(state.isConnected);
+            
+          });
+          
+          unsubscribe();
+          
+          
+          requestUserPermission();
+          deviceInformation();
+          
+          listenForBackgroundPushNotification()
+          .then(async(result) => {
+            if(result){
+              if(user && user.id){
+                await authContext.asyncCustomerProfile(user.id);
+              }
             }
-            >
-            
-            <Image
-            source={icons.noInternet}
-            resizeMode="contain"
-            style={{
-              tintColor: '#808080',
-              width: 120,
-              height: 120,
-            }}
-            />
-            
-            <Text style={[styles.title, {
-              color: '#fd5e53',
-            }]}>No internet connection...</Text>
-            <Text style={{fontSize: 16, color: '#808080', padding:15}}>
-            Ops...it seems you are not connected on internet. Check your internet connection
-            and try again.
-            </Text>
-            <FontAwesome 
-            name={"refresh"}
-            color={'#C0C0C0'}
-            size={50}
-            style={styles.refresh}
-            onPress={onRefresh}
-            /><Text style={{color: '#808080', fontSize: 14}}>Pull down to refresh</Text>
-            </ScrollView>
-            
-            </SafeAreaView >
-            );
-          };
+          });
           
+          setTimeout(async() => {
+            
+            try{
+              let userToken = await AsyncStorage.getItem("userToken");
+              dispatch({ type: 'REGISTER', userToken: userToken});
+            }catch(e){
+              console.log("Error on async storage", e);
+            }
+            
+          }, 2500);
           
-          const EnableLocationScreen = () => {
+          SplashScreen.hide();
+          
+        }, [loggedInUser]);
+        
+        if(loginState.isLoading) {
+          return (
+            // <AppLoaderAnimation/>
+            <>
+            <StatusBar barStyle="light-content" backgroundColor={theme.colors.primary} />
+            <UIActivityIndicator color={theme.colors.primary} size={60}/>
+            </>
+            )
+          }
+          
+          if(!isConnected){
+            return (
+              <OfflineScreen/>
+              )
+            }
             
-            const css =  makeStyles(theme.colors);
+            // if(!enabled){
+            //   return (
+            //     <EnableLocationScreen theme={theme} userToken={loginState.userToken}/>
+            //     )
+            //   }
             
-            return(
-              <View style={css.container}>
-              <StatusBar barStyle="light-content" backgroundColor={theme.colors.primary} />
+            return (
               
-              <View style={css.header}>
-              <FontAwesome name={"map-marker"} size={135} color={theme.colors.text} style={{ top:-80 }}/>
-              <Text style={{textAlign: 'center', fontSize:30, color: theme.colors.text,
-              fontWeight: 'bold'}}>Where are you?</Text>
-              <Text style={{textAlign: 'center', fontSize:18, 
-              color: theme.colors.text, top:35, fontStyle: 'normal' }}>
-              Enabling your location is important because it helps us 
-              get you the closest parking areas.</Text>
-              </View>
+              <AuthContext.Provider value={authContext}>
+              <PaperProvider theme={theme}>
+              <NavigationContainer theme={theme}>
               
-              <View style={css.footer}>
-              <TouchableOpacity style={[design.btnSecondary, 
-                { color: '#fff', backgroundColor: theme.colors.text,
-                borderColor: theme.colors.primary, alignSelf: 'center'}]}
-                onPress={requestResolution}>
-                <Text style={{color:design.colors.dark, textTransform:'uppercase',
-                fontSize:16, fontWeight: 'bold'}}>Enable Your Location </Text>
-                </TouchableOpacity>
-                </View>
-                </View>
-                )
+              {  // loginState.userToken
+                loginState.userToken
+                ?  <ProfileProvider value={providerValue}>
+                <DrawerScreenStack/>
+                </ProfileProvider>
+                : <AppRootStack/>
+              } 
+              </NavigationContainer>
+              </PaperProvider>
+              </AuthContext.Provider>
+              );
+            }
+            
+            
+            
+            export default App;
+            
+            const styles = StyleSheet.create({
+              container: {
+                flex: 1, 
+              },
+              
+              scrollView: {
+                flex: 1, 
+                backgroundColor: '#fff',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding:20,
+              },
+              
+              refresh: {
+                padding:15,
+              },
+              title: {
+                color: '#05375a',
+                fontSize: 20,
+                fontWeight: 'bold',
+                textAlign: 'center',
+              },
+            });
+            
+            const makeStyles = (colors) => StyleSheet.create({
+              
+              container: {
+                flex: 1
+              },
+              
+              header: {
+                flex: 5,
+                padding:20,
+                backgroundColor: colors.primary,
+                justifyContent: 'center',
+                alignItems: 'center',
+              },
+              
+              footer: {
+                flex: 1,
+                backgroundColor: design.colors.white,
               }
               
-              const getLocale = () => {
-                const deviceLanguage =
-                Platform.OS === 'ios'
-                ? NativeModules.SettingsManager.settings.AppleLocale ||
-                NativeModules.SettingsManager.settings.AppleLanguages[0] //iOS 13
-                : NativeModules.I18nManager.localeIdentifier;
-                return deviceLanguage;
-              }
-              
-              const deviceInformation = () => {
-                var language = getLocale();
-                
-                messaging()
-                .getToken()
-                .then(token => {
-                  if (token) {
-                    onChangeToken(token, language)
-                  } else {
-                    console.log("User does not have device token");
-                  } 
-                });
-                
-                messaging().onTokenRefresh(token => {
-                  if (token) {
-                    onChangeToken(token, language)
-                  } else {
-                    console.log("User does not have device token");
-                  } 
-                });
-                
-              }
-              
-              const onChangeToken = (token, language) => {
-                
-                var data = {};
-                data[`${apiKeys.DEVICE_TOKEN}`] = token;
-                data[`${apiKeys.DEVICE_TYPE}`] = Platform.OS;
-                data[`${apiKeys.DEVICE_LANGUAGE}`] = language;
-                loadDeviceInfo(data).done();
-                
-              }
-              
-              const loadDeviceInfo = async (deviceData) => {
-                var value = JSON.stringify(deviceData);
-                try {
-                  await AsyncStorage.setItem(apiKeys.DEVICE_INFO, value);
-                } catch (error) {
-                  console.log(error);
-                }
-              }; 
-              
-              const authContext = React.useMemo(() => ({
-                
-                
-                sendSmsVerification: async(data) => {
-                  try{
-                    return await services.customer.sendOTP(data);
-                  }catch(e){
-                    throw e;
-                  }
-                },
-                
-                verifyOTP: async(data) => {
-                  try{
-                    return await services.customer.verifyOtp(data);
-                  }catch(e){
-                    throw e;
-                  }
-                },
-                
-                
-                goToHomeScreen: async(user) => {
-                  let userToken = null;
-                  try{
-                    
-                    userToken = user.access_token;
-                    setProfile(user);
-                    
-                    await AsyncStorage.setItem("userToken", userToken);
-                    await AsyncStorage.setItem("userProfile", JSON.stringify(user));
-                    dispatch({ type: 'LOGIN', id: user.phone_number, userToken: userToken})
-                    
-                  }catch(e){
-                    console.log("Got exception on async storage", e);
-                    throw e;
-                  } 
-                },
-                
-                signOut: async() => {
-                  try{
-                    await AsyncStorage.removeItem("userToken");
-                    await AsyncStorage.removeItem("userProfile");
-                    dispatch({ type: 'LOGOUT' });
-                  }catch(e){
-                    throw e;
-                  }
-                  
-                },
-                
-                
-                createProfile: async(data) => {
-                  try{
-                    return await services.customer.createProfile(data);
-                  }catch(e){
-                    throw e;
-                  }
-                },
-                
-                
-                updateProfile: async(data) => {
-                  try{
-                    return await services.customer.updateProfile(data);
-                  }catch(e){
-                    throw e;
-                  }
-                },
-                
-                UpdateProfileImage: async(data) => {
-                  try{
-                    return await services.customer.uploadProfilePicture(data);
-                  }catch(e){
-                    throw e;
-                  }
-                },
-                
-                deleteProfilePicture: async(data) => {
-                  try{
-                    return await services.customer.removeProfilePicture(data);
-                  }catch(e){
-                    throw e;
-                  }
-                },
-                
-                changePin: async(data) => {
-                  try{
-                    return await services.customer.changePin(data);
-                  }catch(e){
-                    throw e;
-                  }
-                },
-                
-                asyncCustomerProfile: async(id) => {
-                  
-                  try{
-                    return services.customer.getCustomerData(id).then(async(res) => {
-                      const statusCode = res.statusCode;
-                      
-                      if(statusCode == 200){
-                        let user = res.data;
-                        console.log(`User profile data`, user);
-                        await AsyncStorage.setItem("userProfile", JSON.stringify(user));
-                        providerValue.setProfile(user);
-                        user.isUpdated = true;
-                        return user;
-                      }
-                      
-                    }).catch((error) => {
-                      throw error;
-                    });
-                  }catch(e){
-                    throw e;
-                  }
-                },
-                
-                getCustomerNotifications: async(id) => {
-                  try{
-                    return await services.customer.getNotifications(id);
-                  }catch(e){
-                    throw e;
-                  }
-                },
-                
-                getCustomerTransactions: async(id) => {
-                  try{
-                    return await services.transaction.getTransactionHistory(id);
-                  }catch(e){
-                    throw e;
-                  }
-                },
-                
-                getParkingAreas: async() => {
-                  try{
-                    return await services.parking.fetchParkingAreas();
-                  }catch(e){
-                    throw e;
-                  }
-                },
-                
-                getVehicleCategories: async() => {
-                  try{
-                    return await services.parking.getCarTypes();
-                  }catch(e){
-                    throw e;
-                  }
-                },
-                
-                
-                
-                updatePassword: async(data) => {
-                  try{
-                    return await services.customer.changePassword(data)
-                  }catch(e){
-                    throw e;
-                  }
-                },
-                
-                
-                postSuggestion: async(data) => {
-                  try{
-                    return await services.customer.postSuggestion(data);
-                  }catch(e){
-                    throw e;
-                  }
-                },
-                
-                
-                depositMoney: async(data) => {
-                  try{
-                    return await services.customer.topUp(data);
-                  }catch(e){
-                    throw e;
-                  }
-                },
-                
-                filterParkingAreas: async(data) => {
-                  try{
-                    return await services.parking.filterParkingAreas(data);
-                  }catch(e){
-                    throw e;
-                  }
-                },
-                
-                searchParkingArea: async(id) => {
-                  try{
-                    return await services.parking.fetchParkingDetailsById(id);
-                  }catch(e){
-                    throw e;
-                  }
-                },
-                
-                getNearByParkingAreas: async(lat, long) => {
-                  try{
-                    const result = await services.parking.fetchNearByParkingAreas(lat, long);
-                    return result;
-                  }catch(e){
-                    throw e;
-                  }
-                },
-                
-                getTopRatedParkingAreas: async() => {
-                  try{
-                    const result = await services.parking.fetchTopRatedParkingAreas();
-                    return result;
-                  }catch(e){
-                    throw e;
-                  }
-                },
-                
-                submitParkingRequest: async(data) => {
-                  try{
-                    return await services.parking.postParkingRequest(data);
-                  }
-                  catch(e){
-                    throw e;
-                  }
-                  
-                },
-                
-                syncProfileData: async(data) => {
-                  try{
-                    await AsyncStorage.setItem("userProfile", JSON.stringify(data));
-                    return {"message": 'done', "statusCode": 1};
-                  }catch(e){
-                    throw e;
-                  }
-                },
-                
-                fetchMyParkingRequests: async(id) => {
-                  try{
-                    return await services.parking.getMyParkingRequests(id);
-                  }catch(e){
-                    throw e;
-                  }
-                },
-                
-                fetchParkingInfo: async(id) => {
-                  try{
-                    return await services.parking.fetchParkingInfo(id);
-                  }catch(e){
-                    throw e;
-                  }
-                },
-                
-                fetchOrderInfo: async(order_no, customer_id) => {
-                  try{
-                    return await services.transaction.getOrderDetails(order_no, customer_id);
-                  }catch(e){
-                    throw e;
-                  }
-                },
-                
-                updateAppDetails: async(data) => {
-                  try{
-                    return await services.customer.postAppDetails(data);
-                  }catch(e){
-                    throw e;
-                  }
-                },
-                
-                resendSignupOTP: async(data) => {
-                  try{
-                    return await services.customer.resendSignupOTP(data);
-                  }catch(e){
-                    throw e;
-                  }
-                },
-                
-                verifyChangePhoneNumber: async(data) => {
-                  try{
-                    return await services.customer.verifyChangePhoneNumber(data);
-                  }catch(e){
-                    throw e;
-                  }
-                },
-                
-                changePhoneNumber: async(data) => {
-                  try{
-                    return await services.customer.changePhoneNumber(data);
-                  }catch(e){
-                    throw e;
-                  }
-                },
-                
-                hasInternetConnection: () => {
-                  let isConnected = NetInfo.fetch().then(state => {
-                    return state.isConnected;
-                  }).catch((err) => {
-                    throw err;
-                  });
-                  return isConnected; 
-                },
-                
-                toggleTheme: () => {
-                  setIsDarkTheme(isDarkTheme => !isDarkTheme);
-                }
-                
-                
-              }), []);
-              
-              
-              
-              useEffect(async() => {
-                
-                ScreenCaptureSecure.disableSecure();
-                
-                
-                let fontName = 'Roboto-Regular'
-                GlobalFont.applyGlobal(fontName);
-                
-                let user = null, userToken = null;
-                user = await AsyncStorage.getItem("userProfile");
-                user = JSON.parse(user);
-                
-                NetInfo.fetch().then(state => {
-                  isMounted.current && setIsConnected(state.isConnected);
-                  
-                });
-                
-                const unsubscribe = NetInfo.addEventListener(state => {
-                  isMounted.current && setIsConnected(state.isConnected);
-                  
-                });
-                
-                unsubscribe();
-                
-                
-                requestUserPermission();
-                deviceInformation();
-                
-                listenForBackgroundPushNotification()
-                .then(async(result) => {
-                  if(result){
-                    if(user && user.id){
-                      await authContext.asyncCustomerProfile(user.id);
-                    }
-                  }
-                });
-                
-                setTimeout(async() => {
-                  
-                  try{
-                    userToken = await AsyncStorage.getItem("userToken");
-                    if(userToken){
-                      
-                      isMounted.current &&  setProfile(user);
-                      
-                    }
-                  }catch(e){
-                    console.log("Error on async storage", e);
-                  }
-                  dispatch({ type: 'REGISTER', userToken: userToken});
-                }, 2500);
-                
-                SplashScreen.hide();
-                
-              }, []);
-              
-              if(loginState.isLoading) {
-                return (
-                  // <AppLoaderAnimation/>
-                  <>
-                  <StatusBar barStyle="light-content" backgroundColor={theme.colors.primary} />
-                  <UIActivityIndicator color={theme.colors.primary} size={60}/>
-                  </>
-                  )
-                }
-                
-                if(!isConnected){
-                  return (
-                    <OfflineScreen/>
-                    )
-                  }
-                  
-                  if(!enabled){
-                    return (
-                      <EnableLocationScreen theme={theme} userToken={loginState.userToken}/>
-                      )
-                    }
-                    
-                    return (
-                      
-                      <AuthContext.Provider value={authContext}>
-                      <PaperProvider theme={theme}>
-                      <NavigationContainer theme={theme}>
-                      
-                      {
-                        loginState.userToken
-                        ?  <ProfileProvider value={providerValue}>
-                        <DrawerScreenStack/>
-                        </ProfileProvider>
-                        : <AppRootStack/>
-                      } 
-                      </NavigationContainer>
-                      </PaperProvider>
-                      </AuthContext.Provider>
-                      );
-                    }
-                    
-                    
-                    
-                    export default App;
-                    
-                    const styles = StyleSheet.create({
-                      container: {
-                        flex: 1, 
-                      },
-                      
-                      scrollView: {
-                        flex: 1, 
-                        backgroundColor: '#fff',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        padding:20,
-                      },
-                      
-                      refresh: {
-                        padding:15,
-                      },
-                      title: {
-                        color: '#05375a',
-                        fontSize: 20,
-                        fontWeight: 'bold',
-                        textAlign: 'center',
-                      },
-                    });
-                    
-                    const makeStyles = (colors) => StyleSheet.create({
-                      
-                      container: {
-                        flex: 1
-                      },
-                      
-                      header: {
-                        flex: 5,
-                        padding:20,
-                        backgroundColor: colors.primary,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                      },
-                      
-                      footer: {
-                        flex: 1,
-                        backgroundColor: design.colors.white,
-                      }
-                      
-                    });
+            });

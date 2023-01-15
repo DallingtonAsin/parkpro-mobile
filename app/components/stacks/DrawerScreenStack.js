@@ -23,7 +23,7 @@ import AppTabStack from  './AppTabStack';
 import WeatherStack from  './WeatherStack';
 import CloseByParkingStack from './CloseByParkingStack';
 import ChangePhoneNumberStack from './ChangePhoneNumberStack';
-import MapScreen from '../../screens/MapScreen';
+import MapDirectionsScreen from '../../screens/MapDirectionsScreen';
 
 
 const Drawer = createDrawerNavigator();
@@ -44,7 +44,7 @@ const DrawerScreenStack = () => {
         <Drawer.Screen name="ParkingInfo" component={ParkingInfoStack}/>
 
         <Drawer.Screen name="Weather" component={WeatherStack}/>
-        <Drawer.Screen name="Map" component={MapScreen} options ={{ drawerLabel: 'Map' }}/>
+        <Drawer.Screen name="Map" component={MapDirectionsScreen} options ={{ drawerLabel: 'Map' }}/>
         <Drawer.Screen name="Help" component={HelpStack} options={{ drawerLabel:'Help' }}/>
         <Drawer.Screen name="Notifications" component={NotificationStack} options ={{ drawerLabel: 'Notification' }}/>
         <Drawer.Screen name="Settings" component={SettingsStack} options ={{ drawerLabel: 'Settings' }}/>

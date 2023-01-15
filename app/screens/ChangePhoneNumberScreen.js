@@ -56,7 +56,7 @@ const ChangePhoneNumberScreen = ({ navigation }) => {
         countryCode: data.countryCode,
         phoneNumber: data.phoneNumber
       }
-      console.log("Phone details opps", phoneDetails);
+      // console.log("Phone details opps", phoneDetails);
  
       setIsLoading(true);
       
@@ -153,7 +153,7 @@ const ChangePhoneNumberScreen = ({ navigation }) => {
         }
         
         let countryCode =  phoneInput.current?.getCallingCode();
-        console.log("country code", countryCode);
+        // console.log("country code", countryCode);
 
         setNewCountryCode(`+${countryCode}`);
         setNewPhoneNumber(number);
@@ -164,7 +164,7 @@ const ChangePhoneNumberScreen = ({ navigation }) => {
           phoneNumber: number,
         }
         
-        console.log(`change phone number details`, changePhoneDetails);
+        // console.log(`change phone number details`, changePhoneDetails);
         
         Alert.alert(
           null, 
