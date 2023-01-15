@@ -518,10 +518,6 @@ const HomeScreen = (props) => {
                         { hideBalance && <Text> .....</Text> }
                         { !hideBalance && <Text> {profile.account_balance}</Text> } 
                         </Text>
-                        <TouchableOpacity onPress={() => { setHideBalance(!hideBalance) }}>
-                        { hideBalance && <FontAwesome name={"eye"} size={26} style={{color: colors.text, top:10, left:18}} /> }
-                        { !hideBalance && <FontAwesome name={"eye-slash"} size={26} style={{color: colors.text, top:10, left:18}} /> }
-                        </TouchableOpacity>
                         </View>
                         
                         </View>

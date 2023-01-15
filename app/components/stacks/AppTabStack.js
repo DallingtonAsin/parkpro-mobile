@@ -6,7 +6,6 @@ import HomeStack from './HomeStack';
 import HelpStack from './ContactUsStack';
 import WeatherStack from './WeatherStack';
 import NotificationStack from './NotificationStack';
-import ZoomStack from './ZoomStack';
 import { useTheme  } from 'react-native-paper';
 import styles from '../../../assets/css/styles';
 
@@ -151,7 +150,7 @@ const AppTabStack = () => {
                                             }}
                                             />
                                             
-                                            <BottomTab.Screen
+                                            {/* <BottomTab.Screen
                                             name="Meeting"
                                             component={ZoomStack}
                                             options={{
@@ -165,7 +164,7 @@ const AppTabStack = () => {
                                                     />
                                                     )
                                                 }}
-                                                />
+                                                /> */}
                                                 
                                                 
                                                 
