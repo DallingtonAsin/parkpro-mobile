@@ -4,7 +4,6 @@ import {TouchableOpacity, Image, View, Text, StyleSheet, Dimensions} from 'react
 import { COLORS, FONTS, SIZES } from '../../constants';
 import design from '../../assets/css/styles';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import Icon5 from 'react-native-vector-icons/FontAwesome5';
 
 
 export const HomeCardItem = ({ icon, label, tintColor, onPress, labelColor }) => {

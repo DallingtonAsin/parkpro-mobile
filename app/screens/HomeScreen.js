@@ -2,13 +2,11 @@ import React, {useState, useEffect, useMemo, useRef, useContext, useCallback} fr
 import {
   StyleSheet,
   View,
-  Image,
   Text,
   TouchableOpacity,
-  SafeAreaView,
   Alert, Pressable,
 } from 'react-native';
-import { icons, SIZES } from '../../constants';
+import { SIZES } from '../../constants';
 import { HomeCardItem } from '../components/CardItem';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
