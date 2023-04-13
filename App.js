@@ -35,18 +35,18 @@
     }
     
     
-    const wait = (timeout: any) => {
+    const wait = (timeout) => {
       return new Promise(resolve => setTimeout(resolve, timeout));
     }
     
     
     const listenForBackgroundPushNotification = async() => {
       
-      PushNotification.channelBlocked(channel_id, function (blocked: any) {});
-      PushNotification.checkPermissions((permissions: any) => {});
+      PushNotification.channelBlocked(channel_id, function (blocked) {});
+      PushNotification.checkPermissions((permissions) => {});
       
       return new Promise((resolve, reject) => { 
-        messaging().setBackgroundMessageHandler(async (remoteMessage:  any) => {
+        messaging().setBackgroundMessageHandler(async (remoteMessage) => {
           
           let body = remoteMessage.notification.body;
           let title = remoteMessage.notification.title;
@@ -247,7 +247,7 @@
         const authContext = React.useMemo(() => ({
           
           
-          sendSmsVerification: async(data:any) => {
+          sendSmsVerification: async(data) => {
             try{
               return await services.customer.sendOTP(data);
             }catch(e){
@@ -255,7 +255,7 @@
             }
           },
           
-          verifyOTP: async(data:any) => {
+          verifyOTP: async(data) => {
             try{
               return await services.customer.verifyOtp(data);
             }catch(e){
@@ -264,7 +264,7 @@
           },
           
           
-          goToHomeScreen: async(user:any) => {
+          goToHomeScreen: async(user) => {
             
             try{
               
@@ -293,7 +293,7 @@
           },
           
           
-          createProfile: async(data:any) => {
+          createProfile: async(data) => {
             try{
               return await services.customer.createProfile(data);
             }catch(e){
@@ -302,7 +302,7 @@
           },
           
           
-          updateProfile: async(data:any) => {
+          updateProfile: async(data) => {
             try{
               return await services.customer.updateProfile(data);
             }catch(e){
@@ -310,7 +310,7 @@
             }
           },
           
-          UpdateProfileImage: async(data:any) => {
+          UpdateProfileImage: async(data) => {
             try{
               return await services.customer.uploadProfilePicture(data);
             }catch(e){
@@ -318,7 +318,7 @@
             }
           },
           
-          deleteProfilePicture: async(data:any) => {
+          deleteProfilePicture: async(data) => {
             try{
               return await services.customer.removeProfilePicture(data);
             }catch(e){
@@ -326,7 +326,7 @@
             }
           },
           
-          changePin: async(data:any) => {
+          changePin: async(data) => {
             try{
               return await services.customer.changePin(data);
             }catch(e){
@@ -334,10 +334,10 @@
             }
           },
           
-          asyncCustomerProfile: async(id:any) => {
+          asyncCustomerProfile: async(id) => {
             
             try{
-              return services.customer.getCustomerData(id).then(async(res:any) => {
+              return services.customer.getCustomerData(id).then(async(res) => {
                 const statusCode = res.statusCode;
                 
                 if(statusCode == 200){
@@ -348,7 +348,7 @@
                   return user;
                 }
                 
-              }).catch((error:any) => {
+              }).catch((error) => {
                 throw error;
               });
             }catch(e){
@@ -356,7 +356,7 @@
             }
           },
           
-          getCustomerNotifications: async(id:any) => {
+          getCustomerNotifications: async(id) => {
             try{
               return await services.customer.getNotifications(id);
             }catch(e){
@@ -364,7 +364,7 @@
             }
           },
           
-          getCustomerTransactions: async(id:any) => {
+          getCustomerTransactions: async(id) => {
             try{
               return await services.transaction.getTransactionHistory(id);
             }catch(e){
@@ -390,7 +390,7 @@
           
           
           
-          updatePassword: async(data:any) => {
+          updatePassword: async(data) => {
             try{
               return await services.customer.changePassword(data)
             }catch(e){
@@ -399,7 +399,7 @@
           },
           
           
-          postSuggestion: async(data:any) => {
+          postSuggestion: async(data) => {
             try{
               return await services.customer.postSuggestion(data);
             }catch(e){
@@ -408,7 +408,7 @@
           },
           
           
-          depositMoney: async(data:any) => {
+          depositMoney: async(data) => {
             try{
               return await services.customer.topUp(data);
             }catch(e){
@@ -416,7 +416,7 @@
             }
           },
           
-          filterParkingAreas: async(data:any) => {
+          filterParkingAreas: async(data) => {
             try{
               return await services.parking.filterParkingAreas(data);
             }catch(e){
@@ -424,7 +424,7 @@
             }
           },
           
-          searchParkingArea: async(id:any) => {
+          searchParkingArea: async(id) => {
             try{
               return await services.parking.fetchParkingDetailsById(id);
             }catch(e){
@@ -432,7 +432,7 @@
             }
           },
           
-          getNearByParkingAreas: async(lat:any, long:any) => {
+          getNearByParkingAreas: async(lat, long) => {
             try{
               const result = await services.parking.fetchNearByParkingAreas(lat, long);
               return result;
@@ -450,7 +450,7 @@
             }
           },
           
-          submitParkingRequest: async(data:any) => {
+          submitParkingRequest: async(data) => {
             try{
               return await services.parking.postParkingRequest(data);
             }
@@ -460,7 +460,7 @@
             
           },
           
-          syncProfileData: async(data:any) => {
+          syncProfileData: async(data) => {
             try{
               await AsyncStorage.setItem("userProfile", JSON.stringify(data));
               return {"message": 'done', "statusCode": 1};
@@ -469,7 +469,7 @@
             }
           },
           
-          fetchMyParkingRequests: async(id:any) => {
+          fetchMyParkingRequests: async(id) => {
             try{
               return await services.parking.getMyParkingRequests(id);
             }catch(e){
@@ -477,7 +477,7 @@
             }
           },
           
-          fetchParkingInfo: async(id:any) => {
+          fetchParkingInfo: async(id) => {
             try{
               return await services.parking.fetchParkingInfo(id);
             }catch(e){
@@ -485,7 +485,7 @@
             }
           },
           
-          fetchOrderInfo: async(order_no:any, customer_id:any) => {
+          fetchOrderInfo: async(order_no, customer_id) => {
             try{
               return await services.transaction.getOrderDetails(order_no, customer_id);
             }catch(e){
@@ -493,7 +493,7 @@
             }
           },
           
-          updateAppDetails: async(data:any) => {
+          updateAppDetails: async(data) => {
             try{
               return await services.customer.postAppDetails(data);
             }catch(e){
@@ -501,7 +501,7 @@
             }
           },
           
-          resendSignupOTP: async(data:any) => {
+          resendSignupOTP: async(data) => {
             try{
               return await services.customer.resendSignupOTP(data);
             }catch(e){
@@ -509,7 +509,7 @@
             }
           },
           
-          verifyChangePhoneNumber: async(data:any) => {
+          verifyChangePhoneNumber: async(data) => {
             try{
               return await services.customer.verifyChangePhoneNumber(data);
             }catch(e){
@@ -517,7 +517,7 @@
             }
           },
           
-          changePhoneNumber: async(data:any) => {
+          changePhoneNumber: async(data) => {
             try{
               return await services.customer.changePhoneNumber(data);
             }catch(e){
@@ -552,19 +552,19 @@
           
           
           const fetchData = async() =>{
-            const response: any = await AsyncStorage.getItem("userProfile");
+            const response = await AsyncStorage.getItem("userProfile");
             let user = JSON.parse(response);
             setProfile(user);
             setLoggedInUser(user);
           }
           fetchData();
           
-          NetInfo.fetch().then((state: any) => {
+          NetInfo.fetch().then((state) => {
             isMounted.current && setIsConnected(state.isConnected);
             
           });
           
-          const unsubscribe = NetInfo.addEventListener((state:any) => {
+          const unsubscribe = NetInfo.addEventListener((state) => {
             isMounted.current && setIsConnected(state.isConnected);
             
           });
@@ -576,7 +576,7 @@
           deviceInformation();
           
           listenForBackgroundPushNotification()
-          .then(async(result:any) => {
+          .then(async(result) => {
             if(result){
               if(user && user.id){
                 await authContext.asyncCustomerProfile(user.id);
@@ -668,7 +668,7 @@
               },
             });
             
-            const makeStyles = (colors:any) => StyleSheet.create({
+            const makeStyles = (colors) => StyleSheet.create({
               
               container: {
                 flex: 1

@@ -6,7 +6,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-  self.moduleName = @"ParkPro";
+  self.moduleName = @"Parkpro";
   return [super application:application didFinishLaunchingWithOptions:launchOptions];
 }
 
