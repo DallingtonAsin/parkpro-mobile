@@ -62,7 +62,6 @@ const EditProfile = ({navigation}) => {
       cropping: true,
       compressImageQuality: 0.7,
     }).then(async image => {
-      // console.log("Camera image object",image);
       await SubmitProfileUpdateDetails(image);
     });
   }
@@ -73,7 +72,6 @@ const EditProfile = ({navigation}) => {
       height: 400,
       cropping: true,
     }).then( async(image) => {
-      // console.log("Gallery image object",image);
       await SubmitProfileUpdateDetails(image);
     });
   }
@@ -151,8 +149,6 @@ const EditProfile = ({navigation}) => {
   
   
   const handleProfileUpdate = async() => {
-    
-    
     try{
       
       const user_id = state.user_id;
